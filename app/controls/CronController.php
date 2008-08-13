@@ -244,11 +244,42 @@ class CronController extends Zend_Controller_Action
         fclose($fp);
     }
 
-    public function truncateAction()
+    public function installAction()
     {
         $db = Zend_Registry::get('db');
-        $db->query("truncate metric");
-        $db->query("truncate overall_status");
+        //$db->query("truncate metric");
+        //$db->query("truncate overall_status");
+        $db->query("DROP TABLE IF EXISTS `rsvextra`.`metric`;
+CREATE TABLE  `rsvextra`.`metric` (
+  `dbid` int(10) unsigned NOT NULL default '0',
+  `status` varchar(10) NOT NULL,
+  `detail` text NOT NULL,
+  `resource_id` int(10) unsigned NOT NULL default '0',
+  `metric_id` int(10) unsigned NOT NULL default '0',
+  `timestamp` int(10) unsigned NOT NULL default '0',
+  `effective_dbid` int(10) unsigned default NULL,
+  `effective_timestamp` int(10) unsigned default NULL,
+  PRIMARY KEY  USING BTREE (`dbid`),
+  KEY `resource_id_index` USING BTREE (`resource_id`),
+  KEY `timestamp` (`timestamp`),
+  KEY `probe_id_index` USING BTREE (`metric_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='this is a copy of metricrecord from gratia, but  this table ';
+
+DROP TABLE IF EXISTS `rsvextra`.`overall_status`;
+CREATE TABLE  `rsvextra`.`overall_status` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `overall_status` varchar(10) default NULL,
+  `timestamp` int(10) unsigned NOT NULL,
+  `detail` text NOT NULL,
+  `resource_id` int(10) unsigned NOT NULL,
+  `responsible_metric_id` int(10) unsigned default NULL,
+  `count_info` varchar(128) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `timestamp` (`timestamp`),
+  KEY `resource_id` (`resource_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=latin1;
+");
+        //clear cache
         passthru("rm ".config()->cache_dir."/*");
 
         $this->render("none");
