@@ -1,0 +1,76 @@
+<? $count = count($this->resources); ?>
+{
+  'metaData': {
+    totalProperty: 'results',
+    root: 'rows',
+    id: 'resource_id',
+    fields: [
+            {name:'resource_id', sortType:'asInt'},
+            'name', 
+            'uri', 
+            'url', 
+            <? if(user()->hasRole(role::$view_admin_email)) { ?>
+                'admin_name',
+                'admin_email', 
+            <? } ?>
+            'summary', 
+            'overall_status',
+            'service_types'
+        ]
+    },
+    'results': <?=$count?>, 'rows': [
+<?
+        $first = true;
+        foreach($this->resources as $resource_id => $resource) {
+            if(!$first) echo ",";
+            $first = false;
+
+            $row = $resource["info"];
+            $status = $resource["status"];
+            $detail = $resource["detail"];
+            $counts = $resource["counts"];
+
+            //output basic info about this resource
+            $name = $row->name;
+            $uri = $row->uri;
+            $url = $row->url;
+            $admin_name = str_replace("\n", "", trim($row->first_name." ".$row->last_name));
+            $admin_name = "fixme";
+            $admin_email = str_replace("\n", "", $row->primary_email);
+            if(trim($admin_email == "")) {
+                $admin_email = "no_email_info@shouldve_been_disabled";
+            }
+            $admin_email = "fixme";
+            echo "{";
+            echo "'resource_id': $resource_id,";
+            echo "'name':'$name',";
+            echo "'uri':'$uri',";
+            echo "'url':'$url',";
+
+            if(user()->hasRole(role::$view_admin_email)) {
+                echo "'admin_name':'$admin_name',";
+                echo "'admin_email':'$admin_email',";
+            }
+
+            echo "'overall_status':'".$status."',";
+
+            //get service types
+            $service_types = $this->resource_service_types->getServiceTypes($resource_id);
+            echo "'service_types':'";
+            $s_first = true;
+            foreach($service_types as $service_type) {
+                if(!$s_first) echo " / ";
+                $s_first = false;
+                echo $service_type->description;
+            }
+            echo "',";
+
+            $summary = $detail;
+            echo "'summary':'".htmlentities($summary, ENT_QUOTES)."'";
+
+            echo "}\n";
+        }
+?> 
+    ]
+}
+

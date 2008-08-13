@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+<title><?=config()->app_name?></title>
+
+<!-- CSS used to display loading dialog -->
+<style>
+#loading {
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    margin-left: -50px;
+    padding: 2px;
+    z-index: 20001;
+    height: auto;
+    border: 1px solid #ccc;
+}
+
+#loading a {
+    color: #225588;
+}
+
+#loading .loading-indicator {
+    background: white;
+    color: #444;
+    font: bold 13px tahoma, arial, helvetica;
+    padding: 10px;
+    margin: 0;
+    height: auto;
+}
+
+#loading .loading-indicator img {
+    margin-right:8px;
+    float:left;
+    vertical-align:top;
+}
+
+#loading-msg {
+    font: normal 10px arial, tahoma, sans-serif;
+}
+
+</style>
+
+</head>
+
+<!-- Show Loading button -->
+<body id="body" style="overflow: hidden">
+
+<div id="loading">
+    <div class="loading-indicator">
+    <img src="images/large-loading.gif" width="32" height="32"/><?=config()->app_name?><br />
+    <span id="loading-msg">Loading application...</span>
+    </div>
+</div>
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="lib/ext-2.1/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="lib/ext-2.1/resources/css/xtheme-gray.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+
+
+<!-- LOAD ExtJS & JQuery -->
+<script language='javascript' src='lib/jquery/jquery.js'></script>
+
+<script language='javascript' src='lib/ext/adapter/jquery/ext-jquery-adapter.js'></script>
+<script language='javascript' src='lib/ext/ext-all.js'></script>
+
+<!-- GMap Stuff -->
+<script langauge='javascript' src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=config()->gmap_key?>" type="text/javascript"></script>
+<script langauge='javascript' src="js/gmap.js"></script>
+
+<!-- RSV Viewer Stuff -->
+<script langauge='javascript' src="index/js"></script>
+
+<?php include("app/views/header.php");?>
+<div id="viewportarea" class="hidden">
+<?php include("app/views/scripts/index/static_content.php");?>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<?
+echo "({ \"markers\": [";
+$first = true;
+foreach($this->resource_rowset as $row) {
+    $resource_id = $row->id;
+    $title = $uri = $row->name;
+    $uri = $row->uri;
+    $url = "fixme";//$row->url;
+
+    /*
+    $admin_name = trim($row->first_name." ".$row->last_name);
+    $admin_email = $row->primary_email;
+    */
+    
+    if(!isset($this->resource_geo[$resource_id])) continue;
+    $geocode = $this->resource_geo[$resource_id];
+    //$geo_lat = rand(30, 45);
+    //$geo_long = -rand(75, 120);
+    $geo_lat = $geocode->latitude;
+    $geo_long = $geocode->longitude;
+    if($geo_lat === null || $geo_long == null) continue;
+    
+    switch($this->status[$resource_id]) {
+    case "CRITICAL":
+        $icon = "icon_critical";
+        break;
+    case "OK":
+        $icon = "icon_ok";
+        break;
+    case "WARNING":
+        $icon = "icon_warning";
+        break;
+    case "UNKNOWN":
+    default:
+        $icon = "icon_unknown";
+        break;
+    }
+
+    //this is json.. put comma
+    if(!$first) echo ",";
+    $first = false;
+
+    echo "{\n";
+    echo "      lat:$geo_lat,\n";
+    echo "      'long':$geo_long,\n";
+    echo "      marker:{title: '$title', icon: $icon},\n";
+    echo "      info: '<b>$title</b> ($uri)<br /><a href=\"$url\">$url</a>'\n";
+    echo "}\n";
+}
+?>
+]})
+<?
+

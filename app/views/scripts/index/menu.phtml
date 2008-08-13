@@ -1,0 +1,37 @@
+[
+{
+    text:'Home',
+    id:'home_start',
+    iconCls:'menuicon_home',
+    leaf:true
+},
+
+{
+    text:'Current Status',
+    cls:'feeds-node',
+    expanded: true,
+    children:[
+        {
+            text:'Overview',
+            id:'current_overview',
+            iconCls:'menuicon_overview',
+            leaf:true
+        },
+        {
+            text:'RSV Metric',
+            id:'current_detail',
+            iconCls:'menuicon_metricdetail',
+            leaf:true
+        }
+    ]
+},{
+    text:'History',
+    cls:'feeds-node',
+    expanded: true,
+    children:[{
+        text:'Overall Status',
+        id:'history_overview',
+        iconCls:'menuicon_metricdetail',
+        leaf:true
+    }]
+}]

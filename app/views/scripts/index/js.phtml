@@ -1,0 +1,1305 @@
+console.log();
+///////////////////////////////////////////////////////////////////////////////
+//
+// This code sucks... smells like rotten garbage and old baby diapers....
+//
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Main definition
+//
+//
+
+var start = {
+    id: 'home_start-panel',
+    title: 'Home',
+    layout: 'fit',
+    bodyStyle: 'padding:25px',
+    contentEl: 'start-div'  // pull existing content from the page
+};
+
+var other_osg = {
+    id: 'other_osg-panel',
+    title: 'OSG Rocks!!',
+    layout: 'fit',
+    bodyStyle: 'padding:25px',
+    html: 'hello'
+};
+
+// This is an inner body element within the Details panel created to provide a "slide in" effect
+// on the panel body without affecting the body's box itself.  This element is created on
+// initial use and cached in this var for subsequent access.
+var detailEl;
+
+// Go ahead and create the TreePanel now so that we can use it below
+var menuPanel = new Ext.tree.TreePanel({
+    id: 'menu-panel',
+    title: 'Navigation',
+    region:'north',
+    split: true,
+    width: 150,
+    height: 300,
+    minSize: 100,
+    collapsible: true,
+    autoScroll: true,
+    
+    // tree-specific configs:
+    rootVisible: false,
+    lines: false,
+    //singleExpand: true,
+    useArrows: true,
+    loader: new Ext.tree.TreeLoader({
+        dataUrl:'index/menu',
+        listeners: {
+            load: function(loader, node, resp) {
+                menuPanel.getNodeById("home_start").select();
+            }
+        }
+    }),
+    
+    root: new Ext.tree.AsyncTreeNode()
+});
+
+// Assign the changeLayout function to be called on tree node click.
+menuPanel.on('click', function(n){
+    var sn = this.selModel.selNode || {}; // selNode is null on initial selection
+    if(n.leaf && n.id != sn.id){  // ignore clicks on folders and currently selected node 
+        //actiavte the panel
+        Ext.getCmp('content-panel').layout.setActiveItem(n.id + '-panel');
+
+        //show information
+        if(!detailEl){
+            var bd = Ext.getCmp('details-panel').body;
+            bd.update('').setStyle('background','#fff');
+            detailEl = bd.createChild(); //create default empty div
+        }
+        detailEl.hide().update(Ext.getDom(n.id+'-details').innerHTML).slideIn('l', {stopFx:true,duration:.2});
+        return true;
+    } 
+    if(!n.leaf) {
+        //folder clicked - expand it
+        n.expand();
+    }
+    return false; //don't let change item selection
+});
+
+// This is the Details panel that contains the description for each example layout.
+var informationPanel = {
+    id: 'details-panel',
+    title: 'Information',
+    height: 200,
+    region: 'center',
+    bodyStyle: 'padding-bottom:15px;background:#eee;',
+    autoScroll: true
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// ServerGrid
+//
+
+var ServerGrid = function(viewer, config) {
+    this.viewer = viewer;
+    Ext.apply(this, config);
+
+    this.store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+            url: 'current/proxy'
+        }),
+        reader: new Ext.data.JsonReader()
+    });
+    this.store.setDefaultSort('name', "DESC"); 
+
+    this.columns = [{
+        header: "ID",
+        dataIndex: 'resource_id',
+        sortable:true,
+        width: 20 
+    },{
+        id: 'title',
+        header: "Name",
+        dataIndex: 'name',
+        sortable:true,
+        width: 150,
+        renderer: this.formatTitle
+    },{
+        header: "Service Types",
+        dataIndex: 'service_types',
+        width: 100,
+        //renderer: this.formatURL,
+        sortable:true
+    },{
+        header: "Overall Status",
+        dataIndex: 'overall_status',
+        width: 70,
+        renderer: this.formatStatus,
+        sortable:true
+    }
+    ];
+
+    ServerGrid.superclass.constructor.call(this, {
+        region: 'center',
+        id: 'server-grid',
+        loadMask: {msg:'Loading Data...'},
+
+        sm: new Ext.grid.RowSelectionModel({
+            singleSelect:true
+        }),
+
+        viewConfig: {
+            forceFit:true,
+            enableRowBody:true,
+            showPreview:true,
+            getRowClass : this.applyRowClass
+        }
+    });
+
+    this.on('rowcontextmenu', this.onContextClick, this);
+};
+
+Ext.extend(ServerGrid, Ext.grid.GridPanel, {
+    changeFilter: function(value) {
+        this.store.baseParams["servicetype"] = value;
+        this.ctxRow = null;
+        this.store.reload();
+    },
+    onContextClick : function(grid, index, e){
+        if(!this.menu){ // create context menu on first right click
+            this.menu = new Ext.menu.Menu({
+                id:'grid-ctx',
+                items: [
+                {
+                    iconCls: 'refresh-icon',
+                    text:'Refresh',
+                    scope:this,
+                    handler: function(){
+                        this.ctxRow = null;
+                        this.store.reload();
+                    }
+                }]
+            });
+            this.menu.on('hide', this.onContextHide, this);
+        }
+        e.stopEvent();
+        if(this.ctxRow){
+            Ext.fly(this.ctxRow).removeClass('x-node-ctx');
+            this.ctxRow = null;
+        }
+        this.ctxRow = this.view.getRow(index);
+        this.ctxRecord = this.store.getAt(index);
+        Ext.fly(this.ctxRow).addClass('x-node-ctx');
+        this.menu.showAt(e.getXY());
+    },
+
+    onContextHide : function(){
+        if(this.ctxRow){
+            Ext.fly(this.ctxRow).removeClass('x-node-ctx');
+            this.ctxRow = null;
+        }
+    },
+
+    loadPage: function(page) {
+        this.store.baseParams["feed"] = page;
+        this.ctxRow = null;
+        this.store.load();
+    },
+
+    togglePreview : function(show){
+        this.view.showPreview = show;
+        this.view.refresh();
+    },
+
+    // within this function "this" is actually the GridView
+    applyRowClass: function(record, rowIndex, p, ds) {
+        if (this.showPreview) {
+            var xf = Ext.util.Format;
+            p.body = '<p>' + xf.ellipsis(xf.stripTags(record.data.summary), 200) + '</p>';
+            return 'x-grid3-row-expanded';
+        }
+        return 'x-grid3-row-collapsed';
+    },
+
+    formatTimeAgo: function(sec) {
+        var out = "unknown";
+        var day = Math.round(sec / (3600*24));
+        if(day > 1) {
+            out = day + ' days ago';
+        } else {
+            var hour = Math.round(sec / 3600);
+            if(hour > 1) {
+                out = hour + ' hours ago';
+            } else {
+                var min = Math.round(sec / 60);
+                out = min + ' minutes ago';
+            }
+        }
+        return out;
+    },
+
+    formatDate : function(date) {
+        if (!date) {
+            return '';
+        }
+        var now = new Date();
+        var d = now.clearTime(true);
+        var notime = date.clearTime(true).getTime();
+        if (notime == d.getTime()) {
+            return 'Today ' + date.dateFormat('g:i a');
+        }
+        d = d.add('d', -6);
+        if (d.getTime() <= notime) {
+            return date.dateFormat('D g:i a');
+        }
+        return date.dateFormat('n/j g:i a');
+    },
+
+    formatURL: function(value, p, record) {
+        return String.format('<a target="{1}" href="{0}">{0}</a>', value, record.data.name);
+    },
+    formatAdmin: function(value, p, record) {
+        return String.format('{0}', value, record.data.admin_email);
+    },
+
+    formatTitle: function(value, p, record) {
+        var str = "";
+        str += String.format('<div class="server"><b>{0}</b><br/> ', value);
+        str += String.format('<span class="servername">{0}</span></div>', record.data.uri);
+        return str;
+    },
+    formatStatus: function(value, p, record) {
+
+        //this tooltip stuff doesnt' work quite wll. It only works if the value is text, it seems..
+        p.attr = 'ext:qtip="TODO - explain why this is '+value+'"';
+
+        //something similar exists in control/CurrentController
+        if(value == "") value = "UNKNOWN";
+        return '<div class="status_icon_holder status_'+value+'"/>';
+    }
+});
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// DetailPanel
+//
+
+var DetailPanel = {
+/*
+    getTemplate:  function(type) { 
+        var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><h3 class="post-title">{name}</h3></td></tr><tr><td></td><td><h4 class="post-author">{uri}</h4></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="current_status_detail_%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
+        return new Ext.Template(tmp.replace("%id_prefix%", type));
+    }
+*/
+};
+
+DetailPanel.LinkInterceptor = {
+    render: function(p){
+        p.body.on({
+            'mousedown': function(e, t){ // try to intercept the easy way
+                t.target = '_blank';
+            },
+            'click': function(e, t){ // if they tab + enter a link, need to do it old fashioned way
+                if(String(t.target).toLowerCase() != '_blank'){
+                    e.stopEvent();
+                    window.open(t.href);
+                }
+            },
+            delegate:'a'
+        });
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Current_MainPanel (contains ServerGrid and DetailPanel)
+//
+
+var Current_MainPanel = function(){
+    //instanciate ServerGrid
+    this.grid = new ServerGrid(this, {
+        minSize: 100, //this is not working??
+        tbar:[
+            {
+                split:true,
+                text:'Metrics Pane',
+                tooltip: {title:'Metircs Pane',text:'Show, move or hide the Metrics Pane'},
+                iconCls: 'preview-bottom',
+                handler: this.moveDetailPanel.createDelegate(this, []),
+                menu:{
+                    id:'reading-menu',
+                    cls:'reading-menu',
+                    width:100,
+                    items: [{
+                        text:'Bottom',
+                        checked:true,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-bottom'
+                    },{
+                        text:'Right',
+                        checked:false,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-right'
+                    },{
+                        text:'Hide',
+                        checked:false,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-hide'
+                    }]
+                }
+            },
+            '-',
+            {
+                pressed: true,
+                enableToggle:true,
+                text:'Summary',
+                tooltip: {title:'Resource Summary',text:'View a short summary of each item in the list'},
+                iconCls: 'summary',
+                scope:this,
+                toggleHandler: function(btn, pressed){
+                    this.grid.togglePreview(pressed);
+                }
+            }
+        ]
+    });
+
+    //instanciate DetailPanel
+    this.detailpanel = new Ext.Panel({
+        title: 'Detail',
+        id: 'detailpanel',
+        region: 'south',
+        cls:'preview',
+        autoScroll: true,
+        listeners: DetailPanel.LinkInterceptor,
+        tbar: [{
+            id:'tab',
+            text: 'View in New Tab',
+            iconCls: 'new-tab',
+            disabled:true,
+            handler : this.openTab,
+            scope: this
+        }, '-',
+        {
+            id:'giptab',
+            text: 'Show GIP Information',
+            iconCls: 'new-tab',
+            disabled:true,
+            handler : this.openGIPTab,
+            scope: this
+        }
+        <?php
+        if(user()->hasRole(role::$view_admin_email)) { 
+        ?>
+            ,'-',{
+                id:'win',
+                text: 'Email Administrator',
+                iconCls: 'email',
+                disabled:true,
+                scope: this,
+                handler : function(){
+                    document.location="mailto:"+this.gsm.getSelected().data.admin_email;
+                }
+            }
+        <?php
+        }
+        ?>
+        ]
+    });
+
+    Current_MainPanel.superclass.constructor.call(this, {
+        id:'current_detail-panel',
+        activeTab:0,
+        region:'center',
+        margins:'0 5 5 0',
+        resizeTabs:true,
+        border:false,
+        tabWidth:150,
+        enableTabScroll: true,
+        //plugins: new Ext.ux.TabCloseMenu(),
+        items: {
+            id:'main-view',
+            layout:'border',
+            title:'Loading...',
+            hideMode:'offsets',
+            items:[
+                this.grid, 
+                {
+                    id:'bottom-detail',
+                    layout:'fit',
+                    items:this.detailpanel,
+                    height: 250,
+                    minSize: 100,
+                    split: true,
+                    border:false,
+                    region:'south'
+                },{
+                    id:'right-detail',
+                    layout:'fit',
+                    border:false,
+                    region:'east',
+                    width:350,
+                    minSize: 100,
+                    split: true,
+                    hidden:true
+                }
+            ]
+        }
+    });
+
+    this.gsm = this.grid.getSelectionModel();
+
+    this.gsm.on('rowselect', function(sm, index, record){
+        getPanelTemplate("current_status_detail_").overwrite(this.detailpanel.body, record.data);
+        var items = this.detailpanel.topToolbar.items;
+        items.get('tab').enable();
+        items.get('giptab').enable();
+        <?php if(user()->hasRole(role::$view_admin_email)) { ?>
+            items.get('win').enable();
+        <? } ?>
+        var r = Math.random(); //prevent browser caching
+        $("#current_status_detail_"+record.data.resource_id).load("current/proxy?feed=detail&id="+record.data.resource_id+"&random="+r);
+    }, this, {buffer:250});
+
+    this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+
+    this.grid.on('rowdblclick', this.openTab, this);
+
+};
+
+Ext.extend(Current_MainPanel, Ext.TabPanel, {
+    loadPage: function(page){
+        this.grid.loadPage(page.url);
+        Ext.getCmp('main-view').setTitle(page.text);
+    },
+
+    moveDetailPanel: function(m, pressed){
+        if(!m){ // cycle if not a menu item click
+            var readMenu = Ext.menu.MenuMgr.get('reading-menu');
+            readMenu.render();
+            var items = readMenu.items.items;
+            var b = items[0], r = items[1], h = items[2];
+            if(b.checked){
+                r.setChecked(true);
+            }else if(r.checked){
+                h.setChecked(true);
+            }else if(h.checked){
+                b.setChecked(true);
+            }
+            return;
+        }
+        if(pressed){
+            var detailpanel = this.detailpanel;
+            var right = Ext.getCmp('right-detail');
+            var bot = Ext.getCmp('bottom-detail');
+            var btn = this.grid.getTopToolbar().items.get(0);
+            switch(m.text){
+                case 'Bottom':
+                    right.hide();
+                    bot.add(detailpanel);
+                    bot.show();
+                    bot.ownerCt.doLayout();
+                    btn.setIconClass('preview-bottom');
+                    break;
+                case 'Right':
+                    bot.hide();
+                    right.add(detailpanel);
+                    right.show();
+                    right.ownerCt.doLayout();
+                    btn.setIconClass('preview-right');
+                    break;
+                case 'Hide':
+                    detailpanel.ownerCt.hide();
+                    detailpanel.ownerCt.ownerCt.doLayout();
+                    btn.setIconClass('preview-hide');
+                    break;
+            }
+        }
+    },
+
+    openTab : function(record){
+        record = (record && record.data) ? record : this.gsm.getSelected();
+        var d = record.data;
+        var id = d.resource_id;
+        var tab;
+        if(!(tab = this.getItem('current_status_detail_tabpanel'+id))){
+            tab = new Ext.Panel({
+                id:'current_status_detail_tabpanel'+id,
+                cls:'preview single-preview',
+                title: d.name,
+                tabTip: d.uri,
+                html: getPanelTemplate("current_status_detail_tab").apply(d),
+                closable:true,
+                listeners: DetailPanel.LinkInterceptor,
+                autoScroll:true,
+                border:true
+                <?php
+                if(user()->hasRole(role::$view_admin_email)) { 
+                ?>
+                    ,tbar: [
+                            {
+                                text: 'Email Administrator',
+                                iconCls: 'email',
+                                handler : function(){
+                                    document.location="mailto:"+d.admin_email;
+                                }
+                            }
+                    ]
+                <?
+                }
+                ?>
+            });
+            this.add(tab);
+        }
+        this.setActiveTab(tab);
+        var r = Math.random(); //prevent browser caching
+        $("#current_status_detail_tab"+d.resource_id).load("current/proxy?feed=detail&id="+d.resource_id+"&random="+r);
+    },
+
+    openGIPTab : function(record){
+        record = (record && record.data) ? record : this.gsm.getSelected();
+        var d = record.data;
+        var id = d.resource_id;
+        var tab;
+        if(!(tab = this.getItem('current_status_gip_tabpanel'+id))){
+            tab = new Ext.Panel({
+                id:'current_status_gip_tabpanel'+id,
+                title: d.name+' (GIP)',
+                tabTip: 'GIP Information from CEMon/BDII for '+d.name,
+                html: 'Loading..',
+                closable:true,
+                autoLoad:"current/proxy?feed=glue&name="+d.name,
+                cls: "gippanel",
+                border:true
+            });
+            this.add(tab);
+        }
+        this.setActiveTab(tab);
+    },
+
+    openAll : function(){
+        this.beginUpdate();
+        this.grid.store.data.each(this.openTab, this);
+        this.endUpdate();
+    }
+
+});
+var current_detail = new Current_MainPanel();
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Status Overview (Gmap)
+//
+var current_map = {
+            id: 'current_overview-panel',
+            title: 'Overview',
+            layout: 'fit',
+            xtype: 'gmappanel',
+            zoomLevel: 4,       //2 is better for whole world
+            gmapType: 'map',
+            addControl: new GSmallMapControl(),
+            setCenter: { lat: 45, 'long': -85 }
+};
+
+var icon_ok = new GIcon();
+icon_ok.image = "images/status_ok.png";
+icon_ok.iconAnchor = new GPoint(12, 12);
+icon_ok.infoWindowAnchor = new GPoint(12, 12);
+icon_ok.iconSize = new GSize(24, 24);
+icon_ok.shadow = "images/shadow.png";
+icon_ok.shadowSize = new GSize(30, 30);
+
+var icon_warning = new GIcon();
+icon_warning.image = "images/status_warning.png";
+icon_warning.iconAnchor = new GPoint(12, 12);
+icon_warning.infoWindowAnchor = new GPoint(12, 12);
+icon_warning.iconSize = new GSize(24, 24);
+icon_warning.shadow = "images/shadow.png";
+icon_warning.shadowSize = new GSize(30, 30);
+
+var icon_unknown = new GIcon();
+icon_unknown.image = "images/status_unknown.png";
+icon_unknown.iconAnchor = new GPoint(12, 12);
+icon_unknown.infoWindowAnchor = new GPoint(12, 12);
+icon_unknown.iconSize = new GSize(24, 24);
+icon_unknown.shadow = "images/shadow.png";
+icon_unknown.shadowSize = new GSize(30, 30);
+
+var icon_critical = new GIcon();
+icon_critical.image = "images/status_critical.png";
+icon_critical.iconAnchor = new GPoint(12, 12);
+icon_critical.infoWindowAnchor = new GPoint(12, 12);
+icon_critical.iconSize = new GSize(24, 24);
+icon_critical.shadow = "images/shadow.png";
+icon_critical.shadowSize = new GSize(30, 30);
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// HistoryGrid
+//
+
+var HistoryGrid = function(viewer, config) {
+    this.viewer = viewer;
+    Ext.apply(this, config);
+
+    this.store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+            url: 'history/resource'
+        }),
+        reader: new Ext.data.JsonReader(
+            {
+                root: 'graphs',
+                totalProperty: 'totalCount',
+                id: 'resource_id'
+            }, [
+                {name: 'resource_id', mapping: 'resource_id', sortType:'asInt'},
+                {name: 'name', mapping: 'name'},
+                {name: 'uri', mapping: 'fqdn'},
+                {name: 'graph', mapping: 'graph'},
+                {name: 'url', mapping: 'url'},
+                {name: 'service_types', mapping: 'service_types'}
+            ]
+        )
+    });
+    this.store.setDefaultSort('name', "DESC"); 
+
+    this.columns = [{
+        header: "ID",
+        dataIndex: 'resource_id',
+        sortable:true,
+        width: 10 
+    },{
+        id: 'title',
+        header: "Name",
+        dataIndex: 'name',
+        sortable:true,
+        width: 150,
+        renderer: this.formatTitle
+    }
+    ];
+
+    HistoryGrid.superclass.constructor.call(this, {
+        region: 'center',
+        id: 'topic-grid',
+        loadMask: {msg:'Loading Data...'},
+
+        sm: new Ext.grid.RowSelectionModel({
+            singleSelect:true
+        }),
+
+        viewConfig: {
+            forceFit:true,
+            enableRowBody:true,
+            showPreview:true,
+            getRowClass : this.applyRowClass
+        }
+    });
+
+    this.on('rowcontextmenu', this.onContextClick, this);
+};
+
+Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
+    changeFilter: function(value) {
+        this.store.baseParams["servicetype"] = value;
+        this.ctxRow = null;
+        this.store.reload();
+    },
+    onContextClick : function(grid, index, e){
+        if(!this.menu){ // create context menu on first right click
+            this.menu = new Ext.menu.Menu({
+                id:'grid-ctx',
+                items: [{
+                    iconCls: 'refresh-icon',
+                    text:'Refresh',
+                    scope:this,
+                    handler: function(){
+                        this.ctxRow = null;
+                        this.store.reload();
+                    }
+                }]
+            });
+            this.menu.on('hide', this.onContextHide, this);
+        }
+        e.stopEvent();
+        if(this.ctxRow){
+            Ext.fly(this.ctxRow).removeClass('x-node-ctx');
+            this.ctxRow = null;
+        }
+        this.ctxRow = this.view.getRow(index);
+        this.ctxRecord = this.store.getAt(index);
+        Ext.fly(this.ctxRow).addClass('x-node-ctx');
+        this.menu.showAt(e.getXY());
+    },
+    onContextHide : function(){
+        if(this.ctxRow){
+            Ext.fly(this.ctxRow).removeClass('x-node-ctx');
+            this.ctxRow = null;
+        }
+    },
+    loadPage: function(page) {
+        this.ctxRow = null;
+        this.store.baseParams["feed"] = page;
+        var startdate = history_detail.start_date.picker.getValue();
+        var enddate = history_detail.end_date.picker.getValue();
+        this.store.baseParams["start_time"] = startdate.getTime()/1000;
+        this.store.baseParams["end_time"] = enddate.getTime()/1000;
+        this.store.load();
+    },
+    togglePreview : function(show){
+        this.view.showPreview = show;
+        this.view.refresh();
+    },
+    // within this function "this" is actually the GridView
+    applyRowClass: function(record, rowIndex, p, ds) {
+        if (this.showPreview) {
+            var xf = Ext.util.Format;
+            p.body = record.data.graph;
+            return 'x-grid3-row-expanded';
+        }
+        return 'x-grid3-row-collapsed';
+    },
+    formatTitle: function(value, p, record) {
+        var str = "";
+        str += String.format('<div class="server"><b>{0}</b><br/> ', value);
+        str += String.format('<span class="servername">{0}</span></div>', record.data.uri);
+        return str;
+    }
+});
+
+function getPanelTemplate(type) {
+    var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><h3 class="post-title">{name}</h3></td></tr><tr><td></td><td><h4 class="post-author">{uri}</h4></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
+    return new Ext.Template(tmp.replace("%id_prefix%", type));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// HistoryDetailPanel
+//
+
+var HistoryDetailPanel = {};
+HistoryDetailPanel.LinkInterceptor = {
+    render: function(p){
+        p.body.on({
+            'mousedown': function(e, t){ // try to intercept the easy way
+                t.target = '_blank';
+            },
+            'click': function(e, t){ // if they tab + enter a link, need to do it old fashioned way
+                if(String(t.target).toLowerCase() != '_blank'){
+                    e.stopEvent();
+                    window.open(t.href);
+                }
+            },
+            delegate:'a'
+        });
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// History_MainPanel (contains HistoryGrid and HistoryDetailPanel)
+//
+
+var History_MainPanel = function(){
+    this.start_date = new Ext.menu.DateMenu({
+        handler : function(dp, date){
+            history_detail.setStartDateLabel(date);
+
+            var min_date = new Date();
+            min_date.setTime(date.getTime() + 3600*24*1000);
+            history_detail.end_date.picker.minDate = min_date;
+
+            var startdate = history_detail.start_date.picker.getValue();
+            var enddate = history_detail.end_date.picker.getValue();
+
+            delete history_detail.end_date.picker.activeDate;
+            history_detail.end_date.picker.setValue(enddate);
+
+            history_detail.grid.loadPage("resource");
+        }
+    });
+    
+    this.end_date = new Ext.menu.DateMenu({
+        handler : function(dp, date){
+            history_detail.setEndDateLabel(date);
+
+            //make sure there will be at least one day between start and end
+            var max_date = new Date();
+            max_date.setTime(date.getTime() - 3600*24*1000);
+            history_detail.start_date.picker.maxDate = max_date;
+
+            var startdate = history_detail.start_date.picker.getValue();
+            var enddate = history_detail.end_date.picker.getValue();
+
+            delete history_detail.start_date.picker.activeDate;
+            history_detail.start_date.picker.setValue(startdate);
+
+            history_detail.grid.loadPage("resource");
+        }
+    });
+    var d = new Date();
+    d.setTime(<?=time()?>*1000);
+    this.end_date.picker.maxDate = d;
+
+    this.grid = new HistoryGrid(this, {
+        minSize: 100, //this is not working??
+        tbar:[
+            {
+                split:true,
+                text:'Detail Pane',
+                tooltip: {title:'Detail Pane',text:'Show, move or hide the History Detail Pane'},
+                iconCls: 'preview-bottom',
+                handler: this.moveDetailPanel.createDelegate(this, []),
+                menu:{
+                    id:'history-menu',
+                    cls:'reading-menu',
+                    width:100,
+                    items: [{
+                        text:'Bottom',
+                        checked:true,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-bottom'
+                    },{
+                        text:'Right',
+                        checked:false,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-right'
+                    },{
+                        text:'Hide',
+                        checked:false,
+                        group:'rp-group',
+                        checkHandler:this.moveDetailPanel,
+                        scope:this,
+                        iconCls:'preview-hide'
+                    }]
+                }
+            },
+            '-',
+            {
+                pressed: true,
+                enableToggle:true,
+                text:'Graph',
+                tooltip: {title:'History Graph',text:'View a summary graph of each resrouces'},
+                iconCls: 'summary',
+                scope:this,
+                toggleHandler: function(btn, pressed){
+                    this.grid.togglePreview(pressed);
+                }
+            }
+        ]
+    });
+
+    //instanciate HistoryDetailPanel
+    this.detailpanel = new Ext.Panel({
+        title: 'History Detail',
+        id:'historydetailpanel',
+        region: 'south',
+        cls:'preview',
+        autoScroll: true,
+        listeners: HistoryDetailPanel.LinkInterceptor,
+        tbar: [{
+            id:'history-tab',
+            text: 'View in New Tab',
+            iconCls: 'new-tab',
+            disabled:true,
+            handler : this.openTab,
+            scope: this
+        }, '-',
+        {
+            id:'history-giptab',
+            text: 'Show GIP Information',
+            iconCls: 'new-tab',
+            disabled:true,
+            handler : this.openGIPTab,
+            scope: this
+        }]
+    });
+
+    History_MainPanel.superclass.constructor.call(this, {
+        id:'history_overview-panel',
+        activeTab:0,
+        region:'center',
+        margins:'0 5 5 0',
+        resizeTabs:true,
+        border:false,
+        tabWidth:150,
+        enableTabScroll: true,
+        defaults:{autoScroll: true},
+        items: {
+            id:'history-main-view',
+            layout:'border',
+            title:'Loading...',
+            hideMode:'offsets',
+            items:[
+                this.grid, 
+                {
+                    id:'history-bottom-detail',
+                    layout:'fit',
+                    items:this.detailpanel,
+                    height: 250,
+                    minSize: 100,
+                    split: true,
+                    border:false,
+                    region:'south'
+                },{
+                    id:'history-right-detail',
+                    layout:'fit',
+                    border:false,
+                    region:'east',
+                    width:350,
+                    minSize: 100,
+                    split: true,
+                    hidden:true
+                }
+            ]
+        }
+    });
+
+    this.gsm = this.grid.getSelectionModel();
+
+    this.gsm.on('rowselect', function(sm, index, record){
+        getPanelTemplate("history_detail_").overwrite(this.detailpanel.body, record.data);
+        var items = this.detailpanel.topToolbar.items;
+        items.get('history-giptab').enable();
+        items.get('history-tab').enable();
+        this.loadDetail(record.data.resource_id, "");
+    }, this, {buffer:250});
+
+    this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+
+    this.grid.on('rowdblclick', this.openTab, this);
+};
+
+Ext.extend(History_MainPanel, Ext.TabPanel, {
+    loadPage: function(page){
+        this.grid.loadPage(page.url);
+        Ext.getCmp('history-main-view').setTitle(page.text);
+    },
+
+    moveDetailPanel: function(m, pressed){
+        if(!m){ // cycle if not a menu item click
+            var readMenu = Ext.menu.MenuMgr.get('history-menu');
+            readMenu.render();
+            var items = readMenu.items.items;
+            var b = items[0], r = items[1], h = items[2];
+            if(b.checked){
+                r.setChecked(true);
+            }else if(r.checked){
+                h.setChecked(true);
+            }else if(h.checked){
+                b.setChecked(true);
+            }
+            return;
+        }
+        if(pressed){
+            var detailpanel = this.detailpanel;
+            var right = Ext.getCmp('history-right-detail');
+            var bot = Ext.getCmp('history-bottom-detail');
+            var btn = this.grid.getTopToolbar().items.get(0);
+            switch(m.text){
+                case 'Bottom':
+                    right.hide();
+                    bot.add(detailpanel);
+                    bot.show();
+                    bot.ownerCt.doLayout();
+                    btn.setIconClass('preview-bottom');
+                    break;
+                case 'Right':
+                    bot.hide();
+                    right.add(detailpanel);
+                    right.show();
+                    right.ownerCt.doLayout();
+                    btn.setIconClass('preview-right');
+                    break;
+                case 'Hide':
+                    detailpanel.ownerCt.hide();
+                    detailpanel.ownerCt.ownerCt.doLayout();
+                    btn.setIconClass('preview-hide');
+                    break;
+            }
+        }
+    },
+
+    openTab : function(record){
+        record = (record && record.data) ? record : this.gsm.getSelected();
+        var d = record.data;
+        var id = d.resource_id;
+        var tab;
+        if(!(tab = this.getItem('history_detail_tabpanel'+id))){
+            tab = new Ext.Panel({
+                id:'history_detail_tabpanel'+id,
+                cls:'preview single-preview',
+                title: d.name,
+                tabTip: d.uri,
+                html: getPanelTemplate("history_detail_history-tab").apply(d),
+                closable:true,
+                listeners: HistoryDetailPanel.LinkInterceptor,
+                autoScroll:true,
+                border:true
+            });
+            this.add(tab);
+        }
+        this.setActiveTab(tab);
+        this.loadDetail(id, "history-tab");
+    },
+
+    openGIPTab : function(record){
+        record = (record && record.data) ? record : this.gsm.getSelected();
+        var d = record.data;
+        var id = d.resource_id;
+        var tab;
+        if(!(tab = this.getItem('current_status_gip_tabpanel'+id))){
+            tab = new Ext.Panel({
+                id:'current_status_gip_tabpanel'+id,
+                title: d.name+' (GIP)',
+                tabTip: 'GIP Information from CEMon/BDII for '+d.name,
+                html: 'Loading..',
+                closable:true,
+                autoLoad:"current/proxy?feed=glue&name="+d.name,
+                cls: "gippanel",
+                border:true
+            });
+            this.add(tab);
+        }
+        this.setActiveTab(tab);
+    },
+    loadDetail: function(id, prefix) {
+        var start_time= history_detail.start_date.picker.getValue().getTime()/1000;
+        var end_time= history_detail.end_date.picker.getValue().getTime()/1000;
+        $("#history_detail_"+prefix+id).load("history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time);
+    },
+    openAll : function(){
+        this.beginUpdate();
+        this.grid.store.data.each(this.openTab, this);
+        this.endUpdate();
+    },
+    setStartDateLabel: function(d) {
+        var label = d.format('<?=config()->date_format?>');
+        $("#history_start_date button").text(label);
+    },
+    setEndDateLabel: function(d) {
+        var label = d.format('<?=config()->date_format?>');
+        $("#history_end_date button").text(label);
+    },
+
+    setStartTime: function(time) {
+        var d = new Date();
+        d.setTime(time*1000);
+        this.start_date.picker.setValue(d);
+        this.setStartDateLabel(d);
+
+        var min_date = new Date();
+        min_date.setTime(d.getTime() + 3600*24*1000);
+        this.end_date.picker.minDate = min_date;
+    },
+    setEndTime: function(time) {
+        var d = new Date();
+        d.setTime(time*1000);
+        this.end_date.picker.setValue(d);
+        this.setEndDateLabel(d);
+
+        //make sure there will be at least one day between start and end
+        var max_date = new Date();
+        max_date.setTime(d.getTime() - 3600*24*1000);
+        this.start_date.picker.maxDate = max_date;
+    }
+});
+var history_detail = new History_MainPanel();
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Application Main Panel
+//
+
+var contentPanel = {
+    id: 'content-panel',
+    region: 'center', // this is what makes this panel into a region within the containing layout
+    layout: 'card',
+    margins: '2 5 5 0',
+    activeItem: 0,
+    border: false,
+    items: [
+        start, 
+        current_detail, 
+        current_map,
+        
+        history_detail
+    ]
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// History date range
+//
+
+/*
+Ext.apply(Ext.form.VTypes, {
+    daterange : function(val, field) {
+        var date = field.parseDate(val);
+
+        if(!date){
+            return;
+        }
+        if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
+            var start = Ext.getCmp(field.startDateField);
+            start.setMaxValue(date);
+            start.validate();
+            this.dateRangeMax = date;
+        } 
+        else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
+            var end = Ext.getCmp(field.endDateField);
+            end.setMinValue(date);
+            end.validate();
+            this.dateRangeMin = date;
+        }
+        return true;
+    }
+});
+*/
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// onReady -- think of it as main()
+//
+
+Ext.onReady(function(){
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Init Ext stuff
+    //
+    Ext.QuickTips.init();
+    Ext.state.SessionProvider = Ext.extend(Ext.state.CookieProvider, {
+        readCookies : function(){
+            if(this.state){
+                for(var k in this.state){
+                    if(typeof this.state[k] == 'string'){
+                        this.state[k] = this.decodeValue(this.state[k]);
+                    }
+                }
+            }
+            return Ext.apply(this.state || {}, Ext.state.SessionProvider.superclass.readCookies.call(this));
+        }
+    });
+    Ext.state.Manager.setProvider(new Ext.state.SessionProvider({state: Ext.appState}));
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // build main viewport
+    //
+    new Ext.Viewport({
+        layout: 'border',
+        title: 'Ext Layout Browser',
+        id: 'viewport',
+        items: [
+            {
+                xtype: 'box',
+                region: 'north',
+                applyTo: 'header',
+                height: 40
+            }, {
+                layout: 'border',
+                id: 'layout-browser',
+                region:'west',
+                border: false,
+                split:true,
+                margins: '2 0 5 5',
+                width: 275,
+                minSize: 100,
+                maxSize: 500,
+                items: [menuPanel, informationPanel]
+            },
+            contentPanel
+        ],
+        renderTo: 'viewportarea'
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // add dynamic toolbar items
+    //
+
+    //add current / service type selector
+    var tbar = current_detail.grid.getTopToolbar();
+    tbar.add('-');
+    tbar.addElement('service_type_selector_div');
+
+    var tbar = history_detail.grid.getTopToolbar();
+    tbar.add('-');
+    tbar.addElement('history_service_type_selector_div');
+
+    //TODO - these aren't dynamic anymore..
+    tbar.add('Date Range');
+    tbar.add({
+        id: 'history_start_date',
+        iconCls: 'calendar',
+        text: 'Start Date',
+        menu: history_detail.start_date
+    });
+    tbar.add('To');
+    tbar.add({
+        id: 'history_end_date',
+        iconCls: 'calendar',
+        text: 'End Date',
+        menu: history_detail.end_date
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Initialize parameters...
+    //
+
+    //init history date range
+    <?
+        require_once("app/timerange.php");
+        list($yesterday, $today) = getLast24HourRange(); 
+    ?>
+    history_detail.setStartTime(<?=$yesterday?>);
+    history_detail.setEndTime(<?=$today?>);
+    //console.log(history_detail);
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Setup autoloader
+    //
+
+    current_detail.on("show", function() {
+        current_detail.loadPage({url:"resource", text:"All Resources"});
+    });
+
+    history_detail.on("show", function() {
+        history_detail.loadPage({url:"resource", text:"All Resources"});
+    });
+
+    Ext.getCmp("current_overview-panel").on("show", function() {
+        $.getJSON("current/proxy?feed=gmap",
+            function(data){
+              Ext.getCmp("current_overview-panel").gmap.clearOverlays();
+              $.each(data.markers, function(i,marker){
+                //add marker
+                var mkr_point = new GLatLng(marker.lat,marker['long']);
+                Ext.getCmp("current_overview-panel").addMarker(
+                        mkr_point,
+                        marker.marker,
+                        false,
+                        marker.setCenter, 
+                        marker.info);
+              });
+        });
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //open curtain
+    //
+    $("#loading").hide();
+    $("#viewportarea").show();
+});
