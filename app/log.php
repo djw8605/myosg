@@ -30,6 +30,24 @@ function dlog($str, $type = Zend_Log::INFO)
     }
 }
 
+//error log
+function elog($str, $type = Zend_Log::ERR)
+{
+    global $g_starttime;
+
+    //log to the logger
+    if($str === null) $str = "[null]";
+    $time = microtime(true) - $g_starttime;
+    $str = round($time, 3)." ".$str;
+    Zend_Registry::get("logger")->log($str, $type);
+
+    //send to error_log as well
+    // 0) message is sent to PHP's system logger, using the Operating System's 
+    // system logging mechanism or a file, depending on what the error_log  
+    // configuration directive is set to. This is the default option. 
+    error_log($str, 0); 
+}
+
 //standard log
 function slog($str, $type = Zend_Log::INFO)
 {

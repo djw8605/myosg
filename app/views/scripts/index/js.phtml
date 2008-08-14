@@ -420,7 +420,6 @@ var Current_MainPanel = function(){
         border:false,
         tabWidth:150,
         enableTabScroll: true,
-        //plugins: new Ext.ux.TabCloseMenu(),
         items: {
             id:'main-view',
             layout:'border',
@@ -840,12 +839,13 @@ var History_MainPanel = function(){
             history_detail.grid.loadPage("resource");
         }
     });
+
+    //don't allow selecting future date
     var d = new Date();
     d.setTime(<?=time()?>*1000);
     this.end_date.picker.maxDate = d;
 
     this.grid = new HistoryGrid(this, {
-        minSize: 100, //this is not working??
         tbar:[
             {
                 split:true,
@@ -856,7 +856,6 @@ var History_MainPanel = function(){
                 menu:{
                     id:'history-menu',
                     cls:'reading-menu',
-                    width:100,
                     items: [{
                         text:'Bottom',
                         checked:true,
@@ -931,7 +930,6 @@ var History_MainPanel = function(){
         border:false,
         tabWidth:150,
         enableTabScroll: true,
-        defaults:{autoScroll: true},
         items: {
             id:'history-main-view',
             layout:'border',
@@ -1133,36 +1131,6 @@ var contentPanel = {
         history_detail
     ]
 };
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// History date range
-//
-
-/*
-Ext.apply(Ext.form.VTypes, {
-    daterange : function(val, field) {
-        var date = field.parseDate(val);
-
-        if(!date){
-            return;
-        }
-        if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
-            var start = Ext.getCmp(field.startDateField);
-            start.setMaxValue(date);
-            start.validate();
-            this.dateRangeMax = date;
-        } 
-        else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
-            var end = Ext.getCmp(field.endDateField);
-            end.setMinValue(date);
-            end.validate();
-            this.dateRangeMin = date;
-        }
-        return true;
-    }
-});
-*/
 
 
 ///////////////////////////////////////////////////////////////////////////////

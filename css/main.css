@@ -375,12 +375,8 @@ Metric Details
 
 pre
 {
-    white-space: normal;
+    white-space: pre-wrap;
     padding: 5px;
-}
-
-.metric .detail pre
-{
 }
 
 .status_icon_holder

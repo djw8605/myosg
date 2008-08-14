@@ -146,7 +146,7 @@ class CronController extends Zend_Controller_Action
                     //$inserted_ids[] = $dbid;
                 } catch (Exception $e) {
                     $rejected++;
-                    dlog("Caught Exception while running query: ".print_r($e, true));
+                    elog("Caught Exception while running query: ".print_r($e, true));
                 }
 
                 //re-calculate overall status
@@ -239,7 +239,7 @@ class CronController extends Zend_Controller_Action
             flock($fp_lock, LOCK_UN);
             //$mutex->release();
         } else {
-            dlog("Failed to obtain mutex for processnewAction");
+            elog("Failed to obtain mutex for processnewAction -- maybe previous is taking too long?");
         }
         fclose($fp_lock);
     }
