@@ -62,13 +62,13 @@ class CronController extends Zend_Controller_Action
             $overall_status_model = array();
             $overall_status = array();
 
-            //number of records rejected
+            //for some status..
             $rejected = 0;
             $inserted = 0;
             $validation_error = 0;
             $newstatus_inserted = 0;
 
-            //grab some new records (not all of them..)
+            //grab "some" new records
             $newrecords = $metric_model->fetchNewGratiaRecords(3000);
             dlog("Records grabbed from gratia: ".count($newrecords));
 
@@ -235,6 +235,10 @@ class CronController extends Zend_Controller_Action
             dlog("$rejected records has been rejected.");
             dlog("$inserted records has been inserted.");
             dlog("$newstatus_inserted records has been inserted to overall_status table.");
+            if(count($newrecords) > 0) {
+                $dstr = date(config()->date_format_full, $timestamp);
+                dlog("data is now synced to $dstr");
+            }
 
             flock($fp_lock, LOCK_UN);
             //$mutex->release();
