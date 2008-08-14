@@ -42,7 +42,9 @@ class CronController extends Zend_Controller_Action
 
         //lock the whole thing...
         $mutex = new Mutex();
-        $mutex->init(config()->mutex_id["processnew"]);
+        $mutex_key = ftok($_SERVER["SCRIPT_FILENAME"], "m");
+        $mutex->init($mutex_key);
+
         dlog("acquiring mutex.");
         if($mutex->acquire()) {
             dlog("acquiring mutex success...");
@@ -64,6 +66,7 @@ class CronController extends Zend_Controller_Action
 
             //grab some new records (not all of them..)
             $newrecords = $metric_model->fetchNewGratiaRecords(3000);
+            dlog("Records grabbed from gratia: ".count($newrecords));
 
             //we are going to make repeated inserts (x thousands times). Let's disable profiling for now
             Zend_Registry::get('db')->getProfiler()->setEnabled(false);
@@ -183,7 +186,7 @@ class CronController extends Zend_Controller_Action
                     //not even reported..
                     if($ostatus_model->isNA()) {
                         $dbid = null;
-                    }                               
+                    }
 
                     $counts = trim(addslashes(serialize($ostatus_model->getStatusCounts())));
                     if($ostatus_model->insertNewOverallStatus(
@@ -244,13 +247,30 @@ class CronController extends Zend_Controller_Action
         fclose($fp);
     }
 
+    public function geocodeAction()
+    {
+
+        $db = Zend_Registry::get('db');
+        $rows = $db->fetchAll("SELECT site_id, zipcode FROM oim.site s where zipcode is not null and zipcode <> \"\"");
+        foreach($rows as $row) {
+            //this is very slow...
+            $ret = system("wget -O - http://geocoder.us/service/csv/geocode?zip=".$row->zipcode);
+
+            $a = split(",", $ret);
+            $sql = "update oim.site set latitude='".$a[0]."', longitude='".$a[1]."' where site_id = ".$row->site_id;
+            dlog($sql);
+            $db->query($sql);
+        }
+        $this->render("none");
+    }
+
+
     public function installAction()
     {
         $db = Zend_Registry::get('db');
-        //$db->query("truncate metric");
-        //$db->query("truncate overall_status");
-        $db->query("DROP TABLE IF EXISTS `rsvextra`.`metric`;
-CREATE TABLE  `rsvextra`.`metric` (
+
+        $db->query("DROP TABLE IF EXISTS `rsvextra`.`metric`;");
+        $db->query("CREATE TABLE  `rsvextra`.`metric` (
   `dbid` int(10) unsigned NOT NULL default '0',
   `status` varchar(10) NOT NULL,
   `detail` text NOT NULL,
@@ -263,10 +283,10 @@ CREATE TABLE  `rsvextra`.`metric` (
   KEY `resource_id_index` USING BTREE (`resource_id`),
   KEY `timestamp` (`timestamp`),
   KEY `probe_id_index` USING BTREE (`metric_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='this is a copy of metricrecord from gratia, but  this table ';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='this is a copy of metricrecord from gratia, but  this table ';");
 
-DROP TABLE IF EXISTS `rsvextra`.`overall_status`;
-CREATE TABLE  `rsvextra`.`overall_status` (
+        $db->query("DROP TABLE IF EXISTS `rsvextra`.`overall_status`;");
+        $db->query("CREATE TABLE  `rsvextra`.`overall_status` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `overall_status` varchar(10) default NULL,
   `timestamp` int(10) unsigned NOT NULL,
@@ -277,14 +297,14 @@ CREATE TABLE  `rsvextra`.`overall_status` (
   PRIMARY KEY  (`id`),
   KEY `timestamp` (`timestamp`),
   KEY `resource_id` (`resource_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=latin1;
-");
+) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=latin1;");
         //clear cache
         passthru("rm ".config()->cache_dir."/*");
 
         $this->render("none");
         
     }
+
 
 /*
     public function addressAction()
