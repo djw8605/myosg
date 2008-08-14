@@ -41,13 +41,17 @@ class CronController extends Zend_Controller_Action
         dlog("processing new records from gratia table.");
 
         //lock the whole thing...
+        /*
         $mutex = new Mutex();
         $mutex_key = ftok($_SERVER["SCRIPT_FILENAME"], "m");
         $mutex->init($mutex_key);
+        */
 
-        dlog("acquiring mutex.");
-        if($mutex->acquire()) {
-            dlog("acquiring mutex success...");
+        $fp_lock = fopen("/tmp/dashboard.processnew", "w+");
+        dlog("acquiring flock.");
+        //if($mutex->acquire()) {
+        if (flock($fp_lock, LOCK_EX)) {
+            dlog("acquiring flock success...");
 
             $resource_model = new Resource();
             $probe_model = new ProbeInfo();
@@ -232,10 +236,12 @@ class CronController extends Zend_Controller_Action
             dlog("$inserted records has been inserted.");
             dlog("$newstatus_inserted records has been inserted to overall_status table.");
 
-            $mutex->release();
+            flock($fp_lock, LOCK_UN);
+            //$mutex->release();
         } else {
             dlog("Failed to obtain mutex for processnewAction");
         }
+        fclose($fp_lock);
     }
 
     private function outputData($filename, $changes)
