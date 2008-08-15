@@ -13,10 +13,9 @@ require_once("config.php");
 require_once("app/views/helper.php");
 require_once("app/models/db.php");
 require_once("app/log.php");
-setup_logs();
 require_once("app/authentication.php");
+setup_logs();
 cert_authenticate();
-require_once("app/mutex.php");
 
 //redirect error to error log
 ini_set('error_log', config()->error_logfile);
