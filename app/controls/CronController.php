@@ -50,7 +50,7 @@ class CronController extends Zend_Controller_Action
         $fp_lock = fopen("/tmp/dashboard.processnew", "w+");
         dlog("acquiring flock.");
         //if($mutex->acquire()) {
-        if (flock($fp_lock, LOCK_EX)) {
+        if (flock($fp_lock, LOCK_EX | LOCK_NB)) {
             dlog("acquiring flock success...");
 
             $resource_model = new Resource();

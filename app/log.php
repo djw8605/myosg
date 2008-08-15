@@ -12,7 +12,6 @@ function setup_logs()
 
     slog('----------------------------------------------------------------------');
     slog('RSV Viewer session starting.. '.$_SERVER["REQUEST_URI"]);
-    slog('Process ID:'.getmypid());
 
     dlog(print_r($_REQUEST, true));
 }
@@ -25,7 +24,7 @@ function dlog($str, $type = Zend_Log::INFO)
     if(config()->debug) {
         if($str === null) $str = "[null]";
         $time = microtime(true) - $g_starttime;
-        $str = round($time, 3)." ".$str;
+        $str = getmypid()."@".round($time, 3)." ".$str;
         Zend_Registry::get("logger")->log($str, $type);
     }
 }
@@ -38,7 +37,7 @@ function elog($str, $type = Zend_Log::ERR)
     //log to the logger
     if($str === null) $str = "[null]";
     $time = microtime(true) - $g_starttime;
-    $str = round($time, 3)." ".$str;
+    $str = getmypid()."@".round($time, 3)." ".$str;
     Zend_Registry::get("logger")->log($str, $type);
 
     //send to error_log as well
@@ -55,6 +54,6 @@ function slog($str, $type = Zend_Log::INFO)
 
     if($str === null) $str = "[null]";
     $time = microtime(true) - $g_starttime;
-    $str = round($time, 3)." ".$str;
+    $str = getmypid()."@".round($time, 3)." ".$str;
     Zend_Registry::get("logger")->log($str, $type);
 }
