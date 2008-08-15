@@ -123,7 +123,7 @@ class HistoryController extends Zend_Controller_Action
                     $resource_name = $resource_record->name;
                     $resource_fqdn = $resource_record->uri;
                     //$graph = addslashes($this->generateGraph($status_changes, $start_time, $end_time));
-                    $graph = addslashes("<img src=\"history/graph?rid=$resource_id&start=$start_time&end=$end_time\" width=\"100%\" height=\"20px\"/>");
+                    $graph = addslashes("<img src=\"history/graph?rid=$resource_id&start=$start_time&end=$end_time\" width=\"100%\" height=\"14px\"/>");
                     $graph .= addslashes($this->generateRuler($start_time, $end_time));
                     $url = $resource_record->url;
 

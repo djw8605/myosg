@@ -150,7 +150,7 @@ var ServerGrid = function(viewer, config) {
         viewConfig: {
             forceFit:true,
             enableRowBody:true,
-            showPreview:true,
+            showPreview:false,
             getRowClass : this.applyRowClass
         }
     });
@@ -355,7 +355,7 @@ var Current_MainPanel = function(){
             },
             '-',
             {
-                pressed: true,
+                pressed: false,
                 enableToggle:true,
                 text:'Summary',
                 tooltip: {title:'Resource Summary',text:'View a short summary of each item in the list'},
@@ -763,14 +763,14 @@ Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
     },
     formatTitle: function(value, p, record) {
         var str = "";
-        str += String.format('<div class="server"><b>{0}</b><br/> ', value);
+        str += String.format('<div class="server"><b>{0}</b> ', value);
         str += String.format('<span class="servername">{0}</span></div>', record.data.uri);
         return str;
     }
 });
 
 function getPanelTemplate(type) {
-    var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><h3 class="post-title">{name}</h3></td></tr><tr><td></td><td><h4 class="post-author">{uri}</h4></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
+    var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><div class="server"><b>{name}</b> <span class="servername">{uri}</span></div></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
     return new Ext.Template(tmp.replace("%id_prefix%", type));
 }
 
@@ -1229,8 +1229,9 @@ Ext.onReady(function(){
     <?
         require_once("app/timerange.php");
         list($yesterday, $today) = getLast24HourRange(); 
+        $last_week = $today - 3600*24*7;
     ?>
-    history_detail.setStartTime(<?=$yesterday?>);
+    history_detail.setStartTime(<?=$last_week?>);
     history_detail.setEndTime(<?=$today?>);
 
     ///////////////////////////////////////////////////////////////////////////
