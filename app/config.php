@@ -70,9 +70,8 @@ class common_config
         $this->force_https = true;
 
         //cache filenames
-        $this->cache_dir = "app/cache";
-        $this->cache_filename_latest_metrics = $this->cache_dir."/latest_detail";
-        $this->cache_filename_latest_overall = $this->cache_dir."/latest_overall";
+        $this->cache_filename_latest_metrics = $this->getCacheDir()."/latest_detail";
+        $this->cache_filename_latest_overall = $this->getCacheDir()."/latest_overall";
 
         //locale
         $this->date_format_full = "M j, Y h:i A";
@@ -104,7 +103,9 @@ class common_config
                 role::$view_admin_email
             )
         );
-
+    }
+    function getCacheDir() {
+        return "app/cache";
     }
 }
 
