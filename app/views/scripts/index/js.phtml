@@ -1,7 +1,7 @@
 //console.log();
 ///////////////////////////////////////////////////////////////////////////////
 //
-// This code sucks... smells like rotten garbage and old baby diapers....
+// hayashis: This code sucks... smells like rotten garbage and old baby diapers
 //
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,6 +75,7 @@ menuPanel.on('click', function(n){
             detailEl = bd.createChild(); //create default empty div
         }
         detailEl.hide().update(Ext.getDom(n.id+'-details').innerHTML).slideIn('l', {stopFx:true,duration:.2});
+
         return true;
     } 
     if(!n.leaf) {
@@ -1280,11 +1281,14 @@ Ext.onReady(function(){
               });
         });
     });
-
+    
     ///////////////////////////////////////////////////////////////////////////
     //
     //open curtain
     //
     $("#loading").hide();
     $("#viewportarea").show();
+
 });
+
+
