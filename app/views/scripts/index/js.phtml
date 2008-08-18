@@ -53,6 +53,7 @@ var menuPanel = new Ext.tree.TreePanel({
         listeners: {
             load: function(loader, node, resp) {
                 menuPanel.getNodeById("home_start").select();
+                menuPanel.getNodeById("home_start").select();
             }
         }
     }),
@@ -402,7 +403,7 @@ var Current_MainPanel = function(){
                 disabled:true,
                 scope: this,
                 handler : function(){
-                    document.location="mailto:"+this.gsm.getSelected().data.admin_email;
+                    document.location=formatCurrentStatusEmail(this.gsm.getSelected().data);
                 }
             }
         <?php
@@ -540,13 +541,19 @@ Ext.extend(Current_MainPanel, Ext.TabPanel, {
                 if(user()->hasRole(role::$view_admin_email)) { 
                 ?>
                     ,tbar: [
-                            {
-                                text: 'Email Administrator',
-                                iconCls: 'email',
-                                handler : function(){
-                                    document.location="mailto:"+d.admin_email;
-                                }
+                        {
+                            id:'giptab',
+                            text: 'Show GIP Information',
+                            iconCls: 'new-tab',
+                            handler : this.openGIPTab,
+                            scope: this
+                        }, '-', {
+                            text: 'Email Administrator',
+                            iconCls: 'email',
+                            handler : function(){
+                                document.location=formatCurrentStatusEmail(d);
                             }
+                        }
                     ]
                 <?
                 }
@@ -773,6 +780,16 @@ function getPanelTemplate(type) {
     var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><div class="server"><b>{name}</b> <span class="servername">{uri}</span></div></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
     return new Ext.Template(tmp.replace("%id_prefix%", type));
 }
+function formatCurrentStatusEmail(d) {
+    var body = "mailto:"+d.admin_email+"?subject=Regarding OSG Resource: "+d.name;
+    body += "&body=Dear "+d.admin_name+",%0A%0A";
+    body += "I have a question regarding following OSG resource.%0A%0A";
+    body += "Resource Name: "+d.name+"%0A";
+    body += "Current Status: "+d.overall_status+"%0A";
+    body += "Summary: "+d.summary;
+    return body;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -1209,14 +1226,14 @@ Ext.onReady(function(){
     tbar.add({
         id: 'history_start_date',
         iconCls: 'calendar',
-        text: 'Start Date',
+        text: 'XXXXXXXXXXXXX',
         menu: history_detail.start_date
     });
     tbar.add('To');
     tbar.add({
         id: 'history_end_date',
         iconCls: 'calendar',
-        text: 'End Date',
+        text: 'XXXXXXXXXXXXX',
         menu: history_detail.end_date
     });
 

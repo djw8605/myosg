@@ -63,6 +63,10 @@ class common_config
         $this->logfile = "app/logs/log.txt";
         $this->error_logfile = "app/logs/error.txt";
 
+        //elog email
+        $this->elog_email = false;
+        $this->elog_email_address = "overrideme";
+
         //log db profile (only available in debug mode)
         $this->profile_db = false;
 

@@ -40,16 +40,8 @@ class CronController extends Zend_Controller_Action
     {
         dlog("processing new records from gratia table.");
 
-        //lock the whole thing...
-        /*
-        $mutex = new Mutex();
-        $mutex_key = ftok($_SERVER["SCRIPT_FILENAME"], "m");
-        $mutex->init($mutex_key);
-        */
-
         $fp_lock = fopen("/tmp/dashboard.processnew", "w+");
         dlog("acquiring flock.");
-        //if($mutex->acquire()) {
         if (flock($fp_lock, LOCK_EX | LOCK_NB)) {
             dlog("acquiring flock success...");
 
@@ -76,7 +68,7 @@ class CronController extends Zend_Controller_Action
             Zend_Registry::get('db')->getProfiler()->setEnabled(false);
 
             foreach($newrecords as $record) {
-                //lookup resource_id
+                //pull & gather information about this metric data
                 $dbid = $record->dbid;
                 $resource_id = $resource_model->lookupID($record->ServiceUri);
                 $metric_id = $probe_model->lookupID($record->MetricName);
@@ -86,7 +78,7 @@ class CronController extends Zend_Controller_Action
                 $effective_dbid = null;
                 $effective_timestamp = null;
 
-                //validate 
+                //validate the metrci data
                 if($resource_id === null) {
                     $validation_error++;
                     continue;
@@ -102,6 +94,17 @@ class CronController extends Zend_Controller_Action
                     $current = $current_metrics[$resource_id];
                 } else {
                     $current = $metric_model->getLatest($resource_id);
+
+
+                    //TODO - remove this once I know what to do about the out-of-order metric data
+                    $last = 0;
+                    //find the last metric entered and use it as resource timestamp (to detect out-of-order metric data)
+                    foreach($current as $met) {
+                        if($met->timestamp > $last) $last = $met->timestamp;
+                    }
+                    $current["lasttime"] = $last;
+                    dlog("last metric entry for $resource_id happend at ".date(config()->date_format_full." s", $last));
+
                     $current_metrics[$resource_id] = $current;
                 }
 
@@ -110,26 +113,28 @@ class CronController extends Zend_Controller_Action
                 if($status == "UNKNOWN") {
                     if(isset($current[$metric_id])) {
                         $previous = $current[$metric_id];
-                        //previous not too old?
                         if($previous->status == "UNKNOWN") {
+                            //previous is also UNKNOWN, test with it's effective_ metric info
                             if(($previous->effective_timestamp + config()->metric_considered_old) > $timestamp) {
                                 $effective_dbid = $previous->effective_dbid;
                                 $effective_timestamp = $previous->effective_timestamp;
                             }
                         } else {
+                            //previous is not UNNOWN, test with it's status
                             if(($previous->timestamp + config()->metric_considered_old) > $timestamp) {
                                 $effective_dbid = $previous->dbid;
                                 $effective_timestamp = $previous->timestamp;
                             }
                         }
                         if($effective_dbid !== null) {
-                            dlog("setting to $dbid effective_dbid to $effective_dbid");
+                            dlog("setting effective status on metric ID: $dbid with that of metric ID: $effective_dbid");
                         }
                     }
                 }
 
                 //update the current set with the new record from gratia
                 if(!isset($current[$metric_id])) {
+                    //first ever metric type for this resource!
                     $current[$metric_id] = new MetricRecord();
                 }
                 $current[$metric_id]->dbid = $dbid;
@@ -139,11 +144,20 @@ class CronController extends Zend_Controller_Action
                 $current[$metric_id]->effective_dbid = $effective_dbid;
                 $current[$metric_id]->effective_timestamp = $effective_timestamp;
 
+
+                //TODO - remove this once I know what to do about the out-of-order metric data
+                //check the lasttimestamp to detect the out-of-order metric
+                if($current["lasttime"] > $timestamp) {
+                    elog("out-of-order metric detected. ID:$dbid ".($current["lasttime"] - $timestamp). " seconds");
+                }
+                $current["lasttime"] = $timestamp;
+
+
                 //insert to our metrics table
                 try {
                     $metric_model->insert($dbid, $resource_id, $metric_id, $status, $timestamp, $detail, $effective_dbid, $effective_timestamp);
+                    //dlog("inserting new metric $dbid for resource: $resource_id at ".date(config()->date_format_full." s", $timestamp));
                     $inserted++;
-                    //$inserted_ids[] = $dbid;
                 } catch (Exception $e) {
                     $rejected++;
                     elog("Caught Exception while running query: ".print_r($e, true));
@@ -152,15 +166,14 @@ class CronController extends Zend_Controller_Action
                 //re-calculate overall status
                 if(!isset($overall_status[$resource_id])) {
                     //we have not yet seen this resource id appears initialize aux. classes.
-                    dlog("initializing for $resource_id");
+                    dlog("initializing overallstatus model for $resource_id");
                     $ostatus_model = new OverallStatus($resource_id);
                     $overall_status_model[$resource_id] = $ostatus_model;
                     $lastinfo = $ostatus_model->getLastInfo();
                     if(isset($lastinfo->overall_status)) {
                         $overall_status[$resource_id] = $lastinfo->overall_status;
                     } else {
-                        //below if ($new_status != overall_status) will cause this record to be inserted as
-                        //initial status.
+                        //below if ($new_status != overall_status) will cause this record to be inserted as initial status.
                         $overall_status[$resource_id] = "no-last-info"; 
                     }
                 } else {
@@ -189,7 +202,7 @@ class CronController extends Zend_Controller_Action
                     //NA means the status is UNKNONW(for now..) due to critical metrics
                     //not even reported..
                     if($ostatus_model->isNA()) {
-                        $dbid = null;
+                        $dbid = null; //no particular metric should be responsible the "change" of this status
                     }
 
                     $counts = trim(addslashes(serialize($ostatus_model->getStatusCounts())));
@@ -205,6 +218,9 @@ class CronController extends Zend_Controller_Action
                     }
                     $overall_status[$resource_id] = $new_status;
                 }
+
+                //TODO - on PHP, I thought I don't have to do this... but..
+                $current_metrics[$resource_id] = $current;
             }
 
             //now, we have the latest info in our $current array. let's update our current cache
@@ -241,7 +257,6 @@ class CronController extends Zend_Controller_Action
             }
 
             flock($fp_lock, LOCK_UN);
-            //$mutex->release();
         } else {
             elog("Failed to obtain mutex for processnewAction -- maybe previous is taking too long?");
         }
@@ -255,6 +270,32 @@ class CronController extends Zend_Controller_Action
         $fp = fopen($filename, "w");
         fwrite($fp, $out);
         fclose($fp);
+    }
+
+    public function ordertestAction()
+    {
+        $resource_model = new Resource();
+        $resources = $resource_model->fetchAll();
+        $db = Zend_Registry::get('db');
+        foreach($resources as $resource) {
+            if($resource->name != "UC_ITB") continue;
+            $rows = $db->fetchAll("SELECT *, UNIX_Timestamp(Timestamp) as timestamp  from gratia.MetricRecord where ServiceUri = 'uct3-edge7.uchicago.edu'");
+            if(count($rows) == 0) continue;
+            echo "Checking timestamp ordering on ".$resource->name."<br/>"; 
+            $ctime = 0;
+            $mis = 0;
+            $lasttime = 0;
+            foreach($rows as $row) {
+                if($ctime > $row->timestamp) {
+                    $mis++;
+                    echo date(config()->date_format_full, $row->timestamp)." ".($ctime - $row->timestamp). "sec ".$row->dbid." ".$row->metric_id."<br/>";
+                    $lasttime = $row->timestamp;
+                } 
+                $ctime = $row->timestamp;
+            }
+            echo "&nbsp;&nbsp;Misalignment: $mis our of ".count($rows)." metrics. <br/>";
+        }
+        $this->render("none");
     }
 
     public function geocodeAction()
@@ -312,9 +353,26 @@ class CronController extends Zend_Controller_Action
         passthru("rm ".config()->cache_dir."/*");
 
         $this->render("none");
-        
     }
 
+
+    public function emailAction()
+    {
+
+        elog("elog will be sent to email");
+
+/*
+        $to = "hayashis@indiana.edu";
+        $subject = "Hi!";
+        $body = "Hi,\n\nHow are you?";
+        if(mail($to, $subject, $body)) {
+            echo("<p>Message successfully sent!</p>");
+        } else {
+            echo("<p>Message delivery failed...</p>");
+        }
+*/
+        $this->render("none");
+    }
 
 /*
     public function addressAction()

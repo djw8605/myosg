@@ -17,12 +17,11 @@ require_once("app/authentication.php");
 setup_logs();
 cert_authenticate();
 
-//redirect error to error log
+//set php config
 ini_set('error_log', config()->error_logfile);
 ini_set('display_errors', 0); 
 ini_set('log_errors', 1); 
 ini_set('display_startup_errors', 1);  
-//init php
 error_reporting(E_ALL | E_STRICT);  
 date_default_timezone_set("UTC");
 

@@ -16,29 +16,32 @@ function setup_logs()
     dlog(print_r($_REQUEST, true));
 }
 
-//debug log
-function dlog($str, $type = Zend_Log::INFO)
+function log_format($str)
 {
     global $g_starttime;
+    if($str === null) $str = "[null]";
+    $time = microtime(true) - $g_starttime;
+    $str = getmypid()."@".round($time, 3)." ".$str;
 
+    return $str;
+}
+
+//debug log
+function dlog($str)
+{
     if(config()->debug) {
-        if($str === null) $str = "[null]";
-        $time = microtime(true) - $g_starttime;
-        $str = getmypid()."@".round($time, 3)." ".$str;
-        Zend_Registry::get("logger")->log($str, $type);
+        Zend_Registry::get("logger")->log(log_format($str), Zend_Log::DEBUG);
     }
 }
 
 //error log
-function elog($str, $type = Zend_Log::ERR)
+function elog($str)
 {
-    global $g_starttime;
+    Zend_Registry::get("logger")->log(log_format($str), Zend_Log::ERR);
 
-    //log to the logger
-    if($str === null) $str = "[null]";
-    $time = microtime(true) - $g_starttime;
-    $str = getmypid()."@".round($time, 3)." ".$str;
-    Zend_Registry::get("logger")->log($str, $type);
+    if(config()->elog_email) {
+        error_log($str, 1,config()->elog_email_address);
+    }
 
     //send to error_log as well
     // 0) message is sent to PHP's system logger, using the Operating System's 
@@ -48,12 +51,11 @@ function elog($str, $type = Zend_Log::ERR)
 }
 
 //standard log
-function slog($str, $type = Zend_Log::INFO)
+function slog($str)
 {
-    global $g_starttime;
-
-    if($str === null) $str = "[null]";
-    $time = microtime(true) - $g_starttime;
-    $str = getmypid()."@".round($time, 3)." ".$str;
-    Zend_Registry::get("logger")->log($str, $type);
+    Zend_Registry::get("logger")->log(log_format($str), Zend_Log::INFO);
 }
+
+
+
+

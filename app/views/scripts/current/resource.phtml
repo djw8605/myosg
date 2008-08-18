@@ -34,13 +34,10 @@
             $name = $row->name;
             $uri = $row->uri;
             $url = $row->url;
-            $admin_name = str_replace("\n", "", trim($row->first_name." ".$row->last_name));
-            $admin_name = "fixme";
-            $admin_email = str_replace("\n", "", $row->primary_email);
-            if(trim($admin_email == "")) {
-                $admin_email = "no_email_info@shouldve_been_disabled";
-            }
-            $admin_email = "fixme";
+
+            $admin_name = trim(str_replace("\n", "", trim($row->first_name." ".$row->last_name)));
+            $admin_email = trim(str_replace("\n", "", $row->primary_email));
+
             echo "{";
             echo "'resource_id': $resource_id,";
             echo "'name':'$name',";

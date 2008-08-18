@@ -14,8 +14,13 @@ class Metrics
 
     public function fetchNewGratiaRecords($limit = 1000)
     {
-        //$sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where dbid > ifnull((select max(dbid) from rsvextra.metric), 0) order by unix_timestamp limit $limit;";
-        $sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where UNIX_TIMESTAMP(Timestamp) > ifnull((select max(timestamp) from rsvextra.metric), 0) order by Timestamp limit $limit;";
+        //$sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where UNIX_TIMESTAMP(Timestamp) > ifnull((select max(timestamp) from rsvextra.metric), 0) order by Timestamp limit $limit;";
+        //why am I sorting by timestamp? Because Gratia receives metric in out-of-oder timestamp.
+        //TODO - now... what this "doesn't" prevent is that if the first record in the batch happens 
+        //to be out-of-order, then we will still have out-of-order issue.. processnew action
+        //may need to artificially update the timestamp by ignoring the reported timestamp
+        //to not cause invalid data entry..
+        $sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where dbid > ifnull((select max(dbid) from rsvextra.metric), 0) order by Timestamp limit $limit;";
         dlog("Fetching new gratia recores. $sql");
         return $this->db->fetchAll($sql);
     }
@@ -105,7 +110,7 @@ class Metrics
             $latest_records = $this->db->fetchAll($sql);
             $this->metrics[$before] = $this->group($latest_records);
             Zend_Registry::set("latestmetrics_$before", $this->metrics[$before]);
-            dlog("Fetching latest metrics. $sql");
+            //dlog("Fetching latest metrics. $sql");
         }
     }
 

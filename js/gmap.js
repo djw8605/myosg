@@ -1,7 +1,3 @@
-/**
- * @author Shea Frederick
- */
-
 Ext.namespace('Ext.ux');
  
 /**
