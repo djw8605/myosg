@@ -1089,7 +1089,8 @@ Ext.extend(History_MainPanel, Ext.TabPanel, {
     loadDetail: function(id, prefix) {
         var start_time= history_detail.start_date.picker.getValue().getTime()/1000;
         var end_time= history_detail.end_date.picker.getValue().getTime()/1000;
-        $("#history_detail_"+prefix+id).load("history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time);
+        var r = Math.random(); //prevent browser caching
+        $("#history_detail_"+prefix+id).load("history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&rand="+r);
     },
     openAll : function(){
         this.beginUpdate();
