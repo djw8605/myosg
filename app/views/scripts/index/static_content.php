@@ -60,6 +60,9 @@
     <div id="vo_matrix-details">
         <p class="details-info">TODO: Add help info for VO Matrix</p>
     </div>
+    <div id="vo_group-details">
+        <p class="details-info">TODO: Add help info for VO Matrix Group</p>
+    </div>
 
     <div id="current_overview-details">
         <h2>Overview</h2>

@@ -132,7 +132,7 @@ var ServerGrid = function(config) {
         }),
         reader: new Ext.data.JsonReader()
     });
-    this.store.setDefaultSort('name', "DESC"); 
+    this.store.setDefaultSort('name', "ASC"); 
 
     this.columns = [{
         header: "ID",
@@ -621,7 +621,7 @@ var VOMatrixGrid = function(config) {
         }),
         reader: new Ext.data.JsonReader()
     });
-    this.store.setDefaultSort('name', "DESC"); 
+    this.store.setDefaultSort('name', "ASC"); 
 
     this.columns = [{
         header: "ID",
@@ -643,12 +643,12 @@ var VOMatrixGrid = function(config) {
     ?>
         ,{
             id: 'vo',
-            header: "<?=$vo->short_name?>",
-            //header: "<img src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
+            //header: "<?=$vo->short_name?>",
+            header: "<img src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
             dataIndex: '<?=$vo->short_name?>',
             tooltip: '<?=$vo->long_name?>',
             renderer: this.formatCheck,
-            width: 30,
+            width: 25,
             sortable:true
         }
     <?
@@ -691,6 +691,99 @@ Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
 });
 
 var vo_matrix = new VOMatrixGrid();
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// VO Matix MainPanel (2)
+//
+
+var VOGroupGrid = function(config) {
+    Ext.apply(this, config);
+
+    this.store = new Ext.data.GroupingStore({
+        proxy: new Ext.data.HttpProxy({
+            url: 'current/proxy'
+        }),
+        reader: new Ext.data.JsonReader(
+            { 
+                totalProperty: 'results',
+                root: 'rows',
+                id: 'id'
+            }, [
+                {name:'id', sortType:'asInt'},
+                {name:'resource_id', sortType:'asInt'},
+                'name', 
+                'vo',
+                'vo_name'
+            ]
+        ),
+        groupField:'vo',
+        sortInfo:{field: 'vo_name', direction: "ASC"}
+    });
+    this.store.setDefaultSort('name', "ASC"); 
+
+    this.columns = [{
+        id: 'resource_id',
+        header: "ID",
+        dataIndex: 'resource_id',
+        width: 30,
+        sortable:true
+    },{
+        id: 'title',
+        header: "Resource Name",
+        dataIndex: 'name',
+        width: 150,
+        renderer: this.formatTitle,
+        sortable:true
+    },{
+        id: 'vo',
+        header: "Virtual Organization",
+        dataIndex: 'vo',
+        hidden:true,
+        renderer: this.formatVO,
+        sortable:true
+    }];
+
+    this.view = new Ext.grid.GroupingView({
+        forceFit:true,
+        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Resources" : "Resource"]})',
+        startCollapsed: true
+    });
+
+    VOGroupGrid.superclass.constructor.call(this, {
+        sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+        title:'Virtual Organization Members',
+        id:'vo_group-panel',
+        region:'center',
+        margins:'0 5 5 0',
+        loadMask: {msg:'Loading Data...'},
+        border:true,
+        viewConfig: {
+            forceFit:true
+        }
+    });
+    this.on('rowcontextmenu', this.onContextClick, this);
+};
+
+Ext.extend(VOGroupGrid, Ext.grid.GridPanel, {
+    formatTitle: function(value, p, record) {
+        var str = "";
+        str += String.format('<div class="server"><b>{0}</b> ', value);
+        return str;
+    },
+    formatVO: function(value, p, record) {
+        var str = "";
+        str += record.data.vo_name;
+        return str;
+    },
+    loadPage: function(){
+        this.store.baseParams["feed"] = "vogroup";
+        this.ctxRow = null;
+        this.store.load();
+    }
+});
+
+var vo_group = new VOGroupGrid();
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -766,7 +859,7 @@ var HistoryGrid = function(config) {
             ]
         )
     });
-    this.store.setDefaultSort('name', "DESC"); 
+    this.store.setDefaultSort('name', "ASC"); 
 
     this.columns = [{
         header: "ID",
@@ -1241,6 +1334,7 @@ var contentPanel = {
         current_detail, 
         current_map,
         vo_matrix,
+        vo_group,
         
         history_detail
     ]
@@ -1359,6 +1453,9 @@ Ext.onReady(function(){
 
     vo_matrix.on("show", function() {
         vo_matrix.loadPage();
+    });
+    vo_group.on("show", function() {
+        vo_group.loadPage();
     });
 
     history_detail.on("show", function() {

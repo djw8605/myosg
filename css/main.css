@@ -545,3 +545,7 @@ div.post-body h2
     font-size: 9px;
     padding: 1px;
 }
+.x-grid3-hd-row
+{
+    align: top;
+}

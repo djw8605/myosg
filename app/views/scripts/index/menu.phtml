@@ -24,10 +24,22 @@
             leaf:true
         },
         {
-            text:'Virtual Organization Matrix',
-            id:'vo_matrix',
-            iconCls:'menuicon_metricdetail',
-            leaf:true
+            text:'Virtual Organization',
+            expanded: true,
+            children:[
+                {
+                    text:'Matrix',
+                    id:'vo_matrix',
+                    iconCls:'menuicon_metricdetail',
+                    leaf:true
+                },
+                {
+                    text:'Group',
+                    id:'vo_group',
+                    iconCls:'menuicon_metricdetail',
+                    leaf:true
+                }
+            ]
         }
     ]
 },{

@@ -17,10 +17,20 @@ class CurrentController extends Zend_Controller_Action
             $this->output_glue();
         } else if($dirty_feed == "vo") {
             $this->output_vo();
+        } else if($dirty_feed == "vogroup") {
+            $this->output_vogroup();
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    private function output_vogroup()
+    {
+        $vo_model = new VO();
+        $this->view->vos = $vo_model->pullMemberVOs();
+        $this->render("vogroup");
+    }
+
 
     private function output_vo()
     {
