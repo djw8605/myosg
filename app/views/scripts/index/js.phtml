@@ -1,12 +1,34 @@
-//console.log();
 ///////////////////////////////////////////////////////////////////////////////
 //
-// hayashis: This code sucks... smells like rotten garbage and old baby diapers
+// Clientside JavaScript
 //
+<?
+/*
+TODO: this file needs some major cleanup, but I will postpon it until I know
+how this file grows and changes overtime - I need to know the patter before
+I can restructure it. I have attempted to do this many time, but always came
+back to everything being defined here... I need to really think this through..
+
+
+
+How to add new page?
+
+1. add entry to menu.phtml (remember the ID)
+2. add id to var contentPanel below.
+3. create -detail div on static page
+4. define and create a component with it of ID-panel (important)
+    a. set region and other config parameter when initalizing
+
+*/
+
+?>
+
+
+//console.log();
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Main definition
+// Some Global functions
 //
 //
 
@@ -31,7 +53,7 @@ var other_osg = {
 // initial use and cached in this var for subsequent access.
 var detailEl;
 
-// Go ahead and create the TreePanel now so that we can use it below
+// Go ahead and create the main TreePanel now so that we can use it later
 var menuPanel = new Ext.tree.TreePanel({
     id: 'menu-panel',
     title: 'Navigation',
@@ -101,8 +123,7 @@ var informationPanel = {
 // ServerGrid
 //
 
-var ServerGrid = function(viewer, config) {
-    this.viewer = viewer;
+var ServerGrid = function(config) {
     Ext.apply(this, config);
 
     this.store = new Ext.data.Store({
@@ -129,7 +150,6 @@ var ServerGrid = function(viewer, config) {
         header: "Service Types",
         dataIndex: 'service_types',
         width: 100,
-        //renderer: this.formatURL,
         sortable:true
     },{
         header: "Overall Status",
@@ -270,10 +290,6 @@ Ext.extend(ServerGrid, Ext.grid.GridPanel, {
         return str;
     },
     formatStatus: function(value, p, record) {
-
-        //this tooltip stuff doesnt' work quite wll. It only works if the value is text, it seems..
-        p.attr = 'ext:qtip="TODO - explain why this is '+value+'"';
-
         //something similar exists in control/CurrentController
         if(value == "") value = "UNKNOWN";
         return '<div class="status_icon_holder status_'+value+'"/>';
@@ -286,12 +302,6 @@ Ext.extend(ServerGrid, Ext.grid.GridPanel, {
 //
 
 var DetailPanel = {
-/*
-    getTemplate:  function(type) { 
-        var tmp = '<div class="post-data"> <span class="post-date"><a href="{url}" target="{name}">{url}</a></span><table><tr><th>Name:</th><td><h3 class="post-title">{name}</h3></td></tr><tr><td></td><td><h4 class="post-author">{uri}</h4></td></tr><tr><th>Service Types:</th><td><h4 class="post-author">{service_types}</h4></td></tr></table></div> <div class="post-body" id="current_status_detail_%id_prefix%{resource_id}"> <img src="images/large-loading.gif" width="32" height="32" align="middle"/> &nbsp;&nbsp;&nbsp; Loading ...</div>';
-        return new Ext.Template(tmp.replace("%id_prefix%", type));
-    }
-*/
 };
 
 DetailPanel.LinkInterceptor = {
@@ -318,7 +328,7 @@ DetailPanel.LinkInterceptor = {
 
 var Current_MainPanel = function(){
     //instanciate ServerGrid
-    this.grid = new ServerGrid(this, {
+    this.grid = new ServerGrid({
         minSize: 100, //this is not working??
         tbar:[
             {
@@ -599,6 +609,91 @@ var current_detail = new Current_MainPanel();
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// VO Matix MainPanel
+//
+
+var VOMatrixGrid = function(config) {
+    Ext.apply(this, config);
+
+    this.store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+            url: 'current/proxy'
+        }),
+        reader: new Ext.data.JsonReader()
+    });
+    this.store.setDefaultSort('name', "DESC"); 
+
+    this.columns = [{
+        header: "ID",
+        dataIndex: 'resource_id',
+        width: 30,
+        sortable:true
+    },{
+        id: 'title',
+        header: "Resource Name",
+        dataIndex: 'name',
+        width: 150,
+        renderer: this.formatTitle,
+        sortable:true
+    }
+    <?
+    $vo_model = new VO();
+    $vos = $vo_model->fetchAll();
+    foreach($vos as $vo) {
+    ?>
+        ,{
+            id: 'vo',
+            header: "<?=$vo->short_name?>",
+            //header: "<img src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
+            dataIndex: '<?=$vo->short_name?>',
+            tooltip: '<?=$vo->long_name?>',
+            renderer: this.formatCheck,
+            width: 30,
+            sortable:true
+        }
+    <?
+    }
+    ?>
+    ];
+
+    VOMatrixGrid.superclass.constructor.call(this, {
+        sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+        title:'Virtual Organization Matrix',
+        id:'vo_matrix-panel',
+        region:'center',
+        margins:'0 5 5 0',
+        loadMask: {msg:'Loading Data...'},
+        border:true,
+        viewConfig: {
+            //forceFit:true
+        }
+    });
+
+    this.on('rowcontextmenu', this.onContextClick, this);
+};
+
+Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
+    formatCheck: function(value, p, record) {
+        if(value == "0") return "<img src='images/small_cross.png'/>";
+        if(value == "1") return "<img src='images/small_ok.png'/>";
+        return "";
+    },
+    formatTitle: function(value, p, record) {
+        var str = "";
+        str += String.format('<div class="server"><b>{0}</b> ', value);
+        return str;
+    },
+    loadPage: function(){
+        this.store.baseParams["feed"] = "vo";
+        this.ctxRow = null;
+        this.store.load();
+    }
+});
+
+var vo_matrix = new VOMatrixGrid();
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // Status Overview (Gmap)
 //
 var current_map = {
@@ -649,8 +744,7 @@ icon_critical.shadowSize = new GSize(30, 30);
 // HistoryGrid
 //
 
-var HistoryGrid = function(viewer, config) {
-    this.viewer = viewer;
+var HistoryGrid = function(config) {
     Ext.apply(this, config);
 
     this.store = new Ext.data.Store({
@@ -863,7 +957,7 @@ var History_MainPanel = function(){
     d.setTime(<?=time()?>*1000);
     this.end_date.picker.maxDate = d;
 
-    this.grid = new HistoryGrid(this, {
+    this.grid = new HistoryGrid({
         tbar:[
             {
                 split:true,
@@ -1146,6 +1240,7 @@ var contentPanel = {
         start, 
         current_detail, 
         current_map,
+        vo_matrix,
         
         history_detail
     ]
@@ -1223,7 +1318,7 @@ Ext.onReady(function(){
     tbar.add('-');
     tbar.addElement('history_service_type_selector_div');
 
-    //TODO - these aren't dynamic anymore..
+    //TODO - these aren't dynamic anymore.. can be inialized in config
     tbar.add('Date Range');
     tbar.add({
         id: 'history_start_date',
@@ -1260,6 +1355,10 @@ Ext.onReady(function(){
 
     current_detail.on("show", function() {
         current_detail.loadPage({url:"resource", text:"All Resources"});
+    });
+
+    vo_matrix.on("show", function() {
+        vo_matrix.loadPage();
     });
 
     history_detail.on("show", function() {

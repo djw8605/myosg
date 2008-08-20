@@ -1,0 +1,36 @@
+<? $count = count($this->rows); ?>
+{
+  'metaData': {
+    totalProperty: 'results',
+    root: 'rows',
+    id: 'resource_id',
+    fields: [
+            {name:'resource_id', sortType:'asInt'},
+            'name', 
+            'service_types'
+            <?
+                foreach($this->vos as $vo) {
+                    echo ",'".$vo->short_name."'\n";
+                }
+            ?> 
+        ]
+    },
+    'results': <?=$count?>, 'rows': [
+<?
+        $first = true;
+        foreach($this->rows as $row) {
+            if(!$first) echo ",";
+            $first = false;
+
+            echo "{";
+            echo "'resource_id': ".$row["resource_id"].",";
+            echo "'name':'".$row["resource_name"]."'";
+            foreach($this->vos as $vo) {
+                echo ",'".$vo->short_name."':'".$row[$vo->short_name]."'";
+            }
+            echo "}\n";
+        }
+?> 
+    ]
+}
+

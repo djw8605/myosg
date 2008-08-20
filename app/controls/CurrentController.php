@@ -15,10 +15,62 @@ class CurrentController extends Zend_Controller_Action
             $this->output_gmap();
         } else if($dirty_feed == "glue") {
             $this->output_glue();
+        } else if($dirty_feed == "vo") {
+            $this->output_vo();
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    private function output_vo()
+    {
+        $servicetype = null;
+        if(isset($_REQUEST["servicetype"])) {
+            $dirty_servicetype = $_REQUEST["servicetype"];
+            if(Zend_Validate::is($dirty_servicetype, 'Int')) {
+                $servicetype = $dirty_servicetype;
+            }
+        }
+
+        $vo_model = new VO();
+        $this->view->vos = $vo_model->fetchAll();
+
+        $resource_model = new Resource();
+        $resources = $resource_model->fetchAll($servicetype);
+
+        //load resource information
+        $this->view->rows = array();
+        foreach($resources as $resource) {
+            $row = array();
+            $row["resource_id"] = $resource->id;
+            $row["resource_name"] = $resource->name;
+            $members = $vo_model->pullMemberVOs($resource->id);
+            if(count($members) > 0) {
+                foreach($this->view->vos as $vo) {
+                    //search for the vo_id
+                    $found = false;
+                    foreach($members as $member) {
+                        if($member->vo_id == $vo->vo_id) {
+                            $row[$vo->short_name] = 1; //meaning - do support
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if(!$found) {
+                        $row[$vo->short_name] = 0; //meaning - no support
+                    }
+                }
+            } else {
+                foreach($this->view->vos as $vo) {
+                    $row[$vo->short_name] = 2;//meaning - N/A
+                }
+            }
+            $this->view->rows[] = $row;
+        }
+
+        $this->render("vo");
+    }
+
     private function output_glue()
     {
         if(isset($_REQUEST["name"])) {
@@ -28,11 +80,9 @@ class CurrentController extends Zend_Controller_Action
             if ($validator->isValid($dirty_name))
             {
                 $name = $dirty_name;
-                //echo "<div class=\"post-data\"><pre>";
                 echo "<pre>";
                 passthru("curl \"http://is.grid.iu.edu/cgi-bin/show_source_data?which=$name&source=served\"");
                 echo "</pre>";
-                //echo "</div>";
             }
         }
         $this->render("none");

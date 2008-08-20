@@ -67,6 +67,9 @@ class CronController extends Zend_Controller_Action
             //we are going to make repeated inserts (x thousands times). Let's disable profiling for now
             Zend_Registry::get('db')->getProfiler()->setEnabled(false);
 
+            require_once("app/plugins/metricupdate.php");
+            $plugin = new Plugin_MetricUpdate();
+
             foreach($newrecords as $record) {
                 //pull & gather information about this metric data
                 $dbid = $record->dbid;
@@ -144,14 +147,12 @@ class CronController extends Zend_Controller_Action
                 $current[$metric_id]->effective_dbid = $effective_dbid;
                 $current[$metric_id]->effective_timestamp = $effective_timestamp;
 
-
                 //TODO - remove this once I know what to do about the out-of-order metric data
                 //check the lasttimestamp to detect the out-of-order metric
                 if($current["lasttime"] > $timestamp) {
                     elog("out-of-order metric detected. ID:$dbid ".($current["lasttime"] - $timestamp). " seconds");
                 }
                 $current["lasttime"] = $timestamp;
-
 
                 //insert to our metrics table
                 try {
@@ -162,6 +163,9 @@ class CronController extends Zend_Controller_Action
                     $rejected++;
                     elog("Caught Exception while running query: ".print_r($e, true));
                 }
+
+                //handle metric update plugins
+                $plugin->dispatch($resource_id, $metric_id, $current[$metric_id]);
 
                 //re-calculate overall status
                 if(!isset($overall_status[$resource_id])) {

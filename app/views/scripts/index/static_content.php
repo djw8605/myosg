@@ -57,6 +57,9 @@
     <div id="home_start-details">
         <p class="details-info">When you select a page from the navigation menu, additional details will display here.</p>
     </div>
+    <div id="vo_matrix-details">
+        <p class="details-info">TODO: Add help info for VO Matrix</p>
+    </div>
 
     <div id="current_overview-details">
         <h2>Overview</h2>

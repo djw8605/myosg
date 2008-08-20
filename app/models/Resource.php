@@ -37,11 +37,6 @@ class Resource
             $join
         where r.active = 1 and r.disable = 0";
 
-        if(config()->debug) {
-            //limit resource to only ITB
-            //$sql .= " and r.osg_grid_type_id = 2";
-            //$sql .= " and r.resource_id = 10";
-        }
         return $this->db->fetchAll($sql);
     }
 

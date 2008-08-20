@@ -539,3 +539,9 @@ div.post-body h2
 {
     padding-left: 30px;
 }
+
+.x-grid3-hd-vo {
+    font-weight: normal;
+    font-size: 9px;
+    padding: 1px;
+}
