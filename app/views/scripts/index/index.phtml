@@ -45,9 +45,7 @@
 
 </head>
 
-<!-- Show Loading button -->
 <body id="body" style="overflow: hidden">
-
 <div id="loading">
     <div class="loading-indicator">
     <img src="images/large-loading.gif" width="32" height="32"/><?=config()->app_name?><br />
@@ -55,39 +53,34 @@
     </div>
 </div>
 
-<!-- CSS -->
 <link rel="stylesheet" type="text/css" href="lib/ext-2.1/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="lib/ext-2.1/resources/css/xtheme-gray.css" />
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 
-
-<!-- LOAD ExtJS & JQuery -->
 <script language='javascript' src='lib/jquery/jquery.js'></script>
-
+<script language='javascript' src='js/jquery.history.js'></script>
 <script language='javascript' src='lib/ext/adapter/jquery/ext-jquery-adapter.js'></script>
 <script language='javascript' src='lib/ext/ext-all.js'></script>
-
-<!-- GMap Stuff -->
 <script langauge='javascript' src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=config()->gmap_key?>" type="text/javascript"></script>
 
+<script langauge='javascript' src="js/gmap.js"></script>
+<script langauge='javascript' src="index/js?page=<?=$this->initial_page?>"></script>
+
+<?php include("app/views/header.php");?>
+<div id="viewportarea" class="hidden">
+    <?php include("app/views/scripts/index/static_content.php");?>
+</div>
+
+<!-- following 2 javascript blocks are for Google Analytics Stuff... Why 2 blocks? I don't know.. -->
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
 <script type="text/javascript">
-var pageTracker = _gat._getTracker("<?=config()->urchin_account?>");
+var pageTracker = _gat._getTracker("UA-69012-6");
+pageTracker._initData();
 pageTracker._trackPageview();
 </script>
-<script langauge='javascript' src="js/gmap.js"></script>
-
-<!-- RSV Viewer Stuff -->
-<script langauge='javascript' src="index/js"></script>
-
-<?php include("app/views/header.php");?>
-<div id="viewportarea" class="hidden">
-<?php include("app/views/scripts/index/static_content.php");?>
-
-</div>
 
 </body>
 </html>

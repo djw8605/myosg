@@ -540,12 +540,16 @@ div.post-body h2
     padding-left: 30px;
 }
 
-.x-grid3-hd-vo {
-    font-weight: normal;
-    font-size: 9px;
-    padding: 1px;
-}
-.x-grid3-hd-row
+#vo_matrix-panel .x-grid3-hd-row
 {
-    align: top;
+    height: 100%;
+}
+#vo_matrix-panel .x-grid3-hd
+{
+    height: 100%;
+}
+
+#vo_matrix-panel .x-grid3-hd-inner
+{
+    height: 100%;
 }

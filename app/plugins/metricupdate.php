@@ -52,7 +52,7 @@ class Plugin_MetricUpdate
                 }
             }
         } else {
-            elog("received vosupported update with OK status, but the detail format was not what was expteded. [$detail]");
+            elog("received vosupported update with OK status, but the detail format was not what was expteded. metric ID:".$metric->dbid." Resource ID: ".$resource_id." [$detail]");
         }
     }
 }

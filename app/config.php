@@ -56,7 +56,7 @@ class common_config
         $this->db_oim_schema = "oim";
 
         //first page to load when user first visit the page
-        $this->initial_page = "current";
+        $this->initial_page = "home_start"; //needs to be a menu ID
 
         //executes debuging code
         $this->debug = false;
