@@ -2,7 +2,7 @@
 
     <div id="service_type_selector_div" class="toolbar_item">
         Filter By
-        <select id="service_type_selector" onchange="current_detail.grid.changeFilter(this.value);">
+        <select id="service_type_selector" onchange="current_detail_obj.grid.changeFilter(this.value);">
         <option value="all">(All Service Types)</option>
     <?
         $servicetypes = new ServiceTypes();
@@ -18,7 +18,7 @@
 
     <div id="history_service_type_selector_div" class="toolbar_item">
         Filter By
-        <select id="history_service_type_selector" onchange="history_detail.grid.changeFilter(this.value);">
+        <select id="history_service_type_selector" onchange="history_detail_obj.grid.changeFilter(this.value);">
         <option value="all">(All Service Types)</option>
     <?
         $servicetypes = new ServiceTypes();
@@ -96,6 +96,7 @@
             <p><img src="images/status_unknown.png" align="middle">&nbsp;&nbsp;<b>Unknown / No Data</b></p>
             <p class="sub">Probe could not gather necessary information to determine its status, or probe is not installed on this CE.</p>
         </div>
+        <p>Please be aware that the resource which has never posted any RSV metricdata will not be displayed on the resource list</p>
     </div>
 
     <div id="history_overview-details">

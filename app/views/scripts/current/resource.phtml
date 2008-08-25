@@ -1,7 +1,6 @@
-<? $count = count($this->resources); ?>
 {
   'metaData': {
-    totalProperty: 'results',
+    totalProperty: 'total',
     root: 'rows',
     id: 'resource_id',
     fields: [
@@ -18,7 +17,7 @@
             'service_types'
         ]
     },
-    'results': <?=$count?>, 'rows': [
+    'total': <?=$this->total_count?>, 'rows': [
 <?
         $first = true;
         foreach($this->resources as $resource_id => $resource) {

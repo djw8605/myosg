@@ -137,11 +137,29 @@ class CurrentController extends Zend_Controller_Action
                 $servicetype = $dirty_servicetype;
             }
         }
+/*
+        $start = null;
+        if(isset($_REQUEST["start"])) {
+            $dirty_start = $_REQUEST["start"];
+            $start = (int)$dirty_start;
+        }
+        $limit = null;
+        if(isset($_REQUEST["limit"])) {
+            $dirty_limit = $_REQUEST["limit"];
+            $limit = (int)$dirty_limit;
+        }
+        $paging = null;
+        if($start !== null and $limit !== null) {
+            $paging = array("offset"=>$start, "limit"=>$limit);
+        } 
+*/
 
         $this->view->resource_service_types = new ResourceServiceTypes();
-
         $resource_model = new Resource();
-        $resources = $resource_model->fetchAll($servicetype);
+        $resources = $resource_model->fetchAll($servicetype/*, $paging*/);
+        $this->view->total_count = count($resources);
+        //$this->view->total_count = $resource_model->fetchAll_CountOnly($servicetype);
+        //dlog("count is ".$this->view->total_count);
 
         //load resource information
         $this->view->resources = array();

@@ -11,7 +11,7 @@ class Resource
         }
     }
 
-    public function fetchAll($service_type = null) 
+    private function fetchAll_sql($service_type)
     {
         $schema = config()->db_oim_schema;
         $join = "($schema.resource r left join $schema.resource_contact rc on 
@@ -36,6 +36,27 @@ class Resource
         from
             $join
         where r.active = 1 and r.disable = 0";
+
+        return $sql;
+    }
+
+    public function fetchAll_CountOnly($service_type)
+    {
+        $sql = "select count(id) from (".$this->fetchAll_sql($service_type).") a";
+        return $this->db->fetchOne($sql);
+    }
+
+    public function fetchAll($service_type = null/*, $paging = null*/)
+    {
+        $sql = $this->fetchAll_sql($service_type);
+
+        /*
+        if($paging !== null) {
+            $offset = $paging["offset"];
+            $limit = $paging["limit"];
+            $sql .= " limit $offset, $limit";
+        }
+        */
 
         return $this->db->fetchAll($sql);
     }

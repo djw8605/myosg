@@ -116,21 +116,26 @@ var informationPanel = {
 // Current Status ServerGrid
 //
 
+servergrid_store = new Ext.data.Store({
+    proxy: new Ext.data.HttpProxy({
+        url: 'current/proxy'
+    }),
+    reader: new Ext.data.JsonReader()
+    //remoteSort: true
+    
+});
+
 var ServerGrid = function(config) {
     Ext.apply(this, config);
 
-    this.store = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({
-            url: 'current/proxy'
-        }),
-        reader: new Ext.data.JsonReader()
-    });
+    this.store = servergrid_store;
     this.store.setDefaultSort('name', "ASC"); 
 
     this.columns = [{
         header: "ID",
         dataIndex: 'resource_id',
         sortable:true,
+        hidden: true,
         width: 20 
     },{
         id: 'title',
@@ -217,6 +222,7 @@ Ext.extend(ServerGrid, Ext.grid.GridPanel, {
     loadPage: function(page) {
         this.store.baseParams["feed"] = page;
         this.ctxRow = null;
+        //this.store.load({params:{start:0, limit:<?=config()->page_rowcount?>}});
         this.store.load();
     },
 
@@ -370,9 +376,12 @@ var Current_MainPanel = function(){
                     this.grid.togglePreview(pressed);
                 }
             }
+        ],
+        bbar: [
+            '<span id="current_resourcecount">&nbsp;</span>'
         ]
     });
-
+    
     //instanciate DetailPanel
     this.detailpanel = new Ext.Panel({
         title: 'Detail',
@@ -472,6 +481,9 @@ var Current_MainPanel = function(){
     }, this, {buffer:250});
 
     this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+    this.grid.store.on('load', function() {
+        $("#current_resourcecount").html("Resources Shown: "+this.store.getCount());
+    }, this.grid);
 
     this.grid.on('rowdblclick', this.openTab, this);
 
@@ -622,6 +634,7 @@ var VOMatrixGrid = function(config) {
         header: "ID",
         dataIndex: 'resource_id',
         width: 30,
+        hidden: true,
         sortable:true
     },{
         id: 'title',
@@ -638,7 +651,7 @@ var VOMatrixGrid = function(config) {
     ?>
         ,{
             //header: "<?=$vo->short_name?>",
-            header: "<img src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
+            header: "<img class='voname' src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
             dataIndex: '<?=$vo->short_name?>',
             tooltip: '<?=$vo->long_name?>',
             renderer: this.formatCheck,
@@ -723,6 +736,7 @@ var VOGroupGrid = function(config) {
         header: "ID",
         dataIndex: 'resource_id',
         width: 30,
+        hidden: true,
         sortable:true
     },{
         id: 'title',
@@ -793,7 +807,7 @@ var current_overview_obj = {
     zoomLevel: 4,       //2 is better for whole world
     gmapType: 'map',
     addControl: new GSmallMapControl(),
-    setCenter: { lat: 55, 'long': -130 },
+    setCenter: { lat: 45, 'long': -90 },
     loadPage: function() {
         $.getJSON("current/proxy?feed=gmap",
             function(data){
@@ -877,6 +891,7 @@ var HistoryGrid = function(config) {
         header: "ID",
         dataIndex: 'resource_id',
         sortable:true,
+        hidden: true,
         width: 10 
     },{
         id: 'title',
@@ -970,7 +985,7 @@ Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
     },
     formatTitle: function(value, p, record) {
         var str = "";
-        str += String.format('<div class="server"><b>{0}</b> ', value);
+        str += String.format('<div class="server"><b>{0}</b><br/>', value);
         str += String.format('<span class="servername">{0}</span></div>', record.data.uri);
         return str;
     }
@@ -1109,6 +1124,9 @@ var History_MainPanel = function(){
                     this.grid.togglePreview(pressed);
                 }
             }
+        ],
+        bbar: [
+            '<span id="history_resourcecount">&nbsp;</span>'
         ]
     });
 
@@ -1190,6 +1208,9 @@ var History_MainPanel = function(){
     }, this, {buffer:250});
 
     this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+    this.grid.store.on('load', function() {
+        $("#history_resourcecount").html("Resources Shown: "+this.store.getCount());
+    }, this.grid);
 
     this.grid.on('rowdblclick', this.openTab, this);
 };

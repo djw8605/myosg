@@ -81,6 +81,9 @@ class common_config
         $this->date_format_full = "M j, Y h:i A";
         $this->date_format = "M j, Y";
 
+        //number of records to show in one page
+        //$this->page_rowcount = 20;
+
         ///////////////////////////////////////////////////////////////////////
         //
         // Authorization Configuration

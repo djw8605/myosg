@@ -14,17 +14,15 @@ class ErrorController extends Zend_Controller_Action
                 $this->render('404');
                 break;
             default:
-                //TODO application error; display error page, but don't change status code
-                $this->view->content = "Encountered an application error.\n\n";
+                //application error !!
+                $this->view->content = "Encountered an application error.\n\nDetail of this error has been sent to the development team for further analysis.";
 
+                //send error log
                 $exception = $errors->exception;
-                if(config()->debug) {
-                    $this->view->content .= $exception->getMessage()."\n\n";
-                    $this->view->content .= $exception->getTraceAsString();
-                }
+                $log = $exception->getMessage()."\n\n";
+                $log  .= $exception->getTraceAsString();
+                elog($log);
 
-                //$log = new Zend_Log(new Zend_Log_Writer_Stream('/tmp/applicationException.log'));
-                //$log->debug($exception->getMessage() . "\n" .  $exception->getTraceAsString());
                 break;
         }
     } 

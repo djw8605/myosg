@@ -1,4 +1,5 @@
 Ext.namespace('Ext.ux');
+
  
 /**
  *
@@ -20,6 +21,9 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         
         Ext.ux.GMapPanel.superclass.initComponent.call(this);        
 
+    },
+    zoomchange: function(evt) {
+        if(evt.newZoom < 5) gMap.zoom = 5; 
     },
     afterRender : function(){
         
@@ -58,13 +62,12 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         }
         
         var dt = new Ext.util.DelayedTask();
-        dt.delay(300, function(){
+        dt.delay(100, function(){
             this.addMarkers(this.markers);
         }, this);
 
         this.gmap.enableScrollWheelZoom();
         this.gmap.enableContinuousZoom();
-
     },
     onResize : function(w, h){
 
