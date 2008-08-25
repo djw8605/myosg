@@ -116,5 +116,7 @@ class common_config
     }
 }
 
-//TODO - I need to figure this out automatically from SERVER_ADDR, etc..
-function base() { return "/trunk";}
+function base() {
+    $last_pos = strrpos($_SERVER["SCRIPT_NAME"], "/");
+    return substr($_SERVER["SCRIPT_NAME"], 0, $last_pos);
+}
