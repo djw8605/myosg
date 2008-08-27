@@ -1,0 +1,25 @@
+<?
+$total_count = count($this->recs);
+
+
+//header
+echo "resource_id,";
+echo "name,";
+echo "fqdn,";
+echo "graph,";
+echo "url,";
+echo "service_types";
+echo "\n";
+
+$first = true;
+foreach($this->recs as $rec) {
+    echo $rec["resource_id"].",";
+    echo "\"".$rec["name"]."\",";
+    echo "\"".$rec["fqdn"]."\",";
+    echo "\"".str_replace("\"", "\"\"", $rec["graph"])."\",";
+    echo "\"".$rec["url"]."\",";
+    echo "\"".$rec["service_types"]."\"";
+
+    echo "\n";
+}
+

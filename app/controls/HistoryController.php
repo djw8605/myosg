@@ -68,7 +68,6 @@ class HistoryController extends Zend_Controller_Action
     //output json containing status history graph (wrapped in json)
     public function resourceAction()
     {
-        header('Content-type: text/json');
 
         $servicetype = null;
         if(isset($_REQUEST["servicetype"])) {
@@ -105,53 +104,60 @@ class HistoryController extends Zend_Controller_Action
                 $resource_records[] = $resource_record;
             }
         }
-        $total_count = count($resource_records);
 
-        echo "{";
-            echo "\"totalCount\":\"$total_count\",";
-            echo "\"graphs\":[";
-                $first = true;
-                foreach($resource_records as $resource_record) { 
-                    $resource_id = $resource_record->id;
-                    //$overall_status = new OverallStatus($resource_id);
-                    //$status_changes = $overall_status->fetchStatusChanges($start_time, $end_time);
-                    //add comma if not first
-                    if(!$first) echo ",";
-                    $first = false;
+        $this->view->recs = array();
 
-                    //pull data
-                    $resource_name = $resource_record->name;
-                    $resource_fqdn = $resource_record->uri;
-                    //$graph = addslashes($this->generateGraph($status_changes, $start_time, $end_time));
-                    $graph = addslashes("<img src=\"history/graph?rid=$resource_id&start=$start_time&end=$end_time\" width=\"100%\" height=\"14px\"/>");
-                    $graph .= addslashes($this->generateRuler($start_time, $end_time));
-                    $url = $resource_record->url;
+        foreach($resource_records as $resource_record) { 
+            $resource_id = $resource_record->id;
 
-                    //service type
-                    $resource_service_types = new ResourceServiceTypes();
-                    $service_types = $resource_service_types->getServiceTypes($resource_id);
-                    $s_first = true;
-                    $str = "";
-                    foreach($service_types as $service_type) {
-                        if(!$s_first) $str .= " / ";
-                        $s_first = false;
-                        $str .= $service_type->description;
-                    }
+            //pull data
+            $resource_name = $resource_record->name;
+            $resource_fqdn = $resource_record->uri;
+            $graph = "<img src=\"history/graph?rid=$resource_id&start=$start_time&end=$end_time\" width=\"100%\" height=\"14px\"/>";
+            $graph .= $this->generateRuler($start_time, $end_time);
+            $url = $resource_record->url;
 
-                    //output graph data
-                    echo "{";
-                        echo "\"resource_id\":\"$resource_id\",";
-                        echo "\"name\":\"$resource_name\",";
-                        echo "\"fqdn\":\"$resource_fqdn\",";
-                        echo "\"graph\":\"$graph\",";
-                        echo "\"url\":\"$url\",";
-                        echo "\"service_types\":\"$str\"";
-                    echo "}";
-                }
-            echo "]";
-        echo "}";
+            //service type
+            $resource_service_types = new ResourceServiceTypes();
+            $service_types = $resource_service_types->getServiceTypes($resource_id);
+            $s_first = true;
+            $str = "";
+            foreach($service_types as $service_type) {
+                if(!$s_first) $str .= " / ";
+                $s_first = false;
+                $str .= $service_type->description;
+            }
 
-        $this->render("none");
+            $this->view->recs[] = array(
+                "resource_id"=>$resource_id,
+                "name"=>$resource_name,
+                "fqdn"=>$resource_fqdn,
+                "graph"=>$graph,
+                "url"=>$url,
+                "service_types"=>$str
+            );
+        }
+
+        $format = "json"; //default
+        if(isset($_REQUEST["format"])) {
+            $format = $_REQUEST["format"];
+        }
+        switch($format) {
+        case "json":
+            header('Content-type: text/javascript');
+            $this->render("resourcejson");
+            break;
+        case "xml":
+            header('Content-type: text/xml');
+            $this->render("resourcexml");
+            break;
+        case "csv":
+            header('Content-type: text/plain');
+            $this->render("resourcecsv");
+            break;
+        default:
+            $this->render("none");
+        }
     }
 
     private function generateRuler($start_time, $end_time)
@@ -182,52 +188,6 @@ class HistoryController extends Zend_Controller_Action
         return $out;
     }
 
-/*
-    private function generateGraph($changes, $start_time, $end_time) 
-    {
-        $total_time = $end_time - $start_time;
-
-        $out = "";
-        $js = "";
-
-        $status = "NA";//if no changes are available, it will use this
-
-        $out .= "<table width=\"100%\" class=\"graph\" align=\"center\"><tr>";
-
-        $first = true;
-        $decile_out = 0; //used to calculate the reminder area
-        foreach($changes as $change) {
-            $time = $change->timestamp;
-            if($first) {
-                //assume first element is always a initial status element at $start_time
-                $decile1 = 0;
-                $status = $change->overall_status;
-                $detail = $change->detail;
-                $first = false;
-            } else {
-                $next_status = $change->overall_status;
-                $next_detail = $change->detail;
-                $decile2 = (float)($time-$start_time)/$total_time*100;
-                $size = ceil($decile2 - $decile1);
-                $decile_out += $size;
-                $out .= "<td width=\"$size%\" class=\"color_$status\"/>";
-
-                $status = $next_status;
-                $decile1 = $decile2;
-            }
-        }
-
-        //fill leftover
-        $size = max(ceil(100 - $decile_out), 1);
-        $out .= "<td width=\"$size%\" class=\"color_$status\">&nbsp;</td>";
-
-        //close table and output js
-        $out .= "</td></table>";
-
-        return $out;
-    }
-*/
-
     public function graphAction()
     {
         //get paramters and pull status changes for that period
@@ -257,11 +217,12 @@ class HistoryController extends Zend_Controller_Action
         $im = imageCreate($image_width,1);
         $back = imageColorAllocate($im, 255,255,255);//paint it white..
 
+        //should I have this configurable from OIM DB?
         $color = array();
-        $color["OK"] = imagecolorallocate($im, 0,255,0);
-        $color["WARNING"] = imagecolorallocate($im, 255,255,0);
-        $color["CRITICAL"] = imagecolorallocate($im, 255,0,0);
-        $color["UNKNOWN"] = imagecolorallocate($im, 100,100,100);
+        $color["OK"] = imagecolorallocate($im, 64,255,64);
+        $color["WARNING"] = imagecolorallocate($im, 255,255,64);
+        $color["CRITICAL"] = imagecolorallocate($im, 255,64,64);
+        $color["UNKNOWN"] = imagecolorallocate($im, 127,127,127);
 
         $total_time = $end_time - $start_time;
         $decile_out = 0; //used to calculate the reminder area

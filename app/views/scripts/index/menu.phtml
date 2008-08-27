@@ -7,49 +7,64 @@
 },
 
 {
-    text:'Current Status',
+    text:'Grid Status',
     cls:'feeds-node',
     expanded: true,
     children:[
         {
-            text:'Overview',
-            id:'current_overview',
-            iconCls:'menuicon_overview',
-            leaf:true
-        },
-        {
-            text:'RSV Metric',
-            id:'current_detail',
-            iconCls:'menuicon_metricdetail',
-            leaf:true
-        },
-        {
-            text:'Virtual Organization',
+            text:'RSV Status',
             expanded: true,
             children:[
-                {
-                    text:'Matrix',
-                    id:'vo_matrix',
-                    iconCls:'menuicon_metricdetail',
-                    leaf:true
-                },
-                {
-                    text:'Group',
-                    id:'vo_group',
-                    iconCls:'menuicon_metricdetail',
-                    leaf:true
-                }
-            ]
+            {
+                text:'Resource Group Map',
+                id:'current_overview',
+                iconCls:'menuicon_overview',
+                leaf:true
+            },
+            {
+                text:'Status Detail',
+                id:'current_detail',
+                iconCls:'menuicon_metricdetail',
+                leaf:true
+            },
+            {
+                text:'Status Change Graph',
+                id:'history_overview',
+                iconCls:'menuicon_historygraph',
+                leaf:true
+            }]
         }
+/*,
+        {
+            text:'Other Stuff',
+            expanded: true,
+            children: [
+            {
+                text:'Other Page',
+                id:'other_page',
+                iconCls:'menuicon_home',
+                leaf:true
+            }
+            ]
+        }*/
     ]
 },{
-    text:'History',
+    text:'Virtual Organization',
     cls:'feeds-node',
     expanded: true,
-    children:[{
-        text:'Status Change Graph',
-        id:'history_overview',
-        iconCls:'menuicon_metricdetail',
+    children:[
+    {
+        text:'Matrix',
+        id:'vo_matrix',
+        iconCls:'menuicon_vomatrix',
         leaf:true
-    }]
+    },
+    {
+        text:'Group',
+        id:'vo_group',
+        iconCls:'menuicon_vogroup',
+        leaf:true
+    }
+
+    ]
 }]

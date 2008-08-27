@@ -79,20 +79,29 @@ a:hover {
     background: #f9f9f9;
 }
 
+/*
 .icon-send {
     background-image:url(images/email_go.png) !important;
 }
 .icon-save {
-    background-image:url(images/disk.png) !important;
+    background-image:url(../images/disk.png) !important;
 }
 .icon-print {
-    background-image:url(images/printer.png) !important;
+    background-image:url(../images/printer.png) !important;
 }
 .icon-spell {
-    background-image:url(images/spellcheck.png) !important;
+    background-image:url(../images/spellcheck.png) !important;
 }
 .icon-attach {
-    background-image:url(images/page_attach.png) !important;
+    background-image:url(../images/page_attach.png) !important;
+}
+*/
+
+.icon-ok {
+    background:transparent url(../images/small_ok.png) no-repeat 3px 0px;
+}
+.icon-cross {
+    background:transparent url(../images/small_cross.png) no-repeat 3px 0px;
 }
 
 .ext-el-mask {
@@ -117,6 +126,9 @@ a:hover {
 .preview-hide {
     background-image: url(../images/preview-hide.gif) !important;
 }
+.export {
+    background-image: url(../images/export.gif) !important;
+}
 
 .tabs {
     background-image: url(../images/tabs.gif ) !important;
@@ -130,6 +142,16 @@ a:hover {
 .menuicon_metricdetail {
     background-image: url(../images/metricdetail.png ) !important;
 }
+.menuicon_historygraph {
+    background-image: url(../images/pert_chart.png ) !important;
+}
+.menuicon_vomatrix {
+    background-image: url(../images/kdb_table.png ) !important;
+}
+.menuicon_vogroup {
+    background-image: url(../images/details.gif) !important;
+}
+
 .summary {
     background-image: url(../images/details.gif) !important;
 }

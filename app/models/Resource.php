@@ -11,7 +11,7 @@ class Resource
         }
     }
 
-    private function fetchAll_sql($service_type)
+    public function fetchAll($service_type = null, $grid_type = null)
     {
         $schema = config()->db_oim_schema;
         $join = "($schema.resource r left join $schema.resource_contact rc on 
@@ -23,40 +23,27 @@ class Resource
                 (r.resource_id = s.resource_id and s.service_id = $service_type)";
         }
 
+        $grid_type_where = "";
+        if($grid_type !== null) {
+            $resource_groups = "select resource_group_id from $schema.resource_group RG where osg_grid_type_id = $grid_type";
+            $resource_ids = "select resource_id from $schema.resource_resource_group RRG where resource_group_id IN ($resource_groups)";
+            $grid_type_where = "and r.resource_id IN ($resource_ids)";
+        }
+
         $sql = "select 
                 `r`.`name` AS `name`,
                 `r`.`resource_id` AS `id`,
                 `r`.`fqdn` AS `uri`,
                 `r`.`url` AS `url`,
-
                 `p`.`first_name` AS `first_name`,
                 `p`.`middle_name` AS `middle_name`,
                 `p`.`last_name` AS `last_name`,
                 `p`.`primary_email` AS `primary_email`
         from
             $join
-        where r.active = 1 and r.disable = 0";
-
-        return $sql;
-    }
-
-    public function fetchAll_CountOnly($service_type)
-    {
-        $sql = "select count(id) from (".$this->fetchAll_sql($service_type).") a";
-        return $this->db->fetchOne($sql);
-    }
-
-    public function fetchAll($service_type = null/*, $paging = null*/)
-    {
-        $sql = $this->fetchAll_sql($service_type);
-
-        /*
-        if($paging !== null) {
-            $offset = $paging["offset"];
-            $limit = $paging["limit"];
-            $sql .= " limit $offset, $limit";
-        }
-        */
+        where r.active = 1 and r.disable = 0 $grid_type_where
+        order by r.name";
+        dlog($sql);
 
         return $this->db->fetchAll($sql);
     }

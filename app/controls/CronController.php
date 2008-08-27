@@ -40,6 +40,8 @@ class CronController extends Zend_Controller_Action
     {
         dlog("processing new records from gratia table.");
 
+        //why flock? sometimes processnew takes very long time to complete, and if the jobs is kicking off 
+        //every minute, the overwrap could happen. If it does, skip it.
         $fp_lock = fopen("/tmp/dashboard.processnew", "w+");
         dlog("acquiring flock.");
         if (flock($fp_lock, LOCK_EX | LOCK_NB)) {
@@ -93,15 +95,12 @@ class CronController extends Zend_Controller_Action
 
                 //pull current metrics for this resource (for initial metric set)
                 $current = array();
-                if(isset($current_metrics[$resource_id])) {
-                    $current = $current_metrics[$resource_id];
-                } else {
+                if(!isset($current_metrics[$resource_id])) {
+                    //first time..
                     $current = $metric_model->getLatest($resource_id);
 
-
-                    //TODO - remove this once I know what to do about the out-of-order metric data
-                    $last = 0;
                     //find the last metric entered and use it as resource timestamp (to detect out-of-order metric data)
+                    $last = 0;
                     foreach($current as $met) {
                         if($met->timestamp > $last) $last = $met->timestamp;
                     }
@@ -110,6 +109,7 @@ class CronController extends Zend_Controller_Action
 
                     $current_metrics[$resource_id] = $current;
                 }
+                $current = $current_metrics[$resource_id];
 
                 //if status is unknown, set effective_dbic to last known metric if it is 
                 //within metric_considered_old time.
@@ -147,10 +147,20 @@ class CronController extends Zend_Controller_Action
                 $current[$metric_id]->effective_dbid = $effective_dbid;
                 $current[$metric_id]->effective_timestamp = $effective_timestamp;
 
-                //TODO - remove this once I know what to do about the out-of-order metric data
-                //check the lasttimestamp to detect the out-of-order metric
+                //check the lasttimestamp to detect the out-of-order metric -- 
+                //(TODO: Arvind to contact Gratia to see if this could be prevented upstream)
                 if($current["lasttime"] > $timestamp) {
-                    elog("out-of-order metric detected. ID:$dbid ".($current["lasttime"] - $timestamp). " seconds");
+                    $lag = $current["lasttime"] - $timestamp;
+                    if($lag < config()->gratia_max_outoforder) {
+                        elog("out-of-order metric detected. ID:$dbid ".$lag. " seconds - resetting timestamp to last reported timestamp");
+                        $timestamp = $current["lasttime"];
+                    } else {
+                        elog("out-of-order metric detected. ID:$dbid ".$lag. " seconds (more than ".config()->gratia_max_outoforder." seconds) - ignoring");
+                        //TODO - Arvind wants to mark these records, and do post-processing. I think if we have to develop
+                        //2 sets of algorithms to handle this, then I should get this algorithm smart enough to be able
+                        //to handle the late records.
+                        continue;
+                    }
                 }
                 $current["lasttime"] = $timestamp;
 
@@ -203,7 +213,7 @@ class CronController extends Zend_Controller_Action
                         dlog("status change due to metric expiration.. resetting responsible dbid to $dbid");
                     }
 
-                    //NA means the status is UNKNONW(for now..) due to critical metrics
+                    //NA means the status is UNKNOWN(for now..) due to critical metrics
                     //not even reported..
                     if($ostatus_model->isNA()) {
                         $dbid = null; //no particular metric should be responsible the "change" of this status
@@ -223,9 +233,11 @@ class CronController extends Zend_Controller_Action
                     $overall_status[$resource_id] = $new_status;
                 }
 
-                //TODO - on PHP, I thought I don't have to do this... but..
                 $current_metrics[$resource_id] = $current;
             }
+
+            //for resrouce that I didn't receive any data (and the status is not "UNKNOWN"), let's
+            //check the metricdata timestamp to see if the status should be now expired (UNKNOWN)
 
             //now, we have the latest info in our $current array. let's update our current cache
             dlog("updating latest information cache");
@@ -249,7 +261,7 @@ class CronController extends Zend_Controller_Action
                 $fp = fopen(config()->cache_filename_latest_overall.".".$resource_id, "w");
                 fwrite($fp, $out);
                 fclose($fp);
-            } 
+            }
 
             dlog("$validation_error records has failed on validation.");
             dlog("$rejected records has been rejected.");
@@ -262,7 +274,7 @@ class CronController extends Zend_Controller_Action
 
             flock($fp_lock, LOCK_UN);
         } else {
-            elog("Failed to obtain mutex for processnewAction -- maybe previous is taking too long?");
+            elog("Failed to obtain flock for processnewAction -- maybe previous run is taking too long?");
         }
         fclose($fp_lock);
     }
@@ -354,7 +366,7 @@ class CronController extends Zend_Controller_Action
   KEY `resource_id` (`resource_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=latin1;");
         //clear cache
-        passthru("rm ".config()->cache_dir."/*");
+        passthru("rm ".config()->getCacheDir()."/*");
 
         $this->render("none");
     }

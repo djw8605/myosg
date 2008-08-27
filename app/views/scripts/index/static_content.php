@@ -1,5 +1,35 @@
 <div style="display: none;">
 
+    <div id="vomatrix_toolbar_div" class="toolbar_item">
+        Filter By
+        <select id="vomatrix_grid_type_selector" onchange="vo_matrix_obj.changeGridType(this.value);">
+        <option value="all">(All Grid Types)</option>
+    <?
+        $gridtypes = new GridTypes();
+        $types = $gridtypes->fetchAll();
+        foreach($types as $type) {
+            $id = $type->grid_type_id;
+            $desc = $type->short_name;
+            echo "<option value=\"$id\">$desc</option>\n";
+        }
+    ?>
+        </select>
+
+        <select id="vomatrix_service_type_selector" onchange="vo_matrix_obj.changeServiceType(this.value);">
+        <option value="all">(All Service Types)</option>
+    <?
+        $servicetypes = new ServiceTypes();
+        $types = $servicetypes->fetchAll();
+        foreach($types as $type) {
+            $id = $type->service_id;
+            $desc = $type->description;
+            echo "<option value=\"$id\">$desc</option>\n";
+        }
+    ?>
+        </select>
+
+    </div>
+
     <div id="service_type_selector_div" class="toolbar_item">
         Filter By
         <select id="service_type_selector" onchange="current_detail_obj.grid.changeFilter(this.value);">
@@ -59,9 +89,11 @@
     </div>
     <div id="vo_matrix-details">
         <p class="details-info">TODO: Add help info for VO Matrix</p>
+        <p><a href="<?=base()?>?page=vo_matrix">Direct Link</a> to this page </p>
     </div>
     <div id="vo_group-details">
         <p class="details-info">TODO: Add help info for VO Matrix Group</p>
+        <p><a href="<?=base()?>?page=vo_group">Direct Link</a> to this page </p>
     </div>
 
     <div id="current_overview-details">
@@ -70,9 +102,9 @@
 
         <p>You can drag and drop the map to change position, and use your mouse wheel to zoom in / out.</p>
 
-        <hr/>
+        <h2>Links</h2>
+        <p><a href="<?=base()?>?page=current_overview">Direct Link</a> to this page </p>
         <p><a href="http://vors.grid.iu.edu/cgi-bin/index.cgi" target="_blank">VORS</a></p>
-
     </div>
 
     <div id="current_detail-details">
@@ -97,10 +129,14 @@
             <p class="sub">Probe could not gather necessary information to determine its status, or probe is not installed on this CE.</p>
         </div>
         <p>Please be aware that the resource which has never posted any RSV metricdata will not be displayed on the resource list</p>
+        <h2>Links</h2>
+        <p><a href="<?=base()?>?page=current_detail">Direct Link</a> to this page </p>
+
     </div>
 
     <div id="history_overview-details">
         <p class="details-info">TODO</p>
+        <p><a href="<?=base()?>?page=history_overview">Direct Link</a> to this page </p>
     </div>
 
 </div>

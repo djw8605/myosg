@@ -84,6 +84,11 @@ class common_config
         //number of records to show in one page
         //$this->page_rowcount = 20;
 
+        //number of seconds that gratia input records can be out-of-order.
+        //if the delay is less than this, the timestamp will be reset to last reported timestamp. 
+        //if it is more than this, the record will be ignored.
+        $this->gratia_max_outoforder = 120;
+
         ///////////////////////////////////////////////////////////////////////
         //
         // Authorization Configuration

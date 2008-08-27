@@ -34,6 +34,13 @@ class CurrentController extends Zend_Controller_Action
 
     private function output_vo()
     {
+        $gridtype = null;
+        if(isset($_REQUEST["gridtype"])) {
+            $dirty_gridtype = $_REQUEST["gridtype"];
+            if(Zend_Validate::is($dirty_gridtype, 'Int')) {
+                $gridtype = $dirty_gridtype;
+            }
+        }
         $servicetype = null;
         if(isset($_REQUEST["servicetype"])) {
             $dirty_servicetype = $_REQUEST["servicetype"];
@@ -42,37 +49,27 @@ class CurrentController extends Zend_Controller_Action
             }
         }
 
+
         $vo_model = new VO();
         $this->view->vos = $vo_model->fetchAll();
+        $members = $vo_model->pullMemberVOs();
 
         $resource_model = new Resource();
-        $resources = $resource_model->fetchAll($servicetype);
+        $resources = $resource_model->fetchAll($servicetype, $gridtype);
 
-        //load resource information
         $this->view->rows = array();
         foreach($resources as $resource) {
             $row = array();
             $row["resource_id"] = $resource->id;
             $row["resource_name"] = $resource->name;
-            $members = $vo_model->pullMemberVOs($resource->id);
-            if(count($members) > 0) {
-                foreach($this->view->vos as $vo) {
-                    //search for the vo_id
-                    $found = false;
-                    foreach($members as $member) {
-                        if($member->vo_id == $vo->vo_id) {
-                            $row[$vo->short_name] = 1; //meaning - do support
-                            $found = true;
-                            break;
-                        }
+            foreach($this->view->vos as $vo) {
+                //search for the vo_id
+                $row[$vo->short_name] = 0; //meaning - no support
+                foreach($members as $member) {
+                    if($member->vo_id == $vo->vo_id and $member->resource_id == $resource->id) {
+                        $row[$vo->short_name] = 1; //meaning - has support
+                        break;
                     }
-                    if(!$found) {
-                        $row[$vo->short_name] = 0; //meaning - no support
-                    }
-                }
-            } else {
-                foreach($this->view->vos as $vo) {
-                    $row[$vo->short_name] = 2;//meaning - N/A
                 }
             }
             $this->view->rows[] = $row;
