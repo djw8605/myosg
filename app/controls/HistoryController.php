@@ -144,7 +144,7 @@ class HistoryController extends Zend_Controller_Action
         }
         switch($format) {
         case "json":
-            header('Content-type: text/javascript');
+            header('Content-type: text/plain');
             $this->render("resourcejson");
             break;
         case "xml":
