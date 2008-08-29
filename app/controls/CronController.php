@@ -81,8 +81,6 @@ class CronController extends Zend_Controller_Action
                 $current = array();
                 if(!isset($current_metrics[$resource_id])) {
                     dlog("initializing current_metrics array for $resource_id");
-
-                    //first time..
                     $current = $metric_model->getLatest($resource_id);
 
                     //find the last metric entered and use it as resource timestamp (to detect out-of-order metric data)
@@ -94,9 +92,20 @@ class CronController extends Zend_Controller_Action
                     //dlog("last metric entry for $resource_id happend at ".date(config()->date_format_full." s", $last));
 
                     $current_metrics[$resource_id] = $current;
-                }
-                $current = $current_metrics[$resource_id];
 
+                    $ostatus_model = new OverallStatus($resource_id);
+                    $overall_status_model[$resource_id] = $ostatus_model;
+                    $lastinfo = $ostatus_model->getLastInfo();
+                    if(isset($lastinfo->overall_status)) {
+                        $overall_status[$resource_id] = $lastinfo->overall_status;
+                    } else {
+                        //below if ($new_status != overall_status) will cause this record to be inserted as initial status.
+                        $overall_status[$resource_id] = "no-last-info"; 
+                    }
+                }
+                $ostatus_model = $overall_status_model[$resource_id];
+                $current = $current_metrics[$resource_id];
+                
                 //if status is unknown, set effective_dbic to last known metric if it is 
                 //within metric_considered_old time.
                 if($status == "UNKNOWN") {
@@ -164,21 +173,6 @@ class CronController extends Zend_Controller_Action
                 $plugin->dispatch($resource_id, $metric_id, $current[$metric_id]);
 
                 //re-calculate overall status
-                if(!isset($overall_status[$resource_id])) {
-                    //we have not yet seen this resource id appears initialize aux. classes.
-                    dlog("initializing overallstatus model for $resource_id");
-                    $ostatus_model = new OverallStatus($resource_id);
-                    $overall_status_model[$resource_id] = $ostatus_model;
-                    $lastinfo = $ostatus_model->getLastInfo();
-                    if(isset($lastinfo->overall_status)) {
-                        $overall_status[$resource_id] = $lastinfo->overall_status;
-                    } else {
-                        //below if ($new_status != overall_status) will cause this record to be inserted as initial status.
-                        $overall_status[$resource_id] = "no-last-info"; 
-                    }
-                } else {
-                    $ostatus_model = $overall_status_model[$resource_id];
-                }
                 $ostatus_model->calculateStatus($current, $timestamp);
                 $new_status = $ostatus_model->getOverallStatus();
 
