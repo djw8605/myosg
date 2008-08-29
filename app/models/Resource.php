@@ -55,7 +55,7 @@ class Resource
         if($offset !== null and $limit !== null) {
             $sql .= " limit $offset,$limit";
         }    
-        dlog($sql);
+        //dlog($sql);
         return $sql;
     }
 
@@ -63,7 +63,7 @@ class Resource
     {
         $sql = $this->fetchAll_sql($service_type, $grid_type);
         $sql = "select count(*) from ($sql) a";
-        dlog($sql);
+        //dlog($sql);
         return $this->db->fetchOne($sql);
     }
 

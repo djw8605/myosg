@@ -240,9 +240,22 @@ class CronController extends Zend_Controller_Action
                             //recalculate overallstatus
                             $omodel = new OverallStatus($resource->id);
                             $omodel->calculateStatus($lastmetrics);
-                            if($omodel->getOverallStatus() == "UNKNOWN") {
-                                elog("found a resource that has been UNKNOWN-ed!!!!!!!!!!!!!!!!!!!!!!!!!!".$resource->id);
+                            //if($omodel->getOverallStatus() == "UNKNOWN") {
+                            if($omodel->isExpired()) {
+                                dlog("found a resource that has been UNKNOWN-ed: ".resource->id);
+/*
+                                if($ostatus_model->insertNewOverallStatus(
+                                        "UNKNOWN", 
+                                        $timestamp, 
+                                        $ostatus_model->getOverallDetail(), 
+                                        $resource_id, 
+                                        $dbid, 
+                                        "remove me")) {
+                                    $newstatus_inserted++;
+                                    dlog("inserted status change for $resource_id, at $timestamp caused by $dbid");
+                                }
                                 //TODO
+ */                               
                             }
                         }
                     }
