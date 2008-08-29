@@ -19,6 +19,11 @@ class OverallStatus
     {
         return $this->infos->isCriticalProbe($this->resource_id, $metric_id);
     }
+    private function isNonCriticalProbe($metric_id)
+    {
+        return $this->infos->isNonCriticalProbe($this->resource_id, $metric_id);
+    }
+
 
     public function getLastInfo()
     {
@@ -41,23 +46,10 @@ class OverallStatus
     }
 
 /*
-    public function updateOverallStatus($id, $timestamp, $detail, $counts)
-    {
-        $sql = "update overall_status set timestamp = $timestamp, detail = '$detail', count_info = '$counts' where id = $id";
-        $this->db->query($sql);
-        return $this->db->lastInsertId(); 
-    }
-*/
-
     //could return null
     public function getOldestProbeTimestamp()
     {
         return $this->oldest_criticalprobe_timestamp;
-    }
-/*
-    public function getOldestProbeID()
-    {
-        return $this->oldest_criticalmetric_id;
     }
 */
 
@@ -77,34 +69,53 @@ class OverallStatus
         }
         $calctime_str = date(config()->date_format_full, $calctime);
 
+        //various counter to use for making status decisions
         $critical_ok = 0;
         $critical_warning = 0;
         $critical_critical = 0;
         $critical_unknown = 0;
         $critical_na = 0;
+        
+        $old_critical = 0;
+ 
+        $noncritical_ok = 0;
+        $noncritical_warning = 0;
+        $noncritical_critical = 0;
+        $noncritical_unknown = 0;
+        $noncritical_na = 0;
 
-        $other_ok = 0;
-        $other_warning = 0;
-        $other_critical = 0;
-        $other_unknown = 0;
-        $other_na = 0;
+        //counter for some statistics
+        $critical_total = 0;
 
         $this->oldest_criticalprobe_timestamp = null;
         $this->oldest_criticalmetricdata_id = null;
-
         $this->expired = false;
         $this->nad = false;
 
         $note = "";
-        //$note .= "Calculated at $calctime_str. ";
 
         //count occurence of each status in the metric set - iterate based on the probe info
         foreach($this->infos->getAllProbeInfo() as $info) {
+            $critical = $this->isCriticalProbe($info->id);
+            $non_critical = $this->isNonCriticalProbe($info->id);
+
+            //ignore irelevant metrics (aka 'others' in old context)
+            if(!$critical and !$non_critical) {
+                continue;
+            }
+
+            //count critical metrics
+            if($critical) {
+                $critical_total++;
+            }
+
             if(!isset($metrics[$info->id])) {
                 //current set doesn't have metric this probe
-                if($this->isCriticalProbe($info->id)) $critical_na++;
-                else $other_na++;
+                if($critical) $critical_na++;
+                else $noncritical_na++;
             } else {
+
+
                 //current has metric for this probe
                 $metric = $metrics[$info->id];
                 $status = $metric->status;
@@ -130,65 +141,74 @@ class OverallStatus
                     }
                 }
 
+                //old critical?
+                $expiration_time = $timestamp + config()->metric_considered_old;
+                if($calctime > $expiration_time) {
+                    if($this->isCriticalProbe($info->id)) {
+                        $old_critical++;
+                        continue;
+                    }
+                }
+
+                //count as usual
                 if($status == "CRITICAL") {
-                    if($this->isCriticalProbe($info->id)) $critical_critical++;
-                    else $other_critical++;
+                    if($this->isCriticalProbe($info->id)) {
+                        $critical_critical++;
+                    } else {
+                        $noncritical_critical++;
+                    }
                 }
                 if($status == "WARNING") {
-                    if($this->isCriticalProbe($info->id)) $critical_warning++;
-                    else $other_warning++;
+                    if($this->isCriticalProbe($info->id)) {
+                        $critical_warning++;
+                    } else {
+                        $noncritical_warning++;
+                    }
                 }
                 if($status == "OK") {
-                    if($this->isCriticalProbe($info->id)) $critical_ok++;
-                    else $other_ok++;
+                    if($this->isCriticalProbe($info->id)) {
+                        $critical_ok++;
+                    } else {
+                        $noncritical_ok++;
+                    }
                 }
                 if($status == "UNKNOWN") {
-                    if($this->isCriticalProbe($info->id)) $critical_unknown++;
-                    else $other_unknown++;
+                    if($this->isCriticalProbe($info->id)) {
+                        $critical_unknown++;
+                    } else {
+                        $noncritical_unknown++;
+                    }
                 }
-                //$note .= $info->common_name. " is ".$status."($mid). ";
             }
         }
+/*
         
         //store it to stats counts
         $this->statuscounts = array(
-            "WARNING" => $critical_warning + $other_warning,
-            "CRITICAL" => $critical_critical + $other_critical,
-            "UNKNOWN" => $critical_unknown + $other_unknown + $critical_na + $other_na,
-            "OK" => $critical_ok + $other_ok
+            "WARNING" => $critical_warning + $noncritical_warning,
+            "CRITICAL" => $critical_critical + $noncritical_critical,
+            "UNKNOWN" => $critical_unknown + $noncritical_unknown + $critical_na + $noncritical_na,
+            "OK" => $critical_ok + $noncritical_ok
         );
 
         $critical_total = $critical_warning + $critical_critical + $critical_unknown + $critical_ok + $critical_na;
+*/
 
-        //check for expiration //TODO - should I come up with a new status?
+        //check for expiration 
         if($this->oldest_criticalprobe_timestamp !== null) {
             $expiration_time = $this->oldest_criticalprobe_timestamp + config()->metric_considered_old;
             if($calctime > $expiration_time) {
-                $this->overall_status = "UNKNOWN";
-                $this->overall_detail = "At least one of the critical metrics is too old.";
                 $this->expired = true;
                 $this->expired_time = $expiration_time;
                 $this->expired_responsible_id = $this->oldest_criticalmetricdata_id;
-                return;
             }
         }
 
         //now figure out the overal status
-        //analyze core metrics
-        if($critical_na > 0) {
-            $this->overall_status = "UNKNOWN";
-            $this->overall_detail = "$critical_na of $critical_total critical metrics is not available. $note";
-            $this->nad = true;
-            return;
-        }
+
         if($critical_critical > 0) {
             $this->overall_status = "CRITICAL";
             $this->overall_detail = "$critical_critical of $critical_total critical metrics reported CRITICAL status. $note";
-            return;
-        }
-        if($critical_unknown > 0) {
-            $this->overall_status = "UNKNOWN";
-            $this->overall_detail = "$critical_unknown of $critical_total critical metrics reported UNKNOWN status. $note";
             return;
         }
         if($critical_warning > 0) {
@@ -196,19 +216,37 @@ class OverallStatus
             $this->overall_detail = "$critical_warning of $critical_total critical metrics reported WARNING status. $note";
             return;
         }
+        if($critical_unknown > 0) {
+            $this->overall_status = "UNKNOWN";
+            $this->overall_detail = "$critical_unknown of $critical_total critical metrics reported UNKNOWN status. $note";
+            return;
+        }
+        if($critical_na > 0) {
+            $this->overall_status = "UNKNOWN";
+            $this->overall_detail = "$critical_na of $critical_total critical metrics is not available. $note";
+            $this->nad = true;
+            return;
+        }
+
+        if($old_critical > 0) {
+            $this->overall_status = "UNKNOWN";
+            $this->overall_detail = "$old_critical of $critical_total critical metrics is too old. $note";
+
+            return;
+        }
 
         $this->overall_status = "OK";
 
-        if($other_critical > 0) {
-            $this->overall_detail = "No issue reported for critical metrics, however, one or more non-critical probes are reporting CRITICAL status.";
+        if($noncritical_critical > 0) {
+            $this->overall_detail = "No issue reported for critical metrics, however, $noncritical_critical noncritical probes reported CRITICAL status.";
             return;
         }
-        if($other_unknown > 0) {
-            $this->overall_detail = "No issue reported for critical metrics, however, one or more non-critical probes are reporting UNKNOWN status.";
+        if($noncritical_warning > 0) {
+            $this->overall_detail = "No issue reported for critical metrics, however, $noncritical_warning noncritical probes reported WARNING status.";
             return;
         }
-        if($other_warning > 0) {
-            $this->overall_detail = "No issue reported for critical metrics, however, one of more non-critical probes are reporting WARNING status.";
+        if($noncritical_unknown > 0) {
+            $this->overall_detail = "No issue reported for critical metrics, however, $noncritical_unknown noncritical probes reported UNKNOWN status.";
             return;
         }
 
@@ -223,18 +261,19 @@ class OverallStatus
     {   
         return $this->overall_detail;
     }
+/*
     public function getStatusCounts()
     {   
         return $this->statuscounts;
     }
-
-    public function isExpired()
-    {
-        return $this->expired;
-    }
+*/
     public function isNA()
     {
         return $this->nad;
+    }
+    public function isExpired()
+    {
+        return $this->expired;
     }
     public function getExpiredResponsibleID()
     {

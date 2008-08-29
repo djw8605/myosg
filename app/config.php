@@ -15,6 +15,19 @@ class authtype
     public static $auth_osg_goc = 4;
 }
 
+class MetricRecord
+{
+    public function __construct()
+    {
+        $this->dbid = null;
+        $this->status = null;
+        $this->timestamp = null;
+        $this->detail = null;
+        $this->effective_dbid = null;
+        $this->effective_timestamp = null;
+    }
+}
+
 class role
 {
     //role to debug authorization issues

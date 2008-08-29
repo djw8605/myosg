@@ -2,22 +2,6 @@
 
 require_once("app/timerange.php");
 
-//since this ain't python, I have to do this stupid thing to mimic
-//metric record datastructure - TODO if I change the metric table
-//layout, I have to update this too..
-class MetricRecord
-{
-    public function __construct()
-    {
-        $this->dbid = null;
-        $this->status = null;
-        $this->timestamp = null;
-        $this->detail = null;
-        $this->effective_dbid = null;
-        $this->effective_timestamp = null;
-    }
-}
-
 //This class takes care of all cron-ish jobs that are initiated from cron on localhost
 //wget -O latestmetric_log http://rsv-itb.grid.iu.edu/trunk/cron/latestmetric
 class CronController extends Zend_Controller_Action 
@@ -63,7 +47,7 @@ class CronController extends Zend_Controller_Action
             $newstatus_inserted = 0;
 
             //grab "some" new records
-            $newrecords = $metric_model->fetchNewGratiaRecords(3000);
+            $newrecords = $metric_model->fetchNewGratiaRecords(5000);
             dlog("Records grabbed from gratia: ".count($newrecords));
 
             //we are going to make repeated inserts (x thousands times). Let's disable profiling for now
@@ -105,7 +89,7 @@ class CronController extends Zend_Controller_Action
                         if($met->timestamp > $last) $last = $met->timestamp;
                     }
                     $current["lasttime"] = $last;
-                    dlog("last metric entry for $resource_id happend at ".date(config()->date_format_full." s", $last));
+                    //dlog("last metric entry for $resource_id happend at ".date(config()->date_format_full." s", $last));
 
                     $current_metrics[$resource_id] = $current;
                 }
@@ -138,7 +122,7 @@ class CronController extends Zend_Controller_Action
                 //update the current set with the new record from gratia
                 if(!isset($current[$metric_id])) {
                     //first ever metric type for this resource!
-                    $current[$metric_id] = new MetricRecord();
+                    $current[$metric_id] = new MetricRecord(); //metric record is defined in config.php (for now)
                 }
                 $current[$metric_id]->dbid = $dbid;
                 $current[$metric_id]->status = $status;
@@ -219,14 +203,13 @@ class CronController extends Zend_Controller_Action
                         $dbid = null; //no particular metric should be responsible the "change" of this status
                     }
 
-                    $counts = trim(addslashes(serialize($ostatus_model->getStatusCounts())));
                     if($ostatus_model->insertNewOverallStatus(
                             $new_status, 
                             $timestamp, 
                             $ostatus_model->getOverallDetail(), 
                             $resource_id, 
                             $dbid, 
-                            $counts)) {
+                            "remove me")) {
                         $newstatus_inserted++;
                         dlog("inserted status change for $resource_id, at $timestamp caused by $dbid");
                     }
@@ -237,7 +220,38 @@ class CronController extends Zend_Controller_Action
             }
 
             //for resrouce that I didn't receive any data (and the status is not "UNKNOWN"), let's
-            //check the metricdata timestamp to see if the status should be now expired (UNKNOWN)
+            //check the metricdata timestamp to see if the status should now be expired (UNKNOWN)
+            $resources = $resource_model->fetchAll();
+            foreach($resources as $resource) {
+                $found = false;
+                foreach($current_metrics as $resource_id=>$current) {
+                    if($resource->id == $resource_id) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if(!$found) {
+                    $cache_filename = config()->cache_filename_latest_overall.".".$resource->id;
+                    if(file_exists($cache_filename)) {
+                        //load the last status
+                        $status = unserialize(file_get_contents($cache_filename));
+                        if($status["status"] != "UNKNOWN") {
+                            dlog("status expiration candicate ".$resource->id);
+
+                            //load latest metrics
+                            $lastmetrics = unserialize(file_get_contents(config()->cache_filename_latest_metrics.".".$resource->id));
+                            
+                            //recalculate overallstatus
+                            $omodel = new OverallStatus($resource->id);
+                            $omodel->calculateStatus($lastmetrics);
+                            if($omodel->getOverallStatus() == "UNKNOWN") {
+                                elog("found a resource that has been UNKNOWN-ed!!!!!!!!!!!!!!!!!!!!!!!!!!".$resource->id);
+                                //TODO
+                            }
+                        }
+                    }
+                }
+            }
 
             //now, we have the latest info in our $current array. let's update our current cache
             dlog("updating latest information cache");
@@ -254,8 +268,7 @@ class CronController extends Zend_Controller_Action
                 $ostatus_model->calculateStatus($current);
                 $info = array(
                     "status"=>$ostatus_model->getOverallStatus(),
-                    "detail"=>$ostatus_model->getOverallDetail(),
-                    "counts"=>$ostatus_model->getStatusCounts()
+                    "detail"=>$ostatus_model->getOverallDetail()
                 );
                 $out = serialize($info);
                 $fp = fopen(config()->cache_filename_latest_overall.".".$resource_id, "w");

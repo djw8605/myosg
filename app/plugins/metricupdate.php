@@ -43,11 +43,11 @@ class Plugin_MetricUpdate
                     //dlog("inserting $lvo($vo_id) to vo_matrix for resource ID: $resource_id");
                     $db->query("insert into vo_matrix (resource_id, vo_id) values ($resource_id, $vo_id)");
                 } else {
-                    elog("couldn't find '$lvo' in virtualorganization table while processing metric ".$metric->dbid);
+                    //elog("couldn't find '$lvo' in virtualorganization table while processing metric ".$metric->dbid);
                 }
             }
         } else {
-            elog("received vosupported update with OK status, but the detail format was not what was expteded. metric ID:".$metric->dbid." Resource ID: ".$resource_id." [$detail]");
+            //elog("received vosupported update with OK status, but the detail format was not what was expteded. metric ID:".$metric->dbid." Resource ID: ".$resource_id." [$detail]");
         }
     }
 }

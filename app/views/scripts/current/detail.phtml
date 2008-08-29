@@ -10,14 +10,9 @@ $pageid = getuid();
     $metricstatus = $this->overall_status["status"];
     $div_class = "status_$metricstatus";
     $detail = $this->overall_status["detail"];
-    $counts = $this->overall_status["counts"];
 ?>
 
         <div class='metric <?=$div_class?>'>
-        <div class='chart'>
-            <h3>Total Status Count</h3>
-            <img src="http://chart.apis.google.com/chart?cht=p3&chs=250x80&chd=t:<?=$counts["OK"]?>,<?=$counts["WARNING"]?>,<?=$counts["CRITICAL"]?>,<?=$counts["UNKNOWN"]?>&chl=OK|Warning|Critical|Unknown&chco=00ff00,ffff00,ff0000,cccccc"/>
-        </div>
         <div class='metric_name'><?=$metricstatus?></div>
         <p><?=$detail?></p>
         </div>
@@ -51,8 +46,11 @@ foreach($this->service_types as $service_type) {
         $service_id = $service_type->service_id;
         foreach($this->metrics as $metric) {
             if($metric->isNonCriticalFor($service_id)) {
-                output_metric($metric);
-                $other_metric_count++;
+                //for noncritical probes, only show it if we have data
+                if($metric->hasData()) {
+                    output_metric($metric);
+                    $other_metric_count++;
+                }
             }
         }
     }
@@ -87,7 +85,7 @@ foreach($this->service_types as $service_type) {
 ?>
 
 new Ext.Panel({
-    title: 'Other Metrics',
+    title: 'Noncritcal Metrics',
     collapsible:true,
     autoHeight:true,
     applyTo: 'detail_other_metrics_<?=$pageid?>'
@@ -119,7 +117,7 @@ function output_metric_holder($metric)
 
     echo "<div class='metric status_UNKNOWN'>";
     echo "<div class='metric_name'>$metricname</div>";
-    echo "<p class='error'>This probe has never run on this resource. No data available.</p>";
+    echo "<p class='error'>This metric has never been reported for this resource. No data available.</p>";
     echo "</div>";
 }
 

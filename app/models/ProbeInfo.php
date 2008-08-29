@@ -92,6 +92,7 @@ class ProbeInfo
         }
 
         $this->critical_probes = array();
+        $this->non_critical_probes = array();
     }
 
     //lookup metric id from metric name
@@ -156,6 +157,13 @@ class ProbeInfo
         }
         return in_array($metric_id, $this->critical_probes[$resource_id]);
     }
+    public function isNonCriticalProbe($resource_id, $metric_id)
+    {
+        if(!isset($this->non_critical_probes[$resource_id])) {
+            $this->non_critical_probes[$resource_id] = $this->loadNonCriticalProbes($resource_id); 
+        }
+        return in_array($metric_id, $this->non_critical_probes[$resource_id]);
+    }
     public function loadCriticalProbes($resource_id)
     {
         //find critical_servicetypes that this resource is associated with.
@@ -163,6 +171,7 @@ class ProbeInfo
         $service_types = $resource_service->getServiceTypes($resource_id);
         $critical_probes = array();
         foreach($service_types as $service_type) {
+            //critical
             $ps = $this->getCriticalProbes($service_type->service_id);
             foreach($ps as $p) {
                 if(!in_array($p, $this->critical_probes)) {
@@ -171,5 +180,22 @@ class ProbeInfo
             }
         }
         return $critical_probes;
+    }
+    public function loadNonCriticalProbes($resource_id)
+    {
+        //find critical_servicetypes that this resource is associated with.
+        $resource_service = new ResourceServiceTypes();
+        $service_types = $resource_service->getServiceTypes($resource_id);
+        $non_critical_probes = array();
+        foreach($service_types as $service_type) {
+            //non critical
+            $ps = $this->getNonCriticalProbes($service_type->service_id);
+            foreach($ps as $p) {
+                if(!in_array($p, $this->non_critical_probes)) {
+                    $non_critical_probes[] = $p;
+                }
+            }
+        }
+        return $non_critical_probes;
     }
 }

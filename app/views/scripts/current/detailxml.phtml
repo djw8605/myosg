@@ -7,13 +7,10 @@ echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     $metricstatus = $this->overall_status["status"];
     $div_class = "status_$metricstatus";
     $detail = $this->overall_status["detail"];
-    $counts = $this->overall_status["counts"];
-    $graph = "<img src=\"http://chart.apis.google.com/chart?cht=p3&chs=250x80&chd=t:".$counts["OK"].",".$counts["WARNING"].",".$counts["CRITICAL"].",".$counts["UNKNOWN"]."&chl=OK|Warning|Critical|Unknown&chco=00ff00,ffff00,ff0000,cccccc\"/>";
 ?>
 
         <status><?=$metricstatus?></status>
         <detail><?=htmlentities($detail)?></detail>
-        <graph><?=htmlentities($graph)?></graph>
     </overall_status>
 <critical_services>
 <?

@@ -77,7 +77,7 @@ class MetricAndProbeInfo
         return in_array($service_id, $this->non_critical_services);
     }
 
-    //see if thiss metric is, irrelevant..
+    //see if this metric is, irrelevant..
     public function hasNoServiceTypeAssociation()
     {
         return (
