@@ -11,7 +11,7 @@ class Resource
         }
     }
 
-    public function fetchAll($service_type = null, $grid_type = null)
+    public function fetchAll_sql($service_type = null, $grid_type = null, $orderby="name", $dir = "ASC", $offset = null, $limit = null)
     {
         $schema = config()->db_oim_schema;
         $join = "($schema.resource r left join $schema.resource_contact rc on 
@@ -42,9 +42,25 @@ class Resource
         from
             $join
         where r.active = 1 and r.disable = 0 $grid_type_where
-        order by r.name";
-        dlog($sql);
+        order by r.$orderby $dir";
 
+        if($offset !== null and $limit !== null) {
+            $sql .= " limit $offset,$limit";
+        }    
+        return $sql;
+    }
+
+    public function fetchAll_count($service_type = null, $grid_type = null)
+    {
+        $sql = $this->fetchAll_sql($service_type, $grid_type);
+        $sql = "select count(*) from ($sql) a";
+        dlog($sql);
+        return $this->db->fetchOne($sql);
+    }
+
+    public function fetchAll($service_type = null, $grid_type = null, $orderby="name", $dir = "ASC", $offset = null, $limit = null)
+    {
+        $sql = $this->fetchAll_sql($service_type, $grid_type, $orderby, $dir, $offset, $limit);
         return $this->db->fetchAll($sql);
     }
 

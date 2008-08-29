@@ -68,10 +68,27 @@ class CurrentController extends Zend_Controller_Action
 
         $vo_model = new VO();
         $this->view->vos = $vo_model->fetchAll();
+
+        $offset = null;
+        if(isset($_REQUEST["start"])) {
+            $offset = (int)$_REQUEST["start"];
+        }
+        $limit = null;
+        if(isset($_REQUEST["limit"])) {
+            $limit = (int)$_REQUEST["limit"];
+        }
+        $dir = null;
+        if(isset($_REQUEST["dir"])) {
+            $dirty_dir = $_REQUEST["dir"];
+            if($dirty_dir == "DESC" || $dirty_dir == "ASC") $dir = $dirty_dir;
+        }
+        //order is always name (can't sort by vos - yet..)
+
         $members = $vo_model->pullMemberVOs();
 
         $resource_model = new Resource();
-        $resources = $resource_model->fetchAll($servicetype, $gridtype);
+        $this->view->total_count = $resource_model->fetchAll_count($servicetype, $gridtype);
+        $resources = $resource_model->fetchAll($servicetype, $gridtype, "name", $dir, $offset, $limit);
 
         $this->view->rows = array();
         foreach($resources as $resource) {

@@ -23,6 +23,18 @@ How to add new page?
 
 ?>
 
+function clone(myObj)
+{
+    if(typeof(myObj) != 'object') return myObj;
+    if(myObj == null) return myObj;
+
+    var myNewObj = new Object();
+
+    for(var i in myObj)
+        myNewObj[i] = clone(myObj[i]);
+
+    return myNewObj;
+}
 
 //console.log();
 
@@ -677,9 +689,21 @@ var VOMatrixGrid = function(config) {
         proxy: new Ext.data.HttpProxy({
             url: 'current/proxy'
         }),
+        baseParams: {
+            feed: 'vo'
+        },
+        remoteSort: true,
         reader: new Ext.data.JsonReader()
     });
     this.store.setDefaultSort('name', "ASC"); 
+
+    this.pagingBar = new Ext.PagingToolbar({
+        pageSize: 20,
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying Resources {0} - {1} of {2}',
+        emptyMsg: "No resources to display"
+    });
 
     this.columns = [{
         header: "ID",
@@ -688,7 +712,7 @@ var VOMatrixGrid = function(config) {
         hidden: true,
         sortable:true
     },{
-        id: 'title',
+        id: 'name',
         header: "Resource Name",
         dataIndex: 'name',
         width: 150,
@@ -707,7 +731,8 @@ var VOMatrixGrid = function(config) {
             tooltip: '<?=$vo->long_name?>',
             renderer: this.formatCheck,
             width: 23,
-            sortable:true
+            //Resource.php doesn't support sorting by VO name!
+            sortable:false
         }
     <?
     }
@@ -723,6 +748,7 @@ var VOMatrixGrid = function(config) {
         loadMask: {msg:'Loading Data...'},
         border:true,
         enableHdMenu:false,
+        disableSelection:true,
         buttonAlign:'center',
         tbar: [
             {
@@ -735,6 +761,7 @@ var VOMatrixGrid = function(config) {
                     {
                         text:'JSON',
                         handler:function() {
+                            //clear start & limit
                             var param = jQuery.param(this.store.baseParams);
                             window.open("<?=base()?>/current/proxy?format=json&"+param);
                         },
@@ -757,7 +784,8 @@ var VOMatrixGrid = function(config) {
                 }
             },
             '-'
-        ]
+        ],
+        bbar: this.pagingBar
     });
 
     this.on('rowcontextmenu', this.onContextClick, this);
@@ -765,7 +793,6 @@ var VOMatrixGrid = function(config) {
 
 Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
     formatCheck: function(value, p, record, rowidx, colidx) {
-        //if(value == "0") return "<img src='images/small_cross.png'/>";
         if(value == "1") p.css += "icon-ok";
         if(colidx % 2 == 0) {
             p.css += " gray_column";
@@ -778,9 +805,8 @@ Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
         return str;
     },
     loadPage: function(){
-        this.store.baseParams["feed"] = "vo";
         this.ctxRow = null;
-        this.store.load();
+        this.store.load({params:{start:0, limit:20}});
     },
     changeFilter: function(value, key) {
         this.store.baseParams[key] = value;
@@ -813,13 +839,13 @@ var VOGroupGrid = function(config) {
                 {name:'resource_id', sortType:'asInt'},
                 'name', 
                 'vo',
-                'vo_name'
+                'vo_name',
+                {name:'vo_short_name', sortType:'asUCString'}
             ]
         ),
-        groupField:'vo',
-        sortInfo:{field: 'vo_name', direction: "ASC"}
+        groupField:'vo_short_name',
+        sortInfo:{field: 'name', direction: "ASC"}
     });
-    this.store.setDefaultSort('name', "ASC"); 
 
     this.columns = [{
         id: 'resource_id',
@@ -838,7 +864,7 @@ var VOGroupGrid = function(config) {
     },{
         id: 'vo',
         header: "Virtual Organization",
-        dataIndex: 'vo',
+        dataIndex: 'vo_short_name',
         hidden:true,
         renderer: this.formatVO,
         sortable:true
@@ -873,7 +899,7 @@ Ext.extend(VOGroupGrid, Ext.grid.GridPanel, {
     },
     formatVO: function(value, p, record) {
         var str = "";
-        str += record.data.vo_name;
+        str += record.data.vo_short_name + " - " + record.data.vo_name + " ";
         return str;
     },
     loadPage: function(){
