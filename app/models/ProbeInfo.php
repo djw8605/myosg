@@ -13,12 +13,13 @@ class ProbeInfo
         if(!Zend_Registry::isRegistered("probeinfo_init")) {
             //pull critical metric information
             $sql = "select * from ".config()->db_oim_schema.".metric_service";
-            $metricinfo_critical_servicetype = $this->db->fetchAll($sql); 
+            $metricinfo_servicetype = $this->db->fetchAll($sql); 
 
             //group by metric_id
             $this->servicetype = array();
             $this->critical_servicetype = array();
-            foreach($metricinfo_critical_servicetype as $info) {
+            $this->non_critical_servicetype = array();
+            foreach($metricinfo_servicetype as $info) {
                 $mid = $info->metric_id;
 
                 //store it to generic servicetype catalog - for looking up which metric belongs to which service
@@ -37,12 +38,21 @@ class ProbeInfo
                     $list = $this->critical_servicetype[$mid];
                     $list[] = $info->service_id;
                     $this->critical_servicetype[$mid] = $list;
+                } else {
+                    //non critical services
+                    if(!isset($this->non_critical_servicetype[$mid])) {
+                        $this->non_critical_servicetype[$mid] = array();
+                    }
+                    $list = $this->non_critical_servicetype[$mid];
+                    $list[] = $info->service_id;
+                    $this->non_critical_servicetype[$mid] = $list;
                 }
             }
 
             //group by critical_servicetype
             $this->critical_probetype = array();
-            foreach($metricinfo_critical_servicetype as $info) {
+            $this->non_critical_probetype = array();
+            foreach($metricinfo_servicetype as $info) {
                 $sid = $info->service_id;
                 if($info->critical == 1) {
                     if(!isset($this->critical_probetype[$sid])) {
@@ -51,7 +61,14 @@ class ProbeInfo
                     $list = $this->critical_probetype[$sid];
                     $list[] = $info->metric_id;
                     $this->critical_probetype[$sid] = $list;
-                }
+                } else {
+                    if(!isset($this->non_critical_probetype[$sid])) {
+                        $this->non_critical_probetype[$sid] = array();
+                    }
+                    $list = $this->non_critical_probetype[$sid];
+                    $list[] = $info->metric_id;
+                    $this->non_critical_probetype[$sid] = $list;
+                  }
             }
 
             //fetch all metricinfo records
@@ -61,12 +78,16 @@ class ProbeInfo
             //store it to cache
             Zend_Registry::set("probeinfo_critical_servicetype", $this->critical_servicetype);
             Zend_Registry::set("probeinfo_critical_probetype", $this->critical_probetype);
+            Zend_Registry::set("probeinfo_non_critical_servicetype", $this->non_critical_servicetype);
+            Zend_Registry::set("probeinfo_non_critical_probetype", $this->non_critical_probetype);
             Zend_Registry::set("probeinfo_probeinfo", $this->probe_infos);
             Zend_Registry::set("probeinfo_init", true);
         } else {
             //use cache
             $this->critical_servicetype = Zend_Registry::get("probeinfo_critical_servicetype");
             $this->critical_probetype = Zend_Registry::get("probeinfo_critical_probetype");
+            $this->non_critical_servicetype = Zend_Registry::get("probeinfo_non_critical_servicetype");
+            $this->non_critical_probetype = Zend_Registry::get("probeinfo_non_critical_probetype");
             $this->probe_infos = Zend_Registry::get("probeinfo_probeinfo");
         }
 
@@ -112,10 +133,20 @@ class ProbeInfo
         if(!isset($this->critical_servicetype[$metric_id])) return array();
         return $this->critical_servicetype[$metric_id];
     }
+    public function getNonCriticalServices($metric_id)
+    {
+        if(!isset($this->non_critical_servicetype[$metric_id])) return array();
+        return $this->non_critical_servicetype[$metric_id];
+    }
     public function getCriticalProbes($service_id)
     {
         if(!isset($this->critical_probetype[$service_id])) return array();
         return $this->critical_probetype[$service_id];
+    }
+    public function getNonCriticalProbes($service_id)
+    {
+        if(!isset($this->non_critical_probetype[$service_id])) return array();
+        return $this->non_critical_probetype[$service_id];
     }
 
     public function isCriticalProbe($resource_id, $metric_id)

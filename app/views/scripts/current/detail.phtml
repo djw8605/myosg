@@ -46,10 +46,18 @@ foreach($this->service_types as $service_type) {
 <div id="detail_other_metrics_<?=$pageid?>">
     <div class="x-panel-body">
     <?
-    foreach($this->metrics as $metric) {
-        if($metric->hasNoServiceTypeAssociation()) {
-            output_metric($metric);
+    $other_metric_count = 0;
+    foreach($this->service_types as $service_type) {
+        $service_id = $service_type->service_id;
+        foreach($this->metrics as $metric) {
+            if($metric->isNonCriticalFor($service_id)) {
+                output_metric($metric);
+                $other_metric_count++;
+            }
         }
+    }
+    if($other_metric_count == 0) {
+        echo "<div class='metric'>No other non-critical metrics are associated with any of the service type associated for this resource.</div>";
     }
     ?>
     </div>

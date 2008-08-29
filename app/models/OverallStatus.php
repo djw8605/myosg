@@ -104,7 +104,6 @@ class OverallStatus
                 //current set doesn't have metric this probe
                 if($this->isCriticalProbe($info->id)) $critical_na++;
                 else $other_na++;
-                //$note .= $info->common_name. " is not reported.";
             } else {
                 //current has metric for this probe
                 $metric = $metrics[$info->id];
@@ -127,7 +126,7 @@ class OverallStatus
                 if($this->isCriticalProbe($info->id)) {
                     if($this->oldest_criticalprobe_timestamp == null or $this->oldest_criticalprobe_timestamp > $timestamp) {
                         $this->oldest_criticalprobe_timestamp = $timestamp;
-                        $this->oldest_criticalmetricdate_id = $mid;//$info->id;
+                        $this->oldest_criticalmetricdate_id = $mid;
                     }
                 }
 

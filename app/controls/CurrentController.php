@@ -277,7 +277,9 @@ class CurrentController extends Zend_Controller_Action
                 if(isset($metrics[$info->id])) $the_metric = $metrics[$info->id];
 
                 //create the metric object with the metric info and data
-                $mobject = new MetricAndProbeInfo($info, $probe_info->getCriticalServices($info->id));
+                $mobject = new MetricAndProbeInfo($info, 
+                    $probe_info->getCriticalServices($info->id),
+                    $probe_info->getNonCriticalServices($info->id));
                 $mobject->setMetric($the_metric);
                 $this->view->metrics[] = $mobject;
             }

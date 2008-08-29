@@ -4,10 +4,14 @@
 //CurrentStatus holds a list of MetricAndProbeInfo
 class MetricAndProbeInfo
 {
-    public function __construct($info, $critical_services) {
+    public function __construct($info, $critical_services, $non_critical_services) {
         $this->info = $info;
         $this->critical_services = $critical_services;
+        $this->non_critical_services = $non_critical_services;
         $this->metric = null;
+
+        //dlog("critical_services: ".print_r($critical_services, true));
+        //dlog("non_critical_services: ".print_r($non_critical_services, true));
     }
 
     public function setMetric($metric) {
@@ -66,9 +70,19 @@ class MetricAndProbeInfo
     {
         return in_array($service_id, $this->critical_services);
     }
+
+    //see if the service it non-critical but are associated service nevertheless
+    public function isNonCriticalFor($service_id)
+    {
+        return in_array($service_id, $this->non_critical_services);
+    }
+
+    //see if thiss metric is, irrelevant..
     public function hasNoServiceTypeAssociation()
     {
-        return count($this->critical_services) == 0;
+        return (
+            count($this->critical_services) == 0 and
+            count($this->non_critical_services) == 0);
     }
 }
 
