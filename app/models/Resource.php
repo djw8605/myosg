@@ -30,6 +30,9 @@ class Resource
             $grid_type_where = "and r.resource_id IN ($resource_ids)";
         }
 
+        //filter by service type (per Arvind's request)
+        $join = "($join) join oim.resource_service rs on r.resource_id = rs.resource_id";
+
         $sql = "select 
                 `r`.`name` AS `name`,
                 `r`.`resource_id` AS `id`,
@@ -41,7 +44,12 @@ class Resource
                 `p`.`primary_email` AS `primary_email`
         from
             $join
-        where r.active = 1 and r.disable = 0 $grid_type_where
+        where 
+            r.active = 1 and r.disable = 0 $grid_type_where
+                and
+            rs.service_id in (SELECT service_id FROM oim.service_service_group WHERE service_group_id=1) 
+                and
+            rs.service_id not in (SELECT DISTINCT PS.parent_service_id psid FROM oim.service PS WHERE PS.parent_service_id IS NOT NULL) 
         order by r.$orderby $dir";
 
         if($offset !== null and $limit !== null) {
