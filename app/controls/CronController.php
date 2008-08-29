@@ -236,7 +236,7 @@ class CronController extends Zend_Controller_Action
                         //load the last status
                         $status = unserialize(file_get_contents($cache_filename));
                         if($status["status"] != "UNKNOWN") {
-                            dlog("status expiration candicate ".$resource->id);
+                            //dlog("status expiration candicate ".$resource->id);
 
                             //load latest metrics
                             $lastmetrics = unserialize(file_get_contents(config()->cache_filename_latest_metrics.".".$resource->id));

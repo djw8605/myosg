@@ -47,6 +47,7 @@ class Resource
         if($offset !== null and $limit !== null) {
             $sql .= " limit $offset,$limit";
         }    
+        dlog($sql);
         return $sql;
     }
 
