@@ -80,6 +80,8 @@ class CronController extends Zend_Controller_Action
                 //pull current metrics for this resource (for initial metric set)
                 $current = array();
                 if(!isset($current_metrics[$resource_id])) {
+                    dlog("initializing current_metrics array for $resource_id");
+
                     //first time..
                     $current = $metric_model->getLatest($resource_id);
 
