@@ -242,7 +242,7 @@ class CronController extends Zend_Controller_Action
                             $omodel->calculateStatus($lastmetrics);
                             //if($omodel->getOverallStatus() == "UNKNOWN") {
                             if($omodel->isExpired()) {
-                                dlog("found a resource that has been UNKNOWN-ed: ".resource->id);
+                                dlog("found a resource that has been UNKNOWN-ed: ".$resource->id);
 /*
                                 if($ostatus_model->insertNewOverallStatus(
                                         "UNKNOWN", 
