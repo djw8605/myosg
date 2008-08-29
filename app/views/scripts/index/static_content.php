@@ -1,8 +1,45 @@
 <div style="display: none;">
 
+    <?
+    function output_standardfilter($id, $obj = "") {
+    ?>
+        <div id="<?=$id?>_toolbar_div" class="toolbar_item">
+            Filter By
+            <select id="<?=$id?>_grid_type_selector" onchange="<?=$id?>_obj<?=$obj?>.changeFilter(this.value, 'gridtype');">
+            <option value="all">(All Grid Types)</option>
+        <?
+            $gridtypes = new GridTypes();
+            $types = $gridtypes->fetchAll();
+            foreach($types as $type) {
+                $gid = $type->grid_type_id;
+                $desc = $type->short_name;
+                echo "<option value=\"$gid\">$desc</option>\n";
+            }
+        ?>
+            </select>
+
+            <select id="<?=$id?>_service_type_selector" onchange="<?=$id?>_obj<?=$obj?>.changeFilter(this.value, 'servicetype');">
+            <option value="all">(All Service Types)</option>
+        <?
+            $servicetypes = new ServiceTypes();
+            $types = $servicetypes->fetchAll();
+            foreach($types as $type) {
+                $id = $type->service_id;
+                $desc = $type->description;
+                echo "<option value=\"$id\">$desc</option>\n";
+            }
+        ?>
+            </select>
+        </div>
+    <?
+    }
+    output_standardfilter("current_overview");
+    
+    ?>
+
     <div id="vomatrix_toolbar_div" class="toolbar_item">
         Filter By
-        <select id="vomatrix_grid_type_selector" onchange="vo_matrix_obj.changeGridType(this.value);">
+        <select id="vomatrix_grid_type_selector" onchange="vo_matrix_obj.changeFilter(this.value, 'gridtype');">
         <option value="all">(All Grid Types)</option>
     <?
         $gridtypes = new GridTypes();
@@ -15,7 +52,7 @@
     ?>
         </select>
 
-        <select id="vomatrix_service_type_selector" onchange="vo_matrix_obj.changeServiceType(this.value);">
+        <select id="vomatrix_service_type_selector" onchange="vo_matrix_obj.changeFilter(this.value, 'servicetype');">
         <option value="all">(All Service Types)</option>
     <?
         $servicetypes = new ServiceTypes();
@@ -27,12 +64,25 @@
         }
     ?>
         </select>
-
     </div>
+
 
     <div id="service_type_selector_div" class="toolbar_item">
         Filter By
-        <select id="service_type_selector" onchange="current_detail_obj.grid.changeFilter(this.value);">
+        <select id="current_detail_grid_type_selector" onchange="current_detail_obj.grid.changeFilter(this.value, 'gridtype');">
+        <option value="all">(All Grid Types)</option>
+    <?
+        $gridtypes = new GridTypes();
+        $types = $gridtypes->fetchAll();
+        foreach($types as $type) {
+            $id = $type->grid_type_id;
+            $desc = $type->short_name;
+            echo "<option value=\"$id\">$desc</option>\n";
+        }
+    ?>
+        </select>
+
+        <select id="current_detail_service_type_selector" onchange="current_detail_obj.grid.changeFilter(this.value, 'servicetype');">
         <option value="all">(All Service Types)</option>
     <?
         $servicetypes = new ServiceTypes();
@@ -48,7 +98,20 @@
 
     <div id="history_service_type_selector_div" class="toolbar_item">
         Filter By
-        <select id="history_service_type_selector" onchange="history_detail_obj.grid.changeFilter(this.value);">
+        <select id="history_grid_type_selector" onchange="history_detail_obj.grid.changeFilter(this.value, 'gridtype');">
+        <option value="all">(All Grid Types)</option>
+    <?
+        $gridtypes = new GridTypes();
+        $types = $gridtypes->fetchAll();
+        foreach($types as $type) {
+            $id = $type->grid_type_id;
+            $desc = $type->short_name;
+            echo "<option value=\"$id\">$desc</option>\n";
+        }
+    ?>
+        </select>
+
+         <select id="history_service_type_selector" onchange="history_detail_obj.grid.changeFilter(this.value, 'servicetype');">
         <option value="all">(All Service Types)</option>
     <?
         $servicetypes = new ServiceTypes();

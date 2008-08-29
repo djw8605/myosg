@@ -19,7 +19,8 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         
         Ext.applyIf(this,defConfig);
         
-        Ext.ux.GMapPanel.superclass.initComponent.call(this);        
+        Ext.ux.GMapPanel.superclass.initComponent.call(this, {
+        });        
 
     },
     zoomchange: function(evt) {

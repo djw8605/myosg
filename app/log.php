@@ -2,6 +2,13 @@
 
 $g_starttime = microtime(true);
 
+function clearlog()
+{
+    unlink(config()->logfile);
+    unlink(config()->error_logfile);
+    unlink(config()->audit_logfile);
+}
+
 function setup_logs()
 {
     //setup logs

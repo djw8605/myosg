@@ -1,0 +1,44 @@
+<?php
+echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+echo "<resources>";
+foreach($this->resources as $resource_id => $resource) {
+
+    $row = $resource["info"];
+    $status = $resource["status"];
+    $detail = $resource["detail"];
+    $counts = $resource["counts"];
+
+    //output basic info about this resource
+    $name = $row->name;
+    $uri = $row->uri;
+    $url = $row->url;
+
+    echo "<resource id=\"$resource_id\">";
+    echo "<name>$name</name>";
+    echo "<uri>$uri</uri>";
+    echo "<url>$url</url>";
+
+    if(user()->hasRole(role::$view_admin_email)) {
+        $admin_name = trim(str_replace("\n", "", trim($row->first_name." ".$row->last_name)));
+        $admin_email = trim(str_replace("\n", "", $row->primary_email));
+
+        echo "<admin_name>$admin_name</admin_name>";
+        echo "<admin_email>$admin_email</admin_email>";
+    }
+
+    echo "<overall_status>$status</overall_status>";
+
+    //get service types
+    $service_types = $this->resource_service_types->getServiceTypes($resource_id);
+    echo "<service_types>";
+    foreach($service_types as $service_type) {
+        echo "<service_type>".$service_type->description."</service_type>";
+    }
+    echo "</service_types>";
+
+    $summary = $detail;
+    echo "<summary>".htmlentities($summary, ENT_QUOTES)."</summary>";
+
+    echo "</resource>";
+}
+echo "</resources>";

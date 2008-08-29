@@ -62,6 +62,7 @@ class common_config
         $this->debug = false;
         $this->logfile = "app/logs/log.txt";
         $this->error_logfile = "app/logs/error.txt";
+        $this->audit_logfile = "app/logs/audit.txt";
 
         //elog email
         $this->elog_email = false;

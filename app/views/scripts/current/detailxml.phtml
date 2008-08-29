@@ -1,0 +1,112 @@
+<?php
+echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+?>
+<detail>
+    <overall_status>
+<?
+    $metricstatus = $this->overall_status["status"];
+    $div_class = "status_$metricstatus";
+    $detail = $this->overall_status["detail"];
+    $counts = $this->overall_status["counts"];
+    $graph = "<img src=\"http://chart.apis.google.com/chart?cht=p3&chs=250x80&chd=t:".$counts["OK"].",".$counts["WARNING"].",".$counts["CRITICAL"].",".$counts["UNKNOWN"]."&chl=OK|Warning|Critical|Unknown&chco=00ff00,ffff00,ff0000,cccccc\"/>";
+?>
+
+        <status><?=$metricstatus?></status>
+        <detail><?=htmlentities($detail)?></detail>
+        <graph><?=htmlentities($graph)?></graph>
+    </overall_status>
+<critical_services>
+<?
+foreach($this->service_types as $service_type) {
+    $service_id = $service_type->service_id;
+?>
+    <critical_service service_id="<?=$service_id?>">
+        <?
+        foreach($this->metrics as $metric) {
+            if($metric->isCriticalFor($service_id)) {
+                output_metric($metric);
+            }
+        }
+        ?>
+    </critical_service>
+<? } ?>
+</critical_services>
+
+<othermetric>
+    <?
+    foreach($this->metrics as $metric) {
+        if($metric->hasNoServiceTypeAssociation()) {
+            output_metric($metric);
+        }
+    }
+    ?>
+</othermetric>
+</detail>
+
+<?
+function output_metric($metric)
+{
+    if($metric->hasData()) {
+        output_metric_detail($metric);
+    } else {
+        output_metric_holder($metric); //data not available..
+    }
+}
+
+function output_metric_holder($metric)
+{
+    $metricname = $metric->getCommonName();
+
+    echo "<metric_status>";
+    echo "<name>$metricname</name>";
+    echo "<status>UNKNOWN</status>";
+    echo "<detail>This probe has never run on this resource. No data available.</detail>";
+    echo "</metric_status>";
+}
+
+function output_metric_detail($status)
+{
+
+    $metricname = $status->getCommonName();
+    $metric_id = $status->getMetricID();
+    $metricstatus = $status->getStatus();
+    echo "<metric_status>";
+
+    $timestamp = $status->getUnixTimestamp();
+    $timestamp_str = date(config()->date_format_full, $timestamp);
+    $sec_ago = time() - $timestamp;
+    $min = (int)($sec_ago / 60);
+    if($min < 2) {
+        $ago = $sec_ago." seconds ago";
+    } else {
+        $hour = (int)($min / 60);
+        if($hour < 2) {
+            $ago = $min." minutes ago";
+        } else {
+            $day = (int)($hour / 24);
+            if($day < 2) {
+                $ago = $hour." hours ago";
+            } else {
+                $ago = $day." days ago";
+            }
+        }
+    }
+    echo "<time>($ago) $timestamp_str UTC</time>";
+    echo "<id>$metric_id</id>";
+    echo "<name>$metricname</name>";
+
+    //is metric too old?
+    if($status->isOld()) {
+        echo "<old_data>true</old_data>";
+    }
+
+    $detail = htmlentities($status->getDetailsData());
+    if(trim($detail) == "") {  
+        echo "<detail>(No Details)</detail>";
+    } else {
+        ?>
+        <detail><?=$detail?></detail>
+        <?
+    }
+    echo "</metric_status>";
+}

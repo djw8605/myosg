@@ -32,6 +32,7 @@ How to add new page?
 //
 //
 
+/*
 var detailEl;
 
 // This is the Details panel that contains the description for each example layout.
@@ -51,7 +52,7 @@ var informationPanel = {
         detailEl.hide().update(Ext.getDom(id+'-details').innerHTML).slideIn('l', {stopFx:true,duration:.2});
     }
 };
-
+*/
 
 var home_start_obj = {
     id: 'home_start-panel',
@@ -67,13 +68,14 @@ var home_start_obj = {
 var menuPanel = new Ext.tree.TreePanel({
     id: 'menu-panel',
     title: 'Navigation',
-    region:'north',
+    region:'west',
     split: true,
-    width: 130,
+    width: 180,
     height: 300,
-    minSize: 50,
+    minSize: 100,
     collapsible: true,
-    autoScroll: true,
+    autoScroll: false,
+    margins: '2 0 5 5',
     
     // tree-specific configs:
     rootVisible: false,
@@ -101,7 +103,7 @@ menuPanel.on('click', function(n){
         Ext.getCmp(n.id+'-panel').loadPage();
 
         //show help information
-        informationPanel.show(n.id);
+        //informationPanel.show(n.id);
 
         return true;
     } 
@@ -180,8 +182,8 @@ var ServerGrid = function(config) {
 };
 
 Ext.extend(ServerGrid, Ext.grid.GridPanel, {
-    changeFilter: function(value) {
-        this.store.baseParams["servicetype"] = value;
+    changeFilter: function(value, key) {
+        this.store.baseParams[key] = value;
         this.ctxRow = null;
         this.store.reload();
     },
@@ -332,8 +334,8 @@ var Current_MainPanel = function(){
         tbar:[
             {
                 split:true,
-                text:'Metrics Pane',
-                tooltip: {title:'Metircs Pane',text:'Show, move or hide the Metrics Pane'},
+                text:'Detail Panel',
+                tooltip: {title:'Metircs Panel',text:'Show, move or hide the Detail Panel'},
                 iconCls: 'preview-bottom',
                 handler: this.moveDetailPanel.createDelegate(this, []),
                 menu:{
@@ -375,6 +377,39 @@ var Current_MainPanel = function(){
                 toggleHandler: function(btn, pressed){
                     this.grid.togglePreview(pressed);
                 }
+            },
+            '-',
+            {
+                text:'Exports',
+                tooltip: {text:'Export raw data for this data source in various data formats.'},
+                iconCls: 'export',
+                menu:{
+                    id:'export-menu',
+                    items: [
+                    {
+                        text:'JSON',
+                        handler:function() {
+                            var param = jQuery.param(this.grid.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=json&"+param);
+                        },
+                        scope:this
+                    },{
+                        text:'CSV',
+                        handler:function() {
+                            var param = jQuery.param(this.grid.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=csv&"+param);
+                        },
+                        scope:this
+                    },
+                    {
+                        text:'XML',
+                        handler:function() {
+                            var param = jQuery.param(this.grid.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=xml&"+param);
+                        },
+                        scope:this
+                    }]
+                }
             }
         ],
         bbar: [
@@ -384,7 +419,7 @@ var Current_MainPanel = function(){
     
     //instanciate DetailPanel
     this.detailpanel = new Ext.Panel({
-        title: 'Detail',
+        title: 'Metric Detail',
         id: 'detailpanel',
         region: 'south',
         cls:'preview',
@@ -405,6 +440,21 @@ var Current_MainPanel = function(){
             disabled:true,
             handler : this.openGIPTab,
             scope: this
+        }, '-',
+        {
+            text:'Exports',
+            tooltip: {text:'Export raw data for this data source in various data formats.'},
+            iconCls: 'export',
+            menu:{
+                items: [{
+                    text:'XML',
+                    handler:function() {
+                        var resource_id = this.grid.getSelectionModel().getSelected().data.resource_id;
+                        window.open("<?=base()?>/current/proxy?feed=detail&id="+resource_id+"&format=xml");
+                    },
+                    scope:this
+                }]
+            }
         }
         <?php
         if(user()->hasRole(role::$view_admin_email)) { 
@@ -554,28 +604,29 @@ Ext.extend(Current_MainPanel, Ext.TabPanel, {
                 closable:true,
                 listeners: DetailPanel.LinkInterceptor,
                 autoScroll:true,
-                border:true
+                border:true,
+                tbar: [
+                    {
+                        id:'giptab',
+                        text: 'Show GIP Information',
+                        iconCls: 'new-tab',
+                        handler : this.openGIPTab,
+                        scope: this
+                    }
                 <?php
                 if(user()->hasRole(role::$view_admin_email)) { 
                 ?>
-                    ,tbar: [
-                        {
-                            id:'giptab',
-                            text: 'Show GIP Information',
-                            iconCls: 'new-tab',
-                            handler : this.openGIPTab,
-                            scope: this
-                        }, '-', {
-                            text: 'Email Administrator',
-                            iconCls: 'email',
-                            handler : function(){
-                                document.location=formatCurrentStatusEmail(d);
-                            }
+                    , '-', {
+                        text: 'Email Administrator',
+                        iconCls: 'email',
+                        handler : function(){
+                            document.location=formatCurrentStatusEmail(d);
                         }
-                    ]
+                    }
                 <?
                 }
                 ?>
+                ]
             });
             this.add(tab);
         }
@@ -647,10 +698,10 @@ var VOMatrixGrid = function(config) {
     <?
     $vo_model = new VO();
     $vos = $vo_model->fetchAll();
+    $odd = false;
     foreach($vos as $vo) {
     ?>
         ,{
-            //header: "<?=$vo->short_name?>",
             header: "<img class='voname' src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
             dataIndex: '<?=$vo->short_name?>',
             tooltip: '<?=$vo->long_name?>',
@@ -673,19 +724,52 @@ var VOMatrixGrid = function(config) {
         border:true,
         enableHdMenu:false,
         buttonAlign:'center',
-        viewConfig: {
-            //forceFit:true
-        },
-        tbar: []
+        tbar: [
+            {
+                text:'Exports',
+                tooltip: {text:'Export raw data for this data source in various data formats.'},
+                iconCls: 'export',
+                menu:{
+                    id:'export-menu',
+                    items: [
+                    {
+                        text:'JSON',
+                        handler:function() {
+                            var param = jQuery.param(this.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=json&"+param);
+                        },
+                        scope:this
+                    },{
+                        text:'CSV',
+                        handler:function() {
+                            var param = jQuery.param(this.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=csv&"+param);
+                        },
+                        scope:this
+                    },{
+                        text:'XML',
+                        handler:function() {
+                            var param = jQuery.param(this.store.baseParams);
+                            window.open("<?=base()?>/current/proxy?format=xml&"+param);
+                        },
+                        scope:this
+                    }]
+                }
+            },
+            '-'
+        ]
     });
 
     this.on('rowcontextmenu', this.onContextClick, this);
 };
 
 Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
-    formatCheck: function(value, p, record) {
+    formatCheck: function(value, p, record, rowidx, colidx) {
         //if(value == "0") return "<img src='images/small_cross.png'/>";
         if(value == "1") p.css += "icon-ok";
+        if(colidx % 2 == 0) {
+            p.css += " gray_column";
+        }
         return "";
     },
     formatTitle: function(value, p, record) {
@@ -698,13 +782,8 @@ Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
         this.ctxRow = null;
         this.store.load();
     },
-    changeServiceType: function(value) {
-        this.store.baseParams["servicetype"] = value;
-        this.ctxRow = null;
-        this.store.reload();
-    },
-    changeGridType: function(value) {
-        this.store.baseParams["gridtype"] = value;
+    changeFilter: function(value, key) {
+        this.store.baseParams[key] = value;
         this.ctxRow = null;
         this.store.reload();
     }
@@ -801,6 +880,11 @@ Ext.extend(VOGroupGrid, Ext.grid.GridPanel, {
         this.store.baseParams["feed"] = "vogroup";
         this.ctxRow = null;
         this.store.load();
+    },
+    changeFilter: function(value, key) {
+        this.store.baseParams[key] = value;
+        this.ctxRow = null;
+        this.store.reload();
     }
 });
 
@@ -810,33 +894,45 @@ var vo_group_obj = new VOGroupGrid();
 //
 // Status Overview (Gmap)
 //
-var current_overview_obj = {
-    id: 'current_overview-panel',
-    title: 'Overview',
-    layout: 'fit',
-    xtype: 'gmappanel',
-    zoomLevel: 4,       //2 is better for whole world
-    gmapType: 'map',
-    addControl: new GSmallMapControl(),
-    setCenter: { lat: 50, 'long': -85 },
-    loadPage: function() {
-        Ext.getCmp("current_overview-panel").gmap.checkResize();
-        $.getJSON("current/proxy?feed=gmap",
-        function(data){
-          Ext.getCmp("current_overview-panel").gmap.clearOverlays();
-          $.each(data.markers, function(i,marker){
-            //add marker
-            var mkr_point = new GLatLng(marker.lat,marker['long']);
-            Ext.getCmp("current_overview-panel").addMarker(
-                    mkr_point,
-                    marker.marker,
-                    false,
-                    marker.setCenter, 
-                    marker.info);
-          });
-        });
-    }
+var Overview = function(config) {
+    Ext.apply(this, config);
+    Overview.superclass.constructor.call(this, {
+        id: 'current_overview-panel',
+        title: 'Resource Group Map',
+        tbar: ['&nbsp;'],
+        layout: 'fit',
+        zoomLevel: 4,       //2 is better for whole world
+        gmapType: 'map',
+        addControl: new GSmallMapControl(),
+        setCenter: { lat: 50, 'long': -85 }
+    });
 };
+Ext.extend(Overview, Ext.ux.GMapPanel, {
+    loadPage: function() {
+        this.gmap.checkResize();
+        var param = jQuery.param(this.baseParams);
+        $.getJSON("current/proxy?feed=gmap&"+param,
+            function(data){
+                current_overview_obj.gmap.clearOverlays();
+                $.each(data.markers, function(i,marker){
+                    current_overview_obj.addMarker(
+                        new GLatLng(marker.lat,marker['long']),
+                        marker.marker,
+                        false,
+                        marker.setCenter, 
+                        marker.info
+                    );
+                });
+            }
+        );
+    },
+    baseParams: new Object,
+    changeFilter: function(value, key) {
+        this.baseParams[key] = value;
+        this.loadPage();
+    }
+});
+var current_overview_obj = new Overview();
 
 var icon_ok = new GIcon();
 icon_ok.image = "images/status_ok.png";
@@ -936,8 +1032,8 @@ var HistoryGrid = function(config) {
 };
 
 Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
-    changeFilter: function(value) {
-        this.store.baseParams["servicetype"] = value;
+    changeFilter: function(value, key) {
+        this.store.baseParams[key] = value;
         this.ctxRow = null;
         this.store.reload();
     },
@@ -984,7 +1080,7 @@ Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
     },
     togglePreview : function(show){
         this.view.showPreview = show;
-        this.view.refresh();
+        //this.view.refresh();
     },
     // within this function "this" is actually the GridView
     applyRowClass: function(record, rowIndex, p, ds) {
@@ -1093,8 +1189,8 @@ var History_MainPanel = function(){
         tbar:[
             {
                 split:true,
-                text:'Detail Pane',
-                tooltip: {title:'Detail Pane',text:'Show, move or hide the History Detail Pane'},
+                text:'Detail Panel',
+                tooltip: {title:'Detail Panel',text:'Show, move or hide the History Detail Panel'},
                 iconCls: 'preview-bottom',
                 handler: this.moveDetailPanel.createDelegate(this, []),
                 menu:{
@@ -1124,6 +1220,7 @@ var History_MainPanel = function(){
                     }]
                 }
             },
+/*
             '-',
             {
                 pressed: true,
@@ -1136,6 +1233,7 @@ var History_MainPanel = function(){
                     this.grid.togglePreview(pressed);
                 }
             },
+*/
             '-',
             'Date Range',
             {
@@ -1158,7 +1256,8 @@ var History_MainPanel = function(){
                 iconCls: 'export',
                 menu:{
                     id:'export-menu',
-                    items: [{
+                    items: [
+                    {
                         text:'JSON',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
@@ -1166,17 +1265,18 @@ var History_MainPanel = function(){
                         },
                         scope:this
                     },{
-                        text:'XML',
-                        handler:function() {
-                            var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/history/resource/?format=xml&"+param);
-                        },
-                        scope:this
-                    },{
                         text:'CSV',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
                             window.open("<?=base()?>/history/resource/?format=csv&"+param);
+                        },
+                        scope:this
+                    },
+                    {
+                        text:'XML',
+                        handler:function() {
+                            var param = jQuery.param(this.grid.store.baseParams);
+                            window.open("<?=base()?>/history/resource/?format=xml&"+param);
                         },
                         scope:this
                     }]
@@ -1211,7 +1311,45 @@ var History_MainPanel = function(){
             disabled:true,
             handler : this.openGIPTab,
             scope: this
-        }]
+        }, '-',
+        {
+            text:'Exports',
+            tooltip: {text:'Export raw data for this data source in various data formats.'},
+            iconCls: 'export',
+            menu:{
+                id:'export-menu',
+                items: [{
+                    text:'XML',
+                    handler:function() {
+                        var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
+                        var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
+                        var id = this.grid.getSelectionModel().getSelected().data.resource_id;
+                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=xml");
+                    },
+                    scope:this
+                }/*,{
+                    text:'JSON',
+                    handler:function() {
+                        var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
+                        var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
+                        var id = this.grid.getSelectionModel().getSelected().data.resource_id;
+                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=json");
+                    },
+                    scope:this
+                },{
+                    text:'CSV',
+                    handler:function() {
+                        var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
+                        var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
+                        var id = this.grid.getSelectionModel().getSelected().data.resource_id;
+                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=csv");
+                    },
+                    scope:this
+                }*/
+                ]
+            }
+        }
+        ]
     });
 
     History_MainPanel.superclass.constructor.call(this, {
@@ -1385,7 +1523,6 @@ Ext.extend(History_MainPanel, Ext.TabPanel, {
         var label = d.format('<?=config()->date_format?>');
         $("#history_end_date button").text(label);
     },
-
     setStartTime: function(time) {
         var d = new Date();
         d.setTime(time*1000);
@@ -1473,7 +1610,7 @@ Ext.onReady(function(){
                 region: 'north',
                 applyTo: 'header',
                 height: 40
-            }, {
+            }, /*{
                 layout: 'border',
                 id: 'layout-browser',
                 region:'west',
@@ -1484,8 +1621,10 @@ Ext.onReady(function(){
                 minSize: 100,
                 maxSize: 500,
                 items: [menuPanel, informationPanel]
-            },
-            contentPanel
+            }*/
+            menuPanel
+            
+            ,contentPanel
         ],
         renderTo: 'viewportarea'
     });
@@ -1504,10 +1643,11 @@ Ext.onReady(function(){
     tbar.add('-');
     tbar.addElement('history_service_type_selector_div');
 
-
     var tbar = vo_matrix_obj.getTopToolbar();
     tbar.addElement('vomatrix_toolbar_div');
 
+    var tbar = current_overview_obj.getTopToolbar();
+    tbar.addElement('current_overview_toolbar_div');
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -1528,7 +1668,7 @@ Ext.onReady(function(){
     // Now, ready to load the initial page
     //
     Ext.getCmp('<?=$this->initial_page?>-panel').loadPage();
-    informationPanel.show('<?=$this->initial_page?>');
+    //informationPanel.show('<?=$this->initial_page?>');
     
     ///////////////////////////////////////////////////////////////////////////
     //

@@ -61,13 +61,46 @@ class HistoryController extends Zend_Controller_Action
             $this->view->start_time = $start_time;
             $this->view->end_time = $end_time;
             $this->view->status_changes = $overall_status->fetchStatusChanges($start_time, $end_time);
-            $this->render("detail");
+
+            //output in requested format
+            $format = "html";
+            if(isset($_REQUEST["format"])) {
+                $format = $_REQUEST["format"];
+            }
+            switch($format) {
+            /*
+            case "json":
+                header('Content-type: text/plain');
+                $this->render("detailjson");
+                break;
+            case "csv":
+                header('Content-type: text/plain');
+                $this->render("detailcsv");
+                break;
+            */
+            case "html":
+                $this->render("detail");
+                break;
+            case "xml":
+                header('Content-type: text/xml');
+                $this->render("detailxml");
+                break;
+            default:
+                $this->render("none");
+            }
         }
     }
 
     //output json containing status history graph (wrapped in json)
     public function resourceAction()
     {
+        $gridtype = null;
+        if(isset($_REQUEST["gridtype"])) {
+            $dirty_gridtype = $_REQUEST["gridtype"];
+            if(Zend_Validate::is($dirty_gridtype, 'Int')) {
+                $gridtype = $dirty_gridtype;
+            }
+        }
 
         $servicetype = null;
         if(isset($_REQUEST["servicetype"])) {
@@ -97,7 +130,7 @@ class HistoryController extends Zend_Controller_Action
 
         //pull resource info 
         $resource_model = new Resource();
-        $resource_records_all = $resource_model->fetchAll($servicetype);
+        $resource_records_all = $resource_model->fetchAll($servicetype, $gridtype);
         $resource_records = array();
         foreach($resource_records_all as $resource_record) {
             if(file_exists(config()->cache_filename_latest_overall.".".$resource_record->id)) {
@@ -227,32 +260,34 @@ class HistoryController extends Zend_Controller_Action
         $total_time = $end_time - $start_time;
         $decile_out = 0; //used to calculate the reminder area
         $first = true;
-        foreach($status_changes as $change) {
-            $time = $change->timestamp;
-            if($first) {
-                $decile1 = (float)($time-$start_time)/$total_time*$image_width;
-                $decile_out = $decile1;
-                $status = $change->overall_status;
-                //$detail = $change->detail;
-                $first = false;
-            } else {
-                $next_status = $change->overall_status;
-                $decile2 = (float)($time-$start_time)/$total_time*$image_width;
-                imageline($im, $decile1, 0, $decile2, 0, $color[$status]);
-                dlog("coloring from $decile1 to $decile2 with $status");
-                $size = ($decile2 - $decile1);
-                $decile_out += $size;
+        if($total_time > 0) {
+            foreach($status_changes as $change) {
+                $time = $change->timestamp;
+                if($first) {
+                    $decile1 = (float)($time-$start_time)/$total_time*$image_width;
+                    $decile_out = $decile1;
+                    $status = $change->overall_status;
+                    //$detail = $change->detail;
+                    $first = false;
+                } else {
+                    $next_status = $change->overall_status;
+                    $decile2 = (float)($time-$start_time)/$total_time*$image_width;
+                    imageline($im, $decile1, 0, $decile2, 0, $color[$status]);
+                    dlog("coloring from $decile1 to $decile2 with $status");
+                    $size = ($decile2 - $decile1);
+                    $decile_out += $size;
 
-                $status = $next_status;
-                $decile1 = $decile2;
+                    $status = $next_status;
+                    $decile1 = $decile2;
+                }
+            }
+            if(count($status_changes) > 0) {
+                //fill leftover
+                imageline($im, $decile_out, 0, $image_width, 0, $color[$status]);
+                dlog("(last)coloring from $decile_out to $image_width with $status");
             }
         }
-        if(count($status_changes) > 0) {
-            //fill leftover
-            imageline($im, $decile_out, 0, $image_width, 0, $color[$status]);
-            dlog("(last)coloring from $decile_out to $image_width with $status");
-        }
- 
+
         //output the image
         header('Content-type: image/png');
         imagePNG($im); 

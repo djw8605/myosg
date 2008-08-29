@@ -23,17 +23,6 @@ class VO
     public function pullMemberVOs($resource_id = null)
     {
         $schema = config()->db_oim_schema;
-/*
-        $sql = "SELECT VOM.*, R.name, VO.long_name
-  FROM vo_matrix VOM
-  LEFT JOIN $schema.resource R ON (VOM.resource_id = R.resource_id )
-  JOIN $schema.resource_resource_group RRG ON (RRG.resource_id=R.resource_id)
-  JOIN $schema.resource_group RG ON (RG.resource_group_id=RRG.resource_group_id)
-  JOIN $schema.resource_service RS ON (RS.resource_id=R.resource_id)
-  JOIN $schema.service S ON (S.service_id=RS.service_id)
-  JOIN $schema.virtualorganization VO on VOM.vo_id = VO.vo_id
-WHERE RG.osg_grid_type_id IN (SELECT grid_type_id FROM $schema.osg_grid_type OGT WHERE OGT.short_name = 'OSG-ITB')";
-*/
         $sql = "SELECT VOM.*, R.name, VO.long_name FROM vo_matrix VOM
                   LEFT JOIN $schema.resource R ON (VOM.resource_id = R.resource_id )
                   JOIN $schema.virtualorganization VO on VOM.vo_id = VO.vo_id";

@@ -1,0 +1,15 @@
+<?
+echo "resource_id,resource_name";
+foreach($this->vos as $vo) {
+    echo ",".$vo->short_name;
+}
+echo "\n";
+
+foreach($this->rows as $row) {
+    echo $row["resource_id"].",";
+    echo "\"".$row["resource_name"]."\"";
+    foreach($this->vos as $vo) {
+        echo ",".$row[$vo->short_name];
+    }
+    echo "\n";
+}

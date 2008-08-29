@@ -371,6 +371,11 @@ class CronController extends Zend_Controller_Action
         $this->render("none");
     }
 
+    public function clearlogAction()
+    {
+        clearlog();
+        $this->render("none");
+    }
 
     public function emailAction()
     {

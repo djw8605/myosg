@@ -1,3 +1,4 @@
+
 html, body {
     font-family:'lucida grande',tahoma,arial,sans-serif;
     font-size:11px;
@@ -257,6 +258,7 @@ body.x-border-layout-ct {
 .preview .x-panel-body pre, #preview .x-panel-body code {
     background:#f1f1f1;
     display:block;
+    white-space: wrap;
 }
 
 .preview .x-panel-body h4.post-author {
@@ -277,9 +279,6 @@ body.x-border-layout-ct {
 .preview .x-panel-body div.post-body {
     padding:10px;
 }
-/*.single-preview .x-toolbar, #right-preview .preview .x-toolbar {
-    border-top:0 none;
-}*/
 .reading-menu .x-menu-item-checked {
    border:1px dotted #a3bae9 !important;
     background:#DFE8F6;
@@ -586,3 +585,16 @@ div.post-body h2
     padding-left: 3px;
 }
 
+.gray_column
+{
+    background-color: #eee;
+}
+.x-grid3-row-selected .gray_column
+{
+    background-color: transparent;
+}
+
+.x-grid3-row
+{
+    border-top: 0;
+}

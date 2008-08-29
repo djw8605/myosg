@@ -1,0 +1,18 @@
+<?
+echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+echo "<vo_matrix>";
+echo "<resources>";
+foreach($this->rows as $row) {
+    echo "<resource id=\"".$row["resource_id"]."\">";
+    echo "<name>".$row["resource_name"]."</name>";
+    echo "<vos>";
+    foreach($this->vos as $vo) {
+        echo "<vo name=\"".$vo->short_name."\">";
+        echo $row[$vo->short_name];
+        echo "</vo>";
+    }
+    echo "</vos>";
+    echo "</resource>";
+}
+echo "</resources>";
+echo "</vo_matrix>";

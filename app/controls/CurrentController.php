@@ -26,6 +26,23 @@ class CurrentController extends Zend_Controller_Action
 
     private function output_vogroup()
     {
+/*
+        $gridtype = null;
+        if(isset($_REQUEST["gridtype"])) {
+            $dirty_gridtype = $_REQUEST["gridtype"];
+            if(Zend_Validate::is($dirty_gridtype, 'Int')) {
+                $gridtype = $dirty_gridtype;
+            }
+        }
+        $servicetype = null;
+        if(isset($_REQUEST["servicetype"])) {
+            $dirty_servicetype = $_REQUEST["servicetype"];
+            if(Zend_Validate::is($dirty_servicetype, 'Int')) {
+                $servicetype = $dirty_servicetype;
+            }
+        }
+*/
+
         $vo_model = new VO();
         $this->view->vos = $vo_model->pullMemberVOs();
         $this->render("vogroup");
@@ -48,7 +65,6 @@ class CurrentController extends Zend_Controller_Action
                 $servicetype = $dirty_servicetype;
             }
         }
-
 
         $vo_model = new VO();
         $this->view->vos = $vo_model->fetchAll();
@@ -75,7 +91,27 @@ class CurrentController extends Zend_Controller_Action
             $this->view->rows[] = $row;
         }
 
-        $this->render("vo");
+        //output in requested format
+        $format = "json";
+        if(isset($_REQUEST["format"])) {
+            $format = $_REQUEST["format"];
+        }
+        switch($format) {
+        case "json":
+            header('Content-type: text/plain');
+            $this->render("vo");
+            break;
+        case "csv":
+            header('Content-type: text/plain');
+            $this->render("vocsv");
+            break;
+        case "xml":
+            header('Content-type: text/xml');
+            $this->render("voxml");
+            break;
+        default:
+            $this->render("none");
+        }
     }
 
     private function output_glue()
@@ -99,8 +135,23 @@ class CurrentController extends Zend_Controller_Action
     {
         header("Content-Type: text/javascript");
 
+        $gridtype = null;
+        if(isset($_REQUEST["gridtype"])) {
+            $dirty_gridtype = $_REQUEST["gridtype"];
+            if(Zend_Validate::is($dirty_gridtype, 'Int')) {
+                $gridtype = $dirty_gridtype;
+            }
+        }
+        $servicetype = null;
+        if(isset($_REQUEST["servicetype"])) {
+            $dirty_servicetype = $_REQUEST["servicetype"];
+            if(Zend_Validate::is($dirty_servicetype, 'Int')) {
+                $servicetype = $dirty_servicetype;
+            }
+        }
+ 
         $resource = new Resource();
-        $this->view->resource_rowset = $resource->fetchAll();
+        $this->view->resource_rowset = $resource->fetchAll($servicetype, $gridtype);
 
         $this->view->status = array();
         $probeinfo = new ProbeInfo();
@@ -127,6 +178,13 @@ class CurrentController extends Zend_Controller_Action
 
     private function output_resource()
     {
+        $gridtype = null;
+        if(isset($_REQUEST["gridtype"])) {
+            $dirty_gridtype = $_REQUEST["gridtype"];
+            if(Zend_Validate::is($dirty_gridtype, 'Int')) {
+                $gridtype = $dirty_gridtype;
+            }
+        }
         $servicetype = null;
         if(isset($_REQUEST["servicetype"])) {
             $dirty_servicetype = $_REQUEST["servicetype"];
@@ -134,29 +192,11 @@ class CurrentController extends Zend_Controller_Action
                 $servicetype = $dirty_servicetype;
             }
         }
-/*
-        $start = null;
-        if(isset($_REQUEST["start"])) {
-            $dirty_start = $_REQUEST["start"];
-            $start = (int)$dirty_start;
-        }
-        $limit = null;
-        if(isset($_REQUEST["limit"])) {
-            $dirty_limit = $_REQUEST["limit"];
-            $limit = (int)$dirty_limit;
-        }
-        $paging = null;
-        if($start !== null and $limit !== null) {
-            $paging = array("offset"=>$start, "limit"=>$limit);
-        } 
-*/
 
         $this->view->resource_service_types = new ResourceServiceTypes();
         $resource_model = new Resource();
-        $resources = $resource_model->fetchAll($servicetype/*, $paging*/);
+        $resources = $resource_model->fetchAll($servicetype, $gridtype);
         $this->view->total_count = count($resources);
-        //$this->view->total_count = $resource_model->fetchAll_CountOnly($servicetype);
-        //dlog("count is ".$this->view->total_count);
 
         //load resource information
         $this->view->resources = array();
@@ -171,7 +211,27 @@ class CurrentController extends Zend_Controller_Action
             }
         }
 
-        $this->render("resource");
+        //output in requested format
+        $format = "json";
+        if(isset($_REQUEST["format"])) {
+            $format = $_REQUEST["format"];
+        }
+        switch($format) {
+        case "json":
+            header('Content-type: text/plain');
+            $this->render("resource");
+            break;
+        case "csv":
+            header('Content-type: text/plain');
+            $this->render("resourcecsv");
+            break;
+        case "xml":
+            header('Content-type: text/xml');
+            $this->render("resourcexml");
+            break;
+        default:
+            $this->render("none");
+        }
     }
 
     private function output_detail()
@@ -205,14 +265,32 @@ class CurrentController extends Zend_Controller_Action
                 $this->view->metrics[] = $mobject;
             }
 
-            //$probeinfo = new ProbeInfo();
-            //$overall_status = new OverallStatus($resource_id, $probeinfo);
-            //$this->view->overall_status = $overall_status;
-            //$lastinfo = $overall_status->getLastInfo();
-            //$before = $lastinfo->timestamp; //TODO - should I use effective_timestamp instead?
-            //$this->view->current_status = new CurrentStatus($resource_id, $before);
-
-            $this->render("detail");
+            //output in requested format
+            $format = "html";
+            if(isset($_REQUEST["format"])) {
+                $format = $_REQUEST["format"];
+            }
+            switch($format) {
+            /*
+            case "json":
+                header('Content-type: text/plain');
+                $this->render("detailjson");
+                break;
+            case "csv":
+                header('Content-type: text/plain');
+                $this->render("detailcsv");
+                break;
+            */
+            case "html":
+                $this->render("detail");
+                break;
+            case "xml":
+                header('Content-type: text/xml');
+                $this->render("detailxml");
+                break;
+            default:
+                $this->render("none");
+            }
         }
     }
 } 
