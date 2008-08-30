@@ -32,10 +32,10 @@ class OverallStatus
         return $info;
     }
 
-    public function insertNewOverallStatus($overall_status, $timestamp, $detail, $resource_id, $responsible_metric_id, $count)
+    public function insertNewOverallStatus($overall_status, $timestamp, $detail, $resource_id, $responsible_metric_id)
     {
         if($responsible_metric_id === null) $responsible_metric_id = "NULL";
-        $sql = "insert into overall_status (overall_status, timestamp, detail, resource_id, responsible_metric_id, count_info) values (\"$overall_status\", $timestamp, \"$detail\", $resource_id, $responsible_metric_id, \"$count\")";
+        $sql = "insert into overall_status (overall_status, timestamp, detail, resource_id, responsible_metric_id) values (\"$overall_status\", $timestamp, \"$detail\", $resource_id, $responsible_metric_id)";
         try {
             $this->db->query($sql);
         } catch(Exception $e) {
@@ -137,7 +137,7 @@ class OverallStatus
                 if($this->isCriticalProbe($info->id)) {
                     if($this->oldest_criticalprobe_timestamp == null or $this->oldest_criticalprobe_timestamp > $timestamp) {
                         $this->oldest_criticalprobe_timestamp = $timestamp;
-                        $this->oldest_criticalmetricdate_id = $mid;
+                        $this->oldest_criticalmetricdata_id = $mid;
                     }
                 }
 
@@ -194,18 +194,21 @@ class OverallStatus
         $critical_total = $critical_warning + $critical_critical + $critical_unknown + $critical_ok + $critical_na;
 */
 
-        //check for expiration 
+        //check for expiration (this must takes precedance, or processnew algorithm will not work
         if($this->oldest_criticalprobe_timestamp !== null) {
             $expiration_time = $this->oldest_criticalprobe_timestamp + config()->metric_considered_old;
             if($calctime > $expiration_time) {
                 $this->expired = true;
                 $this->expired_time = $expiration_time;
                 $this->expired_responsible_id = $this->oldest_criticalmetricdata_id;
+
+                $this->overall_status = "UNKNOWN";
+                $this->overall_detail = "$old_critical of $critical_total critical metrics is too old. $note";
+                return;
             }
         }
 
         //now figure out the overal status
-
         if($critical_critical > 0) {
             $this->overall_status = "CRITICAL";
             $this->overall_detail = "$critical_critical of $critical_total critical metrics reported CRITICAL status. $note";
@@ -225,13 +228,6 @@ class OverallStatus
             $this->overall_status = "UNKNOWN";
             $this->overall_detail = "$critical_na of $critical_total critical metrics is not available. $note";
             $this->nad = true;
-            return;
-        }
-
-        if($old_critical > 0) {
-            $this->overall_status = "UNKNOWN";
-            $this->overall_detail = "$old_critical of $critical_total critical metrics is too old. $note";
-
             return;
         }
 

@@ -67,7 +67,7 @@ class CronController extends Zend_Controller_Action
                 $effective_dbid = null;
                 $effective_timestamp = null;
 
-                //validate the metrci data
+                //make sure it belongs to correct resource and metric
                 if($resource_id === null) {
                     $validation_error++;
                     continue;
@@ -78,6 +78,7 @@ class CronController extends Zend_Controller_Action
                 }
 
                 //pull current metrics for this resource (for initial metric set)
+                //also initialize the overstatus model for status calculation
                 $current = array();
                 if(!isset($current_metrics[$resource_id])) {
                     dlog("initializing current_metrics array for $resource_id");
@@ -103,11 +104,13 @@ class CronController extends Zend_Controller_Action
                         $overall_status[$resource_id] = "no-last-info"; 
                     }
                 }
+
+                //some shorthands..
                 $ostatus_model = $overall_status_model[$resource_id];
                 $current = $current_metrics[$resource_id];
                 
-                //if status is unknown, set effective_dbic to last known metric if it is 
-                //within metric_considered_old time.
+                //if the metric status is unknown, try to use previous non-unknown metric
+                //if it it's within certain time frame.
                 if($status == "UNKNOWN") {
                     if(isset($current[$metric_id])) {
                         $previous = $current[$metric_id];
@@ -130,10 +133,11 @@ class CronController extends Zend_Controller_Action
                     }
                 }
 
-                //update the current set with the new record from gratia
+                //Finaly, update the current set with the new record from gratia
                 if(!isset($current[$metric_id])) {
                     //first ever metric type for this resource!
-                    $current[$metric_id] = new MetricRecord(); //metric record is defined in config.php (for now)
+                    //MetricRecord is defined in config.php because we serialize current array
+                    $current[$metric_id] = new MetricRecord(); 
                 }
                 $current[$metric_id]->dbid = $dbid;
                 $current[$metric_id]->status = $status;
@@ -147,19 +151,17 @@ class CronController extends Zend_Controller_Action
                 if($current["lasttime"] > $timestamp) {
                     $lag = $current["lasttime"] - $timestamp;
                     if($lag < config()->gratia_max_outoforder) {
-                        elog("out-of-order metric detected. ID:$dbid ".$lag. " seconds - resetting timestamp to last reported timestamp");
+                        dlog("out-of-order metric detected. ID:$dbid ".$lag. " seconds - resetting timestamp to last reported timestamp");
                         $timestamp = $current["lasttime"];
                     } else {
-                        elog("out-of-order metric detected. ID:$dbid ".$lag. " seconds (more than ".config()->gratia_max_outoforder." seconds) - ignoring");
-                        //TODO - Arvind wants to mark these records, and do post-processing. I think if we have to develop
-                        //2 sets of algorithms to handle this, then I should get this algorithm smart enough to be able
-                        //to handle the late records.
+                        //ignore this metric.. for now.
+                        dlog("out-of-order metric detected. ID:$dbid ".$lag. " seconds (more than ".config()->gratia_max_outoforder." seconds) - ignoring");
                         continue;
                     }
                 }
                 $current["lasttime"] = $timestamp;
 
-                //insert to our metrics table
+                //insert new record to our metrics table
                 try {
                     $metric_model->insert($dbid, $resource_id, $metric_id, $status, $timestamp, $detail, $effective_dbid, $effective_timestamp);
                     //dlog("inserting new metric $dbid for resource: $resource_id at ".date(config()->date_format_full." s", $timestamp));
@@ -169,10 +171,10 @@ class CronController extends Zend_Controller_Action
                     elog("Caught Exception while running query: ".print_r($e, true));
                 }
 
-                //handle metric update plugins
+                //call metric update plugins for any additional processing for this metric update
                 $plugin->dispatch($resource_id, $metric_id, $current[$metric_id]);
 
-                //re-calculate overall status
+                //Re-calculate overall status with current metric set
                 $ostatus_model->calculateStatus($current, $timestamp);
                 $new_status = $ostatus_model->getOverallStatus();
 
@@ -196,7 +198,7 @@ class CronController extends Zend_Controller_Action
                     //NA means the status is UNKNOWN(for now..) due to critical metrics
                     //not even reported..
                     if($ostatus_model->isNA()) {
-                        $dbid = null; //no particular metric should be responsible the "change" of this status
+                        $dbid = null; //no particular metric should be responsible for not having enough data
                     }
 
                     if($ostatus_model->insertNewOverallStatus(
@@ -204,8 +206,7 @@ class CronController extends Zend_Controller_Action
                             $timestamp, 
                             $ostatus_model->getOverallDetail(), 
                             $resource_id, 
-                            $dbid, 
-                            "remove me")) {
+                            $dbid)) {
                         $newstatus_inserted++;
                         dlog("inserted status change for $resource_id, at $timestamp caused by $dbid");
                     }
@@ -240,22 +241,24 @@ class CronController extends Zend_Controller_Action
                             //recalculate overallstatus
                             $omodel = new OverallStatus($resource->id);
                             $omodel->calculateStatus($lastmetrics);
-                            //if($omodel->getOverallStatus() == "UNKNOWN") {
+
                             if($omodel->isExpired()) {
-                                dlog("found a resource that has been UNKNOWN-ed: ".$resource->id);
-/*
-                                if($ostatus_model->insertNewOverallStatus(
+                                $timestamp = $omodel->getExpiredTimestamp();
+                                $detail = $omodel->getOverallDetail();
+                                $dbid = $omodel->getExpiredResponsibleID();
+                                if($omodel->insertNewOverallStatus(
                                         "UNKNOWN", 
                                         $timestamp, 
-                                        $ostatus_model->getOverallDetail(), 
+                                        $detail,
                                         $resource_id, 
-                                        $dbid, 
-                                        "remove me")) {
+                                        $dbid)) {
                                     $newstatus_inserted++;
-                                    dlog("inserted status change for $resource_id, at $timestamp caused by $dbid");
+                                    elog("Expired Previously: inserted status change for $resource_id, at $timestamp caused by $dbid");
+
+                                    //these causes below caching saving code to update info
+                                    $current_metrics[$resource->id] = $lastmetrics;
+                                    $overall_status_model[$resource->id] = $omodel;
                                 }
-                                //TODO
- */                               
                             }
                         }
                     }

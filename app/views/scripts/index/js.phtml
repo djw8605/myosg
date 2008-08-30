@@ -698,7 +698,7 @@ var VOMatrixGrid = function(config) {
     this.store.setDefaultSort('name', "ASC"); 
 
     this.pagingBar = new Ext.PagingToolbar({
-        pageSize: 20,
+        pageSize: 30,
         store: this.store,
         displayInfo: true,
         displayMsg: 'Displaying Resources {0} - {1} of {2}',
@@ -806,7 +806,7 @@ Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
     },
     loadPage: function(){
         this.ctxRow = null;
-        this.store.load({params:{start:0, limit:20}});
+        this.store.load({params:{start:0, limit:30}});
     },
     changeFilter: function(value, key) {
         this.store.baseParams[key] = value;

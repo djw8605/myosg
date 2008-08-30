@@ -30,9 +30,6 @@ class Resource
             $grid_type_where = "and r.resource_id IN ($resource_ids)";
         }
 
-        //filter by service type (per Arvind's request)
-        $join = "($join) join oim.resource_service rs on r.resource_id = rs.resource_id";
-
         $sql = "select 
                 `r`.`name` AS `name`,
                 `r`.`resource_id` AS `id`,
@@ -47,13 +44,13 @@ class Resource
         where 
             r.active = 1 and r.disable = 0 $grid_type_where
                 and
-            rs.service_id in (SELECT service_id FROM oim.service_service_group WHERE service_group_id=1) 
-                and
-            rs.service_id not in (SELECT DISTINCT PS.parent_service_id psid FROM oim.service PS WHERE PS.parent_service_id IS NOT NULL) 
+            r.resource_id in ( 
+                    select resource_id from  $schema.resource_service where service_id in (SELECT service_id FROM $schema.service_service_group WHERE service_group_id=1) and service_id not in (SELECT DISTINCT PS.parent_service_id psid FROM $schema.service PS WHERE PS.parent_service_id IS NOT NULL) 
+                )
         order by r.$orderby $dir";
 
         if($offset !== null and $limit !== null) {
-            $sql .= " limit $offset,$limit";
+            $sql = "select * from ($sql) s limit $limit offset $offset";
         }    
         //dlog($sql);
         return $sql;
