@@ -20,7 +20,7 @@ class Metrics
         //to be out-of-order, then we will still have out-of-order issue.. processnew action
         //may need to artificially update the timestamp by ignoring the reported timestamp
         //to not cause invalid data entry..
-        $sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where dbid > ifnull((select max(dbid) from rsvextra.metric), 0) order by Timestamp limit $limit;";
+        $sql = "select dbid,ServiceUri,MetricName,MetricStatus,DetailsData, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where dbid > ifnull((select max(dbid) from rsvextra.metric), 0) order by Timestamp limit $limit;";
         dlog("Fetching new gratia recores. $sql");
         return $this->db->fetchAll($sql);
     }
