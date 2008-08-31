@@ -47,7 +47,7 @@ class CronController extends Zend_Controller_Action
             $newstatus_inserted = 0;
 
             //grab "some" new records
-            $newrecords = $metric_model->fetchNewGratiaRecords(5000);
+            $newrecords = $metric_model->fetchNewGratiaRecords(config()->gratia_recordcount);
             dlog("Records grabbed from gratia: ".count($newrecords));
 
             //we are going to make repeated inserts (x thousands times). Let's disable profiling for now

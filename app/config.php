@@ -103,6 +103,9 @@ class common_config
         //if it is more than this, the record will be ignored.
         $this->gratia_max_outoforder = 120;
 
+        //number of recrord to pull per each procesew request
+        $this->gratia_recordcount = 3500;
+
         ///////////////////////////////////////////////////////////////////////
         //
         // Authorization Configuration
