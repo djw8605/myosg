@@ -216,8 +216,12 @@ class CronController extends Zend_Controller_Action
                 $current_metrics[$resource_id] = $current;
             }
 
+            //TODO - following algorithm doesn't work, because I don't know when to set timestamp
+            //for calculation time of calculate()
+/*
             //for resrouce that I didn't receive any data (and the status is not "UNKNOWN"), let's
             //check the metricdata timestamp to see if the status should now be expired (UNKNOWN)
+            dlog("processing on resource that has stopped posting data");
             $resources = $resource_model->fetchAll();
             foreach($resources as $resource) {
                 $found = false;
@@ -239,7 +243,7 @@ class CronController extends Zend_Controller_Action
                             $lastmetrics = unserialize(file_get_contents(config()->cache_filename_latest_metrics.".".$resource->id));
                             
                             //recalculate overallstatus
-                            $omodel = new OverallStatus($resource->id);
+                            $omodel = new OverallStatus($resource->id, $when???);
                             $omodel->calculateStatus($lastmetrics);
 
                             if($omodel->isExpired()) {
@@ -264,6 +268,7 @@ class CronController extends Zend_Controller_Action
                     }
                 }
             }
+*/
 
             //now, we have the latest info in our $current array. let's update our current cache
             dlog("updating latest information cache");
@@ -277,7 +282,7 @@ class CronController extends Zend_Controller_Action
 
                 //latest overall status
                 $ostatus_model = $overall_status_model[$resource_id];
-                $ostatus_model->calculateStatus($current);
+                $ostatus_model->calculateStatus($current);//calculate on time()
                 $info = array(
                     "status"=>$ostatus_model->getOverallStatus(),
                     "detail"=>$ostatus_model->getOverallDetail()
