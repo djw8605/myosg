@@ -103,6 +103,7 @@ class CronController extends Zend_Controller_Action
                         //below if ($new_status != overall_status) will cause this record to be inserted as initial status.
                         $overall_status[$resource_id] = "no-last-info"; 
                     }
+                    dlog("initializing current_metrics array for $resource_id - okay");
                 }
 
                 //some shorthands..
