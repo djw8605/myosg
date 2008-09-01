@@ -107,10 +107,10 @@ class Metrics
                         a.timestamp = l.timestamp
                     order by
                         a.resource_id";
+            dlog("Fetching latest metrics. $sql");
             $latest_records = $this->db->fetchAll($sql);
             $this->metrics[$before] = $this->group($latest_records);
             Zend_Registry::set("latestmetrics_$before", $this->metrics[$before]);
-            //dlog("Fetching latest metrics. $sql");
         }
     }
 

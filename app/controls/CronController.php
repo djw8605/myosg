@@ -83,7 +83,6 @@ class CronController extends Zend_Controller_Action
                 if(!isset($current_metrics[$resource_id])) {
                     dlog("initializing current_metrics array for $resource_id");
                     $current = $metric_model->getLatest($resource_id);
-                    dlog("got latest for $resource_id");
 
                     //find the last metric entered and use it as resource timestamp (to detect out-of-order metric data)
                     $last = 0;
@@ -97,7 +96,6 @@ class CronController extends Zend_Controller_Action
 
                     $ostatus_model = new OverallStatus($resource_id);
                     $overall_status_model[$resource_id] = $ostatus_model;
-                    dlog("calling getLastInfo for $resource_id");
                     $lastinfo = $ostatus_model->getLastInfo();
                     if(isset($lastinfo->overall_status)) {
                         $overall_status[$resource_id] = $lastinfo->overall_status;
@@ -105,7 +103,6 @@ class CronController extends Zend_Controller_Action
                         //below if ($new_status != overall_status) will cause this record to be inserted as initial status.
                         $overall_status[$resource_id] = "no-last-info"; 
                     }
-                    dlog("initializing current_metrics array for $resource_id - okay");
                 }
 
                 //some shorthands..
