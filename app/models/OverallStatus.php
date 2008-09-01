@@ -154,6 +154,7 @@ class OverallStatus
                 if($status == "CRITICAL") {
                     if($this->isCriticalProbe($info->id)) {
                         $critical_critical++;
+                        $note .= "$mid is critical.";
                     } else {
                         $noncritical_critical++;
                     }
