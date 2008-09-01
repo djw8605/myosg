@@ -109,7 +109,9 @@ class Metrics
                         a.resource_id";
             dlog("Fetching latest metrics. $sql");
             $latest_records = $this->db->fetchAll($sql);
+            dlog("done.. grouping.");
             $this->metrics[$before] = $this->group($latest_records);
+            dlog("all done..");
             Zend_Registry::set("latestmetrics_$before", $this->metrics[$before]);
         }
     }
