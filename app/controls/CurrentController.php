@@ -280,8 +280,15 @@ class CurrentController extends Zend_Controller_Action
                     //$metric->setID($metric->effective_dbid);
                     //$metric->timestamp = $metric->effective_timestamp;
                     $metric->status = $metrics_model->getStatus($metric->effective_dbid);
-                
-                    $metric->detail = "(Effective Metric ID:".$metric->effective_dbid.")\n";
+
+                    $original_detail = $metric->detail;
+
+                    $metric->detail = "This metric returned UNKNOWN status, but the dashboard used previouly reported non-UNKNOWN metric data for status calculation since the metric data is within configured time frame.\n(";
+                    $metric->detail .= "[Effective Metric Detail -- ID:".$metric->effective_dbid."]\n".
+                    $metric->detail .= $metrics_model->getDetail($metric->effective_dbid);
+
+                    $metric->detail .= "[Original Metric Detail -- ID:".$metric->dbid."]\n".
+                    $metric->detail .= $original_detail;
                 }
             }
     

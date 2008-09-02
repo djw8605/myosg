@@ -12,6 +12,11 @@ class Metrics
         $this->metrics[] = array();
     }
 
+    public function getDetail($dbid) 
+    {
+        return $this->db->fetchOne("select detail from metric where dbid = $dbid");
+    }
+
     public function getStatus($dbid) 
     {
         return $this->db->fetchOne("select status from metric where dbid = $dbid");
