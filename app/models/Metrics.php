@@ -12,6 +12,11 @@ class Metrics
         $this->metrics[] = array();
     }
 
+    public function getStatus($dbid) 
+    {
+        return $this->db->fetchOne("select status from metric where dbid = $dbid");
+    }
+
     public function fetchNewGratiaRecords($limit = 1000)
     {
         //$sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where UNIX_TIMESTAMP(Timestamp) > ifnull((select max(timestamp) from rsvextra.metric), 0) order by Timestamp limit $limit;";

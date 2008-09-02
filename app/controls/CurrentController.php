@@ -266,13 +266,25 @@ class CurrentController extends Zend_Controller_Action
 
             //read overall status cache
             $filename = config()->cache_filename_latest_overall.".".$resource_id;
-            $info = unserialize(file_get_contents($filename));
-            $this->view->overall_status = $info;
+            $this->view->overall_status = $info = unserialize(file_get_contents($filename));
 
             //read latest metric set cache
             $filename = config()->cache_filename_latest_metrics.".".$resource_id;
-            $info = unserialize(file_get_contents($filename));
-            $metrics = $info;
+            $metrics = unserialize(file_get_contents($filename));
+
+            //find metricdata with effective_dbid set
+            $metrics_model = new Metrics;
+            foreach($metrics as $metric) {
+                if(isset($metric->effective_dbid)) {
+                    //get effective information
+                    //$metric->setID($metric->effective_dbid);
+                    //$metric->timestamp = $metric->effective_timestamp;
+                    $metric->status = $metrics_model->getStatus($metric->effective_dbid);
+                
+                    $metric->detail = "(Effective Metric ID:".$metric->effective_dbid.")\n";
+                }
+            }
+    
             $probe_info = new ProbeInfo();
             $this->view->metrics = array();
             foreach($probe_info->getAllProbeInfo() as $info) {
