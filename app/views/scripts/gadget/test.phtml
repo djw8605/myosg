@@ -1,0 +1,10 @@
+<?
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+?>
+
+<Module>
+  <ModulePrefs height="250" scrolling="true" title="OSG Resource Status">
+    <Require feature="views" /> 
+  </ModulePrefs>
+  <Content type="url" href="http://<?=$_SERVER["SERVER_NAME"].base()?>/current/proxy?feed=resource&amp;format=gadget"/>
+</Module>

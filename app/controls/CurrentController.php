@@ -246,6 +246,10 @@ class CurrentController extends Zend_Controller_Action
             header('Content-type: text/xml');
             $this->render("resourcexml");
             break;
+        case "gadget":
+            header('Content-type: text/html');
+            $this->render("resourcegadget");
+            break;
         default:
             $this->render("none");
         }

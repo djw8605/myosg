@@ -142,3 +142,4 @@ function base() {
     $last_pos = strrpos($_SERVER["SCRIPT_NAME"], "/");
     return substr($_SERVER["SCRIPT_NAME"], 0, $last_pos);
 }
+
