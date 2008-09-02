@@ -420,7 +420,15 @@ var Current_MainPanel = function(){
                             window.open("<?=base()?>/current/proxy?format=xml&"+param);
                         },
                         scope:this
-                    }]
+                    },
+                    {
+                        text:'iGoogle',
+                        handler:function() {
+                            window.open("http://www.google.com/ig/adde?moduleurl=<?=$_SERVER["SERVER_NAME"].base()?>/gadget/resourcelist");
+                        },
+                        scope:this
+                    }
+                    ]
                 }
             }
         ],

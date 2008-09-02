@@ -1,0 +1,24 @@
+<?
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+?>
+
+<Module>
+  <ModulePrefs 
+    height="250" 
+    scrolling="true" 
+    title="OSG Resource Status" 
+    title_url="http://www.google.com/apis/gadgets/gs.html#Scratchpad" 
+    directory_title="OSG Resource Status" 
+    description="Shows list of current OSG Resource status."
+    author="Soichi Hayashi" 
+    author_email="hayashis@indiana.edu" 
+    author_affiliation="Indiana University (UITS)" 
+    author_location="Bloomington, IN" 
+    screenshot="http://<?=$_SERVER["SERVER_NAME"].base()?>/images/igoogle/resourcelist.png" 
+    thumbnail="http://<?=$_SERVER["SERVER_NAME"].base()?>/images/igoogle/resourcelist-thm.png"
+    scaling="false" 
+    singleton="false">
+    <Require feature="views" /> 
+  </ModulePrefs>
+  <Content type="url" href="http://<?=$_SERVER["SERVER_NAME"].base()?>/current/proxy?feed=resource&amp;format=gadget"/>
+</Module>

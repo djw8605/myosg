@@ -8,7 +8,7 @@ class GadgetController extends Zend_Controller_Action
         header('Content-type: text/xml');
     }
 
-    public function testAction()
+    public function resourcelistAction()
     {
     }
 }
