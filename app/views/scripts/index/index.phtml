@@ -78,7 +78,33 @@ if (document.all && /MSIE (5\.5|6)/.test(navigator.userAgent) &&
 <script langauge='javascript' src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=config()->gmap_key?>" type="text/javascript"></script>
 
 <script langauge='javascript' src="js/gmap.js"></script>
-<script langauge='javascript' src="index/js?page=<?=$this->initial_page?>"></script>
+<script langauge='javascript'>
+function getBase()
+{
+    return "<?=base()?>";
+}
+function getURLBase()
+{
+    return "<?=$_SERVER["SERVER_NAME"]?>"+getBase();
+}
+function getFullURLBase()
+{
+    return "http://"+getURLBase();
+}
+function getInitialPage()
+{
+    return "<?=$this->initial_page?>";
+}
+function getInitialParam()
+{
+    <?if(isset($_REQUEST["param"])) {
+        echo "return unescape(\"".$_REQUEST["param"]."\");\n";
+    } else {
+        echo "return \"\";\n";
+    }?>
+}
+</script>
+<script langauge='javascript' src="index/js"></script>
 
 <?php include("app/views/header.php");?>
 <div id="viewportarea" class="hidden">

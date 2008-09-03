@@ -2,6 +2,7 @@
 //
 // Clientside JavaScript
 //
+//console.dir();
 <?
 /*
 TODO: this file needs some major cleanup, but I will postpon it until I know
@@ -19,6 +20,7 @@ How to add new page?
 4. define and create a component with it of ID-panel (important)  
     and the instance name of ID_obj (important)
         a. set region and other config parameter when initalizing this component
+5. add getDirectLinkParam() function which returns parameter list to reopent the current page
 */
 
 ?>
@@ -35,8 +37,6 @@ function clone(myObj)
 
     return myNewObj;
 }
-
-//console.log();
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -72,7 +72,12 @@ var home_start_obj = {
     layout: 'fit',
     bodyStyle: 'padding:25px',
     contentEl: 'start-div',  // pull existing content from the page
-    loadPage: function() {}
+    loadPage: function() {},
+    getDirectLinkParam: function() {
+        return "";
+    },
+    setParam: function(param) {
+    }
 };
 
 
@@ -98,11 +103,26 @@ var menuPanel = new Ext.tree.TreePanel({
         dataUrl:'index/menu',
         listeners: {
             load: function(loader, node, resp) {
-                menuPanel.getNodeById("<?=$this->initial_page?>").select();
+                menuPanel.getNodeById(getInitialPage()).select();
             }
         }
     }),
-    
+    bbar: [
+        {
+            text:'Show Direct Link To This Page',
+            iconCls:'direct-link',
+            handler:function() {
+                //find currently selected page id
+                var pageid = this.menuPanel.getSelectionModel().getSelectedNode().id;
+                var page = Ext.getCmp(pageid+'-panel'); 
+                var param = escape(jQuery.param(page.getDirectLinkParam()));
+                var url = getFullURLBase()+"/?page="+pageid+"&amp;param="+param;
+                Ext.Msg.alert('Direct Link To Current Page', 'Please copy following URL for the direct link to the current page.<br/><br/>'+url);
+            },
+            scope:this
+        }
+    ],
+
     root: new Ext.tree.AsyncTreeNode()
 });
 
@@ -237,7 +257,16 @@ Ext.extend(ServerGrid, Ext.grid.GridPanel, {
     loadPage: function(page) {
         this.store.baseParams["feed"] = page;
         this.ctxRow = null;
-        this.store.load();
+        this.store.load({
+            callback: function() {
+                if(this.store.baseParams.selected_id) {
+                    var rec = this.store.getById(this.store.baseParams.selected_id);
+                    this.getSelectionModel().selectRecords([rec]);
+                }
+                this.store.baseParams.selected_id = null;
+            },
+            scope: this
+            });
     },
 
     togglePreview : function(show){
@@ -392,39 +421,38 @@ var Current_MainPanel = function(){
             },
             '-',
             {
-                text:'Exports',
-                tooltip: {text:'Export raw data for this data source in various data formats.'},
+                text:'More',
                 iconCls: 'export',
                 menu:{
                     id:'export-menu',
                     items: [
                     {
-                        text:'JSON',
+                        text:'Export in JSON',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=json&"+param);
+                            window.open(getBase()+"/current/proxy?format=json&"+param);
                         },
                         scope:this
                     },{
-                        text:'CSV',
+                        text:'Export in CSV',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=csv&"+param);
+                            window.open(getBase()+"/current/proxy?format=csv&"+param);
                         },
                         scope:this
                     },
                     {
-                        text:'XML',
+                        text:'Export in XML',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=xml&"+param);
+                            window.open(getBase()+"/current/proxy?format=xml&"+param);
                         },
                         scope:this
                     },
                     {
-                        text:'iGoogle',
+                        text:'Add to iGoogle',
                         handler:function() {
-                            window.open("http://www.google.com/ig/adde?moduleurl=<?=$_SERVER["SERVER_NAME"].base()?>/gadget/resourcelist");
+                            window.open("http://www.google.com/ig/adde?moduleurl="+getURLBase()+"/gadget/resourcelist");
                         },
                         scope:this
                     }
@@ -449,7 +477,6 @@ var Current_MainPanel = function(){
             id:'tab',
             text: 'View in New Tab',
             iconCls: 'new-tab',
-            disabled:true,
             handler : this.openTab,
             scope: this
         }, '-',
@@ -457,23 +484,23 @@ var Current_MainPanel = function(){
             id:'giptab',
             text: 'Show GIP Information',
             iconCls: 'new-tab',
-            disabled:true,
             handler : this.openGIPTab,
             scope: this
         }, '-',
         {
-            text:'Exports',
-            tooltip: {text:'Export raw data for this data source in various data formats.'},
+            text:'More',
             iconCls: 'export',
             menu:{
-                items: [{
-                    text:'XML',
+                items: [
+                {
+                    text:'Export in XML',
                     handler:function() {
                         var resource_id = this.grid.getSelectionModel().getSelected().data.resource_id;
-                        window.open("<?=base()?>/current/proxy?feed=detail&id="+resource_id+"&format=xml");
+                        window.open(getBase()+"/current/proxy?feed=detail&id="+resource_id+"&format=xml");
                     },
                     scope:this
-                }]
+                }
+                ]
             }
         }
         <?php
@@ -483,7 +510,6 @@ var Current_MainPanel = function(){
                 id:'win',
                 text: 'Email Administrator',
                 iconCls: 'email',
-                disabled:true,
                 scope: this,
                 handler : function(){
                     document.location=formatCurrentStatusEmail(this.gsm.getSelected().data);
@@ -541,19 +567,15 @@ var Current_MainPanel = function(){
     this.gsm.on('rowselect', function(sm, index, record){
         getPanelTemplate("current_status_detail_").overwrite(this.detailpanel.body, record.data);
         var items = this.detailpanel.topToolbar.items;
-        items.get('tab').enable();
-        items.get('giptab').enable();
-        <?php if(user()->hasRole(role::$view_admin_email)) { ?>
-            items.get('win').enable();
-        <? } ?>
         var r = Math.random(); //prevent browser caching
         $("#current_status_detail_"+record.data.resource_id).load("current/proxy?feed=detail&id="+record.data.resource_id+"&random="+r);
     }, this, {buffer:250});
 
-    this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+    //this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
     this.grid.store.on('load', function() {
-        $("#current_resourcecount").html("Resources Shown: "+this.store.getCount());
-    }, this.grid);
+        $("#current_resourcecount").html("Resources Shown: "+this.grid.store.getCount());
+        this.gsm.selectFirstRow();
+    }, this);
 
     this.grid.on('rowdblclick', this.openTab, this);
 
@@ -680,8 +702,16 @@ Ext.extend(Current_MainPanel, Ext.TabPanel, {
         this.beginUpdate();
         this.grid.store.data.each(this.openTab, this);
         this.endUpdate();
+    },
+    getDirectLinkParam: function() {
+        this.grid.store.baseParams.selected_id = this.gsm.getSelected().id;
+        return this.grid.store.baseParams;
+    },
+    setParam: function(param) {
+        this.grid.store.baseParams = param;
+        $('#current_detail_grid_type_selector').val(param.gridtype);
+        $('#current_detail_service_type_selector').val(param.servicetype);
     }
-
 });
 var current_detail_obj = new Current_MainPanel();
 
@@ -760,32 +790,31 @@ var VOMatrixGrid = function(config) {
         buttonAlign:'center',
         tbar: [
             {
-                text:'Exports',
-                tooltip: {text:'Export raw data for this data source in various data formats.'},
+                text:'More',
                 iconCls: 'export',
                 menu:{
                     id:'export-menu',
                     items: [
                     {
-                        text:'JSON',
+                        text:'Export in JSON',
                         handler:function() {
                             //clear start & limit
                             var param = jQuery.param(this.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=json&"+param);
+                            window.open(getBase()+"/current/proxy?format=json&"+param);
                         },
                         scope:this
                     },{
-                        text:'CSV',
+                        text:'Export in CSV',
                         handler:function() {
                             var param = jQuery.param(this.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=csv&"+param);
+                            window.open(getBase()+"/current/proxy?format=csv&"+param);
                         },
                         scope:this
                     },{
-                        text:'XML',
+                        text:'Export in XML',
                         handler:function() {
                             var param = jQuery.param(this.store.baseParams);
-                            window.open("<?=base()?>/current/proxy?format=xml&"+param);
+                            window.open(getBase()+"/current/proxy?format=xml&"+param);
                         },
                         scope:this
                     }]
@@ -820,6 +849,14 @@ Ext.extend(VOMatrixGrid, Ext.grid.GridPanel, {
         this.store.baseParams[key] = value;
         this.ctxRow = null;
         this.store.reload();
+    },
+    getDirectLinkParam: function() {
+        return this.store.baseParams;
+    },
+    setParam: function(param) {
+        this.store.baseParams = param;
+        $('#vo_matrix_grid_type_selector').val(param.gridtype);
+        $('#vo_matrix_service_type_selector').val(param.servicetype);
     }
 });
 
@@ -919,6 +956,11 @@ Ext.extend(VOGroupGrid, Ext.grid.GridPanel, {
         this.store.baseParams[key] = value;
         this.ctxRow = null;
         this.store.reload();
+    },
+    getDirectLinkParam: function() {
+        return "";
+    },
+    setParam: function(param) {
     }
 });
 
@@ -964,6 +1006,14 @@ Ext.extend(Overview, Ext.ux.GMapPanel, {
     changeFilter: function(value, key) {
         this.baseParams[key] = value;
         this.loadPage();
+    },
+    getDirectLinkParam: function() {
+        return this.baseParams;
+    },
+    setParam: function(param) {
+        this.baseParams = param;
+        $('#current_overview_grid_type_selector').val(param.gridtype);
+        $('#current_overview_service_type_selector').val(param.servicetype);
     }
 });
 var current_overview_obj = new Overview();
@@ -1047,7 +1097,7 @@ var HistoryGrid = function(config) {
 
     HistoryGrid.superclass.constructor.call(this, {
         region: 'center',
-        id: 'topic-grid',
+        id: 'history-grid',
         loadMask: {msg:'Loading Data...'},
 
         sm: new Ext.grid.RowSelectionModel({
@@ -1110,7 +1160,16 @@ Ext.extend(HistoryGrid, Ext.grid.GridPanel, {
         var enddate = history_detail_obj.end_date.picker.getValue();
         this.store.baseParams["start_time"] = startdate.getTime()/1000;
         this.store.baseParams["end_time"] = enddate.getTime()/1000;
-        this.store.load();
+        this.store.load({
+            callback: function() {
+                if(this.store.baseParams.selected_id) {
+                    var rec = this.store.getById(this.store.baseParams.selected_id);
+                    this.getSelectionModel().selectRecords([rec]);
+                }
+                this.store.baseParams.selected_id = null;
+            },
+            scope: this
+            });
     },
     togglePreview : function(show){
         this.view.showPreview = show;
@@ -1285,32 +1344,31 @@ var History_MainPanel = function(){
             },
             '-',
             {
-                text:'Exports',
-                tooltip: {text:'Export raw data for this data source in various data formats.'},
+                text:'More',
                 iconCls: 'export',
                 menu:{
                     id:'export-menu',
                     items: [
                     {
-                        text:'JSON',
+                        text:'Export in JSON',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/history/resource/?format=json&"+param);
+                            window.open(getBase()+"/history/resource/?format=json&"+param);
                         },
                         scope:this
                     },{
-                        text:'CSV',
+                        text:'Export in CSV',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/history/resource/?format=csv&"+param);
+                            window.open(getBase()+"/history/resource/?format=csv&"+param);
                         },
                         scope:this
                     },
                     {
-                        text:'XML',
+                        text:'Export in XML',
                         handler:function() {
                             var param = jQuery.param(this.grid.store.baseParams);
-                            window.open("<?=base()?>/history/resource/?format=xml&"+param);
+                            window.open(getBase()+"/history/resource/?format=xml&"+param);
                         },
                         scope:this
                     }]
@@ -1334,7 +1392,6 @@ var History_MainPanel = function(){
             id:'history-tab',
             text: 'View in New Tab',
             iconCls: 'new-tab',
-            disabled:true,
             handler : this.openTab,
             scope: this
         }, '-',
@@ -1342,41 +1399,39 @@ var History_MainPanel = function(){
             id:'history-giptab',
             text: 'Show GIP Information',
             iconCls: 'new-tab',
-            disabled:true,
             handler : this.openGIPTab,
             scope: this
         }, '-',
         {
-            text:'Exports',
-            tooltip: {text:'Export raw data for this data source in various data formats.'},
+            text:'More',
             iconCls: 'export',
             menu:{
                 id:'export-menu',
                 items: [{
-                    text:'XML',
+                    text:'Export in XML',
                     handler:function() {
                         var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
                         var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
                         var id = this.grid.getSelectionModel().getSelected().data.resource_id;
-                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=xml");
+                        window.open(getBase()+"/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=xml");
                     },
                     scope:this
                 }/*,{
-                    text:'JSON',
+                    text:'Export in JSON',
                     handler:function() {
                         var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
                         var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
                         var id = this.grid.getSelectionModel().getSelected().data.resource_id;
-                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=json");
+                        window.open(getBase()+"/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=json");
                     },
                     scope:this
                 },{
-                    text:'CSV',
+                    text:'Export in CSV',
                     handler:function() {
                         var start_time= history_detail_obj.start_date.picker.getValue().getTime()/1000;
                         var end_time= history_detail_obj.end_date.picker.getValue().getTime()/1000;
                         var id = this.grid.getSelectionModel().getSelected().data.resource_id;
-                        window.open("<?=base()?>/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=csv");
+                        window.open(getBase()+"/history/proxy?feed=detail&id="+id+"&start_time="+start_time+"&end_time="+end_time+"&format=csv");
                     },
                     scope:this
                 }*/
@@ -1432,15 +1487,14 @@ var History_MainPanel = function(){
     this.gsm.on('rowselect', function(sm, index, record){
         getPanelTemplate("history_detail_").overwrite(this.detailpanel.body, record.data);
         var items = this.detailpanel.topToolbar.items;
-        items.get('history-giptab').enable();
-        items.get('history-tab').enable();
         this.loadDetail(record.data.resource_id, "");
     }, this, {buffer:250});
 
-    this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
+    //this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
     this.grid.store.on('load', function() {
-        $("#history_resourcecount").html("Resources Shown: "+this.store.getCount());
-    }, this.grid);
+        $("#history_resourcecount").html("Resources Shown: "+this.grid.store.getCount());
+        this.gsm.selectFirstRow();
+    }, this);
 
     this.grid.on('rowdblclick', this.openTab, this);
 };
@@ -1577,6 +1631,17 @@ Ext.extend(History_MainPanel, Ext.TabPanel, {
         var max_date = new Date();
         max_date.setTime(d.getTime() - 3600*24*1000);
         this.start_date.picker.maxDate = max_date;
+    },
+    getDirectLinkParam: function() {
+        this.grid.store.baseParams.selected_id = this.gsm.getSelected().id;
+        return this.grid.store.baseParams;
+    },
+    setParam: function(param) {
+        this.grid.store.baseParams = param;
+        $('#history_detail_grid_type_selector').val(param.gridtype);
+        $('#history_detail_service_type_selector').val(param.servicetype);
+        this.setStartTime(param.start_time);
+        this.setEndTime(param.end_time);
     }
 });
 var history_detail_obj = new History_MainPanel();
@@ -1591,7 +1656,7 @@ var contentPanel = {
     region: 'center', // this is what makes this panel into a region within the containing layout
     layout: 'card',
     margins: '2 5 5 0',
-    activeItem: '<?=$this->initial_page?>-panel',
+    activeItem: getInitialPage()+'-panel',
     border: false,
     items: [
         home_start_obj, 
@@ -1671,14 +1736,14 @@ Ext.onReady(function(){
     //add current / service type selector
     var tbar = current_detail_obj.grid.getTopToolbar();
     tbar.add('-');
-    tbar.addElement('service_type_selector_div');
+    tbar.addElement('current_detail_toolbar_div');
 
     var tbar = history_detail_obj.grid.getTopToolbar();
     tbar.add('-');
-    tbar.addElement('history_service_type_selector_div');
+    tbar.addElement('history_detail_toolbar_div');
 
     var tbar = vo_matrix_obj.getTopToolbar();
-    tbar.addElement('vomatrix_toolbar_div');
+    tbar.addElement('vo_matrix_toolbar_div');
 
     var tbar = current_overview_obj.getTopToolbar();
     tbar.addElement('current_overview_toolbar_div');
@@ -1701,8 +1766,17 @@ Ext.onReady(function(){
     //
     // Now, ready to load the initial page
     //
-    Ext.getCmp('<?=$this->initial_page?>-panel').loadPage();
-    //informationPanel.show('<?=$this->initial_page?>');
+    //setup initial parameters given through URL
+    var page = Ext.getCmp(getInitialPage()+'-panel');
+    var param_array = getInitialParam().split("&");
+    var param_obj = new Object;
+    for(i = 0;i < param_array.length;i++) {
+        var key_value = param_array[i].split("=");
+        param_obj[key_value[0]] = key_value[1];
+    } 
+    page.setParam(param_obj);
+    //then load
+    page.loadPage();
     
     ///////////////////////////////////////////////////////////////////////////
     //

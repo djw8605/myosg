@@ -283,7 +283,7 @@ class CurrentController extends Zend_Controller_Action
 
                     $original_detail = $metric->detail;
 
-                    $metric->detail = "This metric returned an UNKNOWN status, but the dashboard used a previouly reported non-UNKNOWN metric data for the status calculation since the metric data is within a configured time frame.\n\n";
+                    $metric->detail = "This metric returned an UNKNOWN status, but the dashboard used a previouly reported non-UNKNOWN metric data for the status calculation since the metric data is within a configured time frame.\n\n\n";
                     $metric->detail .= "[Effective Metric Detail -- ID:".$metric->effective_dbid."]\n";
                     $metric->detail .= $metrics_model->getDetail($metric->effective_dbid);
 

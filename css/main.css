@@ -215,6 +215,10 @@ body.x-border-layout-ct {
 .refresh-icon {
     background-image:url(../shared/icons/fam/table_refresh.png) !important;
 }
+.direct-link {
+    background-image:url(../images/application_link.png) !important;
+}
+
 .x-tree-selected {
     border:1px dotted #a3bae9;
     background:#DFE8F6;
