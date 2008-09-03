@@ -59,10 +59,9 @@ function outputResponsibleInfo($mid)
     $detail_id = getuid();
     $show_again_id = getuid();
 
-    $out = "<p>Metric Responsible for this status change: Metric ID $mid</p>";
-    $out .= "<div class=\"indent\"><pre>";
-    $out .= "<div id=$show_id class='button'><img src='images/plusbutton.gif'/> Show Detail</div>";
-    $out .= "<div id=$show_again_id class='button hidden'><img src='images/plusbutton.gif'/> Show Detail</div>";
+    $out .= "<div><pre>";
+    $out .= "<div id=$show_id class='button'><img src='images/plusbutton.gif'/> Show Detail for the Metric responsible for this status change</div>";
+    $out .= "<div id=$show_again_id class='button hidden'><img src='images/plusbutton.gif'/> Show Detail for the Metric responsible for this status change</div>";
     $out .= "<div id=$hide_id class='hidden button'><img src='images/minusbutton.gif'/> Hide Detail</div>";
     $out .= "<div id=$detail_id class='hidden'>Loading</div>";
     $out .= "<script type=\"text/javascript\">".

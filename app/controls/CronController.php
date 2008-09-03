@@ -361,6 +361,25 @@ class CronController extends Zend_Controller_Action
         $this->render("none");
     }
 
+    //clear history for last n-days
+    public function clearAction()
+    {
+        if(!isset($_REQUEST["days"])) {
+            $days = 7;
+        } else {
+            $days = $_REQUEST["days"];
+        }
+        $start = time() - $days*3600*24;
+
+        $db = Zend_Registry::get('db');
+
+        $db->query("delete from metric where timestamp > $start");
+        $db->query("delete from overall_status where timestamp > $start");
+
+        //clear cache
+        passthru("rm ".config()->getCacheDir()."/*");
+        $this->render("none");
+    }
 
     public function installAction()
     {
@@ -395,9 +414,9 @@ class CronController extends Zend_Controller_Action
   KEY `timestamp` (`timestamp`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=latin1;");
+
         //clear cache
         passthru("rm ".config()->getCacheDir()."/*");
-
         $this->render("none");
     }
 

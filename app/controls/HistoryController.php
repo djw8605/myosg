@@ -18,6 +18,7 @@ class HistoryController extends Zend_Controller_Action
             $probeinfo_model = new ProbeInfo();
             $metric_info = $probeinfo_model->getProbeInfo($metric->metric_id);
 
+            echo "Metric ID: ".$metric_id."<br/>";
             echo "Metric Name: ".$metric_info->name."<br/>";
             echo "Metric Status: ".$metric->status."<br/>";
             
