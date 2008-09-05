@@ -117,7 +117,7 @@ var menuPanel = new Ext.tree.TreePanel({
                 var page = Ext.getCmp(pageid+'-panel'); 
                 var param = escape(jQuery.param(page.getDirectLinkParam()));
                 var url = getFullURLBase()+"/?page="+pageid+"&amp;param="+param;
-                Ext.Msg.alert('Direct Link To Current Page', 'Please copy following URL for the direct link to the current page.<br/><br/>'+url);
+                Ext.Msg.alert('Direct Link To Current Page', 'Please copy following URL for the direct link to the current page.<br/><br/><input size="50" type="text" value="'+url+'"/>');
             },
             scope:this
         }

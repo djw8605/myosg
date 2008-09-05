@@ -65,6 +65,7 @@ foreach($this->service_types as $service_type) {
 new Ext.Panel({
     title: 'Overall Status',
     collapsible:true,
+    autoWidth:true,
     autoHeight:true,
     applyTo: 'detail_overall_status_<?=$pageid?>'
 });
@@ -77,6 +78,7 @@ foreach($this->service_types as $service_type) {
         new Ext.Panel({
             title: '<?=$service_name?> Critical Metrics',
             collapsible:true,
+            autoWidth:true,
             autoHeight:true,
             applyTo: 'detail_core_metrics_<?=$service_id?>_<?=$pageid?>'
         });
@@ -87,6 +89,7 @@ foreach($this->service_types as $service_type) {
 new Ext.Panel({
     title: 'Noncritcal Metrics',
     collapsible:true,
+    autoWidth:true,
     autoHeight:true,
     applyTo: 'detail_other_metrics_<?=$pageid?>'
 });
