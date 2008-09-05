@@ -2,28 +2,6 @@
 //
 // Clientside JavaScript
 //
-//console.dir();
-<?
-/*
-TODO: this file needs some major cleanup, but I will postpon it until I know
-how this file grows and changes overtime - I need to know the patter before
-I can restructure it. I have attempted to do this many time, but always came
-back to everything being defined here... I need to really think this through..
-
-
-
-How to add new page?
-
-1. add entry to menu.phtml (remember the ID)
-2. add id to var contentPanel below.
-3. create -detail div on static page
-4. define and create a component with it of ID-panel (important)  
-    and the instance name of ID_obj (important)
-        a. set region and other config parameter when initalizing this component
-5. add getDirectLinkParam() function which returns parameter list to reopent the current page
-*/
-
-?>
 
 function clone(myObj)
 {
@@ -44,28 +22,6 @@ function clone(myObj)
 //
 //
 
-/*
-var detailEl;
-
-// This is the Details panel that contains the description for each example layout.
-var informationPanel = {
-    id: 'details-panel',
-    title: 'Information',
-    height: 200,
-    region: 'center',
-    bodyStyle: 'padding-bottom:15px;background:#eee;',
-    autoScroll: true,
-    show: function(id) {
-        if(!detailEl) {
-            var bd = Ext.getCmp('details-panel').body;
-            bd.update('').setStyle('background','#fff');
-            detailEl = bd.createChild(); //create default empty div
-        }
-        detailEl.hide().update(Ext.getDom(id+'-details').innerHTML).slideIn('l', {stopFx:true,duration:.2});
-    }
-};
-*/
-
 var home_start_obj = {
     id: 'home_start-panel',
     title: 'Home',
@@ -85,6 +41,8 @@ var home_start_obj = {
 var menuPanel = new Ext.tree.TreePanel({
     id: 'menu-panel',
     title: 'Navigation',
+    animate: true,
+    enableDD: false,
     region:'west',
     split: true,
     width: 200,
@@ -100,14 +58,13 @@ var menuPanel = new Ext.tree.TreePanel({
     //singleExpand: true,
     useArrows: true,
     loader: new Ext.tree.TreeLoader({
-        dataUrl:'index/menu',
         listeners: {
             load: function(loader, node, resp) {
-                menuPanel.getNodeById(getInitialPage()).select();
             }
         }
     }),
     bbar: [
+
         {
             text:'Show Direct Link To This Page',
             iconCls:'direct-link',
@@ -123,7 +80,64 @@ var menuPanel = new Ext.tree.TreePanel({
         }
     ],
 
-    root: new Ext.tree.AsyncTreeNode()
+    root: {
+        children: [
+            {
+                text:'Home',
+                id:'home_start',
+                iconCls:'menuicon_home',
+                leaf:true
+            }, {
+                text:'Grid Status',
+                cls:'feeds-node',
+                expanded: true,
+                children:[
+                    {
+                        text:'RSV Status',
+                        expanded: true,
+                        children:[
+                        {
+                            text:'Resource Group Map',
+                            id:'current_overview',
+                            iconCls:'menuicon_overview',
+                            leaf:true
+                        },
+                        {
+                            text:'Status Detail',
+                            id:'current_detail',
+                            iconCls:'menuicon_metricdetail',
+                            leaf:true
+                        },
+                        {
+                            text:'Status Change Graph',
+                            id:'history_overview',
+                            iconCls:'menuicon_historygraph',
+                            leaf:true
+                        }]
+                    }
+                ]
+            }, {
+                text:'Virtual Organization',
+                cls:'feeds-node',
+                expanded: true,
+                children:[
+                {
+                    text:'Matrix',
+                    id:'vo_matrix',
+                    iconCls:'menuicon_vomatrix',
+                    leaf:true
+                },
+                {
+                    text:'Group',
+                    id:'vo_group',
+                    iconCls:'menuicon_vogroup',
+                    leaf:true
+                }
+
+                ]
+            }
+        ]
+    }
 });
 
 // Assign the changeLayout function to be called on tree node click.
@@ -743,7 +757,8 @@ var VOMatrixGrid = function(config) {
         emptyMsg: "No resources to display"
     });
 
-    this.columns = [{
+    this.columns = [
+    {
         header: "ID",
         dataIndex: 'resource_id',
         width: 30,
@@ -757,25 +772,19 @@ var VOMatrixGrid = function(config) {
         renderer: this.formatTitle,
         sortable:true
     }
-    <?
-    $vo_model = new VO();
-    $vos = $vo_model->fetchAll();
-    $odd = false;
-    foreach($vos as $vo) {
-    ?>
-        ,{
-            header: "<img class='voname' src='image/rotate?text=<?=$vo->short_name?>&angle=90'/>",
-            dataIndex: '<?=$vo->short_name?>',
-            tooltip: '<?=$vo->long_name?>',
+    ];
+    for(var i=0, len=vonames.length; i<len;++i) {
+        var col = vonames[i];
+        this.columns.push({
+            //header: "<img class='voname' src='image/rotate?text="+col.short_name+"&angle=90'/>",
+            header: "<img class='voname' src='app/cache/vo."+col.id+".png'/>",
+            dataIndex: col.short_name,
+            tooltip: col.long_name,
             renderer: this.formatCheck,
             width: 23,
-            //Resource.php doesn't support sorting by VO name!
             sortable:false
-        }
-    <?
+        });
     }
-    ?>
-    ];
 
     VOMatrixGrid.superclass.constructor.call(this, {
         sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
@@ -1490,7 +1499,6 @@ var History_MainPanel = function(){
         this.loadDetail(record.data.resource_id, "");
     }, this, {buffer:250});
 
-    //this.grid.store.on('load', this.gsm.selectFirstRow, this.gsm);
     this.grid.store.on('load', function() {
         $("#history_resourcecount").html("Resources Shown: "+this.grid.store.getCount());
         this.gsm.selectFirstRow();
@@ -1777,6 +1785,7 @@ Ext.onReady(function(){
     page.setParam(param_obj);
     //then load
     page.loadPage();
+    menuPanel.getNodeById(getInitialPage()).select();
     
     ///////////////////////////////////////////////////////////////////////////
     //
