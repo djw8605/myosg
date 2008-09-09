@@ -57,12 +57,7 @@ var menuPanel = new Ext.tree.TreePanel({
     lines: false,
     //singleExpand: true,
     useArrows: true,
-    loader: new Ext.tree.TreeLoader({
-        listeners: {
-            load: function(loader, node, resp) {
-            }
-        }
-    }),
+    loader: new Ext.tree.TreeLoader(),
     bbar: [
 
         {
