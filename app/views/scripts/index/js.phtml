@@ -979,9 +979,9 @@ var vo_group_obj = new VOGroupGrid();
 //
 // Status Overview (Gmap)
 //
-var Overview = function(config) {
+var OverviewGmap = function(config) {
     Ext.apply(this, config);
-    Overview.superclass.constructor.call(this, {
+    OverviewGmap.superclass.constructor.call(this, {
         id: 'current_overview-panel',
         title: 'Resource Group Map',
         tbar: ['&nbsp;'],
@@ -992,7 +992,7 @@ var Overview = function(config) {
         setCenter: { lat: 50, 'long': -85 }
     });
 };
-Ext.extend(Overview, Ext.ux.GMapPanel, {
+Ext.extend(OverviewGmap, Ext.ux.GMapPanel, {
     loadPage: function() {
         this.gmap.checkResize();
         var param = jQuery.param(this.baseParams);
@@ -1025,7 +1025,9 @@ Ext.extend(Overview, Ext.ux.GMapPanel, {
         $('#current_overview_service_type_selector').val(param.servicetype);
     }
 });
-var current_overview_obj = new Overview();
+
+
+var current_overview_obj = new OverviewGmap();
 
 var icon_ok = new GIcon();
 icon_ok.image = "images/status_ok.png";
