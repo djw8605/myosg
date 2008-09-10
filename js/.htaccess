@@ -1,4 +1,6 @@
-<FilesMatch "\.(js)$">
-#1 week
-Header set Cache-Control "max-age=604800, public"
-</FilesMatch>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js)$">
+    #1 week
+    Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+</IfModule>
