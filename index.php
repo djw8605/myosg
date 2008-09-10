@@ -4,7 +4,7 @@
 session_start();
 
 //init zend framework
-set_include_path('lib/zf/library' . PATH_SEPARATOR . get_include_path());  
+set_include_path('lib/zf-1.5.2/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
 require_once "Zend/Loader.php"; 
 Zend_Loader::registerAutoload(); 
