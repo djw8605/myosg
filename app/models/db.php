@@ -12,7 +12,7 @@ function connectdb()
 
     $db->setFetchMode(Zend_Db::FETCH_OBJ);
 
-    if(config()->debug) {
+    if(config()->profile_db) {
         $db->getProfiler()->setEnabled(true);
     }
 
