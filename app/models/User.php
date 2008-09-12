@@ -15,9 +15,11 @@ class User
         $this->person_id = null;
         $this->person_name = "Guest";
 
-        $this->lookupUserID($dn);
-        if($this->person_id !== null) {
-            $this->lookupRoles($this->person_id);
+        if($dn !== null) {
+            $this->lookupUserID($dn);
+            if($this->person_id !== null) {
+                $this->lookupRoles($this->person_id);
+            }
         }
     }
 
