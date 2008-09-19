@@ -103,6 +103,15 @@ var vonames = [
 ?>
 ];
 
+function role_viewadminemail()
+{
+    <?php if(user()->hasRole(role::$view_admin_email)) { ?>
+        return true;
+    <? } else { ?>
+        return false;
+    <? } ?>
+}
+
 </script>
 <script langauge='javascript' src="index/js"></script>
 

@@ -512,23 +512,22 @@ var Current_MainPanel = function(){
                 ]
             }
         }
-        <?php
-        if(user()->hasRole(role::$view_admin_email)) { 
-        ?>
-            ,'-',{
-                id:'win',
-                text: 'Email Administrator',
-                iconCls: 'email',
-                scope: this,
-                handler : function(){
-                    document.location=formatCurrentStatusEmail(this.gsm.getSelected().data);
-                }
-            }
-        <?php
-        }
-        ?>
         ]
     });
+
+    if(role_viewadminemail()) {
+        var tbar = this.detailpanel.getTopToolbar();
+        tbar.push('-');
+        tbar.push({
+            id:'win',
+            text: 'Email Administrator',
+            iconCls: 'email',
+            scope: this,
+            handler : function(){
+                document.location=formatCurrentStatusEmail(this.gsm.getSelected().data);
+            }
+        });
+    }
 
     Current_MainPanel.superclass.constructor.call(this, {
         id:'current_detail-panel',
@@ -664,21 +663,19 @@ Ext.extend(Current_MainPanel, Ext.TabPanel, {
                         handler : this.openGIPTab,
                         scope: this
                     }
-                <?php
-                if(user()->hasRole(role::$view_admin_email)) { 
-                ?>
-                    , '-', {
-                        text: 'Email Administrator',
-                        iconCls: 'email',
-                        handler : function(){
-                            document.location=formatCurrentStatusEmail(d);
-                        }
-                    }
-                <?
-                }
-                ?>
                 ]
             });
+            if(role_viewadminemail()) {
+                var tbar = tab.getTopToolbar();
+                tbar.push("-");
+                tbar.push({
+                    text: 'Email Administrator',
+                    iconCls: 'email',
+                    handler : function(){
+                        document.location=formatCurrentStatusEmail(d);
+                    }
+                });
+            }
             this.add(tab);
         }
         this.setActiveTab(tab);

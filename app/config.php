@@ -48,7 +48,7 @@ class common_config
         //application version to use for version specific data structures, etc.
         $this->version = "1.0";
         //application to display or used in email
-        $this->app_name = "OSG Operations Dashboard";
+        $this->app_name = "OSG Operations Dashboard (Alpha)";
         //application name used in places such as session name
         $this->app_id = "rsv_viewer";
 

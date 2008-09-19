@@ -409,7 +409,6 @@ class AdminController extends Zend_Controller_Action
   `detail` text NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
   `responsible_metric_id` int(10) unsigned default NULL,
-  `count_info` varchar(128) default NULL,
   PRIMARY KEY  (`id`),
   KEY `timestamp` (`timestamp`),
   KEY `resource_id` (`resource_id`)
