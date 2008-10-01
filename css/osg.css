@@ -1,0 +1,112 @@
+a img
+{
+border: 0;
+}
+
+div.error_message
+{
+padding: 5px;
+padding-left: 50px;
+background-color: #fee;
+color: red;
+border: 1px dotted red;
+margin-bottom: 10px;
+}
+
+div.resource
+{
+padding-left:20px;
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/computer.png) no-repeat 0 2px;
+}
+
+div.resource_group
+{
+border: 1px solid #ccc;
+padding: 3px;
+margin-bottom: 3px;
+}
+
+div.sidenote
+{
+float: right;
+color: gray;
+text-align: right;
+}
+
+.status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN
+{
+padding-left: 50px;
+
+min-height: 25px;
+height: auto !important;
+height: 25px;
+}
+
+.bottom_border
+{
+border-bottom: 1px dotted #ddd;
+padding-bottom: 5px;
+margin-bottom: 5px;
+}
+
+.status_CRITICAL
+{
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/button_cancel.png) no-repeat 5px 0px;
+}
+
+.status_OK
+{
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_ok.png) no-repeat 5px 0px;
+}
+
+.status_WARNING
+{
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_warning.png) no-repeat 5px 0px;
+}
+
+.status_UNKNOWN, .status_
+{
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_unknown.png) no-repeat 5px 0px;
+}
+
+div.indent
+{
+margin-left: 20px;
+}
+
+pre
+{
+white-space: pre-wrap;       /* css-3 */
+white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+white-space: -pre-wrap;      /* Opera 4-6 */
+white-space: -o-pre-wrap;    /* Opera 7 */
+word-wrap: break-word;       /* Internet Explorer 5.5+ */
+background-color: #ddd;
+color: black;
+}
+
+span.note
+{
+color: #ccc;
+}
+.hidden
+{
+display: none;
+}
+.button
+{
+cursor: pointer;
+}
+
+span.h3
+{
+margin-bottom: 3px;
+font-weight: bold;
+font-size: 13px;
+}
+span.h4
+{
+margin-bottom: 3px;
+font-weight: bold;
+font-size: 12px;
+}

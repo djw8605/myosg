@@ -1,24 +1,12 @@
 <?
 
-require_once("model_base.php");
-
-class GridTypes
+class GridTypes extends CachedIndexedModel
 {
-    public function __construct()
+    public function sql($param)
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
+        return "select * from oim.osg_grid_type";
     }
-
-    public function fetchAll()
-    {
-        $schema = config()->db_oim_schema;
-        $sql = "select * from oim.osg_grid_type";
-        return $this->db->fetchAll($sql);
-    }
+    public function key() { return "grid_type_id"; }
 }
 
 

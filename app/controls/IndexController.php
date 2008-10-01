@@ -4,9 +4,9 @@ class IndexController extends Zend_Controller_Action
 { 
     public function indexAction() 
     { 
-        $this->setInitialPage();
     }
 
+/*
     private function setInitialPage()
     {
         $page = config()->initial_page;
@@ -32,4 +32,5 @@ class IndexController extends Zend_Controller_Action
     }
 
     public function gmaptestAction() { } 
+*/
 } 

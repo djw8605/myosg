@@ -1,13 +1,14 @@
 <?php
 //session_cache_limiter('private_no_expire');
 
-session_start();
-
 //init zend framework
 set_include_path('lib/zf-1.5.2/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
 require_once "Zend/Loader.php"; 
 Zend_Loader::registerAutoload(); 
+
+$g_session = new Zend_Session_Namespace('breadcrumb');
+function session() { global $g_session; return $g_session; }
 
 //load our stuff
 require_once("config.php");

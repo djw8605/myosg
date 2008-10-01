@@ -249,14 +249,16 @@ class HistoryController extends Zend_Controller_Action
 
         $image_width = 300;
         $im = imageCreate($image_width,1);
-        $back = imageColorAllocate($im, 255,255,255);//paint it white..
 
         //should I have this configurable from OIM DB?
         $color = array();
+        $color["NA"] = imageColorAllocate($im, 127,127,127);
         $color["OK"] = imagecolorallocate($im, 64,255,64);
         $color["WARNING"] = imagecolorallocate($im, 255,255,64);
         $color["CRITICAL"] = imagecolorallocate($im, 255,64,64);
         $color["UNKNOWN"] = imagecolorallocate($im, 127,127,127);
+
+        $back = $color["NA"];
 
         $total_time = $end_time - $start_time;
         $decile_out = 0; //used to calculate the reminder area

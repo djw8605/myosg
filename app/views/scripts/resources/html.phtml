@@ -1,0 +1,55 @@
+<?
+
+foreach($this->resource_groups as $resource_group) {
+    if(isset($this->resources_index[$resource_group->id])) {
+        $resource_list = $this->resources_index[$resource_group->id];
+        if(count($resource_list) != 0) {
+            echo "<div class=\"resource_group\">";
+            $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
+            echo "<h3>".$resource_group->name."</h3>";
+            echo "<div class=\"sidenote\">$gridtype_name</div>";
+            echo "<p>".$resource_group->description."</p>";
+
+            foreach($resource_list as $resource) {
+
+                $resource_status = $this->resource_status[$resource->id];
+                $note = $resource_status->Note[0];
+                $status = $resource_status->Status[0];
+                $services = $this->resource_services[$resource->id];
+                $service_names = "";
+                foreach($services as $service) {
+                    if($service_names != "") $service_names .= " / ";
+                    $service_names .= $this->servicetypes[$service->service_id][0]->description;
+                }
+            
+                echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
+                echo "$note<br/>";
+
+                if(!isset($_REQUEST["uwa"])) {
+                    $url = base()."/current?resource_id=".$resource->id;
+                    echo "<a href=\"$url\">Show Status Detail</a>&nbsp;&nbsp;&nbsp;";
+                }            
+
+                /*
+                $end_time = time();
+                $start_time = $end_time - 3600*24*7;
+                echo "<img src=\"history/graph?rid=".$resource->id."&start=$start_time&end=$end_time\" width=\"100%\" height=\"14px\"/>";
+                */
+
+                if(!isset($_REQUEST["uwa"])) {
+                    $url = base()."/history?resource_id=".$resource->id;
+                    echo "<a href=\"$url\">Show History Detail</a>&nbsp;&nbsp;&nbsp;";
+                }
+
+                if(!isset($_REQUEST["uwa"])) {
+                    $url = base()."/vogroup?resource_id=".$resource->id;
+                    echo "<a href=\"$url\">Show Virtual Organization</a>&nbsp;&nbsp;&nbsp;";
+                }
+
+                echo "</div>";
+            }
+
+            echo "</div>";
+        }
+    }
+}

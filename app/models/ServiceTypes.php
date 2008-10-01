@@ -1,24 +1,12 @@
 <?
 
-require_once("model_base.php");
-
-class ServiceTypes
+class ServiceTypes extends CachedIndexedModel
 {
-    public function __construct()
+    public function sql($param)
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
+        return "SELECT * FROM oim.service S WHERE S.service_id IN (SELECT service_id FROM oim.service_service_group WHERE service_group_id=1) AND S.service_id NOT IN (SELECT DISTINCT PS.parent_service_id psid FROM oim.service PS WHERE PS.parent_service_id IS NOT NULL)";
     }
-
-    public function fetchAll()
-    {
-        $schema = config()->db_oim_schema;
-        $sql = "SELECT * FROM $schema.service S WHERE S.service_id IN (SELECT service_id FROM $schema.service_service_group WHERE service_group_id=1) AND S.service_id NOT IN (SELECT DISTINCT PS.parent_service_id psid FROM $schema.service PS WHERE PS.parent_service_id IS NOT NULL)";
-        return $this->db->fetchAll($sql);
-    }
+    public function key() { return "service_id"; }
 }
 
 

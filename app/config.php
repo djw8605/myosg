@@ -49,6 +49,8 @@ class common_config
         $this->version = "1.0";
         //application to display or used in email
         $this->app_name = "OSG Operations Dashboard (Alpha)";
+        $this->app_subname = "by Grid Operations Center";
+        $this->copyright = "Indiana University GOC";
         //application name used in places such as session name
         $this->app_id = "rsv_viewer";
 
@@ -89,8 +91,8 @@ class common_config
         $this->force_https = true;
 
         //cache filenames
-        $this->cache_filename_latest_metrics = $this->getCacheDir()."/latest_detail";
-        $this->cache_filename_latest_overall = $this->getCacheDir()."/latest_overall";
+        $this->vomatrix_xml_cache = $this->getCacheDir()."/cache.vomatrix.xml";
+        $this->current_resource_status_xml_cache = $this->getCacheDir()."/cache.current_resource_<ResourceID>.xml";
 
         //locale
         $this->date_format_full = "M j, Y h:i A";
@@ -135,12 +137,17 @@ class common_config
         );
     }
     function getCacheDir() {
-        return "app/cache";
+        return "/tmp";
     }
 }
 
 function base() {
     $last_pos = strrpos($_SERVER["SCRIPT_NAME"], "/");
     return substr($_SERVER["SCRIPT_NAME"], 0, $last_pos);
+}
+function fullbase() {
+    $p = "http://";
+    if(isset($_SERVER["HTTPS"])) $p = "https://";
+    return $p.$_SERVER["HTTP_HOST"].base();
 }
 

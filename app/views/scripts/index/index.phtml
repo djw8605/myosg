@@ -1,136 +1,63 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-<link href="images/favicon.ico" rel="icon" type="image/x-icon" />
-<title><?=config()->app_name?></title>
+<?=$this->render("full_header.phtml", true)?>
 
-<!-- CSS used to display loading dialog -->
-<style>
-#loading {
-    position: absolute;
-    left: 45%;
-    top: 40%;
-    margin-left: -50px;
-    padding: 2px;
-    z-index: 20001;
-    height: auto;
-    border: 1px solid #ccc;
-}
+        <div id="primaryContentContainer">
+            <div id="primaryContent">
+                <div class="error_message">Everything you see on this page is a mockup. GOC takes no responsiblity whatsoever on these contents.</strong></div>
+                <h2>Welcome to <?=config()->app_name?>!</h2>
 
-#loading a {
-    color: #225588;
-}
+                <p><strong><?=config()->app_name?></strong> is a central web interface for information related to OSG and its operations. Most of the pages displayed here can be exported into several different formats as well as various content aggregation systems such as Netvibes or iGoogle in order for you to create your own dashbaord where you display information relavant to your day to day activities.</p>
 
-#loading .loading-indicator {
-    background: white;
-    color: #444;
-    font: bold 13px tahoma, arial, helvetica;
-    padding: 10px;
-    margin: 0;
-    height: auto;
-}
+                <h3>Voices from our Users</h3>
+                <blockquote>
+                        <p>"<?=config()->app_name?> is a great place where I can quickly pull infomration I need without looking around many different webpages. Once I found the information I am looking for, I can export it into my Netvibe homepage so that I don't ever have to look for the same page again."</p>
+                </blockquote>
+                <h3>Information currently Avilable</h3>
+                <ul>
+                    <li><a href="#">Current RSV results resource / service status</a></li>
+                    <li><a href="#">History chart for past resource / service status.</a></li>
+                    <li><a href="#">Various OIM related information such as VO matrix.</a></li>
+                    <li><a href="#">BDII / GIP information</a></li>
+                    <li><a href="#">Links to OSG support systems</a></li>
+                </ul>
+                <h3>Development Timeline</h3>
+                <table>
+                    <tr class="rowH">
+                        <th>Date</th>
+                        <th>State</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr class="rowA">
+                        <td>October 1, 2008</td>
+                        <td>Requirement Gathering</td>
+                        <td>Alpha version will be lunched for public to gain insight as to what feature should be implemented .</td>
+                    </tr>
+                    <tr class="rowB">
+                        <td>XXX, 2008</td>
+                        <td>Development Begins</td>
+                        <td>Official development cycle will begin given go ahead from our management.</td>
+                    </tr>
+                    <tr class="rowA">
+                        <td>XXX, 2008</td>
+                        <td>First ITB Release</td>
+                        <td>ITB Version will be send to selected users for testing.</td>
+                    </tr>
+                    <tr class="rowB">
+                        <td>XXX, 2009</td>
+                        <td>Version 1 Release</td>
+                        <td>First version will be released for public.</td>
+                    </tr>
+                    <tr class="rowA">
+                        <td>XXX, 2009</td>
+                        <td>VORS Shutdown</td>
+                        <td>VORS will be phased down and shutdown.</td>
+                    </tr>
+</table>
+            </div>
 
-#loading .loading-indicator img {
-    margin-right:8px;
-    float:left;
-    vertical-align:top;
-}
-
-#loading-msg {
-    font: normal 10px arial, tahoma, sans-serif;
-}
-
-</style>
-
-</head>
-
-<body id="body" style="overflow: hidden">
-<div id="loading">
-    <div class="loading-indicator">
-    <img src="images/large-loading.gif" width="32" height="32"/><?=config()->app_name?><br />
-    <span id="loading-msg">Loading ...</span>
-    </div>
-</div>
-
-<link rel="stylesheet" type="text/css" href="lib/ext-2.2/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="lib/ext-2.2/resources/css/xtheme-gray.css" />
-<link rel="stylesheet" type="text/css" href="css/main.css" />
-
-<script language='javascript' src='lib/jquery-1.2.6/jquery.js'></script>
-<script language='javascript' src='lib/ext-2.2/adapter/jquery/ext-jquery-adapter.js'></script>
-<script language='javascript' src='lib/ext-2.2/ext-all.js'></script>
-<script language='javascript' src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=config()->gmap_key?>" type="text/javascript"></script>
-
-<script langauge='javascript' src="js/gmap.js"></script>
-<script langauge='javascript'>
-function getBase()
-{
-    return "<?=base()?>";
-}
-function getURLBase()
-{
-    return "<?=$_SERVER["SERVER_NAME"]?>"+getBase();
-}
-function getFullURLBase()
-{
-    return "http://"+getURLBase();
-}
-function getInitialPage()
-{
-    return "<?=$this->initial_page?>";
-}
-function getInitialParam()
-{
-    <?if(isset($_REQUEST["param"])) {
-        echo "return unescape(\"".$_REQUEST["param"]."\");\n";
-    } else {
-        echo "return \"\";\n";
-    }?>
-}
-var vonames = [    
-<?
-    $vo_model = new VO();
-    $vos = $vo_model->fetchAll();
-    $first = true;
-    foreach($vos as $vo) {
-        if(!$first) echo ",";
-        $first = false;
-    ?>
-        { id: '<?=$vo->vo_id?>', short_name: '<?=$vo->short_name?>', long_name: '<?=$vo->long_name?>' }
-<?
-}
-?>
-];
-
-function role_viewadminemail()
-{
-    <?php if(user()->hasRole(role::$view_admin_email)) { ?>
-        return true;
-    <? } else { ?>
-        return false;
-    <? } ?>
-}
-
-</script>
-<script langauge='javascript' src="index/js"></script>
-
-<?php include("app/views/header.php");?>
-<div id="viewportarea" class="hidden">
-    <?php include("app/views/scripts/index/static_content.php");?>
-</div>
-
-<!-- following 2 javascript blocks are for Google Analytics Stuff... Why 2 blocks? I don't know.. 
--->
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-69012-6");
-pageTracker._initData();
-pageTracker._trackPageview();
-</script>
-
-</body>
-</html>
+        </div>
+        <div id="sideContent">
+            <h3>Home</h3>
+            <p>Side content for home</p>
+            <?=$this->render("full_menu.phtml", true)?>
+        </div>
+<?=$this->render("full_footer.phtml", true)?>

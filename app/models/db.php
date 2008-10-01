@@ -32,21 +32,21 @@ function log_db_profile()
         $longestTime  = 0;
         $longestQuery = null;
 
-        dlog('----------------------------------------------------------------------');
-        dlog('DB PROFILE');
-        dlog('Executed ' . $queryCount . ' queries in ' . $totalTime . ' seconds');
+        if($profiler->getQueryProfiles()) {
+            dlog('----------------------------------------------------------------------');
+            dlog('DB PROFILE');
+            dlog('Executed ' . $queryCount . ' queries in ' . $totalTime . ' seconds');
 
-        foreach ($profiler->getQueryProfiles() as $query) {
-            if ($query->getElapsedSecs() > $longestTime) {
-                $longestTime  = $query->getElapsedSecs();
-                $longestQuery = $query->getQuery();
+            foreach ($profiler->getQueryProfiles() as $query) {
+                if ($query->getElapsedSecs() > $longestTime) {
+                    $longestTime  = $query->getElapsedSecs();
+                    $longestQuery = $query->getQuery();
+                }
+                dlog("Executed Query: (in ".$query->getElapsedSecs().")");
+                dlog($query->getQuery());
             }
-            dlog("Executed Query: (in ".$query->getElapsedSecs().")");
-            dlog($query->getQuery());
-        }
 
-        dlog('----------------------------------------------------------------------');
-        //dlog('Longest query length: ' . $longestTime);
-        //dlog("Longest query: \n" . $longestQuery);
+            dlog('----------------------------------------------------------------------');
+        }
     }
 }
