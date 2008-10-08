@@ -6,16 +6,18 @@ abstract class CachedIndexedModel extends CachedModel
     private static $indexed_cache = array();
     abstract public function key();
 
-    public function getindex($param = "") {
-        if(!isset(CachedIndexedModel::$indexed_cache[get_class($this)][$param])) {
+    //returns list of record grouped by key() field.
+    public function getindex($param = array()) {
+        $str_param = print_r($param, true);
+        if(!isset(CachedIndexedModel::$indexed_cache[get_class($this)][$str_param])) {
             $records = parent::get($param);
 
             //index the record set
             $key = $this->key();
             foreach($records as $record) {
-                CachedIndexedModel::$indexed_cache[get_class($this)][$param][$record->$key][] = $record;
+                CachedIndexedModel::$indexed_cache[get_class($this)][$str_param][$record->$key][] = $record;
             }
         }
-        return CachedIndexedModel::$indexed_cache[get_class($this)][$param];
+        return CachedIndexedModel::$indexed_cache[get_class($this)][$str_param];
     }
 }

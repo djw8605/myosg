@@ -55,3 +55,48 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
     ob_end_clean();
     return $content;
 }
+
+function agoCalculation($timestamp)
+{
+    $ago = time() - $timestamp;
+    if($ago < 60) return $ago." seconds ago";
+    if($ago < 60*60) return floor($ago/60)." minutes ago";
+    if($ago < 60*60*24) return floor($ago/(60*60))." hours ago";
+    return floor($ago/(60*60*24))." days ago";
+}
+
+function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)
+{
+    global $g_pagename;
+?>
+    <?=$field_name?>:
+    <p>
+    <select id="filter_<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
+    <option value="">(All <?=$field_name?>)</option>
+    <?
+    $rows = $model->get();
+    $current_value = @$_REQUEST[$field_id];
+    foreach($rows as $row) {
+        $value = $row->$value_field;
+        $name = $row->$name_field;
+        $selected = "";
+        if($value == $current_value) {
+            $selected = "selected=selected";
+        }
+        echo "<option value=\"$value\" $selected>$name</option>\n";
+    }
+    ?>
+    </select>
+    </p>
+<?
+}
+
+function outputClearFilterButton()
+{
+    global $g_pagename;
+    ?>
+    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename";?>';">Clear All Filters</a></p>
+    <?
+}
+
+

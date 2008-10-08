@@ -2,10 +2,9 @@
 
 class CurrentController extends ControllerBase
 {
-    public function init()
+    public function pagename() { return "current"; }
+    public function load()
     {
-        $this->rememberQuery("current");
-
         $dirty_resource_id = $_REQUEST["resource_id"];
         $resource_id = (int)$dirty_resource_id;
 

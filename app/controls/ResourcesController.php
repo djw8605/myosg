@@ -2,33 +2,42 @@
 
 class ResourcesController extends ControllerBase
 { 
-    public function init() 
+    public function pagename() { return "resources"; }
+    public function load() 
     { 
-        $this->rememberQuery("resources"); 
+
+        //the reason why this is so convoluted is because I have to sort by resource group name
+        //well.. that's just one of reasons..
 
         ///////////////////////////////////////////////////////////////////////
         //pull resource requested (filter by servicetype)
         $resource_model = new ResourceByGroupID();
-        $where = "";
+        $params = array();
         if(isset($_REQUEST["servicetype"])) {
             if(trim($_REQUEST["servicetype"]) != "") {
                 $servicetype = (int)$_REQUEST["servicetype"];
-                $where = "where resource_id in (select resource_id from oim.resource_service where service_id = $servicetype and active = 1 and disable = 0)";
+                $params["servicetype"] = $servicetype;
             }
         }
-        $this->view->resources_index = $resource_model->getindex($where);
+        $this->view->resources_index = $resource_model->getindex($params);
 
         ///////////////////////////////////////////////////////////////////////
         //pull group requested (filter by gridtype)
         $resource_group_model = new ResourceGroup();
-        $where = "";
+        $params = array();
         if(isset($_REQUEST["gridtype"])) {
             if(trim($_REQUEST["gridtype"]) != "") {
                 $gridtype = (int)$_REQUEST["gridtype"];
-                $where = "where osg_grid_type_id = $gridtype"; 
+                $params["osg_grid_type_id"] = $gridtype;
             }
         }
-        $this->view->resource_groups = $resource_group_model->get($where);
+        if(isset($_REQUEST["resourcegroup"])) {
+            if(trim($_REQUEST["resourcegroup"]) != "") {
+                $resourcegroup = (int)$_REQUEST["resourcegroup"];
+                $params["resourcegroup"] = $resourcegroup;
+            }
+        }
+        $this->view->resource_groups = $resource_group_model->get($params);
 
         ///////////////////////////////////////////////////////////////////////
         //pull other things that we'd like to display
@@ -40,11 +49,22 @@ class ResourcesController extends ControllerBase
         $this->view->resource_services = $resourceservice_model->getindex();
 
         ///////////////////////////////////////////////////////////////////////
+        //load vo cache
+        $cache_filename = config()->vomatrix_xml_cache;
+        $cache_xml = file_get_contents($cache_filename);
+        $this->view->xml = $cache_xml;
+        $vos = new SimpleXMLElement($cache_xml);
+        $this->view->vos = array();
+        foreach($vos->ResourceGrouped[0] as $resource_vo) {
+            $attributes = $resource_vo->attributes();
+            $this->view->vos[(int)$attributes->id[0]] = $resource_vo->Members[0]->VO; 
+        }        
+
+        ///////////////////////////////////////////////////////////////////////
         //get resource status cache
         $cache_filename_template = config()->current_resource_status_xml_cache;
         $cache_filename = str_replace("<ResourceID>", "all", $cache_filename_template); 
         $cache_xml = file_get_contents($cache_filename);
-        $this->view->xml = $cache_xml;
 
         $cache = new SimpleXMLElement($cache_xml);
         //index resource status list by resource ID
@@ -53,6 +73,29 @@ class ResourcesController extends ControllerBase
             $id = (int)$resource_status->ResourceID[0];
             $this->view->resource_status[$id] = $resource_status;
         }
-        $this->view->page_title = "Resource";
+
+        ///////////////////////////////////////////////////////////////////////
+        //filter resources based on status filter
+        if(isset($_REQUEST["status"])) {
+            if(trim($_REQUEST["status"]) != "") {
+                $status = $_REQUEST["status"];
+                foreach($this->view->resource_groups as $resource_group) {
+                    if(!isset($this->view->resources_index[$resource_group->id])) {
+                        continue;
+                    }
+                    $list = $this->view->resources_index[$resource_group->id];
+                    $newlist = array();
+                    foreach($list as $rec) {
+                        $resource_status = $this->view->resource_status[$rec->id];
+                        if($resource_status->Status[0] == $status) {
+                            $newlist[] = $rec;
+                        }
+                    } 
+                    $this->view->resources_index[$resource_group->id] = $newlist;
+                }
+            }
+        } 
+
+        $this->view->page_title = "Resource Groups";
     }
 } 

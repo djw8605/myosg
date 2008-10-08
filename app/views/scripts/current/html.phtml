@@ -1,5 +1,6 @@
 <div class="sidenote">Status calculated at <?=date(config()->date_format_full, $this->timestamp)?></div>
 
+<h3>Overall Status</h3>
 <div class="status_<?=$this->status?>">
 <p><?=$this->note?></p>
 </div>
@@ -9,14 +10,20 @@ function outputMetricInfo($metric)
 {
     $detail = $metric->Detail;
     $out = "";
-
     $out .= "<div class=\"bottom_border status_".$metric->Status."\">";
+    if($metric->Timestamp != "") {
+        $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)."</div>";
+    }
     $out .= "<span class=\"h4\">".$metric->MetricName."</span>"; 
-    $detail = "<pre>$detail</pre>";
     if(isset($_REQUEST["uwa"])) {
-        $out .= $detail;
+        $out .= "<pre>$detail</pre>";
     } else {
-        $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+        if(trim($detail) == "") {
+            $out .= "<br/>(No detail provided)<br/>";
+        } else {
+            $detail = "<pre>$detail</pre>";
+            $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+        }
     }
     $out .= "</div>";
 
@@ -24,7 +31,7 @@ function outputMetricInfo($metric)
 }
 
 foreach($this->services as $service) {
-    echo "<h3>".$service->ServiceDescription."</h3>"; 
+    echo "<h3>".$service->ServiceDescription." Service Status</h3>"; 
     echo "<div class=\"status_".$service->Status."\">";
 
     echo $service->Note;
