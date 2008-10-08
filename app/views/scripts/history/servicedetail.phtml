@@ -1,0 +1,56 @@
+<h3><?=$this->page_title?></h3>
+
+<?
+if($this->service_status !== null) {
+    $status = Status::getStatus($this->service_status->status_id);
+    echo "<div class=\"bottom_border status_".$status."\">";
+    echo "<div class=\"sidenote\">Status changed at ".
+        date(config()->date_format_full, $this->service_status->timestamp).
+        "</div>";
+    echo $this->service_status->detail;
+} else {
+    echo "<div class=\"bottom_border status_UNKNOWN\">";
+    echo "No status change has ever occured for this service.";
+}
+
+$title = "<span class=\"h3\">Critical Metrics</span>";
+echo outputToggle($title, $title, showmetrics($this->critical_metrics), true);
+
+$title = "<span class=\"h3\">Non-Critical Metrics</span>";
+echo outputToggle($title, $title, showmetrics($this->noncritical_metrics));
+
+echo "</div>";
+
+
+function showmetrics($metrics) 
+{
+    $out = "";
+    foreach($metrics as $metric) {
+        $out .= showmetric($metric);
+    }
+    return $out;
+}
+
+function showmetric($metric)
+{
+    $detail = $metric->Detail;
+    $out = "";
+    $out .= "<div class=\"bottom_border status_".$metric->Status."\">";
+    if($metric->Timestamp != "") {
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+    }
+    $out .= "<span class=\"h4\">".$metric->MetricName."</span>"; 
+    if(trim($detail) == "") {
+        $out .= "<br/>(No detail provided)<br/>";
+    } else {
+        $id = $metric->MetricDataID;
+        $detail = "Metric Data ID: $id<pre>$detail</pre>";
+        $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+    }
+    $out .= "</div>";
+
+    return $out;
+ 
+}
+
+

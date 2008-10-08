@@ -1,0 +1,11 @@
+<?
+
+foreach($this->vos as $vo) {
+    echo "<h3>".$vo->Name[0]."</h3>"; 
+    echo "<h4>Member Resources</h4>";
+    echo "<p>";
+    foreach($vo->Members[0]->Resource as $resource) {
+        echo $resource->ResourceName[0]."<br/>";
+    }
+    echo "</p>";
+}

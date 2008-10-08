@@ -1,0 +1,120 @@
+<style>
+.time-tooltip
+{
+    position: absolute;
+    padding-bottom: 8px;
+    background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
+}
+
+.opacity_70
+{
+    opacity: .70;
+}
+
+.graph
+{
+    cursor: pointer;
+}
+
+.time-tooltip-content
+{
+    background-color: #ccc;
+    padding: 5px;
+}
+</style>
+
+<script language='javascript' src='<?=base()?>/lib/jquery-1.2.6/dimensions_1.2/jquery.dimensions.min.js'></script>
+<script type="text/javascript">
+function convertXtoUnixTime(graph, x)
+{
+    //convert posititon to unixtimestamp
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var time = (time_width / width) * x + start_time;
+    return parseInt(time);
+}
+$(document).ready(function() {
+/*
+
+    $("#overall_graph").click(function(event) {
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var time = convertXtoUnixTime(this, x);
+        $("#detail_content").load("<?=fullbase()?>/history/overalldetail?resource_id=<?=$this->resource_id?>&time="+time);
+    });
+*/
+    $(".graph").click(function(event) {
+        var service_param = $(this).attr("id");
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var time = convertXtoUnixTime(this, x);
+        $("#detail_content").html("Loading...");
+        $("#detail_content").load("<?=fullbase()?>/history/servicedetail?resource_id=<?=$this->resource_id?>&time="+time+"&"+service_param,
+            function() {
+                //mark shown..
+                var tool = $("#time-tooltip-shown");
+                tool.css("left", imgpos.left + x);
+                tool.css("top", imgpos.top - 28 );
+                var d = new Date(convertXtoUnixTime(this, x)* 1000);
+                $(tool).children("span").html(d.toGMTString());
+                tool.show();
+            }
+        );
+
+    });
+
+    $(".graph").mousemove(function(event) {
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var y = event.pageY - imgpos.top;
+
+        var tool = $("#time-tooltip");
+        tool.css("left", imgpos.left + x);
+        tool.css("top", imgpos.top - 28 );
+
+        //convert timestamp to human readable time
+        var d = new Date(convertXtoUnixTime(this, x)* 1000);
+        $(tool).children("span").html(d.toGMTString());
+        tool.show();
+    });
+    $(".graph").mouseout(function(event) {
+        var tool = $("#time-tooltip");
+        tool.hide();
+    });
+});
+</script>
+
+<div id="time-tooltip-shown" class="hidden time-tooltip">
+<span class="time-tooltip-content"/>
+</div>
+<div id="time-tooltip" class="hidden time-tooltip opacity_70">
+<span class="time-tooltip-content"/>
+</div>
+
+<!--
+<h3>Overall Status</h3>
+<div class="history_graph">
+<img id="overall_graph" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>"/>
+-->
+
+<?
+foreach($this->services as $service) {
+    ?>
+    <h4><?=$service->description?> Status</h4>
+    <div class="history_graph">
+    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&service_id=<?=$service->service_id?>"/>
+    </div>
+    <?=$this->ruler?>
+    <?
+}
+?>
+
+<?
+if(!isset($_REQUEST["uwa"])) {
+?>
+    <div id="detail_content">Click inside graph to show metric details.</div>
+<?
+}
+?>

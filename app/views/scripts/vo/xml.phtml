@@ -1,0 +1,14 @@
+<VirtualOrganizations>
+<?
+foreach($this->vos as $vo) {
+    echo "<VirtualOrganization>";
+    echo "<Name>".$vo->Name[0]."</Name>"; 
+    echo "<Members>";
+    foreach($vo->Members[0]->Resource as $resource) {
+        echo "<Resource>".$resource->ResourceName[0]."</Resource>";
+    }
+    echo "</Members>";
+    echo "</VirtualOrganization>";
+}
+?>
+</VirtualOrganizations>

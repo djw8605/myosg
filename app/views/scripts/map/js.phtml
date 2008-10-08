@@ -1,0 +1,95 @@
+function init() {
+  if (GBrowserIsCompatible()) {
+    var map = new GMap2(document.getElementById("map_canvas"));
+    map.addControl(new GSmallMapControl());
+    map.addControl(new GMapTypeControl());
+
+    map.setCenter(new GLatLng(37, -100), 4);
+
+    var icon_ok = new GIcon();
+    icon_ok.image = "<?=fullbase();?>/images/status_ok.png";
+    icon_ok.iconAnchor = new GPoint(12, 12);
+    icon_ok.infoWindowAnchor = new GPoint(12, 12);
+    icon_ok.iconSize = new GSize(24, 24);
+    icon_ok.shadow = "<?=fullbase();?>/images/shadow.png";
+    icon_ok.shadowSize = new GSize(30, 30);
+
+    var icon_warning = new GIcon();
+    icon_warning.image = "<?=fullbase();?>/images/status_warning.png";
+    icon_warning.iconAnchor = new GPoint(12, 12);
+    icon_warning.infoWindowAnchor = new GPoint(12, 12);
+    icon_warning.iconSize = new GSize(24, 24);
+    icon_warning.shadow = "<?=fullbase();?>/images/shadow.png";
+    icon_warning.shadowSize = new GSize(30, 30);
+
+    var icon_unknown = new GIcon();
+    icon_unknown.image = "<?=fullbase();?>/images/status_unknown.png";
+    icon_unknown.iconAnchor = new GPoint(12, 12);
+    icon_unknown.infoWindowAnchor = new GPoint(12, 12);
+    icon_unknown.iconSize = new GSize(24, 24);
+    icon_unknown.shadow = "<?=fullbase();?>/images/shadow.png";
+    icon_unknown.shadowSize = new GSize(30, 30);
+
+    var icon_critical = new GIcon();
+    icon_critical.image = "<?=fullbase();?>/images/status_critical.png";
+    icon_critical.iconAnchor = new GPoint(12, 12);
+    icon_critical.infoWindowAnchor = new GPoint(12, 12);
+    icon_critical.iconSize = new GSize(24, 24);
+    icon_critical.shadow = "<?=fullbase();?>images/shadow.png";
+    icon_critical.shadowSize = new GSize(30, 30);
+
+    function createMarker(point, markerOptions, html) {
+      var marker = new GMarker(point, markerOptions);
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml(html);
+      });
+      return marker;
+    }
+<?
+foreach($this->sites as $site) {
+    //status counter    
+    $status_ok = 0;
+    $status_warning = 0;
+    $status_critical = 0;
+    $status_unknown = 0;
+
+    $rgs = $this->rgs[$site->site_id];
+    $html = "";
+    //$html = "<h2>$site->name</h2>";
+    foreach($rgs as $rg) {
+        $html .= "<h3>Resource Group: <a href=\"".fullbase()."/resources?resourcegroup=".$rg->id."\">".$rg->name."</a></h3>";
+        $html .= "<p>";
+        if(isset($this->resources_bygid[$rg->id])) {
+            $rs = $this->resources_bygid[$rg->id];
+            foreach($rs as $r) {
+                $rstatus = $this->resource_status[$r->id];
+                $name = $rstatus->ResourceName[0];
+                $status = $rstatus->Status[0];
+                $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/current?resource_id=".$r->id."\">$name</a></h4>";
+                $html .= $rstatus->Note[0] . "<br/>";
+                
+                //determine site status
+                if($status == "OK") $status_ok++;
+                if($status == "WARNING") $status_warning++;
+                if($status == "CRITICAL") $status_critical++;
+                if($status == "UNKNOWN") $status_unknown++;
+            }
+        } else {
+            $html .= "No active resource exists under this resource group.";
+        }
+        $html .= "</p>";
+    }
+
+    //decide site status
+    if($status_critical > 0) $status = "critical";
+    else if($status_warning > 0) $status = "warning";
+    else if($status_unknown > 0) $status = "unknown";
+    else $status = "ok";
+
+    $html = addslashes($html);
+    echo "map.addOverlay(createMarker(new GLatLng(".$site->latitude.", ".$site->longitude."), {icon:icon_$status}, '$html'));\n";
+}
+
+?>
+  }
+}

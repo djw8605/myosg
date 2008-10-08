@@ -1,0 +1,17 @@
+<link href="<?=base()?>/css/uwa.css" rel="stylesheet" type="text/css" />
+<link href="<?=base()?>/css/osg.css" rel="stylesheet" type="text/css" />
+<style>
+body {
+margin: 0px;
+}
+</style>
+<script language='javascript' src='<?=fullbase()?>/lib/jquery-1.2.6/jquery.js'></script>
+<script src="http://maps.google.com/maps?file=api&v=2&key=<?=config()->gmap_key?>" type="text/javascript"></script>
+<script type="text/javascript">
+<?=$this->render(pagename()."/js.phtml");?>
+$(document).ready(function() {
+    init();
+});
+</script>
+<?=$this->render(pagename()."/html.phtml");?>
+
