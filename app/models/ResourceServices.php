@@ -13,6 +13,8 @@ class ResourceServices extends CachedModel
             $service_id = $params["service_id"];
             $where .= " and rs.service_id = $service_id"; 
         }
-        return "SELECT rs.resource_id, rs.service_id, s.description FROM oim.resource_service rs join oim.service s on rs.service_id = s.service_id $where";
+        $sql = "SELECT rs.resource_id, rs.service_id, s.description FROM oim.resource_service rs join oim.service s on rs.service_id = s.service_id $where";
+        //elog($sql);
+        return $sql;
     }
 }

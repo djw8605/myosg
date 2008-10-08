@@ -14,16 +14,30 @@ function outputMetricInfo($metric)
     if($metric->Timestamp != "") {
         $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)."</div>";
     }
-    $out .= "<span class=\"h4\">".$metric->MetricName."</span>"; 
+    $out .= "<span class=\"h4\">".$metric->MetricCommonName."</span>";
     if(isset($_REQUEST["uwa"])) {
         $out .= "<pre>$detail</pre>";
     } else {
         if(trim($detail) == "") {
-            $out .= "<br/>(No detail provided)<br/>";
+            $detail = "(No detail provided)<br/>";
         } else {
             $detail = "<pre>$detail</pre>";
-            $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+            $id = $metric->MetricDataID;
+            $detail .= "Metric Data ID: $id<br/>";
         }
+        //some other stuff
+        $desc = $metric->MetricDescription;
+        $detail .= "Metric Description: $desc ";
+        $help_url = config()->default_rsvforum;
+        if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+            $help_url = config()->rsvforum[(int)$metric->MetricID];
+        }
+        $detail .= "<a href=\"$help_url\">Help Forum</a><br/>";
+
+        //wrap detail with toggler
+        $detail = outputToggle("Show Detail", "Hide Detail", $detail);
+
+        $out .= $detail;
     }
     $out .= "</div>";
 

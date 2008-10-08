@@ -6,11 +6,6 @@
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
 }
 
-.opacity_70
-{
-    opacity: .70;
-}
-
 .graph
 {
     cursor: pointer;
@@ -20,6 +15,13 @@
 {
     background-color: #ccc;
     padding: 5px;
+}
+.mark
+{
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background: transparent url(<?=fullbase();?>/images/downarrow.png) no-repeat 0px 0px;
 }
 </style>
 
@@ -35,34 +37,25 @@ function convertXtoUnixTime(graph, x)
     var time = (time_width / width) * x + start_time;
     return parseInt(time);
 }
-$(document).ready(function() {
-/*
+function convertUnixTimeToX(graph, time)
+{
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var x = (time - start_time)*(width / time_width);
+    return x;
+}
 
-    $("#overall_graph").click(function(event) {
-        var imgpos = $(this).position();
-        var x = event.pageX - imgpos.left;
-        var time = convertXtoUnixTime(this, x);
-        $("#detail_content").load("<?=fullbase()?>/history/overalldetail?resource_id=<?=$this->resource_id?>&time="+time);
-    });
-*/
+$(document).ready(function() {
     $(".graph").click(function(event) {
         var service_param = $(this).attr("id");
+
         var imgpos = $(this).position();
         var x = event.pageX - imgpos.left;
         var time = convertXtoUnixTime(this, x);
-        $("#detail_content").html("Loading...");
-        $("#detail_content").load("<?=fullbase()?>/history/servicedetail?resource_id=<?=$this->resource_id?>&time="+time+"&"+service_param,
-            function() {
-                //mark shown..
-                var tool = $("#time-tooltip-shown");
-                tool.css("left", imgpos.left + x);
-                tool.css("top", imgpos.top - 28 );
-                var d = new Date(convertXtoUnixTime(this, x)* 1000);
-                $(tool).children("span").html(d.toGMTString());
-                tool.show();
-            }
-        );
 
+        document.location = "<?=fullbase()?>/history?resource_id=<?=$this->resource_id?>&time="+time+"&"+service_param;
     });
 
     $(".graph").mousemove(function(event) {
@@ -82,22 +75,27 @@ $(document).ready(function() {
     $(".graph").mouseout(function(event) {
         var tool = $("#time-tooltip");
         tool.hide();
+
     });
+
+    <?  if(!isset($_REQUEST["uwa"])) { if($this->detail_show) { ?>
+    var graph = $("#service_id\\=<?=$this->detail_service_id?>");
+    var pos = graph.position();
+    var x = pos.left + convertUnixTimeToX(graph, <?=$this->detail_time?>)-8;
+    var y = pos.top-16;
+
+    var mark = $("#mark");
+    mark.css("left", x);
+    mark.css("top", y);
+    mark.show();
+    <? } } ?>
 });
 </script>
 
-<div id="time-tooltip-shown" class="hidden time-tooltip">
+<div id="mark" class="hidden mark">&nbsp;</div>
+<div id="time-tooltip" class="hidden time-tooltip">
 <span class="time-tooltip-content"/>
 </div>
-<div id="time-tooltip" class="hidden time-tooltip opacity_70">
-<span class="time-tooltip-content"/>
-</div>
-
-<!--
-<h3>Overall Status</h3>
-<div class="history_graph">
-<img id="overall_graph" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>"/>
--->
 
 <?
 foreach($this->services as $service) {
@@ -113,8 +111,79 @@ foreach($this->services as $service) {
 
 <?
 if(!isset($_REQUEST["uwa"])) {
-?>
-    <div id="detail_content">Click inside graph to show metric details.</div>
-<?
+    if($this->detail_show) {
+        echo "<h3>".$this->detail_page_title."</h3>";
+        if($this->detail_service_status !== null) {
+            $status = Status::getStatus($this->detail_service_status->status_id);
+            echo "<div class=\"bottom_border status_".$status."\">";
+            $status_time = $this->detail_service_status->timestamp;
+            $url = fullbase()."/history?resource_id=".$this->resource_id.
+                "&service_id=".$this->detail_service_id.
+                "&time=".$status_time;
+            echo "Status changed to $status at <a href=\"$url\">".date(config()->date_format_full, $status_time)."</a><br/>";
+            echo $this->detail_service_status->detail."<br/>";
+            if($this->detail_time != $status_time) {
+                echo "(Above reason is valid only at the time when this status change occured.)<br/>";
+            }
+        } else {
+            echo "<div class=\"bottom_border status_UNKNOWN\">";
+            echo "No status change has ever occured for this service.";
+        }
+
+        $title = "<span class=\"h3\">Critical Metrics</span>";
+        echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics), true);
+
+        $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+        echo outputToggle($title, $title, showmetrics($this->detail_noncritical_metrics));
+
+        echo "</div>";
+    } else {
+    ?>
+        <div id="detail_content">Click inside graph to show metric details.</div>
+    <?
+    }
 }
-?>
+
+function showmetrics($metrics) 
+{
+    $out = "";
+    foreach($metrics as $metric) {
+        $out .= showmetric($metric);
+    }
+    return $out;
+}
+
+function showmetric($metric)
+{
+    $detail = $metric->Detail;
+    $out = "";
+    $out .= "<div class=\"bottom_border status_".$metric->Status."\">";
+    if($metric->Timestamp != "") {
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+    }
+    $out .= "<span class=\"h4\">".$metric->MetricCommonName."</span>"; 
+    if(trim($detail) == "") {
+        $detail = "(No detail provided)<br/>";
+    } else {
+        $detail = "<pre>$detail</pre>";
+        $id = $metric->MetricDataID;
+        $detail .= "Metric Data ID: $id<br/>";
+    }
+
+    //some other stuff
+    $desc = $metric->MetricDescription;
+    $detail .= "Metric Description: $desc ";
+    $help_url = config()->default_rsvforum;
+    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    }
+    $detail .= "<a href=\"$help_url\">Help Forum</a><br/>";
+
+
+    $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+    $out .= "</div>";
+
+    return $out;
+} 
+
+

@@ -95,7 +95,7 @@ class common_config
         $this->current_resource_status_xml_cache = $this->getCacheDir()."/cache.current_resource_<ResourceID>.xml";
 
         //locale
-        $this->date_format_full = "M j, Y h:i A";
+        $this->date_format_full = "M j, Y H:i:s e";
         $this->date_format = "M j, Y";
 
         //number of records to show in one page
@@ -137,6 +137,16 @@ class common_config
                 role::$view_admin_email
             )
         );
+
+        ///////////////////////////////////////////////////////////////////////
+        // RSV Probe help  (metric_id => URL)
+        $this->rsvforum = array(
+            1=>"http://groups.google.com/group/goc-issues/browse_thread/thread/4ef0f6297d80c39c#",
+            2=>"http://groups.google.com/group/goc-issues/browse_thread/thread/b3d918719d51a367",
+            3=>"http://groups.google.com/group/goc-issues/browse_thread/thread/a4840f319768c5f2#",
+        );
+        //if specific metric_id is not found, use following
+        $this->default_rsvforum = "http://groups.google.com/group/goc-issues/topics";
     }
     function getCacheDir() {
         return "/tmp";

@@ -5,11 +5,16 @@ require_once("app/timerange.php");
 class HistoryController extends ControllerBase
 {
     public function pagename() { return "history"; }
+
+    //why do we have both graph and service detail page together?
+    //bacause having them together greatly increases the usability.. 
+    //I know this is against the design policy of having separate pages for diffent
+    //kind of information... but I think we sometime have to make 
+    //compromises..
     public function load()
     {
-
         ///////////////////////////////////////////////////////////////////////
-        // Process Query
+        // Load graph inforamtion
         $dirty_resource_id = $_REQUEST["resource_id"];
         if(Zend_Validate::is($dirty_resource_id, 'Int')) {
             $resource_id = $dirty_resource_id;
@@ -44,8 +49,65 @@ class HistoryController extends ControllerBase
         $this->view->resource_name = $resource->name;
         $this->view->page_title = "Status History for ".$resource->name;
 
-        //generate maps
-        //$this->view->overall_map = $this->outputMap("overall_map");
+        ///////////////////////////////////////////////////////////////////////
+        // Optionally, load service detail
+        $this->view->detail_show = false;
+        if(isset($_REQUEST["service_id"])) {
+            $this->view->detail_show = true;
+        
+            $dirty_service_id = $_REQUEST["service_id"];
+            $service_id = (int)$dirty_service_id;
+            $this->view->detail_service_id = $service_id;
+
+            $dirty_time = $_REQUEST["time"];
+            $time = (int)$dirty_time;
+            $this->view->detail_time = $time;
+
+            //get service information
+            $params = array("resource_id" => $resource_id, "service_id" => $service_id);
+            $this->view->detail_service = $resource_service_model->get($params);
+            $this->view->detail_page_title = "Metric Details for ".$this->view->detail_service[0]->description.
+                " at ".date(config()->date_format_full, $time);
+
+            //get statuses at specified timestamp
+            $metricdata_model = new MetricData();
+            $params = array("resource_id" => $resource_id, "time" => $time);
+            $metrics = $metricdata_model->get($params); 
+
+            //load cache (for template use.)
+            $cache_filename_template = config()->current_resource_status_xml_cache;
+            $cache_filename = str_replace("<ResourceID>", $resource_id, $cache_filename_template); 
+            $cache_xml = file_get_contents($cache_filename);
+            $cache = new SimpleXMLElement($cache_xml);
+            foreach($cache->Services[0] as $service) {
+                if($service->ServiceID[0] == $service_id) {
+                    $critical_metrics = $service->CriticalMetrics[0];
+                    $noncritical_metrics = $service->NonCriticalMetrics[0];
+                    break;
+                }
+            }
+            foreach($critical_metrics as $metric) {
+                $this->metric_overwrite($metric, $metrics);
+            }
+            foreach($noncritical_metrics as $metric) {
+                $this->metric_overwrite($metric, $metrics);
+            }
+            $this->view->detail_critical_metrics = $critical_metrics;
+            $this->view->detail_noncritical_metrics = $noncritical_metrics;
+
+            //load service status
+            $service_status_model = new ServiceStatusChange();
+            $params = array();
+            $params["resource_id"] = $resource_id;
+            $params["service_id"] = $service_id;
+            $params["start_time"] = $time;
+            $params["end_time"] = $time;
+            $service_statuses = $service_status_model->get($params);
+            $this->view->detail_service_status = null;
+            if(isset($service_statuses[0])) {
+                $this->view->detail_service_status = $service_statuses[0];
+            }
+        }
     }
 
     private function generateRuler($start_time, $end_time)
@@ -130,6 +192,7 @@ class HistoryController extends ControllerBase
         return array($status_changes, $start_time, $end_time);
     }
 
+/*
     function outputArea($status_changes, $start_time, $end_time)
     {
         $out = "";
@@ -170,6 +233,7 @@ class HistoryController extends ControllerBase
         
         return $out;
     }
+*/
 
     function drawGraph($status_changes, $start_time, $end_time)
     {
@@ -244,13 +308,14 @@ class HistoryController extends ControllerBase
 
         echo "yo";
     }
-*/
     public function servicedetailAction()
     {
         $dirty_resource_id = $_REQUEST["resource_id"];
         $resource_id = (int)$dirty_resource_id;
+
         $dirty_time = $_REQUEST["time"];
         $time = (int)$dirty_time;
+
         $dirty_service_id = $_REQUEST["service_id"];
         $service_id = (int)$dirty_service_id;
 
@@ -303,18 +368,25 @@ class HistoryController extends ControllerBase
             $this->view->service_status = $service_statuses[0];
         }
     }
+*/
 
     private function metric_overwrite($metric, $latest)
     {
         //find the update from $latest and apply change to $metric
         foreach($latest as $latest_metric) {
             if($latest_metric->metric_id == $metric->MetricID[0]) {
-                $metric->MetricDescription = "hoge";
+                $metric->MetricDataID = $latest_metric->id;
                 $metric->Timestamp = $latest_metric->timestamp;
                 $metric->Detail = $this->fetchMetricDetail($latest_metric->id);
                 $metric->Status = Status::getStatus($latest_metric->metric_status_id);
+                return;
             }
         }
+        //didn't find the match - clear it
+        $metric->MetricDataID = null;
+        $metric->Timestamp = null;
+        $metric->Detail = null;
+        $metric->Status = null;
     }
     private function fetchMetricDetail($id)
     {

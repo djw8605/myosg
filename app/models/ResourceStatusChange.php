@@ -8,7 +8,7 @@ class ResourceStatusChange extends Model
         $end_time = $params["end_time"];
         
         $sql = "select * from statuschange_resource where resource_id = $resource_id and timestamp >= coalesce((select max(timestamp) from statuschange_resource where resource_id = $resource_id and timestamp < $start_time), 0) and timestamp <= $end_time order by timestamp;"; 
-        elog($sql);
+        //elog($sql);
         return $sql;
     }
 }
