@@ -94,7 +94,7 @@ $(document).ready(function() {
 
 <div id="mark" class="hidden mark">&nbsp;</div>
 <div id="time-tooltip" class="hidden time-tooltip">
-<span class="time-tooltip-content"/>
+<span class="time-tooltip-content">to be loaded..</span>
 </div>
 
 <?
@@ -102,7 +102,7 @@ foreach($this->services as $service) {
     ?>
     <h4><?=$service->description?> Status</h4>
     <div class="history_graph">
-    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&service_id=<?=$service->service_id?>"/>
+    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&amp;service_id=<?=$service->service_id?>"/>
     </div>
     <?=$this->ruler?>
     <?
@@ -118,8 +118,8 @@ if(!isset($_REQUEST["uwa"])) {
             echo "<div class=\"bottom_border status_".$status."\">";
             $status_time = $this->detail_service_status->timestamp;
             $url = fullbase()."/history?resource_id=".$this->resource_id.
-                "&service_id=".$this->detail_service_id.
-                "&time=".$status_time;
+                "&amp;service_id=".$this->detail_service_id.
+                "&amp;time=".$status_time;
             echo "Status changed to $status at <a href=\"$url\">".date(config()->date_format_full, $status_time)."</a><br/>";
             echo $this->detail_service_status->detail."<br/>";
             if($this->detail_time != $status_time) {
@@ -139,7 +139,7 @@ if(!isset($_REQUEST["uwa"])) {
         echo "</div>";
     } else {
     ?>
-        <div id="detail_content">Click inside graph to show metric details.</div>
+        <div id="detail_content">Click inside graphs to show metric details at a particular point in time.</div>
     <?
     }
 }
