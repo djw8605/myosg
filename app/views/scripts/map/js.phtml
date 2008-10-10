@@ -3,6 +3,7 @@ function init() {
     var map = new GMap2(document.getElementById("map_canvas"));
     map.addControl(new GSmallMapControl());
     map.addControl(new GMapTypeControl());
+    map.enableScrollWheelZoom();
 
     map.setCenter(new GLatLng(37, -100), 4);
 
