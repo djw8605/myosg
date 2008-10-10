@@ -35,6 +35,7 @@ text-align: right;
 
 .status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN
 {
+padding: 5px;
 padding-left: 50px;
 
 min-height: 25px;
@@ -51,22 +52,22 @@ margin-bottom: 5px;
 
 .status_CRITICAL
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/button_cancel.png) no-repeat 5px 0px;
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/button_cancel.png) no-repeat 5px 5px;
 }
 
 .status_OK
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_ok.png) no-repeat 5px 0px;
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_ok.png) no-repeat 5px 5px;
 }
 
 .status_WARNING
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_warning.png) no-repeat 5px 0px;
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_warning.png) no-repeat 5px 5px;
 }
 
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_unknown.png) no-repeat 5px 0px;
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_unknown.png) no-repeat 5px 5px;
 }
 
 div.indent
@@ -137,5 +138,12 @@ table.ruler td
     white-space: nowrap;
     text-align: right;
 }
-
+.expired
+{
+    background-color: #bbb;
+}
+.expired .sidenote
+{
+    color: red;
+}
 

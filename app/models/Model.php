@@ -23,18 +23,4 @@ abstract class Model
         return $this->load($param);
     }
     public abstract function sql($param);
-/*
-    public function parseParam($param)
-    {
-        $params = array();
-        $ps = split("&", $param);
-        foreach($ps as $p) {
-            $key_value = split("=", $p);
-            if(count($key_value) == 2) {
-                $params[$key_value[0]] = $key_value[1];
-            }
-        }
-        return $params;
-    }
-*/
 }

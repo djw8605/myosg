@@ -54,6 +54,8 @@ foreach($this->sites as $site) {
     $status_unknown = 0;
 
     $rgs = $this->rgs[$site->site_id];
+    if(count($rgs) == 0) continue; //don't show site with no resource group
+
     $html = "";
     //$html = "<h2>$site->name</h2>";
     foreach($rgs as $rg) {
@@ -66,7 +68,7 @@ foreach($this->sites as $site) {
                 $name = $rstatus->ResourceName[0];
                 $status = $rstatus->Status[0];
                 $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/current?resource_id=".$r->id."\">$name</a></h4>";
-                $html .= $rstatus->Note[0] . "<br/>";
+                $html .= $rstatus->Note[0] . "<br/></div>";
                 
                 //determine site status
                 if($status == "OK") $status_ok++;
