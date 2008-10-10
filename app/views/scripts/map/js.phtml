@@ -5,7 +5,8 @@ function init() {
     map.addControl(new GMapTypeControl());
     map.enableScrollWheelZoom();
 
-    map.setCenter(new GLatLng(37, -100), 4);
+    //map.setCenter(new GLatLng(37, -100), 4); //U.S. only
+    map.setCenter(new GLatLng(20, 0), 2);
 
     var icon_ok = new GIcon();
     icon_ok.image = "<?=fullbase();?>/images/status_ok.png";
