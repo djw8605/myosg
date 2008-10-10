@@ -60,7 +60,6 @@ foreach($this->sites as $site) {
     //$html = "<h2>$site->name</h2>";
     foreach($rgs as $rg) {
         $html .= "<h3>Resource Group: <a href=\"".fullbase()."/resources?resourcegroup=".$rg->id."\">".$rg->name."</a></h3>";
-        $html .= "<p>";
         if(isset($this->resources_bygid[$rg->id])) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
@@ -79,7 +78,6 @@ foreach($this->sites as $site) {
         } else {
             $html .= "No active resource exists under this resource group.";
         }
-        $html .= "</p>";
     }
 
     //decide site status
