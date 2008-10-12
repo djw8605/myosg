@@ -16,7 +16,7 @@ class MetricData extends Model
             "group by metric_id) last ".
             "where m.timestamp = last.last_timestamp and m.metric_id = last.metric_id and m.resource_id = $resource_id ".
             "order by timestamp";
-        //elog($sql);
+        elog($sql);
         return $sql;
     }
     static public function isFresh($metric_timestamp, $metric_freshfor, $at) {

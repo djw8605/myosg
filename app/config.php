@@ -109,7 +109,8 @@ class common_config
         //number of recrord to pull per each procesew request
         $this->gratia_recordcount = 3500;
 
-        $this->history_graph_image_width = 300; //this just defines the precision of the graph..
+        $this->history_graph_image_width = 800; //this just defines the precision of the graph..
+        $this->history_graph_default_days = 7;
 
         ///////////////////////////////////////////////////////////////////////
         //

@@ -26,8 +26,8 @@
 
 <style type="text/css">
 <?
-include("css/uwa.css");
 include("css/osg.css");
+include("css/uwa.css");
 ?>
 .moduleContent
 {
@@ -42,8 +42,6 @@ widget.onLoad = function() {
     text = "<iframe src='<?=fullbase();?>/<?=pagename()?>/iframe' width='100%' height='300px' scrolling='no' frameborder='0'></iframe>";
     widget.setBody(text);
 }
-// you can move your start up code to your own method:
-// simply use widget.onLoad = myObject.myStartupMethod;
 </script>
   </head>
   <body>

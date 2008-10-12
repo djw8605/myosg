@@ -20,7 +20,7 @@ class HistoryController extends ControllerBase
             $resource_id = $dirty_resource_id;
         }
 
-        list($start_time, $end_time) = getLast24HourRange();
+        list($start_time, $end_time) = getLastNDayRange(config()->history_graph_default_days);
         if(isset($_REQUEST["start_time"])&& isset($_REQUEST["end_time"])) {
             $dirty_start_time = $_REQUEST["start_time"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {
@@ -152,7 +152,7 @@ class HistoryController extends ControllerBase
         if(Zend_Validate::is($dirty_resource_id, 'Int')) {
             $resource_id = $dirty_resource_id;
         }
-        list($start_time, $end_time) = getLast24HourRange();
+        list($start_time, $end_time) = getLastNDayRange(config()->history_graph_default_days);
         if(isset($_REQUEST["start"])&& isset($_REQUEST["end"])) {
             $dirty_start_time = $_REQUEST["start"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {
