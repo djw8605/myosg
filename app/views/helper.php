@@ -59,10 +59,14 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
 function agoCalculation($timestamp)
 {
     $ago = time() - $timestamp;
-    if($ago < 60) return $ago." seconds ago";
-    if($ago < 60*60) return floor($ago/60)." minutes ago";
-    if($ago < 60*60*24) return floor($ago/(60*60))." hours ago";
-    return floor($ago/(60*60*24))." days ago";
+    return humanDuration($ago);
+}
+function humanDuration($ago)
+{
+    if($ago < 60) return $ago." seconds";
+    if($ago < 60*60) return floor($ago/60)." minutes";
+    if($ago < 60*60*24) return floor($ago/(60*60))." hours";
+    return floor($ago/(60*60*24))." days";
 }
 
 function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)

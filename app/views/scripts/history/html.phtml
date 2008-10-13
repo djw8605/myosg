@@ -180,7 +180,10 @@ function showmetric($metric, $timestamp)
     } else {
         $detail = "<pre>$detail</pre>";
         $id = $metric->MetricDataID;
-        $detail .= "Metric Data ID: $id<br/>";
+        $detail .= "Metric Data ID: $id ";
+        $fresh_for = $metric->MetricFreshFor;
+        $detail .= "Fresh for: ".humanDuration($fresh_for);
+        $detail .= "<br/>";
     }
     $out .= outputToggle("Show Detail", "Hide Detail", $detail);
     $out .= "</div>";

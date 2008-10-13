@@ -33,7 +33,7 @@ color: gray;
 text-align: right;
 }
 
-.status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN
+.status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME
 {
 padding: 5px;
 padding-left: 50px;
@@ -53,6 +53,11 @@ margin-bottom: 5px;
 .status_CRITICAL
 {
 background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/button_cancel.png) no-repeat 5px 5px;
+}
+
+.status_DOWNTIME
+{
+background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_downtime.png) no-repeat 5px 5px;
 }
 
 .status_OK
@@ -127,8 +132,10 @@ table.graph
 }
 table.ruler
 {
+    border-collapse: collapse; 
+    font-size: 10px;
     border-top:1px solid #999;
-    color: #999;
+    color: #333;
     margin-bottom: 2px;
 }
 table.ruler td

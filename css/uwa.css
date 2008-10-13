@@ -102,8 +102,12 @@ a
 	background-color: #F9FFEF;
 	color: inherit;
 }
-.status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_
+.status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {
     padding: 2px;
     padding-left: 40px;
+}
+table.ruler
+{
+font-size: 8px;
 }

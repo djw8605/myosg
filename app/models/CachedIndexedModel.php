@@ -14,6 +14,7 @@ abstract class CachedIndexedModel extends CachedModel
 
             //index the record set
             $key = $this->key();
+            CachedIndexedModel::$indexed_cache[get_class($this)][$str_param] = null; //incase records is empty
             foreach($records as $record) {
                 CachedIndexedModel::$indexed_cache[get_class($this)][$str_param][$record->$key][] = $record;
             }
