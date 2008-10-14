@@ -121,6 +121,11 @@ if(!isset($_REQUEST["uwa"])) {
             $start = date(config()->date_format_full, $this->downtime->start_time);
             $end = date(config()->date_format_full, $this->downtime->end_time);
             echo " (From $start to $end)<br/>";
+            if($this->detail_service_status !== null) {
+                $status = Status::getStatus($this->detail_service_status->status_id);
+                echo "Internal Status :$status<br/>";
+                echo "Internal Status Detail:".$this->detail_service_status->detail."<br/>";
+            }
         } else {
             //process normal status
             if($this->detail_service_status !== null) {
