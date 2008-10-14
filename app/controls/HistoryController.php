@@ -49,6 +49,7 @@ class HistoryController extends ControllerBase
         $this->view->resource_name = $resource->name;
         $this->view->page_title = "Status History for ".$resource->name;
 
+
         ///////////////////////////////////////////////////////////////////////
         // Optionally, load service detail
         $this->view->detail_show = false;
@@ -107,6 +108,16 @@ class HistoryController extends ControllerBase
             if(isset($service_statuses[0])) {
                 $this->view->detail_service_status = $service_statuses[0];
             }
+
+            //load downtime
+            $downtime_model = new Downtime();
+            $params = array("resource_id" => $resource_id, "start_time"=>$time, "end_time"=>$time);
+            $downtimes = $downtime_model->getindex($params);
+            $downtimes_service = null;
+            if(isset($downtimes[$service_id])) {
+                $downtimes_service = $downtimes[$service_id];
+                $this->view->downtime = $downtimes_service[0];
+            }
         }
     }
 
@@ -140,8 +151,8 @@ class HistoryController extends ControllerBase
 
     public function graphAction()
     {
-        list($status_changes, $start_time, $end_time)  = $this->loadStatusChanges();
-        $this->drawGraph($status_changes, $start_time, $end_time);
+        list($status_changes, $start_time, $end_time, $downtimes)  = $this->loadStatusChanges();
+        $this->drawGraph($status_changes, $start_time, $end_time, $downtimes);
     }
         
     public function loadStatusChanges()
@@ -187,16 +198,25 @@ class HistoryController extends ControllerBase
             $params["end_time"] = $end_time;
             $status_changes = $service_statuschange_model->get($params);
         }
-        //dlog("status_change count: ".count($status_changes). " $start_time $end_time");
+    
+        /////////////////////////////////////////////////////////////////////////////////
+        //pull downtime info
+        $downtime_model = new Downtime();
+        $params = array("resource_id" => $resource_id, "start_time"=>$start_time, "end_time"=>$end_time);
+        $downtimes = $downtime_model->getindex($params);
+        $downtimes_forservice = null;
+        if(isset($downtimes[$service_id])) {
+            $downtimes_forservice = $downtimes[$service_id];
+        }
 
-        return array($status_changes, $start_time, $end_time);
+        return array($status_changes, $start_time, $end_time, $downtimes_forservice);
     }
 
-    function drawGraph($status_changes, $start_time, $end_time)
+    function drawGraph($status_changes, $start_time, $end_time, $downtimes)
     {
         //let's draw the graph..
         $image_width = config()->history_graph_image_width;
-        $im = imageCreate($image_width,1);
+        $im = imageCreate($image_width,2);
 
         //should I have this configurable from OIM DB?
         $color = array();
@@ -204,6 +224,7 @@ class HistoryController extends ControllerBase
         $color[2] = imagecolorallocate($im, 255,255,64); #warning
         $color[3] = imagecolorallocate($im, 255,64,64); #critical
         $color[4] = imagecolorallocate($im, 127,127,127);#unknown
+        $color_downtime = imagecolorallocate($im, 255,130,0);#downtime
         $back = imagecolorallocate($im, 64,64,64); #na
 
         $total_time = $end_time - $start_time;
@@ -225,6 +246,7 @@ class HistoryController extends ControllerBase
                     $decile2 = (float)($time-$start_time)/$total_time*$image_width;
                 dlog("panting from $decile1 to $decile2 with ".$status);
                     imageline($im, $decile1, 0, $decile2, 0, $color[$status]);
+                    imageline($im, $decile1, 1, $decile2, 1, $color[$status]);
                     $size = ($decile2 - $decile1);
                     $decile_out += $size;
 
@@ -236,11 +258,20 @@ class HistoryController extends ControllerBase
                 //fill leftover
                 dlog("panting from $decile_out to $image_width with ".$status);
                 imageline($im, $decile_out, 0, $image_width, 0, $color[$status]);
+                imageline($im, $decile_out, 1, $image_width, 1, $color[$status]);
             } else {
                 //no data?
                 dlog("panting from 0 to $image_width with back");
                 imageline($im, 0, 0, $image_width, 0, $back);
+                imageline($im, 0, 1, $image_width, 1, $back);
             }
+        }
+
+        //now draw downtimes
+        foreach($downtimes as $downtime) {
+            $start_p = (float)($downtime->unix_start_time-$start_time)/$total_time*$image_width;
+            $end_p = (float)($downtime->unix_end_time-$start_time)/$total_time*$image_width;
+            imageline($im, $start_p, 0, $end_p, 0, $color_downtime);
         }
 
         //output the image
