@@ -12,7 +12,7 @@
             $model = new ResourceGroup();
             outputSelectBox("resourcegroup", "Resource Group", $model, "id", "name");
             $gridtypes = new GridTypes();
-            outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "description");
+            outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
             $servicetypes = new ServiceTypes();
             outputSelectBox("servicetype", "Sevice Type", $servicetypes, "service_id", "description");
             $status_model = new Status();
