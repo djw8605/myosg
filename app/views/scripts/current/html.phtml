@@ -84,16 +84,16 @@ foreach($this->services as $service) {
     //non-critical metrics
     if(!isset($_REQUEST["uwa"])) {
         $non_critical_metrics = $service->NonCriticalMetrics[0];
-        if(count($non_critical_metrics) == 0) {
-            echo "<div>There are no non-critical metrics associated with this service.</div>";
-        } else {
             $out = "";
             foreach($non_critical_metrics as $metric) {
-                $out .= outputMetricInfo($metric, $this->timestamp);
+                if($metric->Detail != "") {
+                    $out .= outputMetricInfo($metric, $this->timestamp);
+                }
             }
-            $title = "<span class=\"h3\">Non-Critical Metrics</span>";
-            echo outputToggle($title, $title, $out);
-        }
+            if($out != "") {
+                $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+                echo outputToggle($title, $title, $out);
+            }
     }
     echo "</div>";
 
