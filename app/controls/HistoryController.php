@@ -224,7 +224,8 @@ class HistoryController extends ControllerBase
         $color[2] = imagecolorallocate($im, 255,255,64); #warning
         $color[3] = imagecolorallocate($im, 255,64,64); #critical
         $color[4] = imagecolorallocate($im, 127,127,127);#unknown
-        $color_downtime = imagecolorallocate($im, 255,130,0);#downtime
+        //$color_downtime = imagecolorallocate($im, 255,130,0);#downtime
+        $color_downtime = imagecolorallocate($im, 100,100,255);#downtime
         $back = imagecolorallocate($im, 64,64,64); #na
 
         $total_time = $end_time - $start_time;
