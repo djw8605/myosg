@@ -53,38 +53,11 @@ class ResourcesController extends ControllerBase
         $cache_filename = config()->vomatrix_xml_cache;
         $cache_xml = file_get_contents($cache_filename);
         $this->view->xml = $cache_xml;
-        $vos = new SimpleXMLElement($cache_xml);
+        $this->vos = new SimpleXMLElement($cache_xml);
         $this->view->vos = array();
-        foreach($vos->ResourceGrouped[0] as $resource_vo) {
+        foreach($this->vos->ResourceGrouped[0] as $resource_vo) {
             $attributes = $resource_vo->attributes();
             $this->view->vos[(int)$attributes->id[0]] = $resource_vo->Members[0]->VO; 
-        }
-        //filter resources based on vo filter
-        if(isset($_REQUEST["vo"])) {
-            $vogrouped = $vos->VOGrouped[0];
-            $vo = (int)$_REQUEST["vo"];
-            foreach($vogrouped as $vogroup) {
-                $attr = $vogroup[0]->attributes();
-                if($attr->id[0] == $vo) {
-                    var_dump($vogroup[0]->Members[0]->Resource);
-                }
-            }
-/*
-            foreach($this->view->resource_groups as $resource_group) {
-                if(!isset($this->view->resources_index[$resource_group->id])) {
-                    continue;
-                }
-                $list = $this->view->resources_index[$resource_group->id];
-                $newlist = array();
-                foreach($list as $rec) {
-                    $resource_status = $this->view->resource_status[$rec->id];
-                    if($resource_status->Status[0] == $status) {
-                        $newlist[] = $rec;
-                    }
-                } 
-                $this->view->resources_index[$resource_group->id] = $newlist;
-            }
-*/
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -103,26 +76,65 @@ class ResourcesController extends ControllerBase
 
         ///////////////////////////////////////////////////////////////////////
         //filter resources based on status filter
+        foreach($this->view->resource_groups as $resource_group) {
+            if(!isset($this->view->resources_index[$resource_group->id])) {
+                continue;
+            }
+            $list = $this->view->resources_index[$resource_group->id];
+            $newlist = array();
+            foreach($list as $rec) {
+                /*
+                $resource_status = $this->view->resource_status[$rec->id];
+                if($resource_status->Status[0] == $status) {
+                    $newlist[] = $rec;
+                }
+                */
+                //only add recrods if it passes resource filter
+                if($this->filterResource($rec)) {
+                    $newlist[] = $rec;
+                } 
+            } 
+            $this->view->resources_index[$resource_group->id] = $newlist;
+        }
+        $this->view->page_title = "Resource Groups";
+    }
+
+    private function filterResource($rec) 
+    {
+        //filter on status
         if(isset($_REQUEST["status"])) {
             if(trim($_REQUEST["status"]) != "") {
                 $status = $_REQUEST["status"];
-                foreach($this->view->resource_groups as $resource_group) {
-                    if(!isset($this->view->resources_index[$resource_group->id])) {
-                        continue;
-                    }
-                    $list = $this->view->resources_index[$resource_group->id];
-                    $newlist = array();
-                    foreach($list as $rec) {
-                        $resource_status = $this->view->resource_status[$rec->id];
-                        if($resource_status->Status[0] == $status) {
-                            $newlist[] = $rec;
-                        }
-                    } 
-                    $this->view->resources_index[$resource_group->id] = $newlist;
+                $resource_status = $this->view->resource_status[$rec->id];
+                if($resource_status->Status[0] != $status) {
+                    return false;
                 }
             }
         } 
 
-        $this->view->page_title = "Resource Groups";
+        //filter on vo
+        if(isset($_REQUEST["vo"])) {
+            if(trim($_REQUEST["vo"]) != "") {
+                $vogrouped = $this->vos->VOGrouped[0];
+                $vo = (int)$_REQUEST["vo"];
+                $found = false;
+                foreach($vogrouped as $vogroup) {
+                    $attr = $vogroup[0]->attributes();
+                    if($attr->id[0] == $vo) {
+                        $resources = $vogroup->Members[0]->Resource;
+                        foreach($resources as $resource) {
+                            if($resource->ResourceID[0] == $rec->id) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if(!$found) return false;
+            }
+        }
+
+        return true;
     }
 } 
