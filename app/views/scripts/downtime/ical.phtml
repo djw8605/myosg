@@ -1,3 +1,4 @@
+<?header("Content-Type: text/x-vCalendar");?>
 BEGIN:VCALENDAR
 PRODID:-//GOC/<?=config()->app_name?> <?=config()->version?>//EN
 VERSION:2.0
@@ -11,18 +12,32 @@ END:VEVENT
 */
 foreach($this->downtimes as $downtime)
 {
-    $format = "Ymd\THis\Z";
+    echo "BEGIN:VEVENT\n";
+
+    //non-all day event
+    //$format = "Ymd\THis\Z";
+    //$start = date($format, $downtime->unix_start_time);
+    //$end = date($format, $downtime->unix_end_time);
+    //echo "DTSTART:$start\n";
+    //echo "DTEND:$end\n";
+
+    $format = "Ymd";
     $start = date($format, $downtime->unix_start_time);
     $end = date($format, $downtime->unix_end_time);
+    echo "DTSTART;VALUE=DATE:$start\n";
+    echo "DTEND;VALUE=DATE:$end\n";
+
     $resource_name = getResourceName($this->resources, $downtime->resource_id);
     $summary = $resource_name;
-    $desc = str_replace(array("\n", "\r"), "", $downtime->downtime_summary);
-
-    echo "BEGIN:VEVENT\n";
-    echo "DTSTART:$start\n";
-    echo "DTEND:$end\n";
     echo "SUMMARY:$summary\n";
+
+    $start_human = date(config()->date_format_full, $downtime->unix_start_time);
+    $end_human = date(config()->date_format_full, $downtime->unix_end_time);
+    $desc = "(From $start_human To $end_human) ";
+    $desc .= $downtime->downtime_summary;
+    $desc = str_replace(array("\n", "\r"), "", $desc);
     echo "DESCRIPTION:$desc\n";
+
     echo "END:VEVENT\n";
 }
 
