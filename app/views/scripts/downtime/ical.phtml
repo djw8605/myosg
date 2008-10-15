@@ -1,15 +1,14 @@
-<?header("Content-Type: text/x-vCalendar");?>
-BEGIN:VCALENDAR
-PRODID:-//GOC/<?=config()->app_name?> <?=config()->version?>//EN
-VERSION:2.0
 <?
-/*
-BEGIN:VEVENT
-DTSTART:19970714T170000Z
-DTEND:19970715T035959Z
-SUMMARY:Bastille Day Party
-END:VEVENT
-*/
+
+header("Content-Type: text/x-vCalendar");
+echo "BEGIN:VCALENDAR\n";
+echo "PRODID:-//GOC/<?=config()->app_name?> <?=config()->version?>//EN\n";
+echo "VERSION:2.0\n";
+echo "CALSCALE:GREGORIAN\n";
+echo "METHOD:PUBLISH\n";
+echo "X-WR-CALNAME:Soichi Hayashi\n";
+echo "X-WR-TIMEZONE:America/New_York\n";
+
 foreach($this->downtimes as $downtime)
 {
     echo "BEGIN:VEVENT\n";
@@ -49,4 +48,7 @@ function getResourceName($resources, $id)
     return "Unknown Resource";
 }
 
-?>END:VCALENDAR
+echo "END:VCALENDAR\n";
+
+
+
