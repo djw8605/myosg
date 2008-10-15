@@ -2,10 +2,19 @@
 
 foreach($this->vos as $vo) {
     echo "<h3>".$vo->Name[0]."</h3>"; 
-    echo "<h4>Member Resources</h4>";
-    echo "<p>";
+
+    $out = "";
     foreach($vo->Members[0]->Resource as $resource) {
-        echo $resource->ResourceName[0]."<br/>";
+        $url = base()."/current?resource_id=".$resource->ResourceID;
+        $out .= "<a href=\"$url\">".$resource->ResourceName[0]."</a><br/>";
     }
-    echo "</p>";
+    if($out == "") {
+        echo "No Member Resources";
+    } else {
+        //echo "<h4>Member Resources</h4>";
+        $out = "<p>$out<p>";
+        echo outputToggle("Show Member Resources", "Hide Member Resources", $out);
+    }
+    
+
 }

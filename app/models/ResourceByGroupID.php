@@ -12,6 +12,7 @@ class ResourceByGroupID extends CachedIndexedModel
         $sql = "SELECT resource_id id, resource_name name, resource_fqdn fqdn, resource_group_id group_id
             FROM `View_resourceSiteScPub`
             where resource_id in (select resource_id from oim.resource_service $service_condition)";
+        //elog($sql);
         return $sql;
     }
     public function key() { return "group_id"; }

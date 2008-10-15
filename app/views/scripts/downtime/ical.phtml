@@ -1,0 +1,37 @@
+BEGIN:VCALENDAR
+PRODID:-//GOC/<?=config()->app_name?> <?=config()->version?>//EN
+VERSION:2.0
+<?
+/*
+BEGIN:VEVENT
+DTSTART:19970714T170000Z
+DTEND:19970715T035959Z
+SUMMARY:Bastille Day Party
+END:VEVENT
+*/
+foreach($this->downtimes as $downtime)
+{
+    $format = "Ymd\THis\Z";
+    $start = date($format, $downtime->unix_start_time);
+    $end = date($format, $downtime->unix_end_time);
+    $resource_name = getResourceName($this->resources, $downtime->resource_id);
+    $summary = $resource_name;
+    $desc = str_replace(array("\n", "\r"), "", $downtime->downtime_summary);
+
+    echo "BEGIN:VEVENT\n";
+    echo "DTSTART:$start\n";
+    echo "DTEND:$end\n";
+    echo "SUMMARY:$summary\n";
+    echo "DESCRIPTION:$desc\n";
+    echo "END:VEVENT\n";
+}
+
+function getResourceName($resources, $id)
+{
+    foreach($resources as $resource) {
+        if($resource->id == $id) return $resource->name;
+    }
+    return "Unknown Resource";
+}
+
+?>END:VCALENDAR

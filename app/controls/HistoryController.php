@@ -113,12 +113,28 @@ class HistoryController extends ControllerBase
             $downtime_model = new Downtime();
             $params = array("resource_id" => $resource_id, "start_time"=>$time, "end_time"=>$time);
             $downtimes = $downtime_model->getindex($params);
-            $downtimes_service = null;
-            if(isset($downtimes[$service_id])) {
-                $downtimes_service = $downtimes[$service_id];
-                $this->view->downtime = $downtimes_service[0];
+            $downtimes_forservice = $this->getDowntimesForService($downtimes, $service_id);
+            if(count($downtimes_forservice) > 0) {
+                $this->view->downtime = $downtimes_forservice[0];//grab first one for this service
             }
         }
+    }
+
+    private function getDowntimesForService($downtimes, $service_id)
+    {
+        $downtime_service_model = new DowntimeService();
+        $downtime_service = $downtime_service_model->get();
+        $downtime_forservice = array();
+
+        foreach($downtimes as $downtime) {
+            $id = $downtime->downtime_id;
+            foreach($downtime_service as $service) {
+                if($service->downtime_id == $id) {
+                    $downtime_forservice[] = $downtime;
+                }
+            }
+        }
+        return $downtime_forservice;
     }
 
     private function generateRuler($start_time, $end_time)
@@ -203,12 +219,8 @@ class HistoryController extends ControllerBase
         //pull downtime info
         $downtime_model = new Downtime();
         $params = array("resource_id" => $resource_id, "start_time"=>$start_time, "end_time"=>$end_time);
-        $downtimes = $downtime_model->getindex($params);
-        $downtimes_forservice = null;
-        if(isset($downtimes[$service_id])) {
-            $downtimes_forservice = $downtimes[$service_id];
-        }
-
+        $downtimes = $downtime_model->get($params);
+        $downtimes_forservice = $this->getDowntimesForService($downtimes, $service_id);
         return array($status_changes, $start_time, $end_time, $downtimes_forservice);
     }
 

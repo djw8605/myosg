@@ -58,7 +58,34 @@ class ResourcesController extends ControllerBase
         foreach($vos->ResourceGrouped[0] as $resource_vo) {
             $attributes = $resource_vo->attributes();
             $this->view->vos[(int)$attributes->id[0]] = $resource_vo->Members[0]->VO; 
-        }        
+        }
+        //filter resources based on vo filter
+        if(isset($_REQUEST["vo"])) {
+            $vogrouped = $vos->VOGrouped[0];
+            $vo = (int)$_REQUEST["vo"];
+            foreach($vogrouped as $vogroup) {
+                $attr = $vogroup[0]->attributes();
+                if($attr->id[0] == $vo) {
+                    var_dump($vogroup[0]->Members[0]->Resource);
+                }
+            }
+/*
+            foreach($this->view->resource_groups as $resource_group) {
+                if(!isset($this->view->resources_index[$resource_group->id])) {
+                    continue;
+                }
+                $list = $this->view->resources_index[$resource_group->id];
+                $newlist = array();
+                foreach($list as $rec) {
+                    $resource_status = $this->view->resource_status[$rec->id];
+                    if($resource_status->Status[0] == $status) {
+                        $newlist[] = $rec;
+                    }
+                } 
+                $this->view->resources_index[$resource_group->id] = $newlist;
+            }
+*/
+        }
 
         ///////////////////////////////////////////////////////////////////////
         //get resource status cache
