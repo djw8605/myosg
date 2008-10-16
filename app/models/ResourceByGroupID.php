@@ -4,7 +4,7 @@ class ResourceByGroupID extends CachedIndexedModel
 {
     public function sql($params)
     {
-        $service_condition = "where active = 1 and disable = 0";
+        $service_condition = "where 1 = 1";
         if(isset($params["servicetype"])) {
             $service_condition .= " and service_id = ".$params["servicetype"];
         }

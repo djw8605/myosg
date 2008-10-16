@@ -14,7 +14,7 @@
             $gridtypes = new GridTypes();
             outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
             $model = new VirtualOrganization();
-            outputSelectBox("vo", "Virtual Organization", $model, "vo_id", "short_name");
+            outputSelectBox("vo", "Supported Virtual Organization", $model, "vo_id", "short_name");
             $servicetypes = new ServiceTypes();
             outputSelectBox("servicetype", "Sevice Type", $servicetypes, "service_id", "description");
             $status_model = new Status();

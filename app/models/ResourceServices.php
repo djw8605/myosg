@@ -4,7 +4,7 @@ class ResourceServices extends CachedModel
 {
     public function sql($params)
     {
-        $where = "where rs.active = 1 and rs.disable = 0";
+        $where = "where 1 = 1";
         if(isset($params["resource_id"])) {
             $resource_id = $params["resource_id"];
             $where .= " and rs.resource_id = $resource_id"; 

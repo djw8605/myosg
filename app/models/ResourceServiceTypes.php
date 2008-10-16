@@ -36,7 +36,7 @@ class ResourceServiceTypes
         $sql = "select r.resource_id, s.service_id, s.name, s.description
                 from $schema.resource_service r
                 left join $schema.service s on r.service_id = s.service_id 
-                where r.active = 1 and r.disable = 0 and 
+                where 1 = 1 and 
                     s.service_id IN (SELECT service_id FROM $schema.service_service_group WHERE service_group_id=1)
                     and
                 s.service_id not in (SELECT DISTINCT PS.parent_service_id psid FROM $schema.service PS WHERE PS.parent_service_id IS NOT NULL)";
