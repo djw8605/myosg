@@ -12,7 +12,9 @@ foreach($this->resource_groups as $resource_group) {
             echo "<h3>".$resource_group->name."</h3>";
 
             if(!isset($_REQUEST["uwa"])) {
-                echo "<div class=\"sidenote\">$gridtype_name</div>";
+                echo "<div class=\"sidenote\">";
+                echo $gridtype_name;
+                echo "</div>";
                 if($resource_group->description != "") {
                     echo "<p>".$resource_group->description."</p>";
                 }
@@ -32,6 +34,7 @@ foreach($this->resource_groups as $resource_group) {
                 }
             
                 echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
+                echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
                 echo "$note<br/>";
 
                 if(!isset($_REQUEST["uwa"])) {

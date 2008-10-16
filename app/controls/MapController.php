@@ -44,7 +44,7 @@ class MapController extends ControllerBase
             $this->view->resource_status[$id] = $resource_status;
         }
 
-        $this->view->page_title = "OSG Site Map";
+        $this->view->page_title = "RSV Status Map";
     }
     public function uwaAction()
     {

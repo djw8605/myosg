@@ -153,4 +153,8 @@ table.ruler td
 {
     color: red;
 }
-
+span.fqdn
+{
+font-family: "Courier", "trebuchet ms", sans-serif;
+font-size: 9px;
+}

@@ -112,7 +112,7 @@ class HistoryController extends ControllerBase
             //load downtime
             $downtime_model = new Downtime();
             $params = array("resource_id" => $resource_id, "start_time"=>$time, "end_time"=>$time);
-            $downtimes = $downtime_model->getindex($params);
+            $downtimes = $downtime_model->get($params);
             $downtimes_forservice = $this->getDowntimesForService($downtimes, $service_id);
             if(count($downtimes_forservice) > 0) {
                 $this->view->downtime = $downtimes_forservice[0];//grab first one for this service

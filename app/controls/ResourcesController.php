@@ -20,7 +20,6 @@ class ResourcesController extends ControllerBase
             }
         }
         $this->view->resources_index = $resource_model->getindex($params);
-        var_dump($this->view->resources_index);
 
         ///////////////////////////////////////////////////////////////////////
         //pull group requested (filter by gridtype)
