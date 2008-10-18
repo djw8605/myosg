@@ -149,9 +149,11 @@ if(!isset($_REQUEST["uwa"])) {
         $title = "<span class=\"h3\">Critical Metrics</span>";
         echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics, $this->detail_time), true);
 
-        $title = "<span class=\"h3\">Non-Critical Metrics</span>";
-        echo outputToggle($title, $title, showmetrics($this->detail_noncritical_metrics, $this->detail_time));
-
+        $content = showmetrics($this->detail_noncritical_metrics, $this->detail_time, true);
+        if($content != "") {
+            $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+            echo outputToggle($title, $title, $content);
+        }
         echo "</div>";
     } else {
     ?>
@@ -160,16 +162,16 @@ if(!isset($_REQUEST["uwa"])) {
     }
 }
 
-function showmetrics($metrics, $timestamp) 
+function showmetrics($metrics, $timestamp, $hide_empty = false) 
 {
     $out = "";
     foreach($metrics as $metric) {
-        $out .= showmetric($metric, $timestamp);
+        $out .= showmetric($metric, $timestamp, $hide_empty);
     }
     return $out;
 }
 
-function showmetric($metric, $timestamp)
+function showmetric($metric, $timestamp, $hide_empty)
 {
     //check expiration
     $freshfor = $metric->MetricFreshFor;
@@ -192,6 +194,10 @@ function showmetric($metric, $timestamp)
     if($expired) $name .= " (Expired)";
     $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
     if(trim($detail) == "") {
+        if($hide_empty) {
+            //if hide_empty is true, don't show it..
+            return "";
+        }
         $detail = "(No detail provided)<br/>";
     } else {
         $detail = "<pre>$detail</pre>";

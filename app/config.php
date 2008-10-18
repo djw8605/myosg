@@ -158,9 +158,11 @@ function base() {
     $last_pos = strrpos($_SERVER["SCRIPT_NAME"], "/");
     return substr($_SERVER["SCRIPT_NAME"], 0, $last_pos);
 }
-function fullbase() {
-    $p = "http://";
-    if(isset($_SERVER["HTTPS"])) $p = "https://";
-    return $p.$_SERVER["HTTP_HOST"].base();
+function fullbase($p = "http") {
+    if($p == "http") {
+        if(isset($_SERVER["HTTPS"])) $p = "https";
+    }
+
+    return $p."://".$_SERVER["HTTP_HOST"].base();
 }
 

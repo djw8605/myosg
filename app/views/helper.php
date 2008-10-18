@@ -72,11 +72,12 @@ function humanDuration($ago)
 function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)
 {
     global $g_pagename;
+
 ?>
     <?=$field_name?>:
     <p>
     <select id="filter_<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
-    <option value="">(All <?=$field_name?>)</option>
+    <option value="">(All)</option>
     <?
     $rows = $model->get();
     $current_value = @$_REQUEST[$field_id];
@@ -87,6 +88,11 @@ function outputSelectBox($field_id, $field_name, $model, $value_field, $name_fie
         if($value == $current_value) {
             $selected = "selected=selected";
         }
+
+        //truncate name so that it won't be too long
+        if(strlen($name) > 25) $name = substr($name, 0, 25)."...";
+
+
         echo "<option value=\"$value\" $selected>$name</option>\n";
     }
     ?>

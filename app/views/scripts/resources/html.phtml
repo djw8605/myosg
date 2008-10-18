@@ -53,11 +53,11 @@ foreach($this->resource_groups as $resource_group) {
 
                 if(!isset($_REQUEST["uwa"])) {
                     $url = base()."/current?resource_id=".$resource->id;
-                    echo "<a href=\"$url\">Show Status Detail</a>&nbsp;&nbsp;&nbsp;";
+                    echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
                 }            
                 if(!isset($_REQUEST["uwa"])) {
                     $url = base()."/history?resource_id=".$resource->id;
-                    echo "<a href=\"$url\">Show Status History</a>&nbsp;&nbsp;&nbsp;";
+                    echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
                 }
 
                 echo "</div>";

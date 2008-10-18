@@ -5,12 +5,12 @@ class CurrentController extends ControllerBase
     public function pagename() { return "current"; }
     public function load()
     {
+        $params = array();
         $dirty_resource_id = $_REQUEST["resource_id"];
         $resource_id = (int)$dirty_resource_id;
-
-        //get resource info
+        $params["resource_id"] = $resource_id;
         $resource_model = new Resource();
-        $resources = $resource_model->get("where resource_id = $resource_id");
+        $resources = $resource_model->get($params);
         $resource = $resources[0];
 
         $this->view->resource_id = $resource->id;

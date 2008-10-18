@@ -13,7 +13,9 @@ foreach($this->vos as $vo) {
     } else {
         //echo "<h4>Member Resources</h4>";
         $out = "<p>$out<p>";
+        echo "<div class=\"indent\">";
         echo outputToggle("Show Member Resources", "Hide Member Resources", $out);
+        echo "</div>";
     }
     
 

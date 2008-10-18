@@ -5,8 +5,14 @@ class DowntimeController extends ControllerBase
     public function pagename() { return "ical"; }
     public function load()
     {
+        $params = array();
+        if(isset($_REQUEST["resource_id"])){
+            $dirty_resource_id = $_REQUEST["resource_id"];
+            $resource_id = (int)$dirty_resource_id;
+            $params["resource_id"] = $resource_id;
+        }
         $resource_model = new Resource();
-        $this->resources = $resource_model->get();
+        $this->resources = $resource_model->get($params);
 
         $downtime_model = new Downtime();
         $this->downtimes = $downtime_model->get();

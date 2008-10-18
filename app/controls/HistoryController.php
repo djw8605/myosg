@@ -38,7 +38,9 @@ class HistoryController extends ControllerBase
 
         //get resource info
         $resource_model = new Resource();
-        $resources = $resource_model->get("where resource_id = $resource_id");
+        $params = array();
+        $params["resource_id"] = $resource_id;
+        $resources = $resource_model->get($params);
         $resource = $resources[0];
 
         $resource_service_model = new ResourceServices();

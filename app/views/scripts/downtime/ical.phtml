@@ -11,33 +11,36 @@ echo "X-WR-TIMEZONE:America/New_York\n";
 
 foreach($this->downtimes as $downtime)
 {
-    echo "BEGIN:VEVENT\n";
-
-    //non-all day event
-    //$format = "Ymd\THis\Z";
-    //$start = date($format, $downtime->unix_start_time);
-    //$end = date($format, $downtime->unix_end_time);
-    //echo "DTSTART:$start\n";
-    //echo "DTEND:$end\n";
-
-    $format = "Ymd";
-    $start = date($format, $downtime->unix_start_time);
-    $end = date($format, $downtime->unix_end_time);
-    echo "DTSTART;VALUE=DATE:$start\n";
-    echo "DTEND;VALUE=DATE:$end\n";
-
+    //only show event that we have pulled resource for
     $resource_name = getResourceName($this->resources, $downtime->resource_id);
-    $summary = $resource_name;
-    echo "SUMMARY:$summary\n";
+    if($resource_name !== null) {
+        echo "BEGIN:VEVENT\n";
 
-    $start_human = date(config()->date_format_full, $downtime->unix_start_time);
-    $end_human = date(config()->date_format_full, $downtime->unix_end_time);
-    $desc = "(From $start_human To $end_human) ";
-    $desc .= $downtime->downtime_summary;
-    $desc = str_replace(array("\n", "\r"), "", $desc);
-    echo "DESCRIPTION:$desc\n";
+        //non-all day event
+        //$format = "Ymd\THis\Z";
+        //$start = date($format, $downtime->unix_start_time);
+        //$end = date($format, $downtime->unix_end_time);
+        //echo "DTSTART:$start\n";
+        //echo "DTEND:$end\n";
 
-    echo "END:VEVENT\n";
+        $format = "Ymd";
+        $start = date($format, $downtime->unix_start_time);
+        $end = date($format, $downtime->unix_end_time);
+        echo "DTSTART;VALUE=DATE:$start\n";
+        echo "DTEND;VALUE=DATE:$end\n";
+
+        $summary = $resource_name;
+        echo "SUMMARY:$summary\n";
+
+        $start_human = date(config()->date_format_full, $downtime->unix_start_time);
+        $end_human = date(config()->date_format_full, $downtime->unix_end_time);
+        $desc = "(From $start_human To $end_human) ";
+        $desc .= $downtime->downtime_summary;
+        $desc = str_replace(array("\n", "\r"), "", $desc);
+        echo "DESCRIPTION:$desc\n";
+
+        echo "END:VEVENT\n";
+    }
 }
 
 function getResourceName($resources, $id)
@@ -45,7 +48,7 @@ function getResourceName($resources, $id)
     foreach($resources as $resource) {
         if($resource->id == $id) return $resource->name;
     }
-    return "Unknown Resource";
+    return null;
 }
 
 echo "END:VCALENDAR\n";

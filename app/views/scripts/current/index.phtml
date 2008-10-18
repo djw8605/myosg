@@ -16,9 +16,13 @@
             $param = $_SERVER["QUERY_STRING"];
             $moduleurl = urlencode(fullbase()."/".pagename()."/uwa?$param");
             ?>
+            <h4>Subscribe to Current View</h4>
             <p><a href="http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=<?=$moduleurl?>"><img src="images/subscribe.png"/></a></p>
             <p><a href="http://www.google.com/ig/add?moduleurl=http%3A%2F%2Fwww.netvibes.com%2Fapi%2Fuwa%2Fcompile%2Fgoogle.php%3FmoduleUrl%3D<?=urlencode($moduleurl)?>"><img src="images/google.png"/></a></p>
             <p><a href="<?=base()?>/<?=pagename()?>/xml?<?=$param?>">XML</a></p>
-            <?//=$this->render("full_menu.phtml", true)?>
+
+            <h4>Downtime Calendar</h4>
+            <p><a href="<?=fullbase("webcal")?>/downtime/ical?<?=$param?>"><img src="<?=fullbase()?>/images/ical.gif"/></a><p>
+
         </div>
 <?=$this->render("full_footer.phtml", true)?>

@@ -55,19 +55,6 @@ foreach($this->services as $service) {
 
     $service_status = $service->Status;
     $note = $service->Note;
-/*
-    if(isset($service->Downtime)) {
-        $downtime = $service->Downtime;
-        $original_note = $note;
-        $from = date(config()->date_format, (int)$downtime->StartTime);
-        $to = date(config()->date_format, (int)$downtime->EndTime);
-        $note = "This service is currently in a maintenance period (From $from to $to).<br/>";
-        $note .= "Summary: ".$downtime->Summary. "<br/>";
-        $note .= "Internal Service Status: $service_status<br/>";
-        $note .= "Internal Service Detail: $original_note";
-        $service_status = "DOWNTIME";
-    }
-*/
 
     echo "<h3>".$service->ServiceDescription." Service Status</h3>"; 
     echo "<div class=\"status_$service_status\">";
@@ -84,16 +71,16 @@ foreach($this->services as $service) {
     //non-critical metrics
     if(!isset($_REQUEST["uwa"])) {
         $non_critical_metrics = $service->NonCriticalMetrics[0];
-            $out = "";
-            foreach($non_critical_metrics as $metric) {
-                if($metric->Detail != "") {
-                    $out .= outputMetricInfo($metric, $this->timestamp);
-                }
+        $out = "";
+        foreach($non_critical_metrics as $metric) {
+            if($metric->Detail != "") {
+                $out .= outputMetricInfo($metric, $this->timestamp);
             }
-            if($out != "") {
-                $title = "<span class=\"h3\">Non-Critical Metrics</span>";
-                echo outputToggle($title, $title, $out);
-            }
+        }
+        if($out != "") {
+            $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+            echo outputToggle($title, $title, $out);
+        }
     }
     echo "</div>";
 
