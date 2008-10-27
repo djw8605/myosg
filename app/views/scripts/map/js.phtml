@@ -83,7 +83,8 @@ foreach($this->sites as $site) {
                 } else {
                     $name = $rg->name;
                     $status = "UNKNOWN";
-                    $html = "Resource status is not calculated..";
+                    $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/current?resource_id=".$r->id."\">$name</a></h4>";
+                    $html .= "Resource status is not calculated..<br/></div>";
                     
                 }
                 
