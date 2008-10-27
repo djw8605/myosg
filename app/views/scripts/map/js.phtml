@@ -89,6 +89,7 @@ foreach($this->sites as $site) {
             }
         } else {
             $html .= "No active resource exists under this resource group.";
+            $status_unknown++; //treat this as unknown
         }
     }
 
