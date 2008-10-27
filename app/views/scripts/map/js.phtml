@@ -74,11 +74,18 @@ foreach($this->sites as $site) {
         if(isset($this->resources_bygid[$rg->id])) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
-                $rstatus = $this->resource_status[$r->id];
-                $name = $rstatus->ResourceName[0];
-                $status = $rstatus->Status[0];
-                $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/current?resource_id=".$r->id."\">$name</a></h4>";
-                $html .= $rstatus->Note[0] . "<br/></div>";
+                if(isset($this->resource_status[$r->id])) {
+                    $rstatus = $this->resource_status[$r->id];
+                    $name = $rstatus->ResourceName[0];
+                    $status = $rstatus->Status[0];
+                    $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/current?resource_id=".$r->id."\">$name</a></h4>";
+                    $html .= $rstatus->Note[0] . "<br/></div>";
+                } else {
+                    $name = $rg->name;
+                    $status = "UNKNOWN";
+                    $html = "Resource status is not calculated..";
+                    
+                }
                 
                 //determine site status
                 if($status == "OK") $status_ok++;
