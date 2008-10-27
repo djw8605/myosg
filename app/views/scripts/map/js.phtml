@@ -94,7 +94,7 @@ foreach($this->sites as $site) {
 
     //decide site status
     if($status_critical > 0) $status = "critical";
-    if($status_downtime > 0) $status = "downtime";
+    else if($status_downtime > 0) $status = "downtime";
     else if($status_warning > 0) $status = "warning";
     else if($status_unknown > 0) $status = "unknown";
     else $status = "ok";
