@@ -23,9 +23,8 @@ foreach($this->resource_groups as $resource_group) {
             foreach($resource_list as $resource) {
 
                 if(!isset($this->resource_status[$resource->id])) {
-                    //elog("Resource Status for ".$resource->id." is unknown...");
-                    $note = "";
-                    $status = "";
+                    $note = "Resource Status for ".$resource->id." is unknown...";
+                    $status = "UNKNOWN";
                     $services = array();
                 } else {
                     $resource_status = $this->resource_status[$resource->id];
