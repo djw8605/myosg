@@ -23,7 +23,7 @@ foreach($this->resource_groups as $resource_group) {
             foreach($resource_list as $resource) {
 
                 if(!isset($this->resource_status[$resource->id])) {
-                    $note = "Resource Status for ".$resource->id." is unknown...";
+                    $note = "Resource status is not calculated for this resource...";
                     $status = "UNKNOWN";
                     $services = array();
                 } else {
@@ -35,7 +35,7 @@ foreach($this->resource_groups as $resource_group) {
 
                 //don't show resource with no services
                 if(count($services) == 0) {
-                    $service_names = "no applicable services";
+                    $service_names = "no applicable service exists";
                 } else {
                     $service_names = "";
                     foreach($services as $service) {
