@@ -33,5 +33,4 @@ class CurrentController extends ControllerBase
 
         $this->view->page_title = "Current Status for ".$resource->name;
     }
-
 }
