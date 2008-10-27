@@ -19,6 +19,9 @@ foreach($this->resource_groups as $resource_group) {
                 $note = $resource_status->Note[0];
                 $status = $resource_status->Status[0];
                 $services = $this->resource_services[$resource->id];
+
+                if(count($services) == 0) continue;
+                
                 $service_names = "";
                 echo "<Services>";
                 foreach($services as $service) {
