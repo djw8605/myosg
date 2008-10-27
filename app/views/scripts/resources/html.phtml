@@ -36,7 +36,6 @@ foreach($this->resource_groups as $resource_group) {
                 //don't show resource with no services
                 if(count($services) == 0) {
                     $service_names = "no applicable services";
-                    continue;
                 } else {
                     $service_names = "";
                     foreach($services as $service) {
