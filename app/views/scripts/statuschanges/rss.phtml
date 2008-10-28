@@ -3,7 +3,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 $param = $_SERVER["QUERY_STRING"];
 $self_url = htmlspecialchars(fullbase()."/".pagename()."/rss?$param");
 ?>
-<feed xmlns="http://www.w3.org/2005/Atoma">
+<feed xmlns="http://www.w3.org/2005/Atom">
  <title><?=$this->page_title?></title>
  <subtitle>Here is the latest status change for you..</subtitle>
  <link href="<?=$self_url?>" rel="self"/>
