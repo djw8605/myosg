@@ -49,8 +49,8 @@ class HistoryController extends ControllerBase
 
         $this->view->resource_id = $resource_id;
         $this->view->resource_name = $resource->name;
-        $this->view->page_title = "Status History for ".$resource->name;
-
+        //$this->view->page_title = "Status History for ".$resource->name;
+        $this->view->page_title = "Status History";
 
         ///////////////////////////////////////////////////////////////////////
         // Optionally, load service detail
@@ -318,8 +318,7 @@ class HistoryController extends ControllerBase
     {
         static $metric_detail_model = null;
         if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
-        $detail = $metric_detail_model->get($id); 
+        $detail = $metric_detail_model->get(array("id"=>$id)); 
         return $detail[0]->detail; 
     }
-
-   } 
+}

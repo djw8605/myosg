@@ -7,10 +7,12 @@ abstract class CachedIndexedModel extends CachedModel
     abstract public function key();
 
     //returns list of record grouped by key() field.
-    public function getindex($param = array()) {
-        $str_param = print_r($param, true);
+    public function getindex($params = array()) {
+        $params = array_merge($this->params, $params);
+
+        $str_param = print_r($params, true);
         if(!isset(CachedIndexedModel::$indexed_cache[get_class($this)][$str_param])) {
-            $records = parent::get($param);
+            $records = $this->get($params);
 
             //index the record set
             $key = $this->key();

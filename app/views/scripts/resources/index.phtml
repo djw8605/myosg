@@ -1,7 +1,7 @@
 <?=$this->render("full_header.phtml", true)?>
         <div id="primaryContentContainer">
             <div id="primaryContent">
-                <div id="breadcrumb"><p>You are here &gt; <?=$this->page_title?></p> </div>
+                <?=breadcrumb($this->page_title)?>
                 <h2><?=$this->page_title?></h2>
                 <?=$this->render(pagename()."/html.phtml")?>
             </div>
@@ -13,9 +13,13 @@
             outputSelectBox("resourcegroup", "Resource Group", $model, "id", "name");
             $gridtypes = new GridTypes();
             outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
+/*
             $model = new VirtualOrganization();
             outputSelectBox("vo", "Supported Virtual Organization", $model, "vo_id", "short_name");
-            $servicetypes = new ServiceTypes();
+*/
+            $params = array();
+            $params["service_group_id"] = 1;
+            $servicetypes = new ServiceTypes($params);
             outputSelectBox("servicetype", "Sevice Type", $servicetypes, "service_id", "description");
             $status_model = new Status();
             outputSelectBox("status", "Resource Status", $status_model, "metric_status_description", "metric_status_description");

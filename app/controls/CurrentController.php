@@ -31,6 +31,7 @@ class CurrentController extends ControllerBase
             $this->view->services = $cache->Services[0];
         }
 
-        $this->view->page_title = "Current Status for ".$resource->name;
+        //$this->view->page_title = "Current Status for ".$resource->name;
+        $this->view->page_title = "Current Status";
     }
 }

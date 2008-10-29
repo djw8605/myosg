@@ -1,0 +1,12 @@
+<?=$this->render("full_header.phtml", true)?>
+        <div id="primaryContentContainer">
+            <div id="primaryContent">
+                <?=breadcrumb($this->page_title)?>
+                <h2><?=$this->page_title?></h2>
+                <?=$this->render(pagename()."/html.phtml")?>
+            </div>
+        </div>
+        <div id="sideContent">
+            <h3>Filter</h3>
+        </div>
+<?=$this->render("full_footer.phtml", true)?>

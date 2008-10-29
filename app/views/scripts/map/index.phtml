@@ -8,7 +8,7 @@ $(document).ready(function() {
 </script>
 <div id="primaryContentContainer">
     <div id="primaryContent">
-        <div id="breadcrumb"><p>You are here &gt; <?=$this->page_title?></p> </div>
+        <?=breadcrumb($this->page_title)?>
         <h2><?=$this->page_title?></h2>
         <?=$this->render(pagename()."/html.phtml");?>
     </div>

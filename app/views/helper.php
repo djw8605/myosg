@@ -3,13 +3,15 @@
 //returns a unique id number for div element (only valid for each session - don't store!)
 function getuid()
 {
-    if(isset(session()->uid)) {
-        $next_uid = session()->uid;
-        session()->uid = $next_uid + 1;
+    $uid = new Zend_Session_Namespace('uid');
+
+    if(isset($uid->next)) {
+        $next_uid = $uid->next;
+        $uid->next = $next_uid + 1;
         return $next_uid+rand(); //add random number to avoid case when 2 different sessions are used
     } else {
-        session()->uid = 1000; //let's start from 1000
-        return session()->uid;
+        $uid->next = 1000; //let's start from 1000
+        return $uid->next;
     }
 }
 
@@ -92,7 +94,6 @@ function outputSelectBox($field_id, $field_name, $model, $value_field, $name_fie
         //truncate name so that it won't be too long
         if(strlen($name) > 25) $name = substr($name, 0, 25)."...";
 
-
         echo "<option value=\"$value\" $selected>$name</option>\n";
     }
     ?>
@@ -109,4 +110,64 @@ function outputClearFilterButton()
     <?
 }
 
+//output breadcrumb. takes page_title for the current page to add to bread crumb
+function breadcrumb($title = null)
+{
+    $breadcrumb = new Zend_Session_Namespace('breadcrumb');
 
+    $root_titles = array("resources", "vo", "map");
+
+    //update breadcrumb
+/*
+    if(isset($_REQUEST["breadcrumb"])) {
+        //clear break crumbs upto specified location
+        $top = $_REQUEST["breadcrumb"];
+        $new_breadcrumb = array();
+        $i = 0;
+        foreach($breadcrumb->crumbs as $crumb) {
+            if($i > $top) break;
+            $new_breadcrumb[] = $crumb;
+            $i++;
+        }
+        $breadcrumb->crumbs = $new_breadcrumb;
+    } else if($title !== null) {
+*/
+    //add current page to the crumb
+    //make sure the same page isn't already referenced in the breadcrumb
+    $new_crumbs = array();
+    if(!in_array(pagename(), $root_titles)) {
+        foreach($breadcrumb->crumbs as $crumb) {
+            if($crumb[0] == pagename()) break;
+            $new_crumbs[] = $crumb;
+        }
+    }
+    $breadcrumb->crumbs = $new_crumbs;
+    if($title !== null) {
+        //then add it at the end
+        $breadcrumb->crumbs[] = array(pagename(), $title, $_SERVER["QUERY_STRING"]);
+        //dlog("adding bread crumb");
+        //dlog(print_r($breadcrumb->crumbs, true));
+    }
+
+    //display breadcrumb
+    $out = "<div id=\"breadcrumb\"><p>";
+    $out .= "You are here ";
+    $counter = 0;
+    foreach($breadcrumb->crumbs as $id=>$crumb) {
+        $name = $crumb[0];
+        $title = $crumb[1];
+        $query = $crumb[2];
+        //$query = "breadcrumb=$id&".$crumb[2];
+        $out .= "&gt; ";
+
+        $counter++;
+        if($counter == sizeof($breadcrumb->crumbs)) {
+            $out .= $title;
+        } else {
+            $out .= "<a href=\"".fullbase()."/$name?$query\">$title</a> ";
+        }
+    }
+    $out .= "</div>";
+    return $out;
+}
+    

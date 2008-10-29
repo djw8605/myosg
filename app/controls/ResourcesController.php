@@ -1,11 +1,10 @@
 <?
 
 class ResourcesController extends ControllerBase
-{ 
+{
     public function pagename() { return "resources"; }
-    public function load() 
-    { 
-
+    public function load()
+    {
         //the reason why this is so convoluted is because I have to sort by resource group name
         //well.. that's just one of reasons..
 
@@ -49,18 +48,6 @@ class ResourcesController extends ControllerBase
         $this->view->resource_services = $resourceservice_model->getindex();
 
         ///////////////////////////////////////////////////////////////////////
-        //load vo cache
-        $cache_filename = config()->vomatrix_xml_cache;
-        $cache_xml = file_get_contents($cache_filename);
-        $this->view->xml = $cache_xml;
-        $this->vos = new SimpleXMLElement($cache_xml);
-        $this->view->vos = array();
-        foreach($this->vos->ResourceGrouped[0] as $resource_vo) {
-            $attributes = $resource_vo->attributes();
-            $this->view->vos[(int)$attributes->id[0]] = $resource_vo->Members[0]->VO; 
-        }
-
-        ///////////////////////////////////////////////////////////////////////
         //get resource status cache
         $cache_filename_template = config()->current_resource_status_xml_cache;
         $cache_filename = str_replace("<ResourceID>", "all", $cache_filename_template); 
@@ -92,8 +79,8 @@ class ResourcesController extends ControllerBase
                 //only add recrods if it passes resource filter
                 if($this->filterResource($rec)) {
                     $newlist[] = $rec;
-                } 
-            } 
+                }
+            }
             $this->view->resources_index[$resource_group->id] = $newlist;
         }
         $this->view->page_title = "Resource Groups";
@@ -110,7 +97,8 @@ class ResourcesController extends ControllerBase
                     return false;
                 }
             }
-        } 
+        }
+/*
 
         //filter on vo
         if(isset($_REQUEST["vo"])) {
@@ -134,7 +122,7 @@ class ResourcesController extends ControllerBase
                 if(!$found) return false;
             }
         }
-
+*/
         return true;
     }
 } 

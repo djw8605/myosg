@@ -12,7 +12,6 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function init()
     {
         setpagename($this->pagename());
-        session()->query[$this->pagename()] = $_SERVER["QUERY_STRING"];
     }
 
     public function indexAction()

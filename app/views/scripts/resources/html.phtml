@@ -48,10 +48,10 @@ foreach($this->resource_groups as $resource_group) {
                     }
                 }
             
-                echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
+                echo "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/resource?resource_id=".$resource->id."\">".$resource->name."</a> ($service_names)</h4>";
                 echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
                 echo "$note<br/>";
-
+/*
                 if(!isset($_REQUEST["uwa"])) {
                     $vonames = "";
                     if(isset($this->vos[$resource->id])) {
@@ -65,16 +65,7 @@ foreach($this->resource_groups as $resource_group) {
                         echo outputToggle("Show Supported Virtual Organizations", "Hide Supported Virtual Organizations", $vonames);
                     }
                 }
-
-                if(!isset($_REQUEST["uwa"])) {
-                    $url = base()."/current?resource_id=".$resource->id;
-                    echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
-                }            
-                if(!isset($_REQUEST["uwa"])) {
-                    $url = base()."/history?resource_id=".$resource->id;
-                    echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
-                }
-
+*/
                 echo "</div>";
             }
 

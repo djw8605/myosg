@@ -2,8 +2,9 @@
 
 class MetricDetail extends Model
 {
-    public function sql($param)
+    public function sql($params)
     {
-        return "SELECT * from metricdetail where metricdata_id = $param";
+        $id = $params["id"];
+        return "SELECT * from metricdetail where metricdata_id = $id";
     }
 }
