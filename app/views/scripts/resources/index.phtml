@@ -1,7 +1,7 @@
 <?=$this->render("full_header.phtml", true)?>
         <div id="primaryContentContainer">
             <div id="primaryContent">
-                <?=breadcrumb($this->page_title)?>
+                <?=$this->render("breadcrumb.phtml", true)?>
                 <h2><?=$this->page_title?></h2>
                 <?=$this->render(pagename()."/html.phtml")?>
             </div>
@@ -11,20 +11,28 @@
             <?
             $model = new ResourceGroup();
             outputSelectBox("resourcegroup", "Resource Group", $model, "id", "name");
+
             $gridtypes = new GridTypes();
             outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
-/*
+
             $model = new VirtualOrganization();
             outputSelectBox("vo", "Supported Virtual Organization", $model, "vo_id", "short_name");
-*/
+            echo "<div class='indent'><p>* Show resources that supports selected VO.</p></div>";
+            outputSelectBox("voowner", "Virtual Organization Ownership", $model, "vo_id", "short_name");
+            echo "<div class='indent'><p>* Show resources that are owned by selected VO.</p></div>";
+
             $params = array();
             $params["service_group_id"] = 1;
             $servicetypes = new ServiceTypes($params);
             outputSelectBox("servicetype", "Sevice Type", $servicetypes, "service_id", "description");
+
             $status_model = new Status();
             outputSelectBox("status", "Resource Status", $status_model, "metric_status_description", "metric_status_description");
 
             outputClearFilterButton();
+            
+            echo "<h3>Additional Details</h3>";
+            outputCheckboxList("detail", array("vomembers"=>"VO Membership", "voowner"=>"VO Ownership Graph"));
             ?>
 
             <h3>Subscribe</h3>
@@ -41,7 +49,7 @@
             <p><a href="<?=fullbase()?>/statuschanges/rss?<?=$param?>"><img src="images/atom_feed.gif"/></a></p>
             <p>
 
-<a href="http://www.addthis.com/feed.php?pub=soichih&h1=http%3A%2F%2Frsv.grid.iu.edu%2Ftrunk%2Fstatuschanges%2Frss&t1=" title="Subscribe using any feed reader!"><img src="http://s7.addthis.com/button0-fd.gif" width="83" height="16" border="0" alt="AddThis Feed Button" /></a>
+<!--a href="http://www.addthis.com/feed.php?pub=soichih&h1=http%3A%2F%2Frsv.grid.iu.edu%2Ftrunk%2Fstatuschanges%2Frss&t1=" title="Subscribe using any feed reader!"><img src="http://s7.addthis.com/button0-fd.gif" width="83" height="16" border="0" alt="AddThis Feed Button" /></a-->
 
             </p>
 

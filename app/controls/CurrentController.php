@@ -2,7 +2,13 @@
 
 class CurrentController extends ControllerBase
 {
-    public function pagename() { return "current"; }
+    public function breads() { return array("resources"); }
+    public static function default_title() { return "Current Status"; }
+    public static function default_url($query) { 
+        $id = $_REQUEST["resource_id"];
+        return "resource_id=$id"; 
+    }
+
     public function load()
     {
         $params = array();
@@ -31,7 +37,6 @@ class CurrentController extends ControllerBase
             $this->view->services = $cache->Services[0];
         }
 
-        //$this->view->page_title = "Current Status for ".$resource->name;
-        $this->view->page_title = "Current Status";
+        $this->setpagetitle("Current Status for ".$resource->name);
     }
 }

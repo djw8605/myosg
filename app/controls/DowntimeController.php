@@ -2,7 +2,10 @@
 
 class DowntimeController extends ControllerBase
 { 
-    public function pagename() { return "ical"; }
+    public function breads() { return array(); }
+    public static function default_title() { return "Downtime"; }
+    public static function default_url($query) { return ""; }
+
     public function load()
     {
         $params = array();

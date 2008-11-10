@@ -2,14 +2,16 @@
 
 class IframeController extends ControllerBase
 { 
-    public function pagename() { return "iframe"; }
+    public function breads() { return array(); }
+    public static function default_title() { return "Other Contents"; }
+    public static function default_url($query) { return ""; }
+
     public function indexAction() {
-        $this->view->page_title = "Other Contents";
+        $this->setpagetitle(ResourcesController::default_title());
     }
     public function oimAction() {
-        $this->view->page_title = "OIM";
         $this->view->url = "https://rsv.grid.iu.edu";
-       // $this->view->url = "http://oim-dev.grid.iu.edu";
+        $this->setpagetitle("OIM");
         $this->render("frame");
     }
 } 

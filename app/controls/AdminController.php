@@ -2,8 +2,6 @@
 
 class AdminController extends ControllerBase
 { 
-    public function pagename() { return "admin"; }
-
     public function load()
     {
         //make sure the request originated from localhost

@@ -10,7 +10,6 @@ class Resource extends CachedModel
             $where .= " and resource_id = $resource_id";
         }
         $sql = "SELECT resource_id id, name, fqdn FROM oim.resource $where";
-        dlog($sql);
         return $sql;
     }
 }

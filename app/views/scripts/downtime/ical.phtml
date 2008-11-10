@@ -2,11 +2,11 @@
 
 header("Content-Type: text/x-vCalendar");
 echo "BEGIN:VCALENDAR\n";
-echo "PRODID:-//GOC/<?=config()->app_name?> <?=config()->version?>//EN\n";
+echo "PRODID:-//GOC/".config()->app_name." ".config()->version."//EN\n";
 echo "VERSION:2.0\n";
 echo "CALSCALE:GREGORIAN\n";
 echo "METHOD:PUBLISH\n";
-echo "X-WR-CALNAME:Soichi Hayashi\n";
+echo "X-WR-CALNAME:OSG Downtime Calendar\n";
 echo "X-WR-TIMEZONE:America/New_York\n";
 
 foreach($this->downtimes as $downtime)

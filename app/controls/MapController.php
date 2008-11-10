@@ -2,7 +2,10 @@
 
 class MapController extends ControllerBase
 {
-    public function pagename() { return "map"; }
+    public function breads() { return array(); }
+    public static function default_title() { return "RSV Status Map"; }
+    public static function default_url($query) { return ""; }
+
     public function load()
     {
 
@@ -44,7 +47,7 @@ class MapController extends ControllerBase
             $this->view->resource_status[$id] = $resource_status;
         }
 
-        $this->view->page_title = "RSV Status Map";
+        $this->setpagetitle(MapController::default_title());
     }
     public function uwaAction()
     {

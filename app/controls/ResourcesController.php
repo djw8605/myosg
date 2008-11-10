@@ -2,9 +2,14 @@
 
 class ResourcesController extends ControllerBase
 {
-    public function pagename() { return "resources"; }
+    public function breads() { return array(); }
+    public static function default_title() { return "Resource Groups"; }
+    public static function default_url($query) { return ""; }
+
     public function load()
     {
+        $this->vocache = null;
+
         //the reason why this is so convoluted is because I have to sort by resource group name
         //well.. that's just one of reasons..
 
@@ -70,12 +75,6 @@ class ResourcesController extends ControllerBase
             $list = $this->view->resources_index[$resource_group->id];
             $newlist = array();
             foreach($list as $rec) {
-                /*
-                $resource_status = $this->view->resource_status[$rec->id];
-                if($resource_status->Status[0] == $status) {
-                    $newlist[] = $rec;
-                }
-                */
                 //only add recrods if it passes resource filter
                 if($this->filterResource($rec)) {
                     $newlist[] = $rec;
@@ -83,7 +82,31 @@ class ResourcesController extends ControllerBase
             }
             $this->view->resources_index[$resource_group->id] = $newlist;
         }
-        $this->view->page_title = "Resource Groups";
+
+        ///////////////////////////////////////////////////////////////////////
+        //load vo supported
+        if(isset($_REQUEST["detail_vomembers"])) {
+            if($_REQUEST["detail_vomembers"] == "true") {
+                $resourcegrouped = $this->getResourceGrouped();
+                $this->view->vos_supported = array();
+                foreach($resourcegrouped as $resource) {
+                    $attr = $resource->attributes();
+                    $id = (int)$attr->id[0];
+                    $this->view->vos_supported[$id] = $resource->Members[0];
+                }
+            }
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        //load vo ownership 
+        if(isset($_REQUEST["detail_voowner"])) {
+            if($_REQUEST["detail_voowner"] == "true") {
+                $model = new ResourceOwnership();
+                $this->view->resource_ownerships = $model->getindex();
+            }
+        }
+
+        $this->setpagetitle(ResourcesController::default_title());
     }
 
     private function filterResource($rec) 
@@ -98,12 +121,11 @@ class ResourcesController extends ControllerBase
                 }
             }
         }
-/*
 
         //filter on vo
         if(isset($_REQUEST["vo"])) {
             if(trim($_REQUEST["vo"]) != "") {
-                $vogrouped = $this->vos->VOGrouped[0];
+                $vogrouped = $this->getVOGrouped();
                 $vo = (int)$_REQUEST["vo"];
                 $found = false;
                 foreach($vogrouped as $vogroup) {
@@ -122,7 +144,61 @@ class ResourcesController extends ControllerBase
                 if(!$found) return false;
             }
         }
-*/
+
+        //filter on voowner
+        if(isset($_REQUEST["voowner"])) {
+            if(trim($_REQUEST["voowner"]) != "") {
+                $vo_id = $_REQUEST["voowner"];
+                $owned_resources = $this->getVOOwnedResources($vo_id);
+                $found = false;
+                foreach($owned_resources as $owned_resource) {
+                    if($rec->id == $owned_resource->resource_id) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if(!$found) return false;
+            }
+        }
+
         return true;
     }
-} 
+
+    private function getVOGrouped()
+    {
+        if($this->vocache === null) {
+            $this->loadvocache();
+        }
+        return $this->vocache->VOGrouped[0];
+    }
+
+    private function getResourceGrouped()
+    {
+        if($this->vocache === null) {
+            $this->loadvocache();
+        }
+        return $this->vocache->ResourceGrouped[0];
+    }
+
+    private function loadvocache()
+    {
+        $cache_filename = config()->vomatrix_xml_cache;
+        $cache_xml = file_get_contents($cache_filename);
+        $this->view->xml = $cache_xml;
+        $this->vocache = new SimpleXMLElement($cache_xml);
+    }
+
+    //$vo_id will be only used once when static variale is initialized.
+    //once it's cached, $vo_id will be ignored..
+    private function getVOOwnedResources($vo_id)
+    {
+        static $resources = null;
+        if($resources === null) {
+            $model = new VOOwnedResources();
+            $params = array();
+            $params["vo_id"] = $vo_id;
+            $resources = $model->get($params);
+        }
+        return $resources;
+    }
+}

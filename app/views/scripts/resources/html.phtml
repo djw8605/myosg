@@ -48,24 +48,63 @@ foreach($this->resource_groups as $resource_group) {
                     }
                 }
             
-                echo "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/resource?resource_id=".$resource->id."\">".$resource->name."</a> ($service_names)</h4>";
+                //echo "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/resource?resource_id=".$resource->id."\">".$resource->name."</a> ($service_names)</h4>";
+                echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
                 echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
                 echo "$note<br/>";
-/*
-                if(!isset($_REQUEST["uwa"])) {
+
+                //show various details requested
+                if(isset($this->vos_supported)) {
                     $vonames = "";
-                    if(isset($this->vos[$resource->id])) {
-                        $volist = $this->vos[$resource->id];
+                    if(isset($this->vos_supported[$resource->id])) {
+                        $volist = $this->vos_supported[$resource->id];
                         foreach($volist as $vo) {
                             $vonames .= $vo." ";
-                        } 
+                        }
                     }
                     if($vonames != "") {
                         $vonames .= "<br/>";
                         echo outputToggle("Show Supported Virtual Organizations", "Hide Supported Virtual Organizations", $vonames);
+                    } else {
+                        echo "Supported Virtual Organization information is not available for this resource.<br/>";
                     }
                 }
-*/
+            
+                if(isset($this->resource_ownerships)) {
+                    $ownership = $this->resource_ownerships[$resource->id];
+                    if($ownership === null) {
+                        echo "Virtual Organization Ownership information is not available for this resource.<br/>";
+                    } else {
+                        $chd = "";
+                        $chl = "";
+                        $total = 0;
+                        foreach($ownership as $item) {
+                            if($chd != "") $chd .= ",";
+                            $chd .= $item->percent;
+                            if($chl != "") $chl .= "|";
+                            $chl .= $item->short_name."(".$item->percent."%)";
+                            $total += $item->percent;
+                        }
+                        if($total < 100) {
+                            if($chd != "") $chd .= ",";
+                            $left = 100 - $total;
+                            $chd .= $left;
+                            if($chl != "") $chl .= "|";
+                            $chl .= "Other($left%)";
+                        }
+                        $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=320x100&chl=$chl";
+                        echo "Virtual Ogranization Ownership<br/>";
+                        echo "<img src='$url'/><br/>";
+                    }
+                }
+
+                if(!isset($_REQUEST["uwa"])) {
+                    $url = base()."/current?resource_id=".$resource->id;
+                    echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
+                    $url = base()."/history?resource_id=".$resource->id;
+                    echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
+                }
+
                 echo "</div>";
             }
 

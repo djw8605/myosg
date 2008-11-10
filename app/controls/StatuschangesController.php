@@ -2,7 +2,10 @@
 
 class StatuschangesController extends ControllerBase
 { 
-    public function pagename() { return "statuschanges"; }
+    public function breads() { return array(); }
+    public static function default_title() { return "Latest Status Changes"; }
+    public static function default_url($query) { return ""; }
+
     public function load()
     {
         $params = array();
@@ -21,7 +24,8 @@ class StatuschangesController extends ControllerBase
         $model = new StatusChangesService();
         $this->view->status_changes = $model->get();
 
-        $this->view->page_title = "Latest Status Changes";
+        $this->setpagetitle(ResourcesController::default_title());
+        //$this->view->page_title = "Latest Status Changes";
     }
     public function rssAction()
     {

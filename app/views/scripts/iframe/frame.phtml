@@ -3,7 +3,7 @@
 
         <div id="primaryContentContainer">
             <div id="primaryContent">
-                <div id="breadcrumb"><p>You are here &gt; <a href="<?=fullbase()?>/iframe">Other Contents</a> &gt; <?=$this->page_title?></p> </div>
+                <?=$this->render("breadcrumb.phtml", true)?>
                 <iframe frameborder="0" id="frame" width="100%" src="<?=$this->url?>" onload="resizeIframe();"></iframe>
             </div>
         </div>

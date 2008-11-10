@@ -4,7 +4,12 @@ require_once("app/timerange.php");
 
 class HistoryController extends ControllerBase
 {
-    public function pagename() { return "history"; }
+    public function breads() { return array("resources"); }
+    public static function default_title() { return "History Status"; }
+    public static function default_url($query) { 
+        $id = $_REQUEST["resource_id"];
+        return "resource_id=$id"; 
+    }
 
     //why do we have both graph and service detail page together?
     //bacause having them together greatly increases the usability.. 
@@ -49,8 +54,8 @@ class HistoryController extends ControllerBase
 
         $this->view->resource_id = $resource_id;
         $this->view->resource_name = $resource->name;
-        //$this->view->page_title = "Status History for ".$resource->name;
-        $this->view->page_title = "Status History";
+
+        $this->setpagetitle("Status Status for ".$resource->name);
 
         ///////////////////////////////////////////////////////////////////////
         // Optionally, load service detail

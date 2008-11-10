@@ -2,8 +2,6 @@
 
 class ResourceController extends ControllerBase
 { 
-    public function pagename() { return "resource"; }
-
     public function load()
     {
         $params = array();
@@ -27,6 +25,20 @@ class ResourceController extends ControllerBase
             $this->view->vos[(int)$attributes->id[0]] = $resource_vo->Members[0]->VO; 
         }
 
+        //load cache
+        $cache_filename_template = config()->current_resource_status_xml_cache;
+        $cache_filename = str_replace("<ResourceID>", $resource_id, $cache_filename_template); 
+        if(file_exists($cache_filename)) {
+            $cache_xml = file_get_contents($cache_filename);
+
+            $cache = new SimpleXMLElement($cache_xml);
+            $this->view->timestamp = (int)$cache->Timestamp[0];
+            $this->view->status = $cache->Status[0];
+            $this->view->note = $cache->Note[0];
+            $this->view->services = $cache->Services[0];
+        }
+
+        //load other things
         $servicetype_model = new ServiceTypes();
         $this->view->servicetypes = $servicetype_model->getindex();
         $resourceservice_model = new ServiceByResourceID();

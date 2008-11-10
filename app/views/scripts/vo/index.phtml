@@ -2,7 +2,7 @@
 
         <div id="primaryContentContainer">
             <div id="primaryContent">
-                <?=breadcrumb($this->page_title)?>
+                <?=$this->render("breadcrumb.phtml", true)?>
                 <h2><?=$this->page_title?></h2>
                 <?=$this->render(pagename()."/html.phtml");?>
             </div>
