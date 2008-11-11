@@ -55,7 +55,7 @@ $(document).ready(function() {
         var x = event.pageX - imgpos.left;
         var time = convertXtoUnixTime(this, x);
 
-        document.location = "<?=fullbase()?>/history?resource_id=<?=$this->resource_id?>&time="+time+"&"+service_param;
+        document.location = "<?=fullbase()?>/history?resource_id=<?=$this->resource_id?>&period=<?=$this->period?>&time="+time+"&"+service_param;
     });
 
     $(".graph").mousemove(function(event) {
@@ -102,7 +102,7 @@ foreach($this->services as $service) {
     ?>
     <h4><?=$service->description?> Status</h4>
     <div class="history_graph">
-    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&amp;service_id=<?=$service->service_id?>"/>
+    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&amp;period=<?=$this->period?>&service_id=<?=$service->service_id?>&amp;start=<?=$this->start_time?>&amp;end=<?=$this->end_time?>"/>
     </div>
     <?=$this->ruler?>
     <?
@@ -132,7 +132,7 @@ if(!isset($_REQUEST["uwa"])) {
                 $status = Status::getStatus($this->detail_service_status->status_id);
                 echo "<div class=\"bottom_border status_".$status."\">";
                 $status_time = $this->detail_service_status->timestamp;
-                $url = fullbase()."/history?resource_id=".$this->resource_id.
+                $url = fullbase()."/history?period=".$this->period."&resource_id=".$this->resource_id.
                     "&amp;service_id=".$this->detail_service_id.
                     "&amp;time=".$status_time;
                 echo "Status changed to $status at <a href=\"$url\">".date(config()->date_format_full, $status_time)."</a><br/>";

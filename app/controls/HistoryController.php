@@ -11,12 +11,7 @@ class HistoryController extends ControllerBase
         return "resource_id=$id"; 
     }
 
-    //why do we have both graph and service detail page together?
-    //bacause having them together greatly increases the usability.. 
-    //I know this is against the design policy of having separate pages for diffent
-    //kind of information... but I think we sometime have to make 
-    //compromises..
-    public function load()
+    public function processPeriodQuery()
     {
         if(!isset($_REQUEST["period"])) {
             //this causes the graph period combo box to use following as default, as well as telling graph 
@@ -24,6 +19,7 @@ class HistoryController extends ControllerBase
             $_REQUEST["period"] = config()->history_graph_default_period;
         }
         $dirty_period = $_REQUEST["period"];
+        $this->view->period = $dirty_period;
         switch($dirty_period) {
         case "1day":
             $this->history_days = 1;
@@ -43,6 +39,16 @@ class HistoryController extends ControllerBase
         default:
             throw new exception("bad period: $dirty_period");
         }
+    }
+
+    //why do we have both graph and service detail page together?
+    //bacause having them together greatly increases the usability.. 
+    //I know this is against the design policy of having separate pages for diffent
+    //kind of information... but I think we sometime have to make 
+    //compromises..
+    public function load()
+    {
+        $this->processPeriodQuery();
 
         ///////////////////////////////////////////////////////////////////////
         // Load graph inforamtion
@@ -52,7 +58,6 @@ class HistoryController extends ControllerBase
         }
 
         list($start_time, $end_time) = getLastNDayRange($this->history_days);
-        elog("days ".$this->history_days);
         if(isset($_REQUEST["start_time"])&& isset($_REQUEST["end_time"])) {
             $dirty_start_time = $_REQUEST["start_time"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {
@@ -213,7 +218,7 @@ class HistoryController extends ControllerBase
         if(Zend_Validate::is($dirty_resource_id, 'Int')) {
             $resource_id = $dirty_resource_id;
         }
-        list($start_time, $end_time) = getLastNDayRange($this->history_days);
+        list($start_time, $end_time) = getLastNDayRange(7);//this default shouldn't be used..
         if(isset($_REQUEST["start"])&& isset($_REQUEST["end"])) {
             $dirty_start_time = $_REQUEST["start"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {
@@ -278,8 +283,8 @@ class HistoryController extends ControllerBase
         $decile_out = 0; //used to calculate the reminder area
         $first = true;
         if($total_time > 0) {
-            dlog("Painting from $start_time to $end_time");
-            dlog(print_r($status_changes, true));
+            //dlog("Painting from $start_time to $end_time");
+            //dlog(print_r($status_changes, true));
             foreach($status_changes as $change) {
                 $time = $change->timestamp;
                 if($first) {
@@ -291,7 +296,6 @@ class HistoryController extends ControllerBase
                 } else {
                     $next_status = (int)$change->status_id;
                     $decile2 = (float)($time-$start_time)/$total_time*$image_width;
-                dlog("panting from $decile1 to $decile2 with ".$status);
                     imageline($im, $decile1, 0, $decile2, 0, $color[$status]);
                     imageline($im, $decile1, 1, $decile2, 1, $color[$status]);
                     $size = ($decile2 - $decile1);
@@ -303,12 +307,10 @@ class HistoryController extends ControllerBase
             }
             if(count($status_changes) > 0) {
                 //fill leftover
-                dlog("panting from $decile_out to $image_width with ".$status);
                 imageline($im, $decile_out, 0, $image_width, 0, $color[$status]);
                 imageline($im, $decile_out, 1, $image_width, 1, $color[$status]);
             } else {
                 //no data?
-                dlog("panting from 0 to $image_width with back");
                 imageline($im, 0, 0, $image_width, 0, $back);
                 imageline($im, 0, 1, $image_width, 1, $back);
             }
