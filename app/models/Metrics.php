@@ -24,7 +24,6 @@ class Metrics
 
     public function fetchNewGratiaRecords($limit = 1000)
     {
-        //$sql = "select *, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where UNIX_TIMESTAMP(Timestamp) > ifnull((select max(timestamp) from rsvextra.metric), 0) order by Timestamp limit $limit;";
         //why am I sorting by timestamp? Because Gratia receives metric in out-of-oder timestamp.
         //TODO - now... what this "doesn't" prevent is that if the first record in the batch happens 
         //to be out-of-order, then we will still have out-of-order issue.. processnew action

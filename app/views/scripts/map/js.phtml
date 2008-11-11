@@ -78,7 +78,7 @@ foreach($this->sites as $site) {
                     $rstatus = $this->resource_status[$r->id];
                     $name = $rstatus->ResourceName[0];
                     $status = $rstatus->Status[0];
-                    $html .= "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/resource?resource_id=".$r->id."\">$name</a></h4>";
+                    $html .= "<div class=\"status_$status\"><h4>$name</h4>";
                     $html .= $rstatus->Note[0] . "<br/></div>";
                 } else {
                     $name = $rg->name;

@@ -8,6 +8,26 @@ foreach($this->vos as $vo) {
         echo "<Resource>".$resource->ResourceName[0]."</Resource>";
     }
     echo "</Members>";
+    echo "<ResourceOwnerships>";
+    $attr = $vo->attributes();
+    $id = (int)$attr->id[0];
+    $ownerships = $this->voownership[$id];
+    foreach($ownerships as $ownership) {
+        $resource_name = "";
+        //find resource info
+        foreach($this->resources as $resinfo) {
+            if($resinfo->id == $ownership->resource_id) {
+                $resource_name = $resinfo->name;
+            }
+        }
+
+        echo "<ResourceOwnership>";
+        echo "<ResourceID>".$ownership->resource_id."</ResourceID>";
+        echo "<ResourceName>".$resource_name."</ResourceName>";
+        echo "<Percentage>".$ownership->percent."</Percentage>";
+        echo "</ResourceOwnership>";
+    }
+    echo "</ResourceOwnerships>";
     echo "</VirtualOrganization>";
 }
 ?>

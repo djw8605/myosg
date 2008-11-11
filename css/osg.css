@@ -25,6 +25,11 @@ border: 1px solid #ccc;
 padding: 3px;
 margin-bottom: 3px;
 }
+div.resource_group_header
+{
+border-bottom: dotted 1px #aaa;
+padding-bottom: 0.3em;
+}
 
 div.sidenote
 {
@@ -110,6 +115,8 @@ margin-bottom: 3px;
 font-weight: bold;
 font-size: 13px;
 }
+
+
 span.h4
 {
 margin-bottom: 3px;

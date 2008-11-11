@@ -18,6 +18,32 @@ class HistoryController extends ControllerBase
     //compromises..
     public function load()
     {
+        if(!isset($_REQUEST["period"])) {
+            //this causes the graph period combo box to use following as default, as well as telling graph 
+            //the default length
+            $_REQUEST["period"] = config()->history_graph_default_period;
+        }
+        $dirty_period = $_REQUEST["period"];
+        switch($dirty_period) {
+        case "1day":
+            $this->history_days = 1;
+            break;
+        case "3day":
+            $this->history_days = 3;
+            break;
+        case "week":
+            $this->history_days = 7;
+            break;
+        case "month":
+            $this->history_days = 31;
+            break;
+        case "year":
+            $this->history_days = 365;
+            break;
+        default:
+            throw new exception("bad period: $dirty_period");
+        }
+
         ///////////////////////////////////////////////////////////////////////
         // Load graph inforamtion
         $dirty_resource_id = $_REQUEST["resource_id"];
@@ -25,7 +51,8 @@ class HistoryController extends ControllerBase
             $resource_id = $dirty_resource_id;
         }
 
-        list($start_time, $end_time) = getLastNDayRange(config()->history_graph_default_days);
+        list($start_time, $end_time) = getLastNDayRange($this->history_days);
+        elog("days ".$this->history_days);
         if(isset($_REQUEST["start_time"])&& isset($_REQUEST["end_time"])) {
             $dirty_start_time = $_REQUEST["start_time"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {
@@ -186,7 +213,7 @@ class HistoryController extends ControllerBase
         if(Zend_Validate::is($dirty_resource_id, 'Int')) {
             $resource_id = $dirty_resource_id;
         }
-        list($start_time, $end_time) = getLastNDayRange(config()->history_graph_default_days);
+        list($start_time, $end_time) = getLastNDayRange($this->history_days);
         if(isset($_REQUEST["start"])&& isset($_REQUEST["end"])) {
             $dirty_start_time = $_REQUEST["start"];
             if(Zend_Validate::is($dirty_start_time, 'Int')) {

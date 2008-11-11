@@ -8,6 +8,16 @@
             </div>
         </div>
         <div id="sideContent">
+            <h3>Graph Period</h3>
+            <?
+            outputSelectBox2("period", array(
+                "1day"=>"Last 24 Hours", 
+                "3day"=>"Last 3 Days", 
+                "week"=>"Last One Week", 
+                "month"=>"Last One Month", 
+                "year"=>"Last One Year"
+            ));
+            ?>
             <h3>Subscribe</h3>
             <h4>Subscribe to Current View</h4>
             <?

@@ -9,16 +9,20 @@ foreach($this->resource_groups as $resource_group) {
         if(count($resource_list) != 0) {
             echo "<div class=\"resource_group\">";
             $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
-            echo "<h3>".$resource_group->name."</h3>";
-
+            echo "<div class='resource_group_header'>";
             if(!isset($_REQUEST["uwa"])) {
                 echo "<div class=\"sidenote\">";
                 echo $gridtype_name;
                 echo "</div>";
+            }
+            echo "<span class='h3'>".$resource_group->name."</span>";
+            if(!isset($_REQUEST["uwa"])) {
                 if($resource_group->description != "") {
-                    echo "<p>".$resource_group->description."</p>";
+                    echo "<br/>".$resource_group->description;
                 }
             }
+            echo "</div>";
+
 
             foreach($resource_list as $resource) {
 

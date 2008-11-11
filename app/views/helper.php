@@ -71,6 +71,25 @@ function humanDuration($ago)
     return floor($ago/(60*60*24))." days";
 }
 
+function outputSelectBox2($field_id, $kv)
+{
+    global $g_pagename;
+?>
+    <select id="<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
+<?
+    $current_value = @$_REQUEST[$field_id];
+    foreach($kv as $value=>$name) {
+        $selected = "";
+        if($value == $current_value) {
+            $selected = "selected=selected";
+        }
+        echo "<option value=\"$value\" $selected>$name</option>\n";
+    }
+?>
+    </select>
+<?
+}
+
 function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)
 {
     global $g_pagename;

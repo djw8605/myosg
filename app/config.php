@@ -110,7 +110,7 @@ class common_config
         $this->gratia_recordcount = 3500;
 
         $this->history_graph_image_width = 800; //this just defines the precision of the graph..
-        $this->history_graph_default_days = 7;
+        $this->history_graph_default_period = "week";
 
         ///////////////////////////////////////////////////////////////////////
         //
