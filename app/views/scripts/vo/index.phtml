@@ -10,8 +10,17 @@
         <div id="sideContent">
             <h3>Filter</h3>
             <?
-            $model = new VirtualOrganization();
-            outputSelectBox("vo", "Virtual Organization", $model, "vo_id", "short_name");
+            echo "<p>Group By:<br/>";
+            outputSelectBox2("group", array("vo"=>"Virtual Organization", "resource"=>"Resource"));
+            echo "</p>";
+
+            if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
+                $model = new Resource();
+                outputSelectBox("resource", "Resource", $model, "id", "name");
+            } else {
+                $model = new VirtualOrganization();
+                outputSelectBox("vo", "Virtual Organization", $model, "vo_id", "short_name");
+            }
 
             outputClearFilterButton();
             ?>

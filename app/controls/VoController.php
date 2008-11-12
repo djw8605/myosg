@@ -8,7 +8,36 @@ class VoController extends ControllerBase
 
     public function load() 
     { 
+        if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
+            $this->load_resourcegrouped();
+        }  else {
+            $this->load_vogrouped();
+        }
+    }
 
+    public function load_resourcegrouped()
+    {
+        $model = new Resource();
+        $this->view->resources = $model->get();
+
+        $model = new ResourceOwnership();
+        $this->view->resource_ownerships = $model->getindex();
+
+        ///////////////////////////////////////////////////////////////////////
+        //Filter
+        if(isset($_REQUEST["resource"])) {
+            if(trim($_REQUEST["resource"]) != "") {
+                $id = (int)$_REQUEST["resource"];
+                $newlist = array();
+                $newlist[$id] = $this->view->resource_ownerships[$id];
+                $this->view->resource_ownerships = $newlist;
+            }
+        }
+        $this->setpagetitle(VoController::default_title(). " - Grouped by Resource");
+    }
+
+    public function load_vogrouped()
+    {
         ///////////////////////////////////////////////////////////////////////
         //load vo cache
         $cache_filename = config()->vomatrix_xml_cache;

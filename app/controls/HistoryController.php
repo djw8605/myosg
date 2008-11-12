@@ -87,7 +87,7 @@ class HistoryController extends ControllerBase
         $this->view->resource_id = $resource_id;
         $this->view->resource_name = $resource->name;
 
-        $this->setpagetitle("Status Status for ".$resource->name);
+        $this->setpagetitle("Status History for ".$resource->name);
 
         ///////////////////////////////////////////////////////////////////////
         // Optionally, load service detail

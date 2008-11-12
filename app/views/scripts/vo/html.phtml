@@ -1,54 +1,94 @@
 <?
-
-foreach($this->vos as $vo) {
-    echo "<h3>".$vo->Name[0]."</h3>"; 
-
-    //ownership chart
-    $attrs = $vo->attributes();
-    $void = (int)$attrs["id"];
-    $resources = $this->voownership[$void];
-    echo "<div class=\"indent\">";
-    if($resources !== null) {
-        $out = "<table width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
-        $rclass = "rowA";
-        foreach($resources as $resource) {
-            if($rclass == "rowA") {
-                $rclass = "rowB";
-            } else {
-                $rclass = "rowA";
-            }
-            //find resource info
-            foreach($this->resources as $resinfo) {
-                if($resinfo->id == $resource->resource_id) {
-                    $url = base()."/current?resource_id=".$resinfo->id;
-                    $out .= "<tr class='$rclass'><td><a href='$url'>".$resinfo->name."</a></td><td>".$resource->percent."%</td></tr>";
-                    break;
+if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
+    foreach($this->resource_ownerships as $resource_id=>$ownership) {
+        //find resource
+        $found = false;
+        foreach($this->resources as $resource) {
+            $found = true;
+            if($resource_id == $resource->id) {
+                echo "<h3>".$resource->name."</h3>"; 
+                if($ownership === null) {
+                    echo "Virtual Organization Ownership information is not available for this resource.<br/>";
+                } else {
+                    $chd = "";
+                    $chl = "";
+                    $total = 0;
+                    foreach($ownership as $item) {
+                        if($chd != "") $chd .= ",";
+                        $chd .= $item->percent;
+                        if($chl != "") $chl .= "|";
+                        $chl .= $item->short_name."(".$item->percent."%)";
+                        $total += $item->percent;
+                    }
+                    if($total < 100) {
+                        if($chd != "") $chd .= ",";
+                        $left = 100 - $total;
+                        $chd .= $left;
+                        if($chl != "") $chl .= "|";
+                        $chl .= "Other($left%)";
+                    }
+                    $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=320x100&chl=$chl";
+                    echo "Resource Ownership<br/>";
+                    echo "<img src='$url'/><br/>";
                 }
+                break;
             }
         }
-        $out .= "</table>";
-        echo outputToggle("Show Resource Ownership", "Hide Resource Ownership", $out);
-    } else {
-        echo "This VO does not own any resource";
+        if(!$found) {
+            echo "Resource Information couldn't be found.";
+        }
     }
-    echo "</div>";
 
-    //member resources
+} else {
+    foreach($this->vos as $vo) {
+        echo "<h3>".$vo->Name[0]."</h3>"; 
 
-    $out = "";
-    foreach($vo->Members[0]->Resource as $resource) {
-        $url = base()."/current?resource_id=".$resource->ResourceID;
-        $out .= "<a href=\"$url\">".$resource->ResourceName[0]."</a><br/>";
-    }
-    if($out == "") {
-        echo "No Member Resources";
-    } else {
-        //echo "<h4>Member Resources</h4>";
-        $out = "<p>$out<p>";
+        //ownership chart
+        $attrs = $vo->attributes();
+        $void = (int)$attrs["id"];
+        $resources = $this->voownership[$void];
         echo "<div class=\"indent\">";
-        echo outputToggle("Show Member Resources", "Hide Member Resources", $out);
+        if($resources !== null) {
+            $out = "<table width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
+            $rclass = "rowA";
+            foreach($resources as $resource) {
+                if($rclass == "rowA") {
+                    $rclass = "rowB";
+                } else {
+                    $rclass = "rowA";
+                }
+                //find resource info
+                foreach($this->resources as $resinfo) {
+                    if($resinfo->id == $resource->resource_id) {
+                        $url = base()."/current?resource_id=".$resinfo->id;
+                        $out .= "<tr class='$rclass'><td><a href='$url'>".$resinfo->name."</a></td><td>".$resource->percent."%</td></tr>";
+                        break;
+                    }
+                }
+            }
+            $out .= "</table>";
+            echo outputToggle("Show Resource Ownership", "Hide Resource Ownership", $out);
+        } else {
+            echo "This VO does not own any resource";
+        }
         echo "</div>";
+
+        //member resources
+
+        $out = "";
+        foreach($vo->Members[0]->Resource as $resource) {
+            $url = base()."/current?resource_id=".$resource->ResourceID;
+            $out .= "<a href=\"$url\">".$resource->ResourceName[0]."</a><br/>";
+        }
+        if($out == "") {
+            echo "No Member Resources";
+        } else {
+            //echo "<h4>Member Resources</h4>";
+            $out = "<p>$out<p>";
+            echo "<div class=\"indent\">";
+            echo outputToggle("Show Member Resources", "Hide Member Resources", $out);
+            echo "</div>";
+        }
     }
-    
 
 }
