@@ -14,7 +14,13 @@ $(document).ready(function() {
     </div>
 </div>
 <div id="sideContent">
-    <h3>Subscribe</h3>
+    <h3>Filter</h3>
+    <?
+    $gridtypes = new GridTypes();
+    outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
+    ?>
+
+     <h3>Subscribe</h3>
     <?
     $param = $_SERVER["QUERY_STRING"];
     $moduleurl = urlencode(fullbase()."/".pagename()."/uwa?$param");

@@ -34,7 +34,12 @@ class ResourcesController extends ControllerBase
                 $gridtype = (int)$_REQUEST["gridtype"];
                 $params["osg_grid_type_id"] = $gridtype;
             }
+        } else {
+            //if gridtype is not set, then default it to 1. be sure to let (all) to be selected still
+            $_REQUEST["gridtype"] = "1";
+            $params["osg_grid_type_id"] = 1;
         }
+
         if(isset($_REQUEST["resourcegroup"])) {
             if(trim($_REQUEST["resourcegroup"]) != "") {
                 $resourcegroup = (int)$_REQUEST["resourcegroup"];

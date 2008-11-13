@@ -16,7 +16,18 @@ class MapController extends ControllerBase
 
         //pull resource groups
         $rgroup_model = new ResourceGroup();
-        $rgroups = $rgroup_model->get();
+        $params = array();
+        if(isset($_REQUEST["gridtype"])) {
+            if(trim($_REQUEST["gridtype"]) != "") {
+                $gridtype = (int)$_REQUEST["gridtype"];
+                $params["osg_grid_type_id"] = $gridtype;
+            }
+        } else {
+            //if gridtype is not set, then default it to 1. be sure to let (all) to be selected still
+            $_REQUEST["gridtype"] = "1";
+            $params["osg_grid_type_id"] = 1;
+        }
+        $rgroups = $rgroup_model->get($params);
         $this->view->rgs = array();
         foreach($sites as $site) {
             $rgs = array();
