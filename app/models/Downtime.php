@@ -29,12 +29,10 @@ class Downtime extends CachedModel
 
         $sql = "select rd.*, UNIX_Timestamp(start_time) as unix_start_time, UNIX_Timestamp(end_time) as unix_end_time ".
                 " from oim.resource_downtime rd ". 
-                //" join oim.resource_downtime_service rds on rd.downtime_id = rds.downtime_id".
-                $where; 
-        //elog($sql);
+                $where.
+                " order by start_time";
         return $sql;
     }
-    //public function key() { return "service_id";}
 }
 
 ?>

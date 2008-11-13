@@ -101,11 +101,13 @@ a
 #content h1,h2
 {
 	margin-bottom: 10px;
+font-size: 15px;
 }
 
 #content h3,h4,h5,h6
 {
 	margin-bottom: 3px;
+font-size: 11px;
 }
 #content ul
 {

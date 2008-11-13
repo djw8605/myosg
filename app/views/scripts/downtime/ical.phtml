@@ -36,6 +36,16 @@ foreach($this->downtimes as $downtime)
         $end_human = date(config()->date_format_full, $downtime->unix_end_time);
         $desc = "(From $start_human To $end_human) ";
         $desc .= $downtime->downtime_summary;
+
+        //append affected services
+        $desc .= "(Affected Services:";
+        foreach($this->downtime_services as $service) {
+            if($service->downtime_id == $downtime->downtime_id) {
+                $desc .= $service->service_id;
+            }
+        } 
+        $desc .= ")";
+        
         $desc = str_replace(array("\n", "\r"), "", $desc);
         echo "DESCRIPTION:$desc\n";
 

@@ -15,19 +15,16 @@ class DowntimeController extends ControllerBase
             $params["resource_id"] = $resource_id;
         }
         $resource_model = new Resource();
-        $this->resources = $resource_model->get($params);
+        $this->view->resources = $resource_model->get($params);
 
         $downtime_model = new Downtime();
-        $this->downtimes = $downtime_model->get();
+        $this->view->downtimes = $downtime_model->get($params);
 
         $downtime_service_model = new DowntimeService();
-        $this->downtime_service = $downtime_service_model->get();
+        $this->view->downtime_services = $downtime_service_model->get();
     }
     public function icalAction()
     {
         $this->load();
-        $this->view->resources = $this->resources;
-        $this->view->downtimes = $this->downtimes;
-        $this->view->downtime_service = $this->downtime_service;
     }
 } 
