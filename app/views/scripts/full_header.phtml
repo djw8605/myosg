@@ -41,17 +41,22 @@ parseQuery();
 
     <div id="menu">
         <ul>
-            <li class="first"><a href="<?=base()?>" accesskey="1" title="">Home</a></li>
-            <li><a href="<?=base()?>/resources" accesskey="2" title="">Resource Groups</a></li>
-            <li><a href="<?=base()?>/vo" accesskey="3" title="">Virtual Organizations</a></li>
-            <li><a href="<?=base()?>/map" accesskey="4" title="">RSV Status Map</a></li>
-            <!--
-            <li><a href="https://rsv.grid.iu.edu" accesskey="3" title="">OIM</a></li>
-
-            <li><a href="<?=base()?>" accesskey="4" title="">BDII</a></li>
-            <li><a href="https://rsv-itb.grid.iu.edu/footprint" accesskey="5" title="">Contact GOC</a></li>
-            -->
+            <li id="menu_rsv" class="first"><a href="<?=base()?>/rsv" accesskey="2" title="">RSV</a></li>
         </ul>
     </div>
+
+    <div class="submenu hidden" id="submenu_rsv">
+        <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv" accesskey="1" title="">Home</a></span>
+        <span id="submenu_rsv_resources"><a href="<?=base()?>/resources" accesskey="2" title="">Resource Groups</a></span>
+        <span id="submenu_rsv_vo"><a href="<?=base()?>/vo" accesskey="3" title="">Virtual Organizations</a></span>
+        <span id="submenu_rsv_map"><a href="<?=base()?>/map" accesskey="4" title="">RSV Status Map</a></span>
+        <span id="submenu_rsv_doc"><a target="_blank" href="http://rsv.grid.iu.edu/documentation/" accesskey="5" title="">Documentation (External)</a></span>
+    </div>
+
+    <script type="text/javascript">
+        $("#menu_<?=$this->menu_selected?>").addClass("selected");
+        $("#submenu_<?=$this->menu_selected?>").removeClass("hidden");
+        $("#submenu_<?=$this->menu_selected?>_<?=$this->submenu_selected?>").addClass("selected");
+    </script>
 
     <div id="content">

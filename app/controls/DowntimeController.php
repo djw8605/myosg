@@ -2,7 +2,7 @@
 
 class DowntimeController extends ControllerBase
 { 
-    public function breads() { return array(); }
+    public function breads() { return array("oim"); }
     public static function default_title() { return "Downtime"; }
     public static function default_url($query) { return ""; }
 

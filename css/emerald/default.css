@@ -61,7 +61,7 @@ a
 	background-image: url('images/a3.gif');
 	background-repeat: repeat-x;
 	background-position: bottom left;
-	padding: 1em 2.5em 1em 2.5em;
+	padding: 0.3em 2.5em 0.3em 2.5em;
 }
 #menu ul
 {
@@ -84,6 +84,38 @@ a
 {
 	color: #6B7E09;
 	text-decoration: underline;
+}
+#menu li.selected a
+{
+    color: green;
+}
+
+/* SubMenu */
+.submenu
+{
+	background-color: black;
+	padding: 0.3em 2.5em 0.3em 28px;
+}
+.submenu span
+{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.submenu a
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: #888;
+	text-decoration: none;
+}
+.submenu a:hover
+{
+	color: #6B7E09;
+	text-decoration: underline;
+}
+.submenu span.selected a
+{
+    color: #fff;
 }
 /* Content */
 #content

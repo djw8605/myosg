@@ -2,7 +2,7 @@
 
 class StatuschangesController extends ControllerBase
 { 
-    public function breads() { return array(); }
+    public function breads() { return array("rsv"); }
     public static function default_title() { return "Latest Status Changes"; }
     public static function default_url($query) { return ""; }
 

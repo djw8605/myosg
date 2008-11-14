@@ -1,0 +1,12 @@
+<?
+foreach($this->resources as $resource)
+{
+    echo "<h3>".$resource->name."</h3>";
+    foreach($this->services as $service)
+    {
+        if($service->resource_id == $resource->id) {
+            echo "<h4>".$service->description."<h4>";
+        }
+    }
+}
+

@@ -2,7 +2,7 @@
 
 class CurrentController extends ControllerBase
 {
-    public function breads() { return array("resources"); }
+    public function breads() { return array("rsv", "resources"); }
     public static function default_title() { return "Current Status"; }
     public static function default_url($query) { 
         $id = $_REQUEST["resource_id"];

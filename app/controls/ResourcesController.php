@@ -2,7 +2,7 @@
 
 class ResourcesController extends ControllerBase
 {
-    public function breads() { return array(); }
+    public function breads() { return array("rsv"); }
     public static function default_title() { return "Resource Groups"; }
     public static function default_url($query) { return ""; }
 

@@ -14,8 +14,13 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         setpagename($this->pagename());
         $this->initbread();
+        $this->selectmenu();
     }
 
+    private function composeControllerName($page)
+    {   
+        return strtoupper(substr($page, 0, 1)).substr($page, 1)."Controller";
+    }
     protected function initbread()
     {
         $pages = $this->breads();
@@ -26,10 +31,10 @@ abstract class ControllerBase extends Zend_Controller_Action
                 $url = $crumb[0];
                 $title = $crumb[1];
             } else {
-                $controllername = strtoupper(substr($page, 0, 1)).substr($page, 1)."Controller";
-                include("$controllername.php");
+                $controllername = $this->composeControllerName($page);
+                include_once("$controllername.php");
                 $title = eval("return $controllername::default_title();");
-                $url = eval("return $controllername::default_url(\$_REQUEST);");
+                $url = $page."?".eval("return $controllername::default_url(\$_REQUEST);");
             }
             $this->view->breadcrumbs[] = array($title, $url);
         }
@@ -48,7 +53,24 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function indexAction()
     {
         $this->load();
+
     }
+    private function selectmenu()
+    {
+        //based on the breadcrumb select correct menu item
+        $breads = $this->breads();
+        if(isset($breads[0])) {
+            $this->view->menu_selected = $breads[0];
+        } else {
+            $this->view->menu_selected = $this->pagename();
+        }
+        if(isset($breads[1])) {
+            $this->view->submenu_selected = $breads[1];
+        } else {
+            $this->view->submenu_selected = $this->pagename();
+        }
+    }
+
     public function htmlAction()
     {
         $this->load();
@@ -74,6 +96,8 @@ abstract class ControllerBase extends Zend_Controller_Action
     public static function default_title() {}
     public static function default_url($query) {}
     */
-    public function load() {}
+    public function load() {
+        $this->setpagetitle("Untitled Page");
+    }
 
 }
