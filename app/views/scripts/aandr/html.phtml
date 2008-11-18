@@ -19,7 +19,9 @@ if(isset($this->aandr)) {
             $a = round((double)$service->Availability[0]*100, 2);
             $r = round((double)$service->Reliability[0]*100, 2);
             $graph = fullbase()."/history/graph?resource_id=$resource_id&service_id=$service_id&start=".$this->start_time."&end=".$this->end_time;
-            echo "<tr><td></td><td>$service_name</td><td>$a%</td><td>$r%</td><td><img width=\"100%\" height=\"20px\" src=\"$graph\"/></td></tr>";
+            $period=$_REQUEST["period"];
+            $history_url = fullbase()."/history?resource_id=$resource_id&period=$period";
+            echo "<tr><td></td><td>$service_name</td><td>$a%</td><td>$r%</td><td><a href=\"$history_url\"><img width=\"100%\" height=\"20px\" src=\"$graph\"/></a></td></tr>";
         }
     }
 ?>
