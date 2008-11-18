@@ -4,21 +4,22 @@ echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
 
 if(isset($this->aandr)) {
 ?>
-    <table>
-    <tr><th colspan="4">Resource</th></tr>
-    <tr><th>&nbsp;&nbsp;&nbsp;</th><th>Service</th><th>Availability</th><th>Reliability</th></tr>
+    <table width="100%">
+    <tr><th colspan="5">Resource</th></tr>
+    <tr><th>&nbsp;&nbsp;&nbsp;</th><th>Service</th><th>Availability</th><th>Reliability</th><th></th></tr>
 <?
     foreach($this->aandr as $resource_id=>$services) {
         $resource_info = $this->resources[$resource_id];
         $resource_name = $resource_info[0]->name;
-        echo "<tr><td colspan=\"3\">$resource_name</td></tr>";
+        echo "<tr><td colspan=\"5\">$resource_name</td></tr>";
         foreach($services as $service) {
             $service_id = $service->ServiceID[0];
             $service_info = $this->services[(int)$service_id];
             $service_name = $service_info[0]->description;
             $a = round((double)$service->Availability[0]*100, 2);
             $r = round((double)$service->Reliability[0]*100, 2);
-            echo "<tr><td></td><td>$service_name</td><td>$a%</td><td>$r%</td></tr>";
+            $graph = fullbase()."/history/graph?resource_id=$resource_id&service_id=$service_id&start=".$this->start_time."&end=".$this->end_time;
+            echo "<tr><td></td><td>$service_name</td><td>$a%</td><td>$r%</td><td><img width=\"100%\" height=\"20px\" src=\"$graph\"/></td></tr>";
         }
     }
 ?>
