@@ -1,6 +1,6 @@
 <?
 
-class Resource extends CachedModel
+class Resource extends CachedIndexedModel
 {
     public function sql($params)
     {
@@ -12,4 +12,5 @@ class Resource extends CachedModel
         $sql = "SELECT resource_id id, name, fqdn FROM oim.resource $where";
         return $sql;
     }
+    public function key() { return "id"; }
 }

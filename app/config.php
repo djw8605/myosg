@@ -93,6 +93,7 @@ class common_config
         //cache filenames
         $this->vomatrix_xml_cache = $this->getCacheDir()."/cache.vomatrix.xml";
         $this->current_resource_status_xml_cache = $this->getCacheDir()."/cache.current_resource_<ResourceID>.xml";
+        $this->aandr_cache = $this->getCacheDir()."/cache.aandr_<start_time>_to_<end_time>.xml";
 
         //locale
         $this->date_format_full = "M j, Y H:i:s e";

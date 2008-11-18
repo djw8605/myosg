@@ -13,7 +13,7 @@ class AandrController extends ControllerBase
         if(!isset($_REQUEST["period"])) {
             //this causes the graph period combo box to use following as default, as well as telling graph 
             //the default length
-            $_REQUEST["period"] = config()->history_graph_default_period;
+            $_REQUEST["period"] = "1day";
         }
         $dirty_period = $_REQUEST["period"];
         $this->view->period = $dirty_period;
@@ -65,16 +65,27 @@ class AandrController extends ControllerBase
 
         //load resource list
         $resource_model = new Resource();
-        $this->view->resources = $resource_model->get($params);
+        $this->view->resources = $resource_model->getindex($params);
 
         //load resource services
-        $resource_service_model = new ResourceServices();
-        $this->view->services = $resource_service_model->get($params);
+        $service_type_model = new ServiceTypes();
+        $this->view->services = $service_type_model->getindex($params);
 
-        //calculate a&r
-        $ars = $this->calculateAR($this->view->resources, $this->view->services, $start_time, $end_time);
-        var_dump($ars);
+        //load A&R cache
+        $cache_filename = config()->aandr_cache;
+        $cache_filename = str_replace("<start_time>", $start_time, $cache_filename);
+        $cache_filename = str_replace("<end_time>", $end_time, $cache_filename);
+        if(file_exists($cache_filename)) {
+            $cache_xml = file_get_contents($cache_filename);
+            $aandr = new SimpleXMLElement($cache_xml);
 
+            //filter by resource_id
+            $this->view->aandr = array();
+            foreach($aandr->Resources[0] as $resource) {
+                $this->view->aandr[(int)$resource->ResourceID] = $resource->Services[0];
+            }
+
+        }
         $this->setpagetitle(AandrController::default_title());
     }
 

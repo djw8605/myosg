@@ -1,12 +1,27 @@
 <?
-foreach($this->resources as $resource)
-{
-    echo "<h3>".$resource->name."</h3>";
-    foreach($this->services as $service)
-    {
-        if($service->resource_id == $resource->id) {
-            echo "<h4>".$service->description."<h4>";
+if(isset($this->aandr)) {
+?>
+    <table>
+    <tr><th colspan="4">Resource</th></tr>
+    <tr><th>&nbsp;&nbsp;&nbsp;</th><th>Service</th><th>Availability</th><th>Reliability</th></tr>
+<?
+    foreach($this->aandr as $resource_id=>$services) {
+        $resource_info = $this->resources[$resource_id];
+        $resource_name = $resource_info[0]->name;
+        echo "<tr><td colspan=\"3\">$resource_name</td></tr>";
+        foreach($services as $service) {
+            $service_id = $service->ServiceID[0];
+            $service_info = $this->services[(int)$service_id];
+            $service_name = $service_info[0]->description;
+            $a = round((double)$service->Availability[0]*100, 2);
+            $r = round((double)$service->Reliability[0]*100, 2);
+            echo "<tr><td></td><td>$service_name</td><td>$a%</td><td>$r%</td></tr>";
         }
     }
+?>
+</table>
+<?
+} else {
+    echo "Availability and Reliability for this period has not yet been calculated.";
 }
 
