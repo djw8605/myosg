@@ -12,6 +12,10 @@
             <?
             $model = new Resource();
             outputSelectBox("resource_id", "Resource", $model, "id", "name");
+
+            echo "Data Period:<br/>";
+            outputSelectBox2("period", array("1day"=>"Yesterday", "week"=>"Last 7 Days"));
+    
             outputClearFilterButton();
             ?>
 

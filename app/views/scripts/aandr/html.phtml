@@ -1,4 +1,7 @@
 <?
+echo "Between ".date(config()->date_format_full, $this->start_time);
+echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+
 if(isset($this->aandr)) {
 ?>
     <table>
@@ -21,7 +24,10 @@ if(isset($this->aandr)) {
 ?>
 </table>
 <?
+    echo "<div class=\"sidenote\">";
+    echo "Data calculated at ".date(config()->date_format_full, $this->calc_time);
+    echo "</div>";
 } else {
-    echo "Availability and Reliability for this period has not yet been calculated.";
+    echo "<p>Availability and Reliability for this period has not yet been calculated.</p>";
 }
 
