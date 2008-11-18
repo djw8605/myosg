@@ -5,7 +5,7 @@ echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
 if(isset($this->aandr)) {
 ?>
     <table width="100%">
-    <tr><th>&nbsp;&nbsp;&nbsp;</th><th>Service</th><th>Availability</th><th>Reliability</th><th></th></tr>
+    <tr><th>&nbsp;&nbsp;&nbsp;</th><th>Service</th><th>Availability</th><th>Reliability</th><th width="100%">&nbsp;</th></tr>
 <?
     foreach($this->aandr as $resource_id=>$services) {
         $resource_info = $this->resources[$resource_id];
