@@ -16,6 +16,7 @@ class CommentController extends ControllerBase
         $this->load();
 
         $name = $_REQUEST["name"];
+        $email = $_REQUEST["email"];
         $comment = $_REQUEST["comment"];
         $page = $_REQUEST["page"];
         
@@ -24,6 +25,7 @@ class CommentController extends ControllerBase
         $email = "hayashis@indiana.edu";
         $recipient = "hayashis@indiana.edu";
         $mail_body = "[META Comment on $page]\n";
+        $mail_body = "[META Submitter Email $email]\n";
         $mail_body .= $comment;
         $subject = "[myosg] comment from ".$name;
         $header = "From: ". $Name . " <" . $email . ">\r\n"; //optional headerfields
