@@ -16,7 +16,7 @@ margin-bottom: 10px;
 div.resource
 {
 padding-left:20px;
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/computer.png) no-repeat 0 2px;
+background:transparent url(../images/computer.png) no-repeat 0 2px;
 }
 
 div.resource_group
@@ -57,27 +57,27 @@ margin-bottom: 5px;
 
 .status_CRITICAL
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/button_cancel.png) no-repeat 5px 5px;
+background:transparent url(../images/button_cancel.png) no-repeat 5px 5px;
 }
 
 .status_DOWNTIME
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_downtime.png) no-repeat 5px 5px;
+background:transparent url(../images/status_downtime.png) no-repeat 5px 5px;
 }
 
 .status_OK
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_ok.png) no-repeat 5px 5px;
+background:transparent url(../images/status_ok.png) no-repeat 5px 5px;
 }
 
 .status_WARNING
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_warning.png) no-repeat 5px 5px;
+background:transparent url(../images/status_warning.png) no-repeat 5px 5px;
 }
 
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://rsv-itb.grid.iu.edu/trunk/images/status_unknown.png) no-repeat 5px 5px;
+background:transparent url(../images/status_unknown.png) no-repeat 5px 5px;
 }
 
 div.indent
