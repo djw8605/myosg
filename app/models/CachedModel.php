@@ -10,7 +10,7 @@ abstract class CachedModel extends Model
 
         $str_param = print_r($params, true);
         if(!isset(CachedModel::$cache[get_class($this)][$str_param])) {
-            dlog(get_class($this)." // callin load with ".print_r($this->params, true));
+            //dlog(get_class($this)." // callin load with ".print_r($this->params, true));
             CachedModel::$cache[get_class($this)][$str_param] = $this->load($params);
         }
         return CachedModel::$cache[get_class($this)][$str_param];

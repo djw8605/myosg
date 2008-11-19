@@ -22,5 +22,6 @@
             <p><a href="<?=fullbase("webcal")?>/downtime/ical?<?=$param?>"><img src="<?=fullbase()?>/images/ical.gif"/></a><p>
             <p><a href="<?=fullbase()?>/downtime/xml?<?=$param?>">XML</a><p>
 
+            <?=$this->render("feedback.phtml", true)?>
         </div>
 <?=$this->render("full_footer.phtml", true)?>

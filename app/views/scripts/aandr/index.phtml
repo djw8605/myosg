@@ -13,9 +13,10 @@
             $model = new Resource();
             outputSelectBox("resource_id", "Resource", $model, "id", "name");
 
-            echo "Data Period:<br/>";
+            echo "Data Period:<br/><p>";
             outputSelectBox2("period", array("1day"=>"Last 24 Hours", "week"=>"Last 7 Days"));
-    
+            echo "</p>";    
+
             outputClearFilterButton();
             ?>
 
@@ -28,5 +29,6 @@
             <p><a href="http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=<?=$moduleurl?>"><img src="images/subscribe.png"/></a></p>
             <p><a href="http://www.google.com/ig/add?moduleurl=http%3A%2F%2Fwww.netvibes.com%2Fapi%2Fuwa%2Fcompile%2Fgoogle.php%3FmoduleUrl%3D<?=urlencode($moduleurl)?>"><img src="images/google.png"/></a></p>
             <p><a href="<?=base()?>/<?=pagename()?>/xml?<?=$param?>">XML</a></p>
+            <?=$this->render("feedback.phtml", true)?>
         </div>
 <?=$this->render("full_footer.phtml", true)?>

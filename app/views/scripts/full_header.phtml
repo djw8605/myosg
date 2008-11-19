@@ -4,6 +4,7 @@ function format() { return "html"; }
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<!--meta http-equiv="refresh" content="60"-->
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?=config()->app_name?></title>
 <meta name="keywords" content="" />
@@ -46,7 +47,7 @@ parseQuery();
     </div>
 
     <div class="submenu hidden" id="submenu_rsv">
-        <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv" accesskey="1" title="">Home</a></span>
+        <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv" accesskey="1" title="">About</a></span>
         <span id="submenu_rsv_resources"><a href="<?=base()?>/resources" accesskey="2" title="">Resource Groups</a></span>
         <span id="submenu_rsv_vo"><a href="<?=base()?>/vo" accesskey="3" title="">Virtual Organizations</a></span>
         <span id="submenu_rsv_map"><a href="<?=base()?>/map" accesskey="4" title="">RSV Status Map</a></span>

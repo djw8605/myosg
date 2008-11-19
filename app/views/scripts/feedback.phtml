@@ -1,0 +1,10 @@
+<h3>Feedback</h3>
+<p>Please tell us what you think about this tool.</p>
+<form action="<?=base()."/comment/submit"?>" method="post">
+Your Name:<br/>
+<input type="text" name="name"/><br/>
+Comment:<br/>
+<textarea rows="5" name="comment"></textarea><br/>
+<input type="submit" value="Submit"/>
+<input type="hidden" name="page" value="<?=$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]?>"/>
+</form>
