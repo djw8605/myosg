@@ -26,6 +26,14 @@ foreach($this->services as $service_id=>$recs)
         $rx .= $x;
         $ry .= $rec->reliability*100;
     }
-    $url = "http://chart.apis.google.com/chart?chs=500x200&cht=lxy&chxt=x,y&chxl=0:|$start_date|$end_date|1:|0%|25%|50%|75%|100%&chdl=Availability|Reliability&chco=00ff00,0000ff&chm=b,ff9999,0,0,0&chd=t:$ax|$ay|$rx|$ry";
+    $url = "http://chart.apis.google.com/chart?chs=550x200";
+    $url .= "&cht=lxy&chxt=x,y";
+    $url .= "&chxl=0:|$start_date|$end_date|1:|0%|25%|50%|75%|100%";
+    $url .= "&chdl=Availability|Reliability&chco=00ff00,0000ff";
+    $url .= "&chm=B,99ff99,0,-1,0";
+    //$url .= "&chm=B,99ff99,0,-1,0|B,9999ff,1,-1,0";
+    $url .= "&chd=t:$ax|$ay|$rx|$ry";
+    $url .= "&chg=20,25,1";
+    $url .= "&chls=2,1,0|2,1,0";
     echo "<img src='$url'/><br/>";
 }
