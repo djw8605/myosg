@@ -67,27 +67,54 @@ class AandrController extends ControllerBase
         $service_type_model = new ServiceTypes();
         $this->view->services = $service_type_model->getindex($params);
 
-        //load A&R cache
-        $cache_filename = config()->aandr_cache;
-        $cache_filename = str_replace("<start_time>", $start_time, $cache_filename);
-        $cache_filename = str_replace("<end_time>", $end_time, $cache_filename);
-        if(file_exists($cache_filename)) {
-            $cache_xml = file_get_contents($cache_filename);
-            $aandr = new SimpleXMLElement($cache_xml);
-            $this->view->aandr = array();
+        //load AR history
+        $model = new ServiceAR();
+        $params["start_time"] = $start_time;
+        $params["end_time"] = $end_time;
+        $ar = $model->get($params);
 
-            $this->view->calc_time = (int)$aandr->CalculateTimestamp[0];
-
-            //pass A&R Info
-            foreach($aandr->Resources[0] as $resource) {
-                //filter by resource_id
-                if($resource_id !== null) {
-                    if($resource_id != (int)$resource->ResourceID) continue;
-                }
-                $this->view->aandr[(int)$resource->ResourceID] = $resource->Services[0];
+        //group by resource/service_id
+        $ar_resource_service = array();
+        foreach($ar as $a) {
+            $r_id = (int)$a->resource_id;
+            if(!isset($ar_resource_service[$r_id])) {
+                $ar_resource_service[$r_id] = array();
             }
-
+            $service_id = (int)$a->service_id;
+            if(!isset($ar_resource_service[$r_id][$service_id])) {
+                $ar_resource_service[$r_id][$service_id] = array();
+            }
+            $ar_resource_service[$r_id][$service_id][] = $a;
         }
+
+        //create avelage
+        $data = array();
+        foreach($ar_resource_service as $rid => $resource) {
+            //filter by resource_id
+            if($resource_id !== null) {
+                if($resource_id != (int)$rid) continue;
+            }
+            $data[$rid] = array();
+            foreach($resource as $service_id=>$service) {
+                $count = 0;
+                $a_total = 0;
+                $r_total = 0;
+                foreach($service as $rec) {
+                    $count++;
+                    $a_total += (double)$rec->availability;
+                    $r_total += (double)$rec->reliability;
+                }
+                //store data
+                if($count != 0) {
+                    $data[$rid][$service_id] = array(
+                        "availability"=>($a_total/$count),
+                        "reliability"=>($r_total/$count)
+                    );
+                }
+            }
+        }
+
+        $this->view->data = $data;
         $this->setpagetitle(AandrController::default_title());
     }
 

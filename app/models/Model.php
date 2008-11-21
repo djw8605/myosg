@@ -24,5 +24,18 @@ abstract class Model
         return $this->load($params);
     }
 
+    public function getgroupby($key, $params = array()) {
+        $recs = $this->get($params);
+        $groups = array();
+        foreach($recs as $rec) {
+            $value = $rec->$key;
+            if(!isset($groups[$value])) {
+                $groups[$value] = array();
+            }
+            $groups[$value][] = $rec;
+        }
+        return $groups;
+    }
+
     public abstract function sql($params);
 }

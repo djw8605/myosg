@@ -1,0 +1,31 @@
+<?
+echo "Between ".date(config()->date_format_full, $this->start_time);
+echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+
+foreach($this->services as $service_id=>$recs)
+{
+    echo "<h3>$service_id</h3>";
+    $ax = "0";
+    $ay = "-1";
+    $rx = "0";
+    $ry = "-1";
+    $start_date = date(config()->date_format, $this->start_time);
+    $end_date = date(config()->date_format, $this->end_time);
+    $period = $this->end_time - $this->start_time;
+    foreach($recs as $rec) {
+        //echo $rec->timestamp." : A:".$rec->availability." R:". $rec->reliability."<br/>";
+        if($ax != "") {
+            $ax .= ",";
+            $ay .= ",";
+            $rx .= ",";
+            $ry .= ",";
+        }
+        $x = ($rec->timestamp - $this->start_time) / $period * 100;
+        $ax .= $x;
+        $ay .= $rec->availability*100;
+        $rx .= $x;
+        $ry .= $rec->reliability*100;
+    }
+    $url = "http://chart.apis.google.com/chart?chs=500x200&cht=lxy&chxt=x,y&chxl=0:|$start_date|$end_date|1:|0%|25%|50%|75%|100%&chdl=Availability|Reliability&chco=00ff00,0000ff&chm=b,ff9999,0,0,0&chd=t:$ax|$ay|$rx|$ry";
+    echo "<img src='$url'/><br/>";
+}
