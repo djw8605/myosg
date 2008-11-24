@@ -50,7 +50,7 @@ class common_config
         //application to display or used in email
         $this->app_name = "My OSG (Alpha)";
         $this->app_subname = "by Grid Operations Center";
-        $this->copyright = "(c) 2008 Indiana University GOC";
+        $this->copyright = "Indiana University GOC";
         //application name used in places such as session name
         $this->app_id = "rsv_viewer";
 

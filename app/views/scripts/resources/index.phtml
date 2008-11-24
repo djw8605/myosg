@@ -28,32 +28,12 @@
 
             $status_model = new Status();
             outputSelectBox("status", "Resource Status", $status_model, "metric_status_description", "metric_status_description");
-            /*
-            $statuses = $status_model->get();
-            $kv = array();
-            foreach($statuses as $s) {
-                $kv["status_".$s->metric_status_id] = $s->metric_status_description;
-            }
-            echo "Resource Status:<br/>";
-            outputCheckboxList("status", $kv);
-            */
 
             outputClearFilterButton();
 
             echo "<h3>Additional Details</h3>";
             echo "Virtual Organization:<br/>";
             outputCheckboxList("detail", array("vomembers"=>"VO Membership", "voowner"=>"VO Ownership Graph"));
-
-/*
-            echo "Metric Detail:<br/>";
-            $metric_model = new Metric();
-            $metrics = $metric_model->get();
-            $kv = array();
-            foreach($metrics as $m) {
-                $kv[$m->metric_id] = $m->common_name;
-            }
-            outputCheckboxList("metricdetail", $kv);
-*/
             ?>
 
             <h3>Subscribe</h3>
@@ -69,8 +49,6 @@
             <h4>Subscribe to Status Changes</h4>
             <p><a href="<?=fullbase()?>/statuschanges/rss?<?=$param?>"><img src="images/atom_feed.gif"/></a></p>
             <p>
-
-<!--a href="http://www.addthis.com/feed.php?pub=soichih&h1=http%3A%2F%2Frsv.grid.iu.edu%2Ftrunk%2Fstatuschanges%2Frss&t1=" title="Subscribe using any feed reader!"><img src="http://s7.addthis.com/button0-fd.gif" width="83" height="16" border="0" alt="AddThis Feed Button" /></a-->
 
             </p>
             <?=$this->render("feedback.phtml", true)?>

@@ -1,5 +1,8 @@
 <?
 
+//global variable to store list of filter variables
+$g_filters = array();
+
 //returns a unique id number for div element (only valid for each session - don't store!)
 function getuid()
 {
@@ -74,6 +77,9 @@ function humanDuration($ago)
 function outputSelectBox2($field_id, $kv)
 {
     global $g_pagename;
+    global $g_filters;
+
+    $g_filters[] = $field_id;
 ?>
     <select id="<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
 <?
@@ -93,6 +99,9 @@ function outputSelectBox2($field_id, $kv)
 function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)
 {
     global $g_pagename;
+    global $g_filters;
+
+    $g_filters[] = $field_id;
 
 ?>
     <?=$field_name?>:
@@ -124,6 +133,9 @@ function outputSelectBox($field_id, $field_name, $model, $value_field, $name_fie
 function outputCheckboxList($prefix, $items)
 {
     global $g_pagename;
+    global $g_filters;
+
+    $g_filters[] = $field_id;
 
     echo "<p>";
     foreach($items as $id=>$value) {
@@ -142,8 +154,24 @@ function outputCheckboxList($prefix, $items)
 function outputClearFilterButton()
 {
     global $g_pagename;
+    global $g_filters;
+
+    //we need to clear only the variables that are set via filters
+    $query = $_SERVER["QUERY_STRING"];
+    $query_s = split("&", $query);
+    $cleared_q = "";
+    foreach($query_s as $q) {
+        $q_s = split("=", $q);
+        if(!in_array($q_s[0], $g_filters)) {
+            if($cleared_q == "") {
+                $cleared_q .= "&";
+            }
+            $cleared_q .= $q;
+        }
+    }
+
     ?>
-    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename";?>';">Clear All Filters</a></p>
+    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename?$cleared_q";?>';">Clear All Filters</a></p>
     <?
 }
 

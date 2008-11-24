@@ -46,18 +46,14 @@ class AandrhistoryController extends ControllerBase
         ///////////////////////////////////////////////////////////////////////
         // Load graph inforamtion
         $resource_id = null;
-        if(isset($_REQUEST["resource_id"])) {
-            $dirty_resource_id = $_REQUEST["resource_id"];
-            if(Zend_Validate::is($dirty_resource_id, 'Int')) {
-                $resource_id = $dirty_resource_id;
-            }
+        $dirty_resource_id = $_REQUEST["resource_id"];
+        if(Zend_Validate::is($dirty_resource_id, 'Int')) {
+            $resource_id = $dirty_resource_id;
         }
 
         //use the same param for both resource / resource service model
         $params = array();
-        if($resource_id !== null) {
-            $params["resource_id"] = $resource_id;
-        }
+        $params["resource_id"] = $resource_id;
 
         //load resource list
         $resource_model = new Resource();
@@ -67,7 +63,7 @@ class AandrhistoryController extends ControllerBase
 
         //load resource services
         $service_type_model = new ServiceTypes();
-        $this->view->services = $service_type_model->getindex($params);
+        $this->view->service_info = $service_type_model->getindex($params);
 
         //pull A&R history
         $model = new ServiceAR();

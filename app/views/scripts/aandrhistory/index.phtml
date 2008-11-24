@@ -10,9 +10,6 @@
         <div id="sideContent">
             <h3>Filter</h3>
             <?
-            $model = new Resource();
-            outputSelectBox("resource_id", "Resource", $model, "id", "name");
-
             echo "Data Period:<br/><p>";
             outputSelectBox2("period", array("week"=>"Last 7 Days", "30days"=>"Last 30 Days"));
             echo "</p>";    
