@@ -263,21 +263,53 @@ class HistoryController extends ControllerBase
         return array($status_changes, $start_time, $end_time, $downtimes_forservice);
     }
 
+    function html2rgb($color)
+    {
+        if ($color[0] == '#')
+            $color = substr($color, 1);
+
+        if (strlen($color) == 6)
+            list($r, $g, $b) = array($color[0].$color[1],
+                                     $color[2].$color[3],
+                                     $color[4].$color[5]);
+        elseif (strlen($color) == 3)
+            list($r, $g, $b) = array($color[0].$color[0], $color[1].$color[1], $color[2].$color[2]);
+        else
+            return false;
+
+        $r = hexdec($r); $g = hexdec($g); $b = hexdec($b);
+
+        return array($r, $g, $b);
+    }
+    function get_graphcolor($id, $im)
+    {
+        $html = config()->graph_color[$id];
+        $rgb = $this->html2rgb($html);
+        return imagecolorallocate($im, $rgb[0], $rgb[1], $rgb[2]);
+    }
+
     function drawGraph($status_changes, $start_time, $end_time, $downtimes)
     {
         //let's draw the graph..
         $image_width = config()->history_graph_image_width;
         $im = imageCreate($image_width,2);
 
-        //should I have this configurable from OIM DB?
+        //should I have this configurable via OIM DB?
         $color = array();
+/*
         $color[1] = imagecolorallocate($im, 64,255,64);#ok
         $color[2] = imagecolorallocate($im, 255,255,64); #warning
         $color[3] = imagecolorallocate($im, 255,64,64); #critical
         $color[4] = imagecolorallocate($im, 127,127,127);#unknown
-        //$color_downtime = imagecolorallocate($im, 255,130,0);#downtime
         $color_downtime = imagecolorallocate($im, 100,100,255);#downtime
         $back = imagecolorallocate($im, 64,64,64); #na
+*/
+        $color[1] = $this->get_graphcolor(1, $im);
+        $color[2] = $this->get_graphcolor(2, $im);
+        $color[3] = $this->get_graphcolor(3, $im);
+        $color[4] = $this->get_graphcolor(4, $im);
+        $color_downtime = $this->get_graphcolor(99, $im);
+        $back = $this->get_graphcolor(-1, $im);
 
         $total_time = $end_time - $start_time;
         $decile_out = 0; //used to calculate the reminder area

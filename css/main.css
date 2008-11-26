@@ -433,6 +433,10 @@ pre
     background:transparent url(../images/status_unknown.png) no-repeat 5px 0px;
 }
 
+.status_DOWNTIME
+{
+    background:transparent url(../images/status_downtime.png) no-repeat 5px 0px;
+}
 div.post-body .disabled
 {
     opacity:0.5;

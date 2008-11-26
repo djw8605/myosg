@@ -155,16 +155,18 @@ class AandrController extends ControllerBase
         }
 
         //sort data
-        $dirty_sort = $_REQUEST["sort"];
-        switch($dirty_sort) {
-        case "resource_name":
-            break;
-        case "a":
-            uasort($data, "cmp_availability");
-            break;
-        case "r":
-            uasort($data, "cmp_reliability");
-            break;
+        if(isset($_REQUEST["sort"])) {
+            $dirty_sort = $_REQUEST["sort"];
+            switch($dirty_sort) {
+            case "resource_name":
+                break;
+            case "a":
+                uasort($data, "cmp_availability");
+                break;
+            case "r":
+                uasort($data, "cmp_reliability");
+                break;
+            }
         }
 
         $this->view->data = $data;

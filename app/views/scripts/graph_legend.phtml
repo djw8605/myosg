@@ -1,0 +1,18 @@
+<h3>Legend</h3>
+<h4>Graph</h4>
+<?
+$color = config()->graph_color;
+?>
+<style>
+.legend span {
+margin-right: 10px;
+}
+</style>
+<div class="legend">
+<span style="background-color: <?=$color[1];?>">&nbsp;&nbsp;&nbsp;</span>OK<br/>
+<span style="background-color: <?=$color[2];?>">&nbsp;&nbsp;&nbsp;</span>WARNING<br/>
+<span style="background-color: <?=$color[3];?>">&nbsp;&nbsp;&nbsp;</span>CRITICAL<br/>
+<span style="background-color: <?=$color[4];?>">&nbsp;&nbsp;&nbsp;</span>UNKNOWN<br/>
+<span style="background-color: <?=$color[-1];?>">&nbsp;&nbsp;&nbsp;</span>N/A<br/>
+<span style="background-color: <?=$color[99];?>">&nbsp;&nbsp;&nbsp;</span>DOWNTIME<br/>
+</div>

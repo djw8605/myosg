@@ -112,6 +112,14 @@ class common_config
 
         $this->history_graph_image_width = 800; //this just defines the precision of the graph..
         $this->history_graph_default_period = "week";
+        $this->graph_color = array(
+                -1=>"#444", //n/a (not unknown)
+                1=>"#4f4", //ok
+                2=>"#ff4", //warning
+                3=>"#f44", //critical
+                4=>"#888", //unknown
+                99=>"#66f", //downtime
+            );
 
         ///////////////////////////////////////////////////////////////////////
         //
