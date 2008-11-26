@@ -2,6 +2,46 @@
 
 require_once("app/timerange.php");
 
+function cmp_availability($a, $b)
+{
+    $a_sum = 0;
+    foreach($a as $service) {
+        $val = $service["availability"];
+        $a_sum += $val;
+    }
+    $a_av = $a_sum / count($a);
+
+    $b_sum = 0;
+    foreach($b as $service) {
+        $val = $service["availability"];
+        $b_sum += $val;
+    }
+    $b_av = $b_sum / count($b);
+
+    if($a_av == $b_av) return 0;
+    return ($a_av > $b_av) ? -1 : 1;
+}
+
+function cmp_reliability($a, $b)
+{
+    $a_sum = 0;
+    foreach($a as $service) {
+        $val = $service["reliability"];
+        $a_sum += $val;
+    }
+    $a_av = $a_sum / count($a);
+
+    $b_sum = 0;
+    foreach($b as $service) {
+        $val = $service["reliability"];
+        $b_sum += $val;
+    }
+    $b_av = $b_sum / count($b);
+
+    if($a_av == $b_av) return 0;
+    return ($a_av > $b_av) ? -1 : 1;
+}
+
 class AandrController extends ControllerBase
 {
     public function breads() { return array("rsv"); }
@@ -112,6 +152,19 @@ class AandrController extends ControllerBase
                     );
                 }
             }
+        }
+
+        //sort data
+        $dirty_sort = $_REQUEST["sort"];
+        switch($dirty_sort) {
+        case "resource_name":
+            break;
+        case "a":
+            uasort($data, "cmp_availability");
+            break;
+        case "r":
+            uasort($data, "cmp_reliability");
+            break;
         }
 
         $this->view->data = $data;

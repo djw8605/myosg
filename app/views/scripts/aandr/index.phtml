@@ -17,6 +17,13 @@
             outputSelectBox2("period", array("1day"=>"Last 24 Hours", "week"=>"Last 7 Days"));
             echo "</p>";    
 
+            echo "Sort By:<br/><p>";
+            outputSelectBox2("sort", array(
+                "resource_name"=>"Resource Name", 
+                "a"=>"Availability", 
+                "r"=>"Reliability"));
+            echo "</p>";    
+
             outputClearFilterButton();
             ?>
 
