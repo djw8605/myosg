@@ -2,6 +2,10 @@
 
 class AdminController extends ControllerBase
 { 
+    public function breads() { return array("admin"); }
+    public static function default_title() { return "Administration"; }
+    public static function default_url($query) { return ""; }
+
     public function load()
     {
         //make sure the request originated from localhost
@@ -9,8 +13,9 @@ class AdminController extends ControllerBase
             //pretend that this page doesn't exist
             $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
             echo "404";
-           exit;
+            exit;
         }
+        $this->setpagetitle(AdminController::default_title());
     }
 
     public function logrotateAction()

@@ -79,15 +79,19 @@ $(document).ready(function() {
     });
 
     <?  if(!isset($_REQUEST["uwa"])) { if($this->detail_show) { ?>
-    var graph = $("#service_id\\=<?=$this->detail_service_id?>");
-    var pos = graph.position();
-    var x = pos.left + convertUnixTimeToX(graph, <?=$this->detail_time?>)-8;
-    var y = pos.top-16;
+    function mark() {
+        var graph = $("#service_id\\=<?=$this->detail_service_id?>");
+        var pos = graph.position();
+        var x = pos.left + convertUnixTimeToX(graph, <?=$this->detail_time?>)-8;
+        var y = pos.top-16;
 
-    var mark = $("#mark");
-    mark.css("left", x);
-    mark.css("top", y);
-    mark.show();
+        var mark = $("#mark");
+        mark.css("left", x);
+        mark.css("top", y);
+        mark.show();
+    }
+    mark();
+    $(window).resize(mark);
     <? } } ?>
 });
 </script>
