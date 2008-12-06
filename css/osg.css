@@ -165,3 +165,9 @@ span.fqdn
 font-family: "Courier", "trebuchet ms", sans-serif;
 font-size: 9px;
 }
+
+#banner
+{
+    color: gray;
+    padding-bottom: 5px;
+}

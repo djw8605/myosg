@@ -62,3 +62,9 @@ parseQuery();
     </script>
 
     <div id="content">
+<?
+    if(config()->banner) {
+        echo "<div id=\"banner\">".config()->banner."</div>";
+    }
+?>
+

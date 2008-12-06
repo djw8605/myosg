@@ -54,6 +54,9 @@ class common_config
         //application name used in places such as session name
         $this->app_id = "rsv_viewer";
 
+        //banner to show on all pages
+        $this->banner = null;
+
         //http://code.google.com/apis/maps/signup.html
         $this->gmap_key = "get your own key";
 
