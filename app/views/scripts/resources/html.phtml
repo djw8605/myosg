@@ -23,9 +23,22 @@ foreach($this->resource_groups as $resource_group) {
             }
             echo "</div>";
 
+            $cols = 2;
+            if(isset($_REQUEST["uwa"])) {
+                $cols = 1;
+            }
 
+            $col = 0;
+            echo "<table width=\"100%\" style=\"margin: 0px;\"><tr>";
             foreach($resource_list as $resource) {
+                $col++;
+                if($col > $cols) {
+                    $col = 0;
+                    echo "</tr><tr>";
+                }
 
+                $col_p = 100 / $cols;
+                echo "<td style=\"padding: 0px;\" valign=\"top\" width=\"$col_p%\">";
                 if(!isset($this->resource_status[$resource->id])) {
                     $note = "Resource status is not calculated for this resource...";
                     $status = "UNKNOWN";
@@ -110,7 +123,9 @@ foreach($this->resource_groups as $resource_group) {
                 }
 
                 echo "</div>";
+                echo "</td>";
             }
+            echo "</tr></table>";
 
             echo "</div>";
         }
