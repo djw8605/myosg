@@ -44,7 +44,6 @@ function init() {
       GEvent.addDomListener(marker, "click", function() {
         marker.openInfoWindowHtml(html);
         var latlng = marker.getLatLng();
-        console.dir(map);
         map.panTo(latlng);
         $("#site option[value="+id+"]").attr("selected", "selected");
       });
