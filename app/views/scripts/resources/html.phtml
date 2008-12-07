@@ -23,21 +23,21 @@ foreach($this->resource_groups as $resource_group) {
             }
             echo "</div>";
 
-            $cols = 2;
+            $cols = 2; //number of columns to show
             if(isset($_REQUEST["uwa"])) {
-                $cols = 1;
+                $cols = 1; //only show sequentially on UWA mode
             }
+            $col_p = 100 / $cols;
 
-            $col = 0;
+            $col = 0; //current column 
             echo "<table width=\"100%\" style=\"margin: 0px;\"><tr>";
             foreach($resource_list as $resource) {
                 $col++;
                 if($col > $cols) {
-                    $col = 0;
+                    $col = 1;
                     echo "</tr><tr>";
                 }
 
-                $col_p = 100 / $cols;
                 echo "<td style=\"padding: 0px;\" valign=\"top\" width=\"$col_p%\">";
                 if(!isset($this->resource_status[$resource->id])) {
                     $note = "Resource status is not calculated for this resource...";
@@ -65,7 +65,6 @@ foreach($this->resource_groups as $resource_group) {
                     }
                 }
             
-                //echo "<div class=\"status_$status\"><h4><a href=\"".fullbase()."/resource?resource_id=".$resource->id."\">".$resource->name."</a> ($service_names)</h4>";
                 echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
                 echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
                 echo "$note<br/>";
@@ -81,7 +80,8 @@ foreach($this->resource_groups as $resource_group) {
                     }
                     if($vonames != "") {
                         $vonames .= "<br/>";
-                        echo outputToggle("Show Supported Virtual Organizations", "Hide Supported Virtual Organizations", $vonames);
+                        //echo outputToggle("Show Supported Virtual Organizations", "Hide Supported Virtual Organizations", $vonames);
+                        echo "Supported Virtual Organizations: ".$vonames;
                     } else {
                         echo "Supported Virtual Organization information is not available for this resource.<br/>";
                     }
