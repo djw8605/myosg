@@ -1,12 +1,5 @@
 Select Site: <select id="site">
 <option value="">(None)</option>
-<?
-foreach($this->sites as $site) {
-    $value = $site->site_id;
-    $name = $site->name;
-    echo "<option value=\"$value\">$name</option>";
-}
-?>
 </select>
 <br/><br/>
 <div id="map_canvas" style="width: 100%; height: 500px"></div>

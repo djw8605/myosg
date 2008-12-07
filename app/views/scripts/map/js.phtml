@@ -25,6 +25,10 @@ function init() {
     //map.setCenter(new GLatLng(37, -100), 4); //U.S. only
     map.setCenter(new GLatLng(20, 0), 2);
 
+    GEvent.addListener(map, "infowindowclose", function() {
+        $("#site option[value=]").attr("selected", "selected");
+    });
+
     //generate icons
     var icon = {};
     var type = "ok";
@@ -59,6 +63,7 @@ foreach($this->sites as $site) {
     $status_downtime = 0;
 
     $site_id = $site->site_id;
+    $name = $site->name;
 
     $rgs = $this->rgs[$site_id];
     if(count($rgs) == 0) continue; //don't show site with no resource group
@@ -105,14 +110,20 @@ foreach($this->sites as $site) {
 
     $html = addslashes($html);
     echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {icon:icon[\"$status\"]}, '$html'));\n";
+    echo "$(\"#site\").append(\"<option value='$site_id'>$name</option>\");\n";
 }
 
 ?>
-    $("#site").change(function() {
-    var id = $(this).val();
-        var marker = marker_id[id];
-        $(marker).trigger('click');
-    });
+    
 
   }
+    $("#site").change(function() {
+        var id = $(this).val();
+        var marker = marker_id[id];
+        if(marker) {
+            $(marker).trigger('click');
+        } else {
+            map.closeInfoWindow();
+        }
+    });
 }
