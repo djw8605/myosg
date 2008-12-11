@@ -40,6 +40,7 @@ class AdminController extends ControllerBase
 
         $this->render("none");
     }
+
     public function optimizeAction()
     {
         $model = new Admin();
