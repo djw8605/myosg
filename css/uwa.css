@@ -9,23 +9,23 @@
 	margin: 0em;
 	padding: 0em;
 }
-h1
+h1, span.h1
 {
-font-size: 15px;
-}
-h2
-{
-font-size: 14px;
-}
-h3
-{
-font-weight: bold;
 font-size: 13px;
 }
-h4
+h2, span.h2
+{
+font-size: 12px;
+}
+h3, span.h3
 {
 font-weight: bold;
-font-size: 12px;
+font-size: 11px;
+}
+h4, span.h4
+{
+font-weight: bold;
+font-size: 10px;
 }
 h2,h3
 {
@@ -35,7 +35,7 @@ border-bottom: dotted 1px #aaa;
 body
 {
 	font-family: verdana, sans-serif;
-	font-size: 9pt;
+	font-size: 8pt;
 }
 a
 {
@@ -48,7 +48,7 @@ a
 #content
 {
 	background: url('images/a4.gif') repeat-x top left;
-        font-size: 11px;
+        font-size: 9px;
 	font-family: verdana, "trebuchet ms", sans-serif;
 }
 #content p
@@ -109,23 +109,23 @@ a
 }
 .status_CRITICAL
 {
-background:transparent url(http://myosg.grid.iu.edu/images/button_cancel.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/button_cancel_small.png) no-repeat 5px 5px;
 }
 .status_DOWNTIME
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_downtime.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_downtime_small.png) no-repeat 5px 5px;
 }
 .status_OK
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_ok.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_ok_small.png) no-repeat 5px 5px;
 }
 .status_WARNING
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_warning.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_warning_small.png) no-repeat 5px 5px;
 }
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_unknown.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_unknown_small.png) no-repeat 5px 5px;
 }
 
 table.ruler

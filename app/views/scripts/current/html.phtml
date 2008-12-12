@@ -28,9 +28,7 @@ function outputMetricInfo($metric, $timestamp)
     }
     if($expired) $name .= " (Expired)";
     $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
-    if(isset($_REQUEST["uwa"])) {
-        $out .= "<pre>$detail</pre>";
-    } else {
+    if(!isset($_REQUEST["uwa"])) {
         if(trim($detail) == "") {
             $detail = "(No detail provided)<br/>";
         } else {
