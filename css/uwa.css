@@ -109,23 +109,23 @@ a
 }
 .status_CRITICAL
 {
-background:transparent url(http://rsv.grid.iu.edu/images/button_cancel.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/button_cancel.png) no-repeat 5px 5px;
 }
 .status_DOWNTIME
 {
-background:transparent url(http://rsv.grid.iu.edu/images/status_downtime.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_downtime.png) no-repeat 5px 5px;
 }
 .status_OK
 {
-background:transparent url(http://rsv.grid.iu.edu/images/status_ok.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_ok.png) no-repeat 5px 5px;
 }
 .status_WARNING
 {
-background:transparent url(http://rsv.grid.iu.edu/images/status_warning.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_warning.png) no-repeat 5px 5px;
 }
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://rsv.grid.iu.edu/images/status_unknown.png) no-repeat 5px 5px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_unknown.png) no-repeat 5px 5px;
 }
 
 table.ruler
