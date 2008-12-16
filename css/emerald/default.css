@@ -32,19 +32,19 @@ a
 	height: 65px;
 	background-image: url('images/a2.gif');
 	background-position: bottom left;
-	padding-left: 40px;
+	padding-left: 65px;
 	padding-top: 0px;
 }
 #header h1 a
 {
 	color: #fff;
 	text-decoration: none;
-	font-size: 1.3em;
 }
 #header h1
 {
-	#text-transform: lowercase;
-	font-size: 1.4em;
+        padding-top: 7px;
+        padding-bottom: 2px;
+	font-size: 15pt;
 }
 #header h2
 {
@@ -52,7 +52,7 @@ a
 	top: -0.3em;
 	color: #E8EFC2;
 	font-weight: normal;
-	font-size: 1.1em;
+	font-size: 13pt;
 	#text-transform: lowercase;
 }
 /* Menu */

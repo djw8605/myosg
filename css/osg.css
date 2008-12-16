@@ -176,3 +176,10 @@ p.note
 {
     color: gray;
 }
+
+#logo
+{
+position: absolute;
+top: 6px;
+left: 10px;
+}
