@@ -63,8 +63,12 @@ foreach($this->services as $service) {
     foreach($service->CriticalMetrics[0] as $metric) {
         $out .= outputMetricInfo($metric, $this->timestamp);
     }
-    $title = "<span class=\"h3\">Critical Metrics</span>";
-    echo outputToggle($title, $title, $out, true);
+    if(!isset($_REQUEST["uwa"])) {
+        $title = "<span class=\"h3\">Critical Metrics</span>";
+        echo outputToggle($title, $title, $out, true);
+    } else {
+        echo $out;
+    }
 
     //non-critical metrics
     if(!isset($_REQUEST["uwa"])) {

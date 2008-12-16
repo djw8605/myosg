@@ -1,5 +1,6 @@
 <?
 if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
+    //group by Resource
     foreach($this->resource_ownerships as $resource_id=>$ownership) {
         //find resource
         $found = false;
@@ -40,13 +41,19 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
     }
 
 } else {
+    //group by VO
     foreach($this->vos as $vo) {
-        echo "<h3>".$vo->Name[0]."</h3>"; 
 
         //ownership chart
         $attrs = $vo->attributes();
         $void = (int)$attrs["id"];
+        $info = $this->voinfo[$void];
         $resources = $this->voownership[$void];
+
+        $url = $info[0]->primary_url;
+        echo "<h3><a href=\"$url\">".$vo->Name[0]."</a></h3>"; 
+        echo("<p class='note'>".$info[0]->community."</p>");
+
         echo "<div class=\"indent\">";
         if($resources !== null) {
             $out = "<table width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";

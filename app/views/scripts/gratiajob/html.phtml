@@ -1,0 +1,13 @@
+<style>
+.gratia_graph
+{
+    <?
+    if(uwa()) {
+        echo "width: 300px;";
+    } else {
+        echo "width: 750px;";
+    }
+    ?>
+}
+</style>
+<img class="gratia_graph" src="http://t2.unl.edu/store/gratia/today/<?=$this->graph_type?>.png"/>

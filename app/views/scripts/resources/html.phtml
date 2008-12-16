@@ -44,9 +44,9 @@ foreach($this->resource_groups as $resource_group) {
                     $status = "UNKNOWN";
                     $services = array();
                 } else {
-                    $resource_status = $this->resource_status[$resource->id];
-                    $note = $resource_status->Note[0];
-                    $status = $resource_status->Status[0];
+                    $resource_status = $this->resource_status[$resource->id][0];
+                    $note = $resource_status->detail;
+                    $status = Status::getStatus($resource_status->status_id);
                     $services = $this->resource_services[$resource->id];
                 }
 

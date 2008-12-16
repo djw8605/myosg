@@ -54,6 +54,8 @@ class VoController extends ControllerBase
         $this->view->voownership = $model->getindex();
         $model = new Resource();
         $this->view->resources = $model->get();
+        $model = new VirtualOrganization();
+        $this->view->voinfo = $model->getgroupby("vo_id");
 
         ///////////////////////////////////////////////////////////////////////
         //Filter
