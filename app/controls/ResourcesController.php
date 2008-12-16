@@ -110,9 +110,13 @@ class ResourcesController extends ControllerBase
         if(isset($_REQUEST["status"])) {
             if(trim($_REQUEST["status"]) != "") {
                 $status = $_REQUEST["status"];
-                $resource_status = $this->view->resource_status[$rec->id];
-                if($resource_status === null or $resource_status->Status[0] != $status) {
+                if(!isset($this->view->resource_status[$rec->id])) {
                     return false;
+                } else {
+                    $resource_status = $this->view->resource_status[$rec->id];
+                    if($resource_status === null or $resource_status->Status[0] != $status) {
+                        return false;
+                    }
                 }
             }
         }

@@ -143,11 +143,12 @@ function outputCheckboxList($prefix, $items)
     global $g_pagename;
     global $g_filters;
 
-    $g_filters[] = $field_id;
 
     echo "<p>";
     foreach($items as $id=>$value) {
         $name = $prefix."_".$id;
+
+        $g_filters[] = $name;
         $current_value = @$_REQUEST[$name];
         $selected = "";
         if($current_value == "true") {

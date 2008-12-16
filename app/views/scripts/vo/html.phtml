@@ -48,13 +48,13 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
         $attrs = $vo->attributes();
         $void = (int)$attrs["id"];
         $info = $this->voinfo[$void];
-        $resources = $this->voownership[$void];
 
         $url = $info[0]->primary_url;
         echo "<h3><a href=\"$url\">".$vo->Name[0]."</a></h3>"; 
         echo("<p class='note'>".$info[0]->community."</p>");
 
         echo "<div class=\"indent\">";
+        $resources = @$this->voownership[$void];
         if($resources !== null) {
             $out = "<table width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
             $rclass = "rowA";
