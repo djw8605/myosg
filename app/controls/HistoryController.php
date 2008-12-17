@@ -296,14 +296,6 @@ class HistoryController extends ControllerBase
 
         //should I have this configurable via OIM DB?
         $color = array();
-/*
-        $color[1] = imagecolorallocate($im, 64,255,64);#ok
-        $color[2] = imagecolorallocate($im, 255,255,64); #warning
-        $color[3] = imagecolorallocate($im, 255,64,64); #critical
-        $color[4] = imagecolorallocate($im, 127,127,127);#unknown
-        $color_downtime = imagecolorallocate($im, 100,100,255);#downtime
-        $back = imagecolorallocate($im, 64,64,64); #na
-*/
         $color[1] = $this->get_graphcolor(1, $im);
         $color[2] = $this->get_graphcolor(2, $im);
         $color[3] = $this->get_graphcolor(3, $im);
@@ -315,8 +307,6 @@ class HistoryController extends ControllerBase
         $decile_out = 0; //used to calculate the reminder area
         $first = true;
         if($total_time > 0) {
-            //dlog("Painting from $start_time to $end_time");
-            //dlog(print_r($status_changes, true));
             foreach($status_changes as $change) {
                 $time = $change->timestamp;
                 if($first) {
