@@ -31,7 +31,6 @@ class ErrorController extends Zend_Controller_Action
                 }
 
                 elog($log);
-
                 break;
         }
     } 

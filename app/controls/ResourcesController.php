@@ -62,7 +62,7 @@ class ResourcesController extends ControllerBase
         $this->view->resource_status = $model->getgroupby("resource_id");
 
         ///////////////////////////////////////////////////////////////////////
-        //filter resources based on status filter
+        //filter resources based on various filter
         foreach($this->view->resource_groups as $resource_group) {
             if(!isset($this->view->resources_index[$resource_group->id])) {
                 continue;
@@ -110,11 +110,12 @@ class ResourcesController extends ControllerBase
         if(isset($_REQUEST["status"])) {
             if(trim($_REQUEST["status"]) != "") {
                 $status = $_REQUEST["status"];
-                if(!isset($this->view->resource_status[$rec->id])) {
+                $rid = (int)$rec->id;
+                if(!isset($this->view->resource_status[$rid])) {
                     return false;
                 } else {
-                    $resource_status = $this->view->resource_status[$rec->id];
-                    if($resource_status === null or $resource_status->Status[0] != $status) {
+                    $resource_status = $this->view->resource_status[$rid][0];
+                    if($resource_status === null or Status::getStatus($resource_status->status_id) != $status) {
                         return false;
                     }
                 }
