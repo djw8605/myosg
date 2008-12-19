@@ -1,3 +1,4 @@
+<?if(!uwa()) {?>
 <style>
 .time-tooltip
 {
@@ -24,6 +25,7 @@
     background: transparent url(<?=fullbase();?>/images/downarrow.png) no-repeat 0px 0px;
 }
 </style>
+<?}?>
 
 <script language='javascript' src='<?=base()?>/lib/jquery-1.2.6/dimensions_1.2/jquery.dimensions.min.js'></script>
 <script type="text/javascript">
@@ -78,7 +80,7 @@ $(document).ready(function() {
 
     });
 
-    <?  if(!isset($_REQUEST["uwa"])) { if($this->detail_show) { ?>
+    <?  if(!uwa()) { if($this->detail_show) { ?>
     function mark() {
         var graph = $("#service_id\\=<?=$this->detail_service_id?>");
         var pos = graph.position();
@@ -104,7 +106,7 @@ $(document).ready(function() {
 <?
 foreach($this->services as $service) {
     ?>
-    <h4><?=$service->description?> Status</h4>
+    <h3><?=$service->description?> Status</h3>
     <div class="history_graph">
     <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&amp;period=<?=$this->period?>&service_id=<?=$service->service_id?>&amp;start=<?=$this->start_time?>&amp;end=<?=$this->end_time?>"/>
     </div>
@@ -114,7 +116,7 @@ foreach($this->services as $service) {
 ?>
 
 <?
-if(!isset($_REQUEST["uwa"])) {
+if(!uwa()) {
     if($this->detail_show) {
         echo "<h3>".$this->detail_page_title."</h3>";
 

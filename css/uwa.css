@@ -6,44 +6,44 @@
 /* Basic */
 *
 {
-	margin: 0em;
-	padding: 0em;
+margin: 0em;
+padding: 0em;
 }
 h1, span.h1
 {
-font-size: 1.3em;
+font-size: 13px;
 }
 h2, span.h2
 {
-font-size: 1.2em;
+font-size: 12px;
 }
 h3, span.h3
 {
 font-weight: bold;
-font-size: 1.1em;
+font-size: 11px;
 }
 h4, span.h4
 {
 font-weight: normal;
-font-size: 1.0em;
+font-size: 10px;
 }
 h2,h3
 {
 padding-bottom: 2px;
-border-bottom: dotted 1px #aaa;
+border-bottom: solid 1px #bbb;
 }
 body
 {
-	font-family: verdana, sans-serif;
-	font-size: 1.1em;
+font-family: verdana, sans-serif;
+font-size: 10px;
 }
 a
 {
-	color: #669911;
+color: #669911;
 }
 .clear
 {
-	clear: both;
+clear: both;
 }
 #content
 {
@@ -104,39 +104,34 @@ a
 }
 .status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {
-    margin: 0px;
+    margin: 1px;
     padding: 2px;
     padding-left: 20px;
     min-height: 0px;
 }
 .status_CRITICAL
 {
-background:transparent url(http://myosg.grid.iu.edu/images/button_cancel_small.png) no-repeat 2px 2px;
+background:transparent url(http://myosg.grid.iu.edu/images/button_cancel_small.png) no-repeat 2px 3px;
 }
 .status_DOWNTIME
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_downtime_small.png) no-repeat 2px 2px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_downtime_small.png) no-repeat 2px 3px;
 }
 .status_OK
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_ok_small.png) no-repeat 2px 2px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_ok_small.png) no-repeat 2px 3px;
 }
 .status_WARNING
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_warning_small.png) no-repeat 2px 2px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_warning_small.png) no-repeat 2px 3px;
 }
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_unknown_small.png) no-repeat 2px 2px;
+background:transparent url(http://myosg.grid.iu.edu/images/status_unknown_small.png) no-repeat 2px 3px;
 }
 .expired
 {
 background-color: #bbb;
-}
-
-table.ruler
-{
-font-size: 6px;
 }
 
 .bottom_border
@@ -147,4 +142,3 @@ div.history_graph img.graph
 {
     height: 12px; 
 }
-

@@ -1,4 +1,4 @@
-<div class="sidenote">Status calculated at <?=date(config()->date_format_full, $this->timestamp)?></div>
+<div class="sidenote"><?if(!uwa()) { echo "Status calculated ";}?> at <?=date(config()->date_format_full, $this->timestamp)?></div>
 
 <h3>Overall Status</h3>
 <div class="status_<?=$this->status?>">

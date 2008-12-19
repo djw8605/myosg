@@ -70,7 +70,7 @@ foreach($this->sites as $site) {
 
     $html = "";
     foreach($rgs as $rg) {
-        $html .= "<h3>Resource Group: <a href=\"".fullbase()."/resources?resourcegroup=".$rg->id."\">".$rg->name."</a></h3>";
+        $html .= "<h3><a target=\"blank\" href=\"".fullbase()."/resources?resourcegroup=".$rg->id."\">".$rg->name."</a></h3>";
         if(isset($this->resources_bygid[$rg->id])) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {

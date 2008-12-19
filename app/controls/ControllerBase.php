@@ -74,6 +74,7 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function htmlAction()
     {
         $this->load();
+        if(isset($_REQUEST["uwa"])) setuwa();
     }
     public function uwaAction()
     {
