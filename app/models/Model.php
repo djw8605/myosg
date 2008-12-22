@@ -37,5 +37,13 @@ abstract class Model
         return $groups;
     }
 
+    public function getcount($params = array())
+    {
+        $params_m = array_merge($this->params, $params);
+        $sql = "select count(*) from (".$this->sql($params_m).") c";
+        dlog($sql);
+        return $this->db->fetchOne($sql);
+    }
+
     public abstract function sql($params);
 }

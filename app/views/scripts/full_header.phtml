@@ -43,24 +43,31 @@ parseQuery();
 
     <div id="menu">
         <ul>
-            <li id="menu_rsv" class="first"><a href="<?=base()?>/rsv">RSV</a></li>
-            <li id="menu_gratia"><a href="<?=base()?>/gratia">Gratia</a></li>
+            <li id="menu_rsv" class="first"><a href="<?=base()?>/resources">RSV</a></li>
+            <li id="menu_gratia"><a href="<?=base()?>/gratiajob">Gratia</a></li>
+            <li id="menu_about"><a href="<?=base()?>/about">About</a></li>
         </ul>
     </div>
 
     <div class="submenu hidden" id="submenu_rsv">
-        <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv">About</a></span>
         <span id="submenu_rsv_resources"><a href="<?=base()?>/resources">Resource Groups</a></span>
         <span id="submenu_rsv_vo"><a href="<?=base()?>/vo">Virtual Organizations</a></span>
         <span id="submenu_rsv_map"><a href="<?=base()?>/map">RSV Status Map</a></span>
         <span id="submenu_rsv_aandr"><a href="<?=base()?>/aandr">Availability</a></span>
         <span id="submenu_rsv_doc"><a target="_blank" href="http://rsv.grid.iu.edu/documentation/">Documentation (External)</a></span>
+        <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv">About RSV</a></span>
     </div>
 
     <div class="submenu hidden" id="submenu_gratia">
-        <span id="submenu_gratia_gratia"><a href="<?=base()?>/gratia">About</a></span>
         <span id="submenu_gratia_gratiajob"><a href="<?=base()?>/gratiajob">Job Activity</a></span>
+        <span id="submenu_gratia_gratia"><a href="<?=base()?>/gratia">About Gratia</a></span>
     </div>
+
+    <div class="submenu hidden" id="submenu_about">
+        <span id="submenu_about_about"><a href="<?=base()?>/about">MyOSG</a></span>
+    </div>
+
+
 
     <script type="text/javascript">
         $("#menu_<?=$this->menu_selected?>").addClass("selected");

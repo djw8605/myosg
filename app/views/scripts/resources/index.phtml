@@ -10,7 +10,7 @@
             <h3>Filter</h3>
             <?
             $model = new ResourceGroup();
-            outputSelectBox("resourcegroup", "Resource Group", $model, "id", "name");
+            outputSelectBox("resourcegroup", "Resource Group", $model, "resource_group_id", "name");
 
             $gridtypes = new GridTypes();
             outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);

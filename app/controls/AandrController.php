@@ -60,21 +60,9 @@ class AandrController extends ControllerBase
         }
         $dirty_period = $_REQUEST["period"];
         $this->view->period = $dirty_period;
-        switch($dirty_period) {
-        case "1day":
-            $end_time = (int)(time() / 86400) * 86400;
-            $start_time = $end_time - 86400;
-            break;
-        case "week":
-            $end_time = (int)(time() / 86400) * 86400;
-            $start_time = $end_time - 86400*7;
-            break;
-        default:
-            throw new exception("bad period: $dirty_period");
-        }
-
-        return array($start_time, $end_time);
+        return computePeriodStartEnd($dirty_period);
     }
+
 
     public function load()
     {
@@ -112,7 +100,7 @@ class AandrController extends ControllerBase
         $params["start_time"] = $start_time;
         $params["end_time"] = $end_time;
         $ar = $model->get($params);
-
+        
         //group by resource/service_id
         $ar_resource_service = array();
         foreach($ar as $a) {
@@ -127,7 +115,7 @@ class AandrController extends ControllerBase
             $ar_resource_service[$r_id][$service_id][] = $a;
         }
 
-        //create avelage
+        //create aveladge
         $data = array();
         foreach($ar_resource_service as $rid => $resource) {
             //filter by resource_id

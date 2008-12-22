@@ -16,15 +16,59 @@ margin-bottom: 10px;
 div.resource
 {
 padding-left:20px;
-background:transparent url(../images/computer.png) no-repeat 0 2px;
+background:transparent url(../images/server.png) no-repeat 0 2px;
 }
 
 div.resource_group
 {
-border: 1px solid #ccc;
-padding: 3px;
-margin-bottom: 3px;
+padding-left:20px;
+background:transparent url(../images/servers.png) no-repeat 0 2px;
 }
+div.site
+{
+padding-left:20px;
+background:transparent url(../images/house.png) no-repeat 0 2px;
+}
+
+div.support_center
+{
+padding-left:20px;
+background:transparent url(../images/medal_bronze_2.png) no-repeat 0 2px;
+}
+
+div.facility
+{
+padding-left:20px;
+background:transparent url(../images/database.png) no-repeat 0 2px;
+}
+div.contact
+{
+padding-left:20px;
+background:transparent url(../images/user.png) no-repeat 0 2px;
+}
+div.vo
+{
+padding-left:20px;
+background:transparent url(../images/group.png) no-repeat 0 2px;
+}
+div.metric
+{
+padding-left:20px;
+background:transparent url(../images/drive_magnify.png) no-repeat 0 2px;
+}
+div.grid_type
+{
+padding-left:20px;
+background:transparent url(../images/list-items.gif) no-repeat 0 2px;
+}
+
+div.border
+{
+border: 1px solid #ccc;
+margin: 3px;
+padding: 3px;
+}
+
 div.resource_group_header
 {
 border-bottom: dotted 1px #aaa;

@@ -28,6 +28,31 @@ function getuid()
     }
 }
 
+function outputAjaxToggle($title, $url)
+{
+    $out = "";
+    $divid = getuid();
+    $hide_script = "$('#$divid').slideUp();$('#${divid}_hide').hide();$('#${divid}_show').show();";
+    $show_script = "$('#$divid').slideDown();$('#${divid}_hide').show();$('#${divid}_show').hide();";
+
+    //load button
+    $out .= "<div id=\"${divid}_load\" class=\"button\"><img src='".fullbase()."/images/plusbutton.gif'/> $title";
+    $out .= " <span id=\"${divid}_loading\" class=\"hidden\"><img src='".fullbase()."/images/loading_animation_small.gif' height='10px'/></span>";
+    $out .= "</div>";
+
+    //hide button
+    $out .= "<div id=\"${divid}_hide\" class=\"button hidden\" onclick=\"$hide_script\"><img src='".fullbase()."/images/minusbutton.gif'/> $title</div>";
+
+    //show button
+    $out .= "<div id=\"${divid}_show\" class=\"button hidden\" onclick=\"$show_script\"><img src='".fullbase()."/images/plusbutton.gif'/> $title</div>";
+
+    //content area
+    $out .= "<div id=\"${divid}\" class=\"hidden\"></div>";
+
+    $out .= "<script text='text/javascript'>$('#${divid}_load').click(function() {loaditem('$divid', '$url')});</script>";
+    return $out;
+}
+
 function outputToggle($show, $hide, $content, $open_by_default = false)
 {
     $divid = getuid();

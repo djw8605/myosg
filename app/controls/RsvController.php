@@ -8,6 +8,6 @@ class RsvController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle("RSV");
+        $this->setpagetitle(RsvController::default_title());
     }
 } 

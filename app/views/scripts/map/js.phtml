@@ -70,12 +70,12 @@ foreach($this->sites as $site) {
 
     $html = "";
     foreach($rgs as $rg) {
-        $html .= "<h3>Resource Group: <a target=\"blank\" href=\"".fullbase()."/resources?resourcegroup=".$rg->id."\">".$rg->name."</a></h3>";
-        if(isset($this->resources_bygid[$rg->id])) {
-            $rs = $this->resources_bygid[$rg->id];
+        $html .= "<h3>Resource Group: <a target=\"blank\" href=\"".fullbase()."/resources?resourcegroup=".$rg->resource_group_id."\">".$rg->name."</a></h3>";
+        if(isset($this->resources_bygid[$rg->resource_group_id])) {
+            $rs = $this->resources_bygid[$rg->resource_group_id];
             foreach($rs as $r) {
-                if(isset($this->resource_status[$r->id][0])) {
-                    $rstatus = $this->resource_status[$r->id][0];
+                if(isset($this->resource_status[$r->resource_id][0])) {
+                    $rstatus = $this->resource_status[$r->resource_id][0];
                     $name = $r->name;
                     $status = Status::getStatus($rstatus->status_id);
                     $html .= "<div class=\"status_$status\"><h4>$name</h4>";

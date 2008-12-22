@@ -11,9 +11,11 @@ class ResourceGroup extends CachedIndexedModel
         if(isset($params["resourcegroup"])) {
             $where .= " and resource_group_id = ".$params["resourcegroup"];
         }
-        $sql = "SELECT resource_group_id id, name, osg_grid_type_id, description, site_id
-            FROM oim.resource_group rg $where
-            order by name";
+        if(isset($params["site_id"])) {
+            $where .= " and site_id = ".$params["site_id"];
+        }
+        $sql = "SELECT rg.*, t.short_name as grid_type FROM oim.resource_group rg join oim.osg_grid_type t on rg.osg_grid_type_id = t.grid_type_id $where order by name";
+        dlog($sql);
         return $sql;
     }
     public function key() { return "id"; }

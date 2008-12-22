@@ -1,13 +1,12 @@
 <?
-
 $count_resources = 0;
 foreach($this->resource_groups as $resource_group) {
-    if(isset($this->resources_index[$resource_group->id])) {
-        $resource_list = $this->resources_index[$resource_group->id];
+    if(isset($this->resources_index[$resource_group->resource_group_id])) {
+        $resource_list = $this->resources_index[$resource_group->resource_group_id];
         $count_resources += count($resource_list);
 
         if(count($resource_list) != 0) {
-            echo "<div class=\"resource_group\">";
+            echo "<div class=\"border\">";
             $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
             echo "<div class='resource_group_header'>";
             if(!isset($_REQUEST["uwa"])) {
@@ -15,12 +14,14 @@ foreach($this->resource_groups as $resource_group) {
                 echo $gridtype_name;
                 echo "</div>";
             }
+            echo "<div class=\"resource_group\">";
             echo "<span class='h3'>".$resource_group->name."</span>";
             if(!isset($_REQUEST["uwa"])) {
                 if($resource_group->description != "") {
                     echo "<br/>".$resource_group->description;
                 }
             }
+            echo "</div>";
             echo "</div>";
 
             $cols = 2; //number of columns to show
@@ -39,7 +40,7 @@ foreach($this->resource_groups as $resource_group) {
                 }
 
                 echo "<td style=\"padding: 0px;\" valign=\"top\" width=\"$col_p%\">";
-                $rid = (int)$resource->id;
+                $rid = (int)$resource->resource_id;
                 if(!isset($this->resource_status[$rid])) {
                     $note = "Resource status is not calculated for this resource...";
                     $status = "UNKNOWN";
@@ -48,9 +49,9 @@ foreach($this->resource_groups as $resource_group) {
                     $note = $resource_status->detail;
                     $status = Status::getStatus($resource_status->status_id);
                 }
-                $services = $this->resource_services[$rid];
 
                 //don't show resource with no services
+                $services = @$this->resource_services[$rid];
                 if(count($services) == 0) {
                     $service_names = "no applicable service exists";
                 } else {
@@ -65,15 +66,15 @@ foreach($this->resource_groups as $resource_group) {
                     }
                 }
             
-                echo "<div class=\"status_$status\"><h4>".$resource->name." ($service_names)</h4>";
+                echo "<div class=\"status_$status\"><h4><div class=\"resource\">".$resource->name." ($service_names)</div></h4>";
                 echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
                 echo "$note<br/>";
 
                 //show various details requested
                 if(isset($this->vos_supported)) {
                     $vonames = "";
-                    if(isset($this->vos_supported[$resource->id])) {
-                        $volist = $this->vos_supported[$resource->id];
+                    if(isset($this->vos_supported[$resource->resource_id])) {
+                        $volist = $this->vos_supported[$resource->resource_id];
                         foreach($volist as $vo) {
                             $vonames .= $vo." ";
                         }
@@ -88,7 +89,7 @@ foreach($this->resource_groups as $resource_group) {
                 }
             
                 if(isset($this->resource_ownerships)) {
-                    $ownership = $this->resource_ownerships[$resource->id];
+                    $ownership = $this->resource_ownerships[$resource->resource_id];
                     if($ownership === null) {
                         echo "Virtual Organization Ownership information is not available for this resource.<br/>";
                     } else {
@@ -116,9 +117,9 @@ foreach($this->resource_groups as $resource_group) {
                 }
 
                 if(!isset($_REQUEST["uwa"])) {
-                    $url = base()."/current?resource_id=".$resource->id;
+                    $url = base()."/current?resource_id=".$resource->resource_id;
                     echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
-                    $url = base()."/history?resource_id=".$resource->id;
+                    $url = base()."/history?resource_id=".$resource->resource_id;
                     echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
                 }
 

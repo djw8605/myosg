@@ -64,10 +64,10 @@ class ResourcesController extends ControllerBase
         ///////////////////////////////////////////////////////////////////////
         //filter resources based on various filter
         foreach($this->view->resource_groups as $resource_group) {
-            if(!isset($this->view->resources_index[$resource_group->id])) {
+            if(!isset($this->view->resources_index[$resource_group->resource_group_id])) {
                 continue;
             }
-            $list = $this->view->resources_index[$resource_group->id];
+            $list = $this->view->resources_index[$resource_group->resource_group_id];
             $newlist = array();
             foreach($list as $rec) {
                 //only add recrods if it passes resource filter
@@ -75,7 +75,7 @@ class ResourcesController extends ControllerBase
                     $newlist[] = $rec;
                 }
             }
-            $this->view->resources_index[$resource_group->id] = $newlist;
+            $this->view->resources_index[$resource_group->resource_group_id] = $newlist;
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -106,11 +106,12 @@ class ResourcesController extends ControllerBase
 
     private function filterResource($rec) 
     {
+        $rid = (int)$rec->resource_id;
+
         //filter on status
         if(isset($_REQUEST["status"])) {
             if(trim($_REQUEST["status"]) != "") {
                 $status = $_REQUEST["status"];
-                $rid = (int)$rec->id;
                 if(!isset($this->view->resource_status[$rid])) {
                     return false;
                 } else {
@@ -133,7 +134,7 @@ class ResourcesController extends ControllerBase
                     if($attr->id[0] == $vo) {
                         $resources = $vogroup->Members[0]->Resource;
                         foreach($resources as $resource) {
-                            if($resource->ResourceID[0] == $rec->id) {
+                            if($resource->ResourceID[0] == $rid) {
                                 $found = true;
                                 break;
                             }
@@ -152,7 +153,7 @@ class ResourcesController extends ControllerBase
                 $owned_resources = $this->getVOOwnedResources($vo_id);
                 $found = false;
                 foreach($owned_resources as $owned_resource) {
-                    if($rec->id == $owned_resource->resource_id) {
+                    if($rid == $owned_resource->resource_id) {
                         $found = true;
                         break;
                     }

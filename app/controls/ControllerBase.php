@@ -18,7 +18,7 @@ abstract class ControllerBase extends Zend_Controller_Action
     }
 
     private function composeControllerName($page)
-    {   
+    {
         return strtoupper(substr($page, 0, 1)).substr($page, 1)."Controller";
     }
     protected function initbread()

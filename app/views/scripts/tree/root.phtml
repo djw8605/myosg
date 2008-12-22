@@ -1,0 +1,39 @@
+<?
+$js = "";
+
+echo "<h3>Support Center</h3>";
+$count = $this->sc_count;
+$url = fullbase()."/tree/item?type=sc";
+echo "<div class=\"indent\">";
+echo outputAjaxToggle("Support Centers ($count)", $url);
+echo "</div>";
+
+echo "<h3>Facilities</h3>";
+$count = $this->facility_count;
+$url = fullbase()."/tree/item?type=facility";
+echo "<div class=\"indent\">";
+echo outputAjaxToggle("Facilities ($count)", $url);
+echo "</div>";
+
+?>
+
+<script type="text/javascript">
+function loaditem(id, url)
+{
+    $('#'+id+'_load').unbind('click');
+    $('#'+id+'_loading').show();
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(content) {
+            $('#'+id+'_load').hide();
+            $('#'+id+'_hide').show();
+            $('#'+id).html(content).slideDown();
+            $('#'+id+'_loading').hide();
+        }
+    });
+}
+$(document).ready(function() {
+<?=$js?>
+});
+</script>

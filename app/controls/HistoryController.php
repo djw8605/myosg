@@ -30,8 +30,8 @@ class HistoryController extends ControllerBase
         case "week":
             $this->history_days = 7;
             break;
-        case "month":
-            $this->history_days = 31;
+        case "30days":
+            $this->history_days = 30;
             break;
         case "year":
             $this->history_days = 365;

@@ -1,8 +1,17 @@
 <?
 class Metric extends CachedModel
 {
-    public function sql($param)
+    public function sql($params)
     {
-        return "select * from oim.metric where active = 1 and disable = 0";
+        $where = "";
+        if(isset($params["service_id"])) {
+            $where .= " and service_id = ".$params["service_id"];
+        }
+        if(isset($params["critical"])) {
+            $where .= " and critical = ".$params["critical"];
+        }
+        $sql = "select m.*, s.critical from oim.metric_service s join oim.metric m on s.metric_id = m.metric_id $where ";
+        dlog($sql);
+        return $sql;
     }
 }

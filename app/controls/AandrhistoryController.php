@@ -20,20 +20,7 @@ class AandrhistoryController extends ControllerBase
         }
         $dirty_period = $_REQUEST["period"];
         $this->view->period = $dirty_period;
-        switch($dirty_period) {
-        case "week":
-            $end_time = (int)(time() / 86400) * 86400;
-            $start_time = $end_time - 86400*7;
-            break;
-        case "30days":
-            $end_time = (int)(time() / 86400) * 86400;
-            $start_time = $end_time - 86400*30;
-            break;
-        default:
-            throw new exception("bad period: $dirty_period");
-        }
-
-        return array($start_time, $end_time);
+        return computePeriodStartEnd($dirty_period);
     }
 
     public function load()

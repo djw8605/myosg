@@ -47,11 +47,12 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
         //ownership chart
         $attrs = $vo->attributes();
         $void = (int)$attrs["id"];
-        $info = $this->voinfo[$void];
-
-        $url = $info[0]->primary_url;
-        echo "<h3><a href=\"$url\">".$vo->Name[0]."</a></h3>"; 
-        echo("<p class='note'>".$info[0]->community."</p>");
+        echo "<h3>".$vo->Name[0]."</h3>"; 
+        if(isset($this->voinfo[$void])) {
+            $info = $this->voinfo[$void];
+            $url = $info[0]->primary_url;
+            echo "<p class='note'>".$info[0]->community."</p>";
+        } 
 
         echo "<div class=\"indent\">";
         $resources = @$this->voownership[$void];

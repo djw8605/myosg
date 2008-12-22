@@ -35,6 +35,7 @@ class role
 
     //view admin email address and able to open OS email client.
     public static $view_admin_email = 1;
+    public static $see_oim_tree = 2;
 }
 
 class common_config
@@ -147,7 +148,8 @@ class common_config
             ),
             authtype::$auth_osg_goc => array(
                 role::$test,
-                role::$view_admin_email
+                role::$view_admin_email,
+                role::$see_oim_tree
             )
         );
 
