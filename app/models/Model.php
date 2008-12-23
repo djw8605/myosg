@@ -41,7 +41,6 @@ abstract class Model
     {
         $params_m = array_merge($this->params, $params);
         $sql = "select count(*) from (".$this->sql($params_m).") c";
-        dlog($sql);
         return $this->db->fetchOne($sql);
     }
 

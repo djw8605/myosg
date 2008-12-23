@@ -80,7 +80,7 @@ $(document).ready(function() {
 
     });
 
-    <?  if(!uwa()) { if($this->detail_show) { ?>
+    <?  if(!uwa() and $this->detail_show) { ?>
     function mark() {
         var graph = $("#service_id\\=<?=$this->detail_service_id?>");
         var pos = graph.position();
@@ -94,7 +94,7 @@ $(document).ready(function() {
     }
     mark();
     $(window).resize(mark);
-    <? } } ?>
+    <? } ?>
 });
 </script>
 

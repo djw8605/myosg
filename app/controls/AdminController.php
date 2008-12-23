@@ -47,4 +47,21 @@ class AdminController extends ControllerBase
         $model->optimize();
         $this->render("none");
     }
+
+    public function dedupdetailAction()
+    {
+        $model = new DuplicateDetail();
+        $duplicates = $model->get();
+
+        //dedup..
+        foreach($duplicates as $dup) {
+            echo $dup->detail;
+            echo "<blockquote>";
+            $ids = split(" ", trim($dup->ids));
+            $model->dedup($ids);
+            echo "</blockquote>";
+        }
+
+        $this->render("none");
+    }
 } 

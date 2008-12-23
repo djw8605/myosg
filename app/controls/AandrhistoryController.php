@@ -16,7 +16,7 @@ class AandrhistoryController extends ControllerBase
         if(!isset($_REQUEST["period"])) {
             //this causes the graph period combo box to use following as default, as well as telling graph 
             //the default length
-            $_REQUEST["period"] = "30days";
+            $_REQUEST["period"] = "week";
         }
         $dirty_period = $_REQUEST["period"];
         $this->view->period = $dirty_period;

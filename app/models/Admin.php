@@ -11,6 +11,9 @@ class Admin extends Model
         
         $sql = "OPTIMIZE TABLE `statuschange_service`";
         $this->db->query($sql);
+
+        $sql = "OPTIMIZE TABLE `metricdetail`";
+        $this->db->query($sql);
    }
 }
 

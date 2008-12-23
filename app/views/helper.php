@@ -197,19 +197,20 @@ function outputClearFilterButton()
     //we need to clear only the variables that are set via filters
     $query = $_SERVER["QUERY_STRING"];
     $query_s = split("&", $query);
-    $cleared_q = "";
     foreach($query_s as $q) {
         $q_s = split("=", $q);
         if(!in_array($q_s[0], $g_filters)) {
             if($cleared_q == "") {
-                $cleared_q .= "&";
+                $cleared_q .= "?";
+            } else {
+                $cleared_q .= "&amp;";
             }
             $cleared_q .= $q;
         }
     }
 
     ?>
-    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename?$cleared_q";?>';">Clear All Filters</a></p>
+    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename$cleared_q";?>';">Clear All Filters</a></p>
     <?
 }
 

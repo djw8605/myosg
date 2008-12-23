@@ -121,6 +121,8 @@ foreach($this->resource_groups as $resource_group) {
                     echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
                     $url = base()."/history?resource_id=".$resource->resource_id;
                     echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
+                    $url = base()."/aandrhistory?resource_id=".$resource->resource_id;
+                    echo "<a href=\"$url\">Availability History</a>&nbsp;&nbsp;&nbsp;";
                 }
 
                 echo "</div>";
