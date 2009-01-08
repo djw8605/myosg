@@ -24,8 +24,7 @@ class StatuschangesController extends ControllerBase
         $model = new StatusChangesService();
         $this->view->status_changes = $model->get();
 
-        $this->setpagetitle(StatuschangesController::default_title());
-        //$this->view->page_title = "Latest Status Changes";
+        $this->setpagetitle(self::default_title());
     }
     public function rssAction()
     {

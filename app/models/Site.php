@@ -16,6 +16,6 @@ class Site extends CachedModel
         return "SELECT site_id, name, longitude, latitude FROM oim.site ".
             "where active = 1 and disable = 0 and ".
             "longitude is not null and longitude <> '' and ".
-            "latitude is not null and latitude <> '' $where";
+            "latitude is not null and latitude <> '' $where order by name";
     }
 }

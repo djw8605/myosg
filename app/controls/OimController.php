@@ -8,6 +8,6 @@ class OimController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle("OIM");
+        $this->setpagetitle(self::default_title());
     }
 } 

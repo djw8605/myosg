@@ -48,7 +48,7 @@ class MapController extends ControllerBase
         $model = new LatestResourceStatus();
         $this->view->resource_status = $model->getgroupby("resource_id");
 
-        $this->setpagetitle(MapController::default_title());
+        $this->setpagetitle(self::default_title());
     }
     public function uwaAction()
     {

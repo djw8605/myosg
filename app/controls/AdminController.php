@@ -15,7 +15,7 @@ class AdminController extends ControllerBase
             echo "404";
             exit;
         }
-        $this->setpagetitle(AdminController::default_title());
+        $this->setpagetitle(self::default_title());
     }
 
     public function logrotateAction()

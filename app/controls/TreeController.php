@@ -8,11 +8,11 @@ class TreeController extends ControllerBase
 
     public function load() 
     { 
-        $this->setpagetitle(TreeController::default_title());
         if(!in_array(role::$see_oim_tree, user()->roles)) {
             $this->render("error/noaccess", null, true);
             return;
         }
+        $this->setpagetitle(self::default_title());
     }
 
     public function itemAction()

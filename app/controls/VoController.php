@@ -33,7 +33,7 @@ class VoController extends ControllerBase
                 $this->view->resource_ownerships = $newlist;
             }
         }
-        $this->setpagetitle(VoController::default_title(). " - Grouped by Resource");
+        $this->setpagetitle(self::default_title(). " - Grouped by Resource");
     }
 
     public function load_vogrouped()

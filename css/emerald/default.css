@@ -160,26 +160,26 @@ font-size: 11px;
 {
 	margin-bottom: 0em;
 }
-#content table
+#content table.real
 {
 	margin-bottom: 1.5em;
 }
-#content table th
+#content table.real th
 {
 	text-align: left;
 	font-weight: bold;
 	padding: 0.5em;
 }
-#content table td
+#content table.real td
 {
 	padding: 0.5em;
 }
-#content table tr.rowA
+#content table.real tr.rowA
 {
 	background-color: #EAEFE0;
 	color: inherit;
 }
-#content table tr.rowB
+#content table.real tr.rowB
 {
 	background-color: #F9FFEF;
 	color: inherit;
@@ -221,7 +221,6 @@ font-size: 11px;
 	float: right;
 	width: 250px;
 	padding-right: 0px;
-background-color: white;
 }
 /* Footer */
 #footer

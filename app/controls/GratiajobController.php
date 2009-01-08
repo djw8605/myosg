@@ -8,8 +8,6 @@ class GratiajobController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle("Job Activity");
-
         if(!isset($_REQUEST["type"])) {
             $_REQUEST["type"] = "wall";
         }
@@ -31,5 +29,7 @@ class GratiajobController extends ControllerBase
         default:
             throw new exception("bad type: $dirty_type");
         }
+
+        $this->setpagetitle(self::default_title());
     }
 }

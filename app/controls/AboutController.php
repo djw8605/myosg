@@ -8,7 +8,6 @@ class AboutController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle(AboutController::default_title());
-
+        $this->setpagetitle(self::default_title());
     }
 } 

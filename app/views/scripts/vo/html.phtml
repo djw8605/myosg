@@ -57,7 +57,7 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
         echo "<div class=\"indent\">";
         $resources = @$this->voownership[$void];
         if($resources !== null) {
-            $out = "<table width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
+            $out = "<table class='real' width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
             $rclass = "rowA";
             foreach($resources as $resource) {
                 if($rclass == "rowA") {

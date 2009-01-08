@@ -1,14 +1,8 @@
+<?php
+$url = "https://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+$url = urlencode($url);
+?>
 <h3>Feedback</h3>
-<p>Do you have an idea to make this tool more useful? Please tell us!</p>
-<form action="<?=base()."/comment/submit"?>" method="post">
-Your Name:<br/>
-<input type="text" name="name"/><br/>
-Your Email:<br/>
-<input type="text" name="email"/><br/>
-Comment:<br/>
-<textarea rows="5" name="comment"></textarea><br/>
-<input type="submit" value="Submit"/>
-<input type="hidden" name="page" value="<?=$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]?>"/>
-</form>
+<p>Do you have an idea to make this tool more useful? Please send us an email at <a href="mailto:goc-issues@googlegroups.com?subject=Comment on <?=config()->app_name;?>&body=GOC,%0A%0AI'd like to comment on following page. %0A<?=$url?> %0A%0A(YOUR COMMENT HERE)">goc-issues@googlegroups.com</a></p>
 <br/>
-<p>Report bugs at <a href="http://code.google.com/p/osggoc/issues/entry">GOC Bug Tracker</a>.</p>
+<p>Report bugs at <a href="http://code.google.com/p/osggoc/issues/entry">GOC Bug Tracker</a></p>

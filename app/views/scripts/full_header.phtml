@@ -31,7 +31,7 @@ parseQuery();
 
 <div id="outer">
     <div id="header">
-        <img id="logo" src="images/myosg.png"/>
+        <img id="logo" src="<?=base()?>/images/myosg.png"/>
         <h1><a href="<?=base()?>"><?=config()->app_name?></a></h1>
         <h2><?=config()->app_subname?></h2>
     </div>
@@ -61,8 +61,6 @@ parseQuery();
     <div class="submenu hidden" id="submenu_about">
         <span id="submenu_about_about"><a href="<?=base()?>/about">MyOSG</a></span>
     </div>
-
-
 
     <script type="text/javascript">
         $("#menu_<?=$this->menu_selected?>").addClass("selected");

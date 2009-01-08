@@ -32,7 +32,7 @@ $frontController->dispatch();
 
 //at the end..
 if(config()->profile_db) {
-    log_db_profile();
+    dlog(dump_db_profile());
 } else {
     //to show the timestamp..
     dlog("All Done!");

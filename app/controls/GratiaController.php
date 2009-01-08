@@ -8,6 +8,6 @@ class GratiaController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle("Gratia");
+        $this->setpagetitle(self::default_title());
     }
 } 

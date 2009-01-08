@@ -2,7 +2,7 @@
 echo "Between ".date(config()->date_format_full, $this->start_time);
 echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
 ?>
-<table width="100%">
+<table class="real" width="100%">
     <tr><th width="100px">Resource</th><th>Service</th><th>Availability</th><th>Reliability</th><th>&nbsp;</th></tr>
 <?
     foreach($this->data as $resource_id=>$resource) {

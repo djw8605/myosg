@@ -10,7 +10,7 @@ class ResourcesController extends ControllerBase
     {
         $this->vocache = null;
 
-        //the reason why this is so convoluted is because I have to sort by resource group name
+        //the reason why this is so convoluted is because I have to sort by resource group name.
         //well.. that's just one of reasons..
 
         ///////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ class ResourcesController extends ControllerBase
             }
         }
 
-        $this->setpagetitle(ResourcesController::default_title());
+        $this->setpagetitle(self::default_title());
     }
 
     private function filterResource($rec) 

@@ -158,7 +158,7 @@ class AandrController extends ControllerBase
         }
 
         $this->view->data = $data;
-        $this->setpagetitle(AandrController::default_title());
+        $this->setpagetitle(self::default_title());
     }
 
 }

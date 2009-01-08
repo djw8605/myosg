@@ -58,7 +58,7 @@ class AandrhistoryController extends ControllerBase
         $params["end_time"] = $end_time;
         $this->view->services = $model->getgroupby("service_id", $params);
         
-        $this->setpagetitle(AandrhistoryController::default_title(). " for ".$resource_name);
+        $this->setpagetitle(self::default_title(). " for ".$resource_name);
     }
 
 }

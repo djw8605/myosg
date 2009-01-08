@@ -21,32 +21,31 @@ function connectdb()
     return $db;
 }
 
-function log_db_profile()
+function dump_db_profile()
 {
+    $out = "";
+
     if(Zend_Registry::isRegistered('db')) {
         $db = Zend_Registry::get('db');
         $profiler = $db->getProfiler();
 
-        $totalTime    = $profiler->getTotalElapsedSecs();
+        $totalTime    = round($profiler->getTotalElapsedSecs(), 2);
         $queryCount   = $profiler->getTotalNumQueries();
         $longestTime  = 0;
         $longestQuery = null;
 
         if($profiler->getQueryProfiles()) {
-            dlog('----------------------------------------------------------------------');
-            dlog('DB PROFILE');
-            dlog('Executed ' . $queryCount . ' queries in ' . $totalTime . ' seconds');
+            $out .= "DB PROFILE ----------------------------------------------------------------------\n";
+            $out .= "Executed $queryCount queries in $totalTime seconds.\n";
 
             foreach ($profiler->getQueryProfiles() as $query) {
                 if ($query->getElapsedSecs() > $longestTime) {
                     $longestTime  = $query->getElapsedSecs();
                     $longestQuery = $query->getQuery();
                 }
-                dlog("Executed Query: (in ".$query->getElapsedSecs().")");
-                dlog($query->getQuery());
+                $out .= "[".round($query->getElapsedSecs(),2)." seconds]\n\t".$query->getQuery()."\n";
             }
-
-            dlog('----------------------------------------------------------------------');
         }
     }
+    return $out;
 }
