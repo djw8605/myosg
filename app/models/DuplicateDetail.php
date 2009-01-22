@@ -18,17 +18,17 @@ class DuplicateDetail extends CachedModel
         $newid = array_shift($ids);
         $ids_str = implode(",", $ids);
 
-        $this->db->beginTransaction();
+        db()->beginTransaction();
         try {
             $sql = "update metricdata set detail_id = $newid where id in ($ids_str);<br/>";
-            $this->db->query($sql);
+            db()->query($sql);
             echo $sql;
 
             $sql = "delete from metricdetail where id in ($ids_str);<br/>";
-            $this->db->query($sql);
+            db()->query($sql);
             echo $sql;
 
-            $this->db->commit();
+            db()->commit();
         } catch (Exception $e) {
             $db->rollBack();
             //rethrow

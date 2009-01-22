@@ -4,16 +4,10 @@ class ProbeInfo
 {
     public function __construct()
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
-
         if(!Zend_Registry::isRegistered("probeinfo_init")) {
             //pull critical metric information
             $sql = "select * from ".config()->db_oim_schema.".metric_service";
-            $metricinfo_servicetype = $this->db->fetchAll($sql); 
+            $metricinfo_servicetype = db()->fetchAll($sql); 
 
             //group by metric_id
             $this->servicetype = array();
@@ -73,7 +67,7 @@ class ProbeInfo
 
             //fetch all metricinfo records
             $sql = "select m.metric_id as id, m.name, m.common_name from ".config()->db_oim_schema.".metric m order by name";
-            $this->probe_infos = $this->db->fetchAll($sql);
+            $this->probe_infos = db()->fetchAll($sql);
 
             //store it to cache
             Zend_Registry::set("probeinfo_critical_servicetype", $this->critical_servicetype);

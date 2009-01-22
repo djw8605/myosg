@@ -1,6 +1,6 @@
 <?
 
-class Downtime extends CachedModel
+class Downtime extends CachedIndexedModel
 {
     public function sql($params)
     {
@@ -23,7 +23,6 @@ class Downtime extends CachedModel
             $where .= "(UNIX_TIMESTAMP(start_time) > $start_time and UNIX_TIMESTAMP(end_time) < $end_time) or";
             //outside
             $where .= "(UNIX_TIMESTAMP(start_time) < $start_time and UNIX_TIMESTAMP(end_time) > $end_time)";
-
             $where .= " )"; 
         }
 
@@ -33,6 +32,7 @@ class Downtime extends CachedModel
                 " order by start_time";
         return $sql;
     }
+    public function key() { return "resource_id"; }
 }
 
 ?>

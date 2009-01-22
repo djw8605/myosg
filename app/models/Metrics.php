@@ -4,22 +4,17 @@ class Metrics
 {
     public function __construct()
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
         $this->metrics[] = array();
     }
 
     public function getDetail($dbid) 
     {
-        return $this->db->fetchOne("select detail from metric where dbid = $dbid");
+        return db()->fetchOne("select detail from metric where dbid = $dbid");
     }
 
     public function getStatus($dbid) 
     {
-        return $this->db->fetchOne("select status from metric where dbid = $dbid");
+        return db()->fetchOne("select status from metric where dbid = $dbid");
     }
 
     public function fetchNewGratiaRecords($limit = 1000)
@@ -31,7 +26,7 @@ class Metrics
         //to not cause invalid data entry..
         $sql = "select dbid,ServiceUri,MetricName,MetricStatus,DetailsData, UNIX_TIMESTAMP(Timestamp) as unix_timestamp from gratia.MetricRecord where dbid > ifnull((select max(dbid) from rsvextra.metric), 0) order by Timestamp limit $limit;";
         dlog("Fetching new gratia recores. $sql");
-        return $this->db->fetchAll($sql);
+        return db()->fetchAll($sql);
     }
 
     //pull metrics for a particular resource at particular time frame
@@ -51,7 +46,7 @@ class Metrics
         if($to === null) $to = time();
         $sql = "select * from metric where timestamp > $from and timestamp <= $to and resource_id = $resource_id order by timestamp";
         dlog("getting metric records. $sql");
-        return $this->db->fetchAll($sql);
+        return db()->fetchAll($sql);
     }
 
     //Take an array of metric records (ordered by resource_id), and group them by resource_id
@@ -91,7 +86,7 @@ class Metrics
     public function fetchOneMetric($mid)
     {
         $sql = "select * from metric where dbid = $mid";
-        return $this->db->fetchRow($sql); 
+        return db()->fetchRow($sql); 
     }
 
     private function fetchAllLatest($before = null)
@@ -117,7 +112,7 @@ class Metrics
                     order by
                         a.resource_id";
             dlog("Fetching latest metrics. $sql");
-            $latest_records = $this->db->fetchAll($sql);
+            $latest_records = db()->fetchAll($sql);
             dlog("done.. grouping.");
             $this->metrics[$before] = $this->group($latest_records);
             dlog("all done..");
@@ -137,7 +132,7 @@ class Metrics
 
         $sql = "insert into metric (dbid, resource_id, metric_id, status, timestamp, detail, effective_dbid, effective_timestamp) 
             values ($dbid, $resource_id, $metric_id, \"$status\", \"$timestamp\", \"$detail\", $effective_dbid, $effective_timestamp)";
-        $this->db->query($sql);
+        db()->query($sql);
         return true;
     }
 }

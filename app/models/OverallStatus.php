@@ -7,12 +7,6 @@ class OverallStatus
     {  
         $this->resource_id = $resource_id;
         $this->infos = new ProbeInfo();
-
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
     }
 
     private function isCriticalProbe($metric_id)
@@ -27,7 +21,7 @@ class OverallStatus
 
     public function getLastInfo()
     {
-        $info = $this->db->fetchRow("select * from overall_status o where timestamp = (select max(timestamp) from overall_status where resource_id = ".$this->resource_id.")");
+        $info = db()->fetchRow("select * from overall_status o where timestamp = (select max(timestamp) from overall_status where resource_id = ".$this->resource_id.")");
         //dlog("pulling latest overall_Status info for ".$this->resource_id);
         return $info;
     }
@@ -37,7 +31,7 @@ class OverallStatus
         if($responsible_metric_id === null) $responsible_metric_id = "NULL";
         $sql = "insert into overall_status (overall_status, timestamp, detail, resource_id, responsible_metric_id) values (\"$overall_status\", $timestamp, \"$detail\", $resource_id, $responsible_metric_id)";
         try {
-            $this->db->query($sql);
+            db()->query($sql);
         } catch(Exception $e) {
             dlog("Caught Exception with following query: ".$sql);
             return false;
@@ -55,7 +49,7 @@ class OverallStatus
 
     public function fetchStatusChanges($start_time, $end_time)
     {
-        return $this->db->fetchAll("select * from overall_status where resource_id = ".
+        return db()->fetchAll("select * from overall_status where resource_id = ".
             $this->resource_id." and timestamp >= coalesce((select max(timestamp) from overall_status where resource_id = ".
             $this->resource_id." and timestamp < $start_time), 0) and timestamp <= $end_time order by timestamp;"); 
     }
@@ -127,7 +121,7 @@ class OverallStatus
                     if($metric->effective_dbid !== null) {
                         //use status of effective metric instead
                         $sql = "select * from metric where dbid = ".$metric->effective_dbid;
-                        $metric = $this->db->fetchRow($sql);
+                        $metric = db()->fetchRow($sql);
                         $status = $metric->status;
                         $timestamp = $metric->timestamp;
                     }

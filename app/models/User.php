@@ -5,12 +5,6 @@ class User
 {
     public function __construct($dn)
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
-
         $this->roles = config()->auth_metrics[authtype::$auth_guest];
         $this->person_id = null;
         $this->person_name = "Guest";
@@ -33,7 +27,7 @@ class User
                         c.active = 1 and 
                         c.disable = 0 and 
                         dn_string = '$dn'";
-        $row = $this->db->fetchRow($sql);
+        $row = db()->fetchRow($sql);
         if($row) {
             $this->person_id = $row->person_id;
             $this->person_name = $row->first_name." ".$row->last_name;
@@ -53,7 +47,7 @@ class User
                 c.active = 1 and
                 c.disable = 0 and
                 c.person_id = $person_id";
-        $auth_types = $this->db->fetchAll($sql);
+        $auth_types = db()->fetchAll($sql);
         //and add roles to roles list
         foreach($auth_types as $auth_type) {
             //merge new role sets

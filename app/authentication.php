@@ -1,4 +1,6 @@
 <?php
+
+
 /* phpinfo sample
 HTTPS   on
 SSL_VERSION_INTERFACE   mod_ssl/2.2.8
@@ -50,44 +52,54 @@ SSL_SERVER_CERT         XXXXXXXXXXXXXXXX
 SSL_CLIENT_CERT         XXXXXXXXXXXXXXXX
 */
 
+function isbot()
+{
+    foreach(config()->botlist as $bot) {
+        if(ereg($bot, $HTTP_USER_AGENT)) {
+            return true;
+        }
+    }
+    return false; 
+}
+
 //do the db lookup against SSL cert. Store User object to the registry.
-//I am not sure if we are going to store this on sessio instead, 
+//I am not sure if we are going to store this on session instead, 
 //and do authentication if it's not done already..
 function cert_authenticate()
 {
-    function setguest() {
+    function _setguest() {
         $guest = new User(null);
         Zend_Registry::set("user", $guest);
-        dlog("guest access from ".$_SERVER["REMOTE_ADDR"]);
-        //gethostbyaddr()
+        slog("guest access from ".$_SERVER["REMOTE_ADDR"]);
     }
 
     if(!isset($_SERVER["HTTPS"])) {
-        if(config()->force_https) {
-            //reload as https
+        if(config()->force_https and !isbot()) {
+            //reload as https (if not bot)
             $SERVER_NAME=$_SERVER["SERVER_NAME"];
             $REQUEST_URI=$_SERVER["REQUEST_URI"];
+            slog("Forwarding to HTTPS");
             header ("Location: https://$SERVER_NAME$REQUEST_URI");
             exit;
         } else {
             //can't authenticate through http - so let's just assume a guest user
-            setguest();
+            _setguest();
         }
     } else {
         if(isset($_SERVER["SSL_CLIENT_S_DN"])) {
             $dn = $_SERVER["SSL_CLIENT_S_DN"];
-            $user= new User($dn);
+            $user = new User($dn);
             if($user->getPersonID()) {
                 Zend_Registry::set("user", $user);
-                dlog("Authenticated User: ".$user->getPersonName());
+                slog("Authenticated User: ".$user->getPersonFullName());
             } else {
                 //unknown, non-active, or expired cert?
-                setguest();
-                dlog("Authenticated User as a Guest");
+                _setguest();
+                slog("Authenticated User as a Guest");
             }
         } else {
             //no client cert provided
-            setguest();
+            _setguest();
         }
     }
 }

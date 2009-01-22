@@ -227,3 +227,11 @@ position: absolute;
 top: 6px;
 left: 10px;
 }
+p.warning
+{
+    background-image: url('../images/error.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 20px;
+}
+

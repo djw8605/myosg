@@ -11,8 +11,6 @@ class Site extends CachedModel
         if(isset($params["sc_id"])) {
             $where = " and sc_id = ".$params["sc_id"];
         }
-
-
         return "SELECT site_id, name, longitude, latitude FROM oim.site ".
             "where active = 1 and disable = 0 and ".
             "longitude is not null and longitude <> '' and ".

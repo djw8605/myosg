@@ -2,20 +2,22 @@
 //session_cache_limiter('private_no_expire');
 
 //init zend framework
-set_include_path('lib/zf-1.5.2/library' . PATH_SEPARATOR . get_include_path());  
+set_include_path('lib/zf-1.7.3/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
+set_include_path('app/controls' . PATH_SEPARATOR . get_include_path());  
 require_once "Zend/Loader.php"; 
 Zend_Loader::registerAutoload(); 
+Zend_Session::start();
 
 //load our stuff
 require_once("config.php");
 require_once("app/views/helper.php");
-require_once("app/models/db.php");
-require_once("app/log.php");
-require_once("app/authentication.php");
+require_once("app/base.php");
+
+remove_quotes();
 setup_logs();
+greet();
 cert_authenticate();
-Zend_Session::start();
 
 //set php config
 ini_set('error_log', config()->error_logfile);
@@ -29,11 +31,3 @@ date_default_timezone_set("UTC");
 $frontController = Zend_Controller_Front::getInstance(); 
 $frontController->setControllerDirectory('app/controls'); 
 $frontController->dispatch(); 
-
-//at the end..
-if(config()->profile_db) {
-    dlog(dump_db_profile());
-} else {
-    //to show the timestamp..
-    dlog("All Done!");
-}

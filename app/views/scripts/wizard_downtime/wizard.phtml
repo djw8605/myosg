@@ -1,0 +1,11 @@
+<?$checked = "";
+if(isset($_REQUEST["downtime_attrs_showpast"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="downtime_attrs_showpast" <?=$checked?>/>
+Show Past Downtime information: <br/>
+
+<?$value = "5"; //default
+if(isset($_REQUEST["downtime_attrs_items"])) {
+    $value = htmlentities($_REQUEST["downtime_attrs_items"]);
+}?>
+Number of Items to Show: <input type="text" name="downtime_attrs_items" value="<?=$value?>"/>
+

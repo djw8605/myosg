@@ -67,11 +67,13 @@ parseQuery();
         $("#submenu_<?=$this->menu_selected?>").removeClass("hidden");
         $("#submenu_<?=$this->menu_selected?>_<?=$this->submenu_selected?>").addClass("selected");
     </script>
-
     <div id="content">
 <?
     if(config()->banner) {
         echo "<div id=\"banner\">".config()->banner."</div>";
+    }
+    if(config()->debug) {
+        echo "<p class=\"warning\">Running in Debug mode</p>";
     }
 ?>
 

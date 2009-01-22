@@ -4,11 +4,6 @@ abstract class Model
 {
     public function __construct($params = array())
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
         $this->params = $params;
     }
     
@@ -16,7 +11,7 @@ abstract class Model
     {
         $params_m = array_merge($this->params, $params);
         $sql = $this->sql($params_m);
-        return $this->db->fetchAll($sql);
+        return db()->fetchAll($sql);
     }
 
     public function get($params = array())
@@ -41,7 +36,7 @@ abstract class Model
     {
         $params_m = array_merge($this->params, $params);
         $sql = "select count(*) from (".$this->sql($params_m).") c";
-        return $this->db->fetchOne($sql);
+        return db()->fetchOne($sql);
     }
 
     public abstract function sql($params);

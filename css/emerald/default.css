@@ -188,12 +188,12 @@ font-size: 11px;
 #primaryContentContainer
 {
 	float: left;
-	margin-right: -460px;
+	margin-right: -510px;
 	width: 100%;
 }
 #primaryContent
 {
-	margin: 0em 250px 0em 0em;
+	margin: 0em 300px 0em 0em;
 	padding: 0em 1.5em 0px 1.5em;
 }
 #primaryContent h2, #primaryContent h3
@@ -219,7 +219,7 @@ font-size: 11px;
 #sideContent
 {
 	float: right;
-	width: 250px;
+	width: 300px;
 	padding-right: 0px;
 }
 /* Footer */

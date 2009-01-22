@@ -1,0 +1,8 @@
+Date Range:
+<?$value = "";
+if(isset($_REQUEST["availability_history_attrs_daterange"])) {
+    $value = htmlentities($_REQUEST["availability_history_attrs_daterange"]);
+}?>
+<input type="text" id="hoge" name="availability_history_attrs_daterange" value="<?=$value?>"/>
+<div id="availability_history_attrs_daterange_area"></div>
+

@@ -1,0 +1,8 @@
+Date Range:
+<?$value = "";
+if(isset($_REQUEST["status_history_attrs_daterange"])) {
+    $value = htmlentities($_REQUEST["status_history_attrs_daterange"]);
+}?>
+<input type="text" id="ho" name="status_history_attrs_daterange" value="<?=$value?>"/>
+<div id="status_history_attrs_daterange_area"></div>
+

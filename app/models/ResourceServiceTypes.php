@@ -4,12 +4,6 @@ class ResourceServiceTypes
 {
     public function __construct()
     {
-        if(!Zend_Registry::isRegistered("db")) {
-            $this->db = connectdb();
-        } else {
-            $this->db = Zend_Registry::get("db");
-        }
-
         //load the resource service types tables and register
         if(Zend_Registry::isRegistered("rst_resource_service")) {
             $this->resource_service = Zend_Registry::get("rst_resource_service");
@@ -40,6 +34,6 @@ class ResourceServiceTypes
                     s.service_id IN (SELECT service_id FROM $schema.service_service_group WHERE service_group_id=1)
                     and
                 s.service_id not in (SELECT DISTINCT PS.parent_service_id psid FROM $schema.service PS WHERE PS.parent_service_id IS NOT NULL)";
-        return $this->db->fetchAll($sql);
+        return db()->fetchAll($sql);
     }   
 }
