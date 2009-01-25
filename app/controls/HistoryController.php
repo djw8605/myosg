@@ -16,7 +16,7 @@ class HistoryController extends ControllerBase
         if(!isset($_REQUEST["period"])) {
             //this causes the graph period combo box to use following as default, as well as telling graph 
             //the default length
-            $_REQUEST["period"] = config()->history_graph_default_period;
+            $_REQUEST["period"] = "";
         }
         $dirty_period = $_REQUEST["period"];
         $this->view->period = $dirty_period;
@@ -27,18 +27,17 @@ class HistoryController extends ControllerBase
         case "3day":
             $this->history_days = 3;
             break;
-        case "week":
-            $this->history_days = 7;
-            break;
         case "30days":
             $this->history_days = 30;
             break;
         case "year":
             $this->history_days = 365;
             break;
+        case "week":
         default:
-            throw new exception("bad period: $dirty_period");
-        }
+            $this->history_days = 7;
+            break;
+         }
     }
 
     //why do we have both graph and service detail page together?

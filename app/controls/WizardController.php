@@ -1,11 +1,5 @@
 <?
 
-interface wizard_controller
-{
-    public function __construct($view, $resource_ids);
-    public function pagetitle();
-}
-
 class WizardController extends ControllerBase
 {
     public function breads() { return array("rsv"); }
@@ -14,30 +8,13 @@ class WizardController extends ControllerBase
 
     public function load()
     {
-        $this->view->datasource = "wizard/default.phtml";
         $this->setpagetitle(self::default_title());
 
-        $resources = null;
         if(isset($_REQUEST["datasource"])) {
-            $resource_ids = $this->process_resourcelist();
-            $this->select_datasource($resource_ids);
-        }
-    }
-
-    private function select_datasource($resource_ids)
-    {
-        $contoller = null;
-        $datasource = @$_REQUEST["datasource"];
-        switch($datasource) {
-        case "summary":
-        case "current_status":
-            require_once("wizard_$datasource.php");
-            $class_name = "wizard_$datasource";
-            $controller = new $class_name($this->view, $resource_ids);
-            $this->view->datasource = "wizard_".$datasource."/html.phtml";
-            $this->view->resource_counts = count($resource_ids);
-            $this->setpagetitle($controller->pagetitle());
-            break;
+            $this->resource_ids = $this->process_resourcelist();
+            if(count($this->resource_ids) == 0) {
+                $this->view->info = "No resource matches your current criteria."; 
+            }
         }
     }
 
