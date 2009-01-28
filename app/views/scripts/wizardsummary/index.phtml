@@ -3,11 +3,12 @@
             <div id="primaryContent">
                 <?=$this->render("breadcrumb.phtml", true)?>
                 <h2><?=$this->page_title?></h2>
+                <?=$this->info?>
                 <?=$this->render(pagename()."/html.phtml")?>
             </div>
         </div>
         <div id="sideContent">
-            <?=$this->render(pagename()."/wizard.phtml")?>
+            <?=$this->render("wizard/wizard.phtml")?>
             <?=$this->render("feedback.phtml", true)?>
         </div>
 <?=$this->render("full_footer.phtml", true)?>

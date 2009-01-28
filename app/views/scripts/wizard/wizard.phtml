@@ -1,10 +1,8 @@
 
-<script type="text/javascript" src="<?=fullbase()?>/lib/jquery-1.2.6/jquery-ui.js"></script>
-<script type="text/javascript" src="<?=fullbase()?>/lib/jquery-1.2.6/daterange/daterangepicker.jQuery.js"></script>
-<link type="text/css" href="<?=fullbase()?>/lib/jquery-1.2.6/ui.core.css" rel="Stylesheet" />
-<link rel="stylesheet" href="<?=fullbase()?>/lib/jquery-1.2.6/ui.theme.css" type="text/css" title="ui-theme" />
-<link rel="stylesheet" href="<?=fullbase()?>/lib/jquery-1.2.6/ui.datepicker.css" type="text/css" />
-<link rel="stylesheet" href="<?=fullbase()?>/lib/jquery-1.2.6/daterange/ui.daterangepicker.css" type="text/css" />
+<script type="text/javascript" src="<?=fullbase()?>/lib/jquery-1.3.1/ui/ui.datepicker.js"></script>
+<link type="text/css" href="<?=fullbase()?>/lib/jquery-1.3.1/themes/base/ui.core.css" rel="Stylesheet" />
+<link type="text/css" href="<?=fullbase()?>/lib/jquery-1.3.1/themes/base/ui.theme.css" rel="Stylesheet" />
+<link type="text/css" href="<?=fullbase()?>/lib/jquery-1.3.1/themes/base/ui.datepicker.css" rel="Stylesheet" />
 
 <style type="text/css">
 .list
@@ -22,48 +20,49 @@
 }
 </style>
 
-<form method="get">
+<form method="get" id="wizard">
     <h3>Information to display</h3>
     <div class="indent" id="datasource_area">
         <select name="datasource">
         <option value="">(Please Select)</option>
-        <option value="summary">Current Status Summary</option>
-        <option value="current_status">Current Status</option>
-        <option value="status_history">Status History</option>
-        <option value="availability_history">Availability History</option>
+        <option value="summary">Resource Summary</option>
+        <option value="currentstatus">Current Status</option>
+        <option value="statushistory">Status History</option>
+        <option value="arhistory">Availability History</option>
+        <option value="armetric">Availability Metrics</option>
         <option value="downtime">Downtime Schedule</option>
-        <option value="vo_membership">VO Membership</option>
-        <option value="vo_ownership">VO Ownership</option>
         </select>
         <p>
             <div id="summary_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_summary/wizard.phtml")?>
+                <?=$this->render("wizard/wizard_summary.phtml")?>
             </div>
 
-            <div id="current_status_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_current_status/wizard.phtml")?>
+            <div id="currentstatus_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_currentstatus.phtml")?>
             </div>
 
-            <div id="status_history_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_status_history/wizard.phtml")?>
+            <div id="statushistory_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_statushistory.phtml")?>
             </div>
 
-            <div id="availability_history_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_availability_history/wizard.phtml")?>
+            <div id="arhistory_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_arhistory.phtml")?>
+            </div>
+
+            <div id="armetric_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_armetric.phtml")?>
             </div>
 
             <div id="downtime_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_downtime/wizard.phtml")?>
+                <?=$this->render("wizard/wizard_downtime.phtml")?>
             </div>
 
-            <div id="vo_membership_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_vo_membership/wizard.phtml")?>
-            </div>
-
-            <div id="vo_ownership_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard_vo_ownership/wizard.phtml")?>
+            <div id="_daterange_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard__daterange.phtml")?>
             </div>
         </p>
+        <br/>
+        <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
     </div>
 
     <h3>Resources to display</h3>
@@ -120,7 +119,7 @@
             $scs = $model->get();
             $kv = array();
             foreach($scs as $sc) { $kv[$sc->sc_id] = $sc->short_name; }
-            echo checklist("sc", "Resources in Support Centers", $kv);
+            echo checklist("sc", "Resource belongs to Support Centers", $kv);
 
             $model = new Site();
             $list = $model->get();
@@ -140,6 +139,8 @@
             foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("r", "Specific Resources", $kv);
             ?>
+            <br/>
+            <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
         </div>
     </div>
 
@@ -162,7 +163,7 @@
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { $kv[$item->metric_status_id] = $item->metric_status_description; }
-            echo checklist("status", "Resource Status", $kv);
+            echo checklist("status", "Current Resource Status", $kv);
 
             $model = new ServiceTypes();
             $list = $model->get(array("service_group_id"=>1));
@@ -187,40 +188,42 @@
             echo "<input type=\"checkbox\" name=\"has_status\" $checked/> Resource Status Calculated<br/>";
             ?>
 
+            <br/>
+            <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
         </div>
     </div>
-
-    <br/>
-    <div class="indent">
-        <input type="submit" value="&nbsp;&nbsp;&nbsp;Update View&nbsp;&nbsp;&nbsp;"/>
-    </div>
 </form>
- 
+
 <script type="text/javascript">
+
+function showhide_attrs(show_speed)
+{
+    var v = $("select[name=datasource]").val();
+    $(".attrs").hide();
+    if(v != "") {
+        $("#"+v+"_attrs").show(show_speed);
+        $("#resource_area").show(show_speed);
+        $("#filter_area").show(show_speed);
+        $("#resource_area_standby").hide();
+        $("#filter_area_standby").hide();
+
+        if(v == "statushistory" || v == "arhistory" || v == "armetric") {
+            $("#_daterange_attrs").show(show_speed);
+        }
+    } else {
+        $("#resource_area").hide();
+        $("#filter_area").hide();
+        $("#resource_area_standby").show();
+        $("#filter_area_standby").show();
+    }
+}
 
 $(document).ready(function() {
 
     //setup form
     $("select[name=datasource]").change(function() {
-        var v = $(this).val();
-        $(".attrs").hide();
-        if(v != "") {
-            $("#"+v+"_attrs").show('normal');
-            $("#resource_area").show('normal');
-            $("#filter_area").show('normal');
-            $("#resource_area_standby").hide();
-            $("#filter_area_standby").hide();
-            //showhide_filterarea();
-        } else {
-            $("#resource_area").hide();
-            $("#filter_area").hide();
-            $("#resource_area_standby").show();
-            $("#filter_area_standby").show();
-        }
+        showhide_attrs('normal');
     });
-
-    //find if there is any checkbox that is selected in resource_area
-    //$("#resource_area").click(showhide_filterarea);
 
     <?
     //select currently selected datasouce
@@ -228,18 +231,13 @@ $(document).ready(function() {
         $datasource = $_REQUEST["datasource"];
         switch($datasource) {
         case "summary":
-        case "current_status":
-        case "status_history":
-        case "availability_history":
+        case "currentstatus":
+        case "statushistory":
+        case "arhistory":
+        case "armetric":
         case "downtime":
-        case "vo_membership":
-        case "vo_ownership":
-            echo "$('#".$_REQUEST["datasource"]."_attrs').show();\n";
             echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
-            echo '$("#resource_area").show();/*showhide_filterarea();*/';
-            echo '$("#filter_area").show();';
-            echo '$("#resource_area_standby").hide();/*showhide_filterarea();*/';
-            echo '$("#filter_area_standby").hide();';
+            echo "showhide_attrs();\n";
         }
     }
 
@@ -249,22 +247,12 @@ $(document).ready(function() {
     ?>
 });
 
-/*
-function showhide_filterarea() {
-    var checks = $(document).find("#resource_area").find(".resource_check");
-    var hascheck = false;
-    checks.each(function(id) {
-        if($(this)[0].checked) {
-            hascheck = true;
-        }
-    });
-    if(hascheck) {
-        $("#filter_area").show('normal');
-    } else {
-        $("#filter_area").hide();
-    }
+function wizard_submit()
+{
+    var ds = $('select[name=datasource]').val(); 
+    $('#wizard').attr('action', 'wizard'+ds); 
+    $('#wizard').submit(); 
 }
-*/
 
 function disable(e)
 {

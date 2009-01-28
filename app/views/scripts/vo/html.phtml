@@ -68,7 +68,8 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
                 //find resource info
                 foreach($this->resources as $resinfo) {
                     if($resinfo->id == $resource->resource_id) {
-                        $url = base()."/current?resource_id=".$resinfo->id;
+                        $rid = $resinfo->id;
+                        $url = base()."/wizardcurrentstatus?datasource=currentstatus&r=on&r_$rid=on";
                         $out .= "<tr class='$rclass'><td><a href='$url'>".$resinfo->name."</a></td><td>".$resource->percent."%</td></tr>";
                         break;
                     }
@@ -85,7 +86,8 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
 
         $out = "";
         foreach($vo->Members[0]->Resource as $resource) {
-            $url = base()."/current?resource_id=".$resource->ResourceID;
+            $rid = $resource->ResourceID;
+            $url = base()."/wizardcurrentstatus?datasource=currentstatus&r=on&r_$rid=on";
             $out .= "<a href=\"$url\">".$resource->ResourceName[0]."</a><br/>";
         }
         if($out == "") {

@@ -41,12 +41,22 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         echo "<td style=\"padding: 0px;\" valign=\"top\" width=\"$col_p%\">";
         if(!isset($this->resource_status[$rid])) {
-            $note = "Resource status is not calculated for this resource...";
+            $note = "<div>Resource status is not calculated for this resource</div>";
             $status = "UNKNOWN";
         } else {
             $resource_status = $this->resource_status[$rid][0];
-            $note = $resource_status->detail;
+            $note = "<div>".$resource_status->detail."</div>";
             $status = Status::getStatus($resource_status->status_id);
+        }
+
+        if(isset($this->downtime[$rid])) {
+            $downtime = $this->downtime[$rid][0];
+            $status = "DOWNTIME";
+            $downtime_desc = $downtime->downtime_summary;
+            $internal_note = $note;
+            $note = "This service is currently under maintenance.<br/>";
+            $note .= "<div style='background-color: #ddf; padding: 3px;'><b>Maintenance Summary:</b><div>$downtime_desc</div>";
+            $note .= "<b>Internal status:</b>$internal_note</div>";
         }
 
         $services = $this->resource_services[$rid];
@@ -65,28 +75,66 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
     
         echo "<div class=\"status_$status\"><h4><div class=\"resource\">".$resource->name." ($service_names)</div></h4>";
-        if(isset($_REQUEST["summary_attrs_showfqdn"])) {
-            echo "<span class=\"fqdn\">".$resource->fqdn."</span><br/>";
-        }
-        if(isset($_REQUEST["summary_attrs_showdesc"])) {
-            if($resource->description != "") {
-                echo $resource->description."<br/>";
-            } else {
-                echo "(No resource description)<br/>";
-            }
-        }
-        echo "$note<br/>";
+        echo $note;
 
-/*
-        if(!isset($_REQUEST["uwa"])) {
-            $url = base()."/current?resource_id=".$rid;
-            echo "<a href=\"$url\">Current Status</a>&nbsp;&nbsp;&nbsp;";
-            $url = base()."/history?resource_id=".$rid;
-            echo "<a href=\"$url\">Status History</a>&nbsp;&nbsp;&nbsp;";
-            $url = base()."/aandrhistory?resource_id=".$rid;
-            echo "<a href=\"$url\">Availability History</a>&nbsp;&nbsp;&nbsp;";
+        if(isset($_REQUEST["summary_attrs_showdesc"])) {
+            echo "<b>Description:</b> ";
+            echo "<div>";
+            if($resource->description != "") {
+                echo $resource->description;
+            } else {
+                echo "(No resource description)";
+            }
+            echo "</div>";
         }
-*/
+        if(isset($_REQUEST["summary_attrs_showfqdn"])) {
+            echo "<div><span class=\"fqdn\">".$resource->fqdn."</span></div>";
+        }
+        if(isset($_REQUEST["summary_attrs_showvomembership"])) {
+            echo "<b>Supported VOs: </b>";
+            echo "<div>";
+            if(isset($this->vos_supported[$rid])) {
+                $volist = $this->vos_supported[$rid];
+                $vonames = "";
+                foreach($volist as $vo) {
+                    $vonames .= $vo." ";
+                }                
+                echo $vonames;
+            } else {
+                echo "(Information not reported)";
+            }
+            echo "</div>";
+        }
+        if(isset($_REQUEST["summary_attrs_showvoownership"])) {
+            echo "<b>This resource is owned by following VO(s):</b>";
+            echo "<div>";
+            $ownership = $this->resource_ownerships[$rid];
+            if($ownership === null) {
+                echo "(Information not available)<br/>";
+            } else {
+                $chd = "";
+                $chl = "";
+                $total = 0;
+                foreach($ownership as $item) {
+                    if($chd != "") $chd .= ",";
+                    $chd .= $item->percent;
+                    if($chl != "") $chl .= "|";
+                    $chl .= $item->short_name."(".$item->percent."%)";
+                    $total += $item->percent;
+                }
+                if($total < 100) {
+                    if($chd != "") $chd .= ",";
+                    $left = 100 - $total;
+                    $chd .= $left;
+                    if($chl != "") $chl .= "|";
+                    $chl .= "Other($left%)";
+                }
+                $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl";
+                echo "<img src='$url'/><br/>";
+            }
+            echo "</div>";
+        }
+
 
         echo "</div>";
         echo "</td>";

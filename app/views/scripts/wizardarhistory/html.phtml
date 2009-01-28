@@ -1,0 +1,54 @@
+<?
+echo "Between ".date(config()->date_format_full, $this->start_time);
+echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+
+foreach($this->services as $rid=>$services) {
+    $resource_info = $this->resource_info[$rid][0];
+    echo "<div class=\"border\">";
+    echo "<h4><div class=\"resource\">$resource_info->name</div></h4>";
+    echo "<div class=\"indent\">";
+
+    asort($services);
+    if(count($services) == 0) {
+        echo "<p><b>No availability history available for this duration.</b></p>";
+    } else {
+        foreach($services as $service_id=>$recs)
+        {
+            $service_info = $this->service_info[$service_id];
+            $service_name = $service_info[0]->description;
+            echo "<p><b>$service_name</b></p>";
+            $ax = "0";
+            $ay = "-1";
+            $rx = "0";
+            $ry = "-1";
+            $start_date = date(config()->date_format, $this->start_time);
+            $mid_date = date(config()->date_format, $this->start_time + ($this->end_time-$this->start_time)/2);
+            $end_date = date(config()->date_format, $this->end_time);
+            $period = $this->end_time - $this->start_time;
+            foreach($recs as $rec) {
+                if($ax != "") {
+                    $ax .= ",";
+                    $ay .= ",";
+                    $rx .= ",";
+                    $ry .= ",";
+                }
+                $x = round(($rec->timestamp - $this->start_time) / $period * 100);
+                $ax .= $x;
+                $ay .= $rec->availability*100;
+                $rx .= $x;
+                $ry .= $rec->reliability*100;
+            }
+            $url = "http://chart.apis.google.com/chart?chs=550x100";
+            $url .= "&cht=lxy&chxt=x,y";
+            $url .= "&chxl=0:|$start_date|$mid_date|$end_date|1:|0%|25%|50%|75%|100%";
+            $url .= "&chdl=Availability|Reliability&chco=00ff00,0000ff";
+            $url .= "&chm=B,99ff99,0,-1,0";
+            $url .= "&chd=t:$ax|$ay|$rx|$ry";
+            $url .= "&chg=10,25,1";
+            $url .= "&chls=2,1,0|2,1,0";
+            echo "<img src='$url'/><br/>";
+        }
+    }
+    echo "</div>";//indent
+    echo "</div>";//border
+}

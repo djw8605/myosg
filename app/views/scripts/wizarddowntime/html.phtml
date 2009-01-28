@@ -1,0 +1,43 @@
+<h3>Currently Under Maintenance</h3>
+<?
+foreach($this->downtimes as $downtime_a)
+{
+    $downtime = $downtime_a[0];
+    if(in_array($downtime->resource_id, $this->resource_ids)) {
+        //only show event that we have pulled resource for
+        $resource = $this->resources[$downtime->resource_id];
+        $resource_name = $resource[0]->name;
+        if($resource_name !== null) {
+            echo "<div class='border'>";
+
+            $name = $resource_name;
+            echo "<h4><div class='resource'>".$name."</div></h4>";
+
+            $start = date(config()->date_format_full, $downtime->unix_start_time);
+            $end = date(config()->date_format_full, $downtime->unix_end_time);
+            echo "<p>From $start to $end</p>";
+
+            $affected_services = "";
+            foreach($this->downtime_services as $service) {
+                if($service->downtime_id == $downtime->downtime_id) {
+                    $service_info = $this->service_info[$service->service_id][0];
+                    $affected_services .= $service_info->description. " ";
+                }
+            }
+            echo "<p>Affected Services: $affected_services</p>";
+
+            //echo "<div class='indent'>";
+            echo "<blockquote>";
+            $desc = $downtime->downtime_summary;
+            $desc = str_replace(array("\n", "\r"), "", $desc);
+            echo "<p>".$desc."</p>";
+            echo "</blockquote>";
+
+            echo "</div>";//border
+        }
+    }
+}
+?>
+
+<h3>Future Maintenance</h3>
+TODO...

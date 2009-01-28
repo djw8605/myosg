@@ -9,7 +9,7 @@
 
 <link href="<?=base()?>/css/emerald/default.css" rel="stylesheet" type="text/css" />
 <link href="<?=base()?>/css/osg.css" rel="stylesheet" type="text/css" />
-<script type='text/javascript' src='<?=base()?>/lib/jquery-1.2.6/jquery.js'></script>
+<script type='text/javascript' src='<?=base()?>/lib/jquery-1.3.1/jquery.js'></script>
 <script language='javascript'>
 var query = {};
 function uwa() { return false; }
@@ -38,17 +38,16 @@ parseQuery();
 
     <div id="menu">
         <ul>
-            <li id="menu_rsv" class="first"><a href="<?=base()?>/resources">RSV</a></li>
+            <li id="menu_rsv" class="first"><a href="<?=base()?>/wizard">RSV</a></li>
             <li id="menu_gratia"><a href="<?=base()?>/gratiajob">Gratia</a></li>
             <li id="menu_about"><a href="<?=base()?>/about">About</a></li>
         </ul>
     </div>
 
     <div class="submenu hidden" id="submenu_rsv">
-        <span id="submenu_rsv_resources"><a href="<?=base()?>/resources">Resource Groups</a></span>
+        <span id="submenu_rsv_wizard"><a href="<?=base()?>/wizard">Resource Wizard</a></span>
+        <span id="submenu_rsv_map"><a href="<?=base()?>/map">Status Map</a></span>
         <span id="submenu_rsv_vo"><a href="<?=base()?>/vo">Virtual Organizations</a></span>
-        <span id="submenu_rsv_map"><a href="<?=base()?>/map">RSV Status Map</a></span>
-        <span id="submenu_rsv_aandr"><a href="<?=base()?>/aandr">Availability</a></span>
         <span id="submenu_rsv_doc"><a target="_blank" href="http://rsv.grid.iu.edu/documentation/">Documentation (External)</a></span>
         <span id="submenu_rsv_rsv"><a href="<?=base()?>/rsv">About RSV</a></span>
     </div>

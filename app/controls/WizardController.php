@@ -3,7 +3,7 @@
 class WizardController extends ControllerBase
 {
     public function breads() { return array("rsv"); }
-    public static function default_title() { return "RSV Information Wizard"; }
+    public static function default_title() { return "Resource Wizard"; }
     public static function default_url($query) { return ""; }
 
     public function load()
@@ -16,6 +16,78 @@ class WizardController extends ControllerBase
                 $this->view->info = "No resource matches your current criteria."; 
             }
         }
+    }
+
+    public function flashAction()
+    {
+        // some typical movie variables
+        Ming_setScale(20.0000000);
+        ming_useswfversion(6);
+        $movie = new SWFMovie();
+        $movie->setRate(60);
+        $movie->setDimension(550, 400);
+        $movie->setBackground(rand(0,0xFF),rand(0,0xFF),rand(0,0xFF));
+
+        // create a centered square shape
+        $sh=new SWFShape(); 
+        $sh->setRightFill(255,155,0);
+        $sh->movePenTo(-50,-50); 
+        $sh->drawLine(100,0);  
+        $sh->drawLine(0,100); 
+        $sh->drawLine(-100,0); 
+        $sh->drawLine(0,-100); 
+
+        // add shape to holder sprite
+        $holder= new SWFSprite();
+        $f1 = $holder->add($sh);
+        $holder->nextFrame();
+
+        // add holder sprite to library and
+        // give sprite linkage name 'sq'
+        $movie->addExport($holder, 'sq');
+
+        // export 'sq' in frame 1 of movie
+        $movie->writeExports();
+
+        // Object.registerClass actionscript
+        $strAction = <<<EOT
+        // create class
+        function RotateClip() {};
+        RotateClip.prototype = new MovieClip();
+        RotateClip.prototype.onEnterFrame = function() {
+            this._rotation+=this.rotationspeed;
+        };
+
+        // associate RotateClip class with sq
+        Object.registerClass('sq', RotateClip);
+
+        // attach sq and set sq1 rotationspeed to 15
+        attachMovie('sq','sq1',1,{rotationspeed:15});
+        sq1._x=150;
+        sq1._y=100;
+
+        // attach sq and set sq2 rotationspeed to -5
+        attachMovie('sq','sq2',2,{rotationspeed:-5});
+        sq2._x=350;
+        sq2._y=100;
+
+        // attach sq and set sq3 rotationspeed to 5
+        attachMovie('sq','sq3',3,{rotationspeed:5});
+        sq3._x=150;
+        sq3._y=300;
+
+        // attach sq and set sq4 rotationspeed to -15
+        attachMovie('sq','sq4',4,{rotationspeed:-15});
+        sq4._x=350;
+        sq4._y=300;
+EOT;
+
+        // add actionscript to root timeline of movie
+        $movie->add(new SWFAction($strAction));
+
+        header('Content-type: application/x-shockwave-flash');
+        $movie->output();
+        $this->render("none", null, true);
     }
 
     //from user query, find the list of resources to display information
@@ -285,4 +357,42 @@ class WizardController extends ControllerBase
         }
         return $resources_to_keep;
     }
+
+    protected function load_daterangequery()
+    {
+        //set some defaults
+        if(!isset($_REQUEST["start_type"])) {
+            $_REQUEST["start_type"] = "7daysago";
+        }
+        if(!isset($_REQUEST["end_type"])) {
+            $_REQUEST["end_type"] = "today";
+        }
+
+        switch($_REQUEST["start_type"]) {
+        case "yesterday":
+            $this->view->start_time = time() - 3600*24;
+            break;
+        case "7daysago":
+            $this->view->start_time = time() - 3600*24*7;
+            break;
+        case "30daysago":
+            $this->view->start_time = time() - 3600*24*30;
+            break;
+        case "specific":
+            $str = $_REQUEST["start_date"];
+            $this->view->start_time = strtotime($str);
+            break;
+        }
+
+        switch($_REQUEST["end_type"]) {
+        case "today":
+            $this->view->end_time = time();
+            break;
+        case "specific":
+            $str = $_REQUEST["end_date"];
+            $this->view->end_time = strtotime($str);
+            break;
+        }
+    }
+
 }

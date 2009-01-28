@@ -73,10 +73,10 @@ class VoController extends ControllerBase
                 $this->view->vos = $newlist;
             }
         }
- 
+
         //this doesn't sort case-insensitively... maybe this should be done via rsv-process
         ksort($this->view->vos, SORT_STRING);
 
-        $this->setpagetitle(VoController::default_title());
+        $this->setpagetitle(self::default_title());
     }
-} 
+}
