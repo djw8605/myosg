@@ -72,7 +72,11 @@ foreach($this->sites as $site) {
     foreach($rgs as $rg) {
         $rgid = $rg->resource_group_id;
         $rgname = $rg->name;
-        //$target = "target=\"blank\"";
+        if(uwa()) {
+            $target = "target=\"blank\"";
+        } else {
+            $target = "";
+        }
         $html .= "<h3>Resource Group: <a $target href=\"".fullbase()."/wizardsummary?datasource=summary&rg=on&rg_$rgid=on\">$rgname</a></h3>";
         if(isset($this->resources_bygid[$rg->resource_group_id])) {
             $rs = $this->resources_bygid[$rg->resource_group_id];

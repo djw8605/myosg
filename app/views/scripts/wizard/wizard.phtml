@@ -62,7 +62,7 @@
             </div>
         </p>
         <br/>
-        <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
+        <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
     </div>
 
     <h3>Resources to display</h3>
@@ -140,7 +140,7 @@
             echo checklist("r", "Specific Resources", $kv);
             ?>
             <br/>
-            <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
+            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
         </div>
     </div>
 
@@ -189,8 +189,18 @@
             ?>
 
             <br/>
-            <input type="button" onclick="wizard_submit();" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
+            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
         </div>
+
+    </div>
+
+
+    <h3>Subscribe</h3>
+    <div class="indent">
+        <p>Subscribe to the content of this page.</p>
+            <a href="#" onclick="wizard_submit('addigoogle');">iGoogle</a><br/>
+            <a href="#" onclick="wizard_submit('adduwa');">Netvibes</a><br/>
+            <a href="#" onclick="wizard_submit('xml');">XML</a><br/>
     </div>
 </form>
 
@@ -247,10 +257,11 @@ $(document).ready(function() {
     ?>
 });
 
-function wizard_submit()
+function wizard_submit(format)
 {
-    var ds = $('select[name=datasource]').val(); 
-    $('#wizard').attr('action', 'wizard'+ds); 
+    var action = '<?=fullbase()?>/wizard'+$('select[name=datasource]').val(); 
+    action += "/"+format;
+    $('#wizard').attr('action', action);
     $('#wizard').submit(); 
 }
 

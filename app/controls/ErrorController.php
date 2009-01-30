@@ -10,7 +10,7 @@ class ErrorController extends Zend_Controller_Action
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 error -- controller or action not found
-                $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+                //$this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found'); //looks like this gets overriden by render()
                 $this->render('404');
                 break;
             default:

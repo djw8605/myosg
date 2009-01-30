@@ -5,10 +5,10 @@ class WizardsummaryController extends WizardController
     public static function default_title() { return "Resource Summary"; }
     public static function default_url($query) { return ""; }
 
-    public function indexAction()
+    public function load()
     {
-        $this->load();
-
+        parent::load();
+        
         //pull needed info
         $gridtype_model = new GridTypes();
         $this->view->gridtypes = $gridtype_model->getindex();

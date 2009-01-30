@@ -5,7 +5,7 @@ foreach($this->breadcrumbs as $crumb)
     $title = $crumb[0];
     $url = $crumb[1];
     echo " &gt; ";
-    echo "<a href='$url'>$title</a>";
+    echo "<a href='".fullbase()."/$url'>$title</a>";
 }
 echo " &gt; ".$this->page_title."</p>";
 

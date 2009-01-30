@@ -8,13 +8,30 @@ class WizardController extends ControllerBase
 
     public function load()
     {
-        $this->setpagetitle(self::default_title());
+        $this->setpagetitle($this->default_title());
 
         if(isset($_REQUEST["datasource"])) {
             $this->resource_ids = $this->process_resourcelist();
             if(count($this->resource_ids) == 0) {
                 $this->view->info = "No resource matches your current criteria."; 
             }
+        }
+
+    }
+
+    public function xmlAction()
+    {
+        $this->setpagetitle($this->default_title());
+
+        //find if xml.phtml exists for this control
+        $name = $this->getRequest()->getControllerName();
+        $path = $this->view->getScriptPath("").$name."/xml.phtml";
+        slog("testint to see if following file exists: $path");
+        if(file_exists($path)) {
+            //if so, then we support xml
+            parent::xmlAction();
+        } else {
+            $this->render("noxml", null, true);
         }
     }
 
@@ -27,6 +44,13 @@ class WizardController extends ControllerBase
         $movie->setRate(60);
         $movie->setDimension(550, 400);
         $movie->setBackground(rand(0,0xFF),rand(0,0xFF),rand(0,0xFF));
+
+        $f = new SWFFont('Arial');
+        $t = new SWFTextField();
+        $t->setFont($f);
+        $t->setHeight(200);
+        $t->addString('MyOSG');
+        $movie->add($t);
 
         // create a centered square shape
         $sh=new SWFShape(); 

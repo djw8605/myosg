@@ -6,9 +6,9 @@ class WizardcurrentstatusController extends WizardController
     public static function default_title() { return "Current Status"; }
     public static function default_url($query) { return ""; }
 
-    public function indexAction()
+    public function load()
     {
-        $this->load();
+        parent::load();
 
         $model = new Resource();
 

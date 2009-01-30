@@ -15,6 +15,7 @@ abstract class ControllerBase extends Zend_Controller_Action
         setpagename($this->pagename());
         $this->initbread();
         $this->selectmenu();
+        $this->setpagetitle("Untitled Page");
     }
 
     private function composeControllerName($page)
@@ -74,13 +75,31 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function htmlAction()
     {
         $this->load();
-        if(isset($_REQUEST["uwa"])) setuwa();
     }
+
     public function uwaAction()
     {
         $this->load();
         $this->render("uwa", null, true);
     }
+
+    public function adduwaAction()
+    {
+        $url = urlencode(fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"]);
+        $target = " http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=$url";
+        slog("Redirecting to $target");
+        header("Location: $target");
+        exit;
+    }
+
+    public function addigoogleAction()
+    {
+        $url = urlencode(fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"]);
+        $url = urlencode("www.netvibes.com/api/uwa/compile/google.php?moduleUrl=".$url);
+        header("Location: http://www.google.com/ig/add?moduleurl=$url");
+        exit;
+    }
+
     public function xmlAction()
     {
         $this->load();
@@ -93,12 +112,6 @@ abstract class ControllerBase extends Zend_Controller_Action
     } 
 
     abstract public function breads(); //return array containing pagename leading to this page
-    /* php doesn't allow abstract static functions, but all controller must override these
-    public static function default_title() {}
-    public static function default_url($query) {}
-    */
-    public function load() {
-        $this->setpagetitle("Untitled Page");
-    }
+    abstract public function load();
 
 }

@@ -7,9 +7,9 @@ class WizardarmetricController extends WizardController
     public static function default_title() { return "Availability Metrics"; }
     public static function default_url($query) { return ""; }
 
-    public function indexAction()
+    public function load()
     {
-        $this->load();
+        parent::load();
         $this->load_daterangequery();
 
         //load resource list

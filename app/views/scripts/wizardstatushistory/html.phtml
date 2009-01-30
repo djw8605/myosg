@@ -81,7 +81,7 @@ function checkAnchor(){
             $(".history_detail").html("");
 
             //$("#history_detail_"+mark_resource_id).html("Loading..");
-            $("#history_detail_"+mark_resource_id).load("<?=fullbase()."/".pagename()?>/"+anchor, 
+            $("#history_detail_"+mark_resource_id).html("<img src='<?=fullbase()?>/images/loading_animation_small.gif'/> Loading...").load("<?=fullbase()."/".pagename()?>/"+anchor, 
                 function() {
                     mark();
                     window.scroll(0, $("#resource_"+mark_resource_id).parent().position().top);

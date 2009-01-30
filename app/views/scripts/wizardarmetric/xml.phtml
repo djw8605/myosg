@@ -1,0 +1,33 @@
+<ARMetrics>
+<?
+echo "<StartTime>$this->start_time</StartTime>";
+echo "<EndTime>$this->end_time</EndTime>";
+foreach($this->data as $resource_id=>$resource) {
+    $resource_info = $this->resources[$resource_id];
+
+    echo "<Resource>";
+    echo "<ID>$resource_id</ID>";
+    echo "<Name>".htmlentities($resource_info[0]->name)."</Name>";
+
+    if(count($resource) == 0) {
+        echo "<Note>(No information)</Note>";
+        continue;
+    }
+    $history_url = fullbase()."/history?resource_id=$resource_id&amp;period=".$_REQUEST["period"];
+
+    foreach($resource as $service_id=>$data) {
+        echo "<Service>";
+        if($data == null) continue;
+        $service_info = $this->services[$service_id];
+        $service_name = $service_info[0]->name;
+        $a = round((double)$data["availability"]*100, 2);
+        $r = round((double)$data["reliability"]*100, 2);
+
+        echo "<Name>".htmlentities($service_name)."</Name>";
+        echo "<Availability>$a%</Availability><Reliability>$r%</Reliability>";
+        echo "</Service>";
+    }
+    echo "</Resource>";
+}
+?>
+</ARMetrics>

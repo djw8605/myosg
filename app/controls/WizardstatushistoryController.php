@@ -5,9 +5,9 @@ class WizardstatushistoryController extends WizardController
     public static function default_title() { return "Status History"; }
     public static function default_url($query) { return ""; }
 
-    public function indexAction()
+    public function load()
     {
-        $this->load();
+        parent::load();
 
         $resource_model = new Resource();
         $resource_service_model = new ResourceServices();

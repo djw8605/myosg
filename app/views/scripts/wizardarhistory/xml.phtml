@@ -1,24 +1,24 @@
+<ARHistory>
 <?
-echo "Between ".date(config()->date_format_full, $this->start_time);
-echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+echo "<StartTime>$this->start_time</StartTime>";
+echo "<EndTime>$this->end_time</EndTime>";
 
 foreach($this->services as $rid=>$services) {
     $resource_info = $this->resource_info[$rid][0];
-    echo "<div class=\"border\">";
-    echo "<h4><div class=\"resource\">$resource_info->name</div></h4>";
-    if(!uwa()) {
-        echo "<div class=\"indent\">";
-    }
+    echo "<Resource>";
+    echo "<ID>$rid</ID>";
+    echo "<Name>".htmlentities($resource_info->name)."</Name>";
 
     asort($services);
     if(count($services) == 0) {
-        echo "<p><b>No availability history available for this duration.</b></p>";
+        echo "<Note>No availability history available for this duration.</Note>";
     } else {
         foreach($services as $service_id=>$recs)
         {
+            echo "<Service>";
             $service_info = $this->service_info[$service_id];
             $service_name = $service_info[0]->description;
-            echo "<p><b>$service_name</b></p>";
+            echo "<Name>".htmlentities($service_name)."</Name>";
             $ax = "0";
             $ay = "-1";
             $rx = "0";
@@ -57,11 +57,11 @@ foreach($this->services as $rid=>$services) {
             $url .= "&chd=t:$ax|$ay|$rx|$ry";
             $url .= "&chg=10,25,1";
             $url .= "&chls=2,1,0|2,1,0";
-            echo "<img src='$url'/><br/>";
+            echo "<GraphURL>".htmlentities($url)."</GraphURL>";
+            echo "</Service>";
         }
     }
-    if(!uwa()) {
-        echo "</div>";//indent
-    }
-    echo "</div>";//border
+    echo "</Resource>";
 }
+?>
+</ARHistory>

@@ -3,7 +3,16 @@
 //global variable to store list of filter variables
 $g_filters = array();
 
-$g_uwa = false;
+function uwa()
+{
+    if(isset($_REQUEST["uwa"])) {
+        return true;
+    }
+    return false;
+}
+
+
+/*
 function uwa()
 {
     global $g_uwa;
@@ -14,7 +23,7 @@ function setuwa()
     global $g_uwa;
     $g_uwa = true;
 }
-
+*/
 //returns a unique id number for div element (only valid for each session - don't store!)
 function getuid()
 {

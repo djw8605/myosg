@@ -1,5 +1,7 @@
+<CurrentStatus>
 <?
 foreach($this->cache as $rid=>$cache) {
+    echo "<Resource>";
     $timestamp = (int)$cache->Timestamp[0];
     $status = $cache->Status[0];
     $note = $cache->Note[0];
@@ -7,36 +9,29 @@ foreach($this->cache as $rid=>$cache) {
 
     $resource = $this->resources[$rid];
     $resource_name = $resource->name;
-    dlog($resource);
 
     ?>
-    <div class="border">
-    <div class="status_<?=$status?>">
-    <h4><div class="resource" style="font-size: 13px;"><?=$resource_name?></div></h4>
-    <p><?=$note?></p>
-    </div>
-    <div class="indent">
+    <Status><?=$status?></Status>
+    <ResourceName><?=$resource_name?></ResourceName>
+    <Note><?=htmlentities($note)?></Note>
     <?
     foreach($services as $service) {
-
+        echo "<Service>";
         $service_status = $service->Status;
         $note = $service->Note;
 
-        echo "<h3>".$service->ServiceDescription." Service Status</h3>"; 
-        echo "<div class=\"status_$service_status\">";
-        echo $note;
+        echo "<Description>".$service->ServiceDescription." Service Status</Description>";
+        echo "<Status>$service_status</Status>";
+        echo "<Note>".htmlentities($note)."</Note>";
 
         //critical metrics
         $out = "";
         foreach($service->CriticalMetrics[0] as $metric) {
             $out .= outputMetricInfo($metric, $timestamp);
         }
-        if(!isset($_REQUEST["uwa"])) {
-            $title = "<span class=\"h3\">Critical Metrics</span>";
-            echo outputToggle($title, $title, $out, true);
-        } else {
-            echo $out;
-        }
+        echo "<CriticalMetrics>";
+        echo $out;
+        echo "</CriticalMetrics>";
 
         //non-critical metrics
         if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
@@ -47,15 +42,11 @@ foreach($this->cache as $rid=>$cache) {
                     $out .= outputMetricInfo($metric, $timestamp);
                 }
             }
-            if($out != "") {
-                $title = "<span class=\"h3\">Non-Critical Metrics</span>";
-                echo outputToggle($title, $title, $out);
-            }
+            echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
         }
-        echo "</div>";
+        echo "</Service>";
     }
-    echo "</div>";//indent
-    echo "</div>";//border
+    echo "</Resource>";
 }
 
 
@@ -66,12 +57,12 @@ function outputMetricInfo($metric, $timestamp)
     $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
 
     $detail = $metric->Detail;
-    $out = "";
-    $expired_css = "";
-    if($expired) $expired_css = "expired";
-    $out .= "<div class=\"bottom_border status_".$metric->Status." $expired_css\">";
+    $out = "<Metric>";
+    $expired_css = "false";
+    if($expired) $expired_css = "true";
+    $out .= "<Status>".$metric->Status."</Status><Expired>$expired_css</Expired>";
     if($metric->Timestamp != "") {
-        $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)." ago</div>";
+        $out .= "<ReportedAt>".$metric->Timestamp."</ReportedAt>";
     }
     $name = $metric->MetricCommonName;
     $desc = $metric->MetricDescription;
@@ -80,25 +71,23 @@ function outputMetricInfo($metric, $timestamp)
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
     if($expired) $name .= " (Expired)";
-    $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
+    $out .= "<Description>".htmlentities($desc)."</Description><HelpURL>".htmlentities($help_url)."</HelpURL><Name>$name</Name>";
     if(!isset($_REQUEST["uwa"])) {
         if(trim($detail) == "") {
-            $detail = "(No detail provided)<br/>";
+            $detail = "<Detail>(No detail provided)</Detail>";
         } else {
-            $detail = "<pre>$detail</pre>";
+            $detail = "<Detail>".htmlentities($detail)."</Detail>";
             $id = $metric->MetricDataID;
-            $detail .= "Metric Data ID: $id ";
+            $detail .= "<MetricDataID>$id</MetricDataID>";
             $fresh_for = $metric->MetricFreshFor;
-            $detail .= "Fresh for: ".humanDuration($fresh_for);
-            $detail .= "<br/>";
+            $detail .= "<FreshFor>".$fresh_for."</FreshFor>";
         }
-        //wrap detail with toggler
-        $detail = outputToggle("Show Detail", "Hide Detail", $detail);
-
         $out .= $detail;
     }
-    $out .= "</div>";
+    $out .= "</Metric>";
 
     return $out;
 }
 
+?>
+</CurrentStatus>

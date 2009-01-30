@@ -3,6 +3,8 @@ $url = "https://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 $url = urlencode($url);
 ?>
 <h3>Feedback</h3>
-<p>Do you have an idea to make this tool more useful? Please send us an email at <a href="mailto:goc-issues@googlegroups.com?subject=Comment on <?=config()->app_name;?>&body=GOC,%0A%0AI'd like to comment on following page. %0A<?=$url?> %0A%0A(YOUR COMMENT HERE)">goc-issues@googlegroups.com</a></p>
+<div class="indent">
+<p>Do you have an idea to make this page more useful? Please send us your comment at <a href="mailto:goc-issues@googlegroups.com?subject=Comment on <?=config()->app_name;?>&body=GOC,%0A%0AI'd like to comment on following page. %0A<?=$url?> %0A%0A(YOUR COMMENT HERE)">goc-issues@googlegroups.com</a></p>
 <br/>
 <p>Report bugs at <a href="http://code.google.com/p/osggoc/issues/entry">GOC Bug Tracker</a></p>
+</div>
