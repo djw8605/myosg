@@ -74,7 +74,12 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             }
         }
     
-        echo "<div class=\"status_$status\"><h4><div class=\"resource\">".$resource->name." ($service_names)</div></h4>";
+        if(uwa()) {
+            $cls = "";
+        } else {
+            $cls = "resource";
+        }
+        echo "<div class=\"status_$status\"><h4><div class=\"$cls\">".$resource->name." ($service_names)</div></h4>";
         echo $note;
 
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
@@ -108,10 +113,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<b>This resource is owned by following VO(s):</b>";
             echo "<div>";
-            $ownership = $this->resource_ownerships[$rid];
-            if($ownership === null) {
+            if(!isset($this->resource_ownership[$rid])) {
                 echo "(Information not available)<br/>";
             } else {
+                $ownership = $this->resource_ownerships[$rid];
                 $chd = "";
                 $chl = "";
                 $total = 0;

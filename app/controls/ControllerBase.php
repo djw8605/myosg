@@ -14,7 +14,7 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         setpagename($this->pagename());
         $this->initbread();
-        $this->selectmenu();
+        $this->selectmenu($this->pagename());
         $this->setpagetitle("Untitled Page");
     }
 
@@ -56,8 +56,9 @@ abstract class ControllerBase extends Zend_Controller_Action
         $this->load();
 
     }
-    private function selectmenu()
+    public function selectmenu($menu)
     {
+/*
         //based on the breadcrumb select correct menu item
         $breads = $this->breads();
         if(isset($breads[0])) {
@@ -70,6 +71,8 @@ abstract class ControllerBase extends Zend_Controller_Action
         } else {
             $this->view->submenu_selected = $this->pagename();
         }
+*/
+        $this->view->menu_selected = $menu;
     }
 
     public function htmlAction()
@@ -111,7 +114,7 @@ abstract class ControllerBase extends Zend_Controller_Action
         return Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
     } 
 
-    abstract public function breads(); //return array containing pagename leading to this page
+    //abstract public function breads(); //return array containing pagename leading to this page
     abstract public function load();
 
 }

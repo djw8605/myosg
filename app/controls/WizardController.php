@@ -3,12 +3,13 @@
 class WizardController extends ControllerBase
 {
     public function breads() { return array("rsv"); }
-    public static function default_title() { return "Resource Wizard"; }
+    public static function default_title() { return "OSG Resource"; }
     public static function default_url($query) { return ""; }
 
     public function load()
     {
         $this->setpagetitle($this->default_title());
+        $this->selectmenu("wizard");
 
         if(isset($_REQUEST["datasource"])) {
             $this->resource_ids = $this->process_resourcelist();
@@ -16,7 +17,6 @@ class WizardController extends ControllerBase
                 $this->view->info = "No resource matches your current criteria."; 
             }
         }
-
     }
 
     public function xmlAction()

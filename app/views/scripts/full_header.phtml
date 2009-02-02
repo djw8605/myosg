@@ -45,35 +45,16 @@ parseQuery();
         return base()."/".$page.$param;
     }?>
 
-    <div id="menu">
-        <ul>
-            <li id="menu_about"><a href="<?=default_url("about")?>">About</a></li>
-            <li id="menu_rsv" class="first"><a href="<?=default_url("wizard")?>">RSV</a></li>
-            <li id="menu_gratia"><a href="<?=default_url("gratiajob")?>">Gratia</a></li>
-        </ul>
-    </div>
-
-    <div class="submenu hidden" id="submenu_rsv">
-        <span id="submenu_rsv_wizard"><a href="<?=default_url("wizard")?>">Resource Wizard</a></span>
-        <span id="submenu_rsv_map"><a href="<?=default_url("map")?>">Status Map</a></span>
-        <span id="submenu_rsv_vo"><a href="<?=default_url("vo")?>">Virtual Organizations</a></span>
-        <span id="submenu_rsv_doc"><a target="_blank" href="http://rsv.grid.iu.edu/documentation/">Documentation (External)</a></span>
-        <span id="submenu_rsv_rsv"><a href="<?=default_url("rsv")?>">About RSV</a></span>
-    </div>
-
-    <div class="submenu hidden" id="submenu_gratia">
-        <span id="submenu_gratia_gratiajob"><a href="<?=default_url("gratiajob")?>">Job Activity</a></span>
-        <span id="submenu_gratia_gratia"><a href="<?=default_url("gratia")?>">About Gratia</a></span>
-    </div>
-
-    <div class="submenu hidden" id="submenu_about">
-        <span id="submenu_about_about"><a href="<?=default_url("about")?>">MyOSG</a></span>
+    <div class="submenu">
+        <span id="menu_about"><a href="<?=default_url("about")?>">Home</a></span>
+        <span id="menu_wizard"><a href="<?=default_url("wizard")?>">Resource</a></span>
+        <span id="menu_vo"><a href="<?=default_url("vo")?>">Virtual Organizations</a></span>
+        <span id="menu_map"><a href="<?=default_url("map")?>">Status Map</a></span>
+        <span id="menu_gratiajob"><a href="<?=default_url("gratiajob")?>">(Gratia)</a></span>
     </div>
 
     <script type="text/javascript">
         $("#menu_<?=$this->menu_selected?>").addClass("selected");
-        $("#submenu_<?=$this->menu_selected?>").removeClass("hidden");
-        $("#submenu_<?=$this->menu_selected?>_<?=$this->submenu_selected?>").addClass("selected");
     </script>
     <div id="content">
 <?
