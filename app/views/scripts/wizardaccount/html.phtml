@@ -1,0 +1,16 @@
+<script type="text/javascript" src='<?=base()?>/lib/jquery-1.3.1/jquery.lazyload.mini.js'></script>
+
+<h3><?=$this->sub_title?></h3>
+<?
+foreach($this->graph_urls as $resource_name=>$url) {
+    echo "<div style='min-height: 400px'>";
+    echo "<h4>".$resource_name."</h4>\n";
+    echo "<img src=\"$url&width=650&height=400&text_size=10&title_size=0&text_padding=3\"/>\n";
+    echo "</div>";
+}
+
+?>
+
+<script type="text/javascript">
+$("img").lazyload({placeholder:"<?=fullbase()?>/images/loading_animation_small.gif", effect: "fadeIn"});
+</script>

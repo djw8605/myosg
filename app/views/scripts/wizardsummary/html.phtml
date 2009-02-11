@@ -113,7 +113,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<b>This resource is owned by following VO(s):</b>";
             echo "<div>";
-            if(!isset($this->resource_ownership[$rid])) {
+            if(!isset($this->resource_ownerships[$rid])) {
                 echo "(Information not available)<br/>";
             } else {
                 $ownership = $this->resource_ownerships[$rid];

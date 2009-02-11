@@ -26,11 +26,13 @@
         <select name="datasource">
         <option value="">(Please Select)</option>
         <option value="summary">Resource Summary</option>
-        <option value="currentstatus">Current Status</option>
-        <option value="statushistory">Status History</option>
+        <option value="currentstatus">RSV Status</option>
+        <option value="gipstatus">GIP Status</option>
+        <option value="statushistory">RSV Status (History)</option>
         <option value="arhistory">Availability History</option>
         <option value="armetric">Availability Metrics</option>
         <option value="downtime">Downtime Schedule</option>
+        <option value="account">Accounting</option>
         </select>
         <p>
             <div id="summary_attrs" class="attrs indent hidden">
@@ -55,6 +57,10 @@
 
             <div id="downtime_attrs" class="attrs indent hidden">
                 <?=$this->render("wizard/wizard_downtime.phtml")?>
+            </div>
+
+            <div id="account_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_account.phtml")?>
             </div>
 
             <div id="_daterange_attrs" class="attrs indent hidden">
@@ -217,7 +223,7 @@ function showhide_attrs(show_speed)
         $("#resource_area_standby").hide();
         $("#filter_area_standby").hide();
 
-        if(v == "statushistory" || v == "arhistory" || v == "armetric") {
+        if(v == "statushistory" || v == "arhistory" || v == "armetric" || v == "account") {
             $("#_daterange_attrs").show(show_speed);
         }
     } else {
@@ -246,6 +252,7 @@ $(document).ready(function() {
         case "arhistory":
         case "armetric":
         case "downtime":
+        case "account":
             echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
             echo "showhide_attrs();\n";
         }

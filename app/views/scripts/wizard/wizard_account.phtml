@@ -1,0 +1,18 @@
+Show Accounting Data for: 
+<select name="account_type">
+<option value="cumulative_hours">Cumulative Hours (Grouped by VO)</option>
+<option value="daily_hours_byvo">Daily CPU Hours (Grouped by VO)</option>
+<option value="daily_hours_byusername">Daily CPU Hours (Grouped by Username)</option>
+<option value="job_count_byvo">Job Count (Grouped by VO)</option>
+<option value="wall_success">VO "Wall Success" Rate</option>
+<option value="cpu_efficiency">CPU Efficiency</option>
+</select>
+<?if(isset($_REQUEST["account_type"])) {
+    $account_type = $_REQUEST["account_type"];
+    ?>
+    <script type="text/javascript">
+    $(document).ready(function() {
+            $("option[value=<?=$account_type?>]").attr('selected', 'selected');
+    });
+    </script>
+<?}?>

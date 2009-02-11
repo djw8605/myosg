@@ -384,6 +384,7 @@ EOT;
 
     protected function load_daterangequery()
     {
+        $today_begin = (time() / (3600*24)) * (3600*24);
         //set some defaults
         if(!isset($_REQUEST["start_type"])) {
             $_REQUEST["start_type"] = "7daysago";
@@ -394,13 +395,13 @@ EOT;
 
         switch($_REQUEST["start_type"]) {
         case "yesterday":
-            $this->view->start_time = time() - 3600*24;
+            $this->view->start_time = $today_begin - 3600*24;
             break;
         case "7daysago":
-            $this->view->start_time = time() - 3600*24*7;
+            $this->view->start_time = $today_begin - 3600*24*7;
             break;
         case "30daysago":
-            $this->view->start_time = time() - 3600*24*30;
+            $this->view->start_time = $today_begin - 3600*24*30;
             break;
         case "specific":
             $str = $_REQUEST["start_date"];
@@ -410,7 +411,7 @@ EOT;
 
         switch($_REQUEST["end_type"]) {
         case "today":
-            $this->view->end_time = time();
+            $this->view->end_time = $today_begin;
             break;
         case "specific":
             $str = $_REQUEST["end_date"];

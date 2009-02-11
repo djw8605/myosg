@@ -22,18 +22,14 @@ a
 {
 	color: #996611;
 }
-/* Outer */
-#outer
+table tr
 {
+vertical-align: top;
 }
-/* Header */
-#header
-{
-	height: 40px;
-        padding-bottom: 20px;
-        background: #195866 url('images/n1.gif') repeat-x;
+#header {
 	padding-left: 65px;
-	padding-top: 0px;
+        background: #195866 url('images/n1.gif') repeat-x;
+	height: 60px;
 }
 #header h1 a
 {
@@ -43,13 +39,10 @@ a
 #header h1
 {
         padding-top: 7px;
-        padding-bottom: 2px;
 	font-size: 15pt;
 }
 #header h2
 {
-	position: relative;
-	top: -0.3em;
 	color: #EfE8C2;
 	font-weight: normal;
 	font-size: 13pt;
