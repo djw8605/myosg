@@ -140,16 +140,16 @@ class WizardstatushistoryController extends WizardController
         if($end_time == time()) {
             $end_marker = "now";
         } else {
-            $end_marker = date(config()->date_format_full, $end_time);
+            $end_marker = date(config()->date_format, $end_time);
         }
 
         $total = $end_time - $start_time;
         $q25 = $start_time + $total / 4;
-        $mark_25th = date(config()->date_format_full, $q25);
+        $mark_25th = date(config()->date_format, $q25);
         $q50 = $start_time + $total / 4 * 2;
-        $mark_50th = date(config()->date_format_full, $q50);
+        $mark_50th = date(config()->date_format, $q50);
         $q75 = $start_time + $total / 4 * 3;
-        $mark_75th = date(config()->date_format_full, $q75);
+        $mark_75th = date(config()->date_format, $q75);
         $out = "";
         $out .= "<table align=\"center\" width=\"100%\" class=\"ruler\"><tr>";
         $out .= "<td width=\"25%\">$mark_25th |</td>";
