@@ -244,3 +244,7 @@ img.screenshot
     border: 3px solid black;
     margin-right: 10px;
 }
+.ui-datepicker
+{
+    font-size: 12px !important;
+}
