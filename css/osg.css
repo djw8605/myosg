@@ -128,7 +128,10 @@ div.indent
 {
 margin-left: 20px;
 }
-
+#sideContent div.indent
+{
+margin-left:10px;
+}
 pre
 {
 white-space: pre-wrap;       /* css-3 */

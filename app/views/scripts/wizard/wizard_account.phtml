@@ -12,7 +12,7 @@ Show Accounting Data for:
     ?>
     <script type="text/javascript">
     $(document).ready(function() {
-            $("option[value=<?=$account_type?>]").attr('selected', 'selected');
+            $("select[name=account_type] option[value=<?=$account_type?>]").attr('selected', 'selected');
     });
     </script>
 <?}?>

@@ -1,0 +1,16 @@
+Show CE Specific Accounting Data for: 
+<select name="ce_account_type">
+<option value="gip_vo">Running jobs (Grouped by VO)</option>
+<option value="gip_vo_waiting">Queued jobs (Grouped by VO)</option>
+<option value="gip_site_size">Size of site over time</option>
+<option value="rsv_metric_quality">RSV Data</option>
+</select>
+<?if(isset($_REQUEST["ce_account_type"])) {
+    $account_type = $_REQUEST["ce_account_type"];
+    ?>
+    <script type="text/javascript">
+    $(document).ready(function() {
+            $("select[name=ce_account_type] option[value=<?=$account_type?>]").attr('selected', 'selected');
+    });
+    </script>
+<?}?>

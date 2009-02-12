@@ -14,7 +14,7 @@ class WizardController extends ControllerBase
         if(isset($_REQUEST["datasource"])) {
             $this->resource_ids = $this->process_resourcelist();
             if(count($this->resource_ids) == 0) {
-                $this->view->info = "No resource matches your current criteria."; 
+                $this->view->info = "No resource matches your current criteria. Please adjust your criteria in order to display any data.";
             }
         }
     }
@@ -384,7 +384,8 @@ EOT;
 
     protected function load_daterangequery()
     {
-        $today_begin = (time() / (3600*24)) * (3600*24);
+        $today_begin = (int)(time() / (3600*24));
+        $today_begin *= 3600*24;
         //set some defaults
         if(!isset($_REQUEST["start_type"])) {
             $_REQUEST["start_type"] = "7daysago";
