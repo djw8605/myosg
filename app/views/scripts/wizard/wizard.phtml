@@ -213,9 +213,12 @@ span.disabled
     <h3>Subscribe</h3>
     <div class="indent">
         <p>Subscribe to the content of this page.</p>
-            <a target="_blank" href="<?=fullbase()."/".pagename()."/addigoogle?".$_SERVER["QUERY_STRING"];?>">iGoogle</a><br/>
-            <a target="_blank" href="<?=fullbase()."/".pagename()."/adduwa?".$_SERVER["QUERY_STRING"];?>">Netvibes</a><br/>
-            <a target="_blank" href="<?=fullbase()."/".pagename()."/xml?".$_SERVER["QUERY_STRING"];?>">XML</a><br/>
+        <a target="_blank" href="<?=fullbase()."/".pagename()."/addigoogle?".$_SERVER["QUERY_STRING"];?>">iGoogle</a><br/>
+        <a target="_blank" href="<?=fullbase()."/".pagename()."/adduwa?".$_SERVER["QUERY_STRING"];?>">Netvibes</a><br/>
+        <a target="_blank" href="<?=fullbase()."/".pagename()."/xml?".$_SERVER["QUERY_STRING"];?>">XML</a><br/>
+        <br/>
+        <a target="_blank" href="http://tinyurl.com/create.php?url=<?=urlencode(fullbase()."/".pagename()."?".$_SERVER["QUERY_STRING"]);?>">Create TinyURL</a>
+
     </div>
 </form>
 
