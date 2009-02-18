@@ -11,26 +11,13 @@ function uwa()
     return false;
 }
 
-
-/*
-function uwa()
-{
-    global $g_uwa;
-    return $g_uwa;
-}
-function setuwa()
-{
-    global $g_uwa;
-    $g_uwa = true;
-}
-*/
 //returns a unique id number for div element (only valid for each session - don't store!)
 function getuid()
 {
     if(isset($_SESSION['next_uid'])) {
         $next_uid = $_SESSION['next_uid'];
         $_SESSION["next_uid"] = $next_uid + 1;
-        return $next_uid+rand(); //add random number to avoid case when 2 different sessions are used
+        return "id".($next_uid+rand()); //add random number to avoid case when 2 different sessions are used
     } else {
         $_SESSION["next_uid"] = 1000; //let's start from 1000
         return $_SESSION["next_uid"];
@@ -45,8 +32,8 @@ function outputAjaxToggle($title, $url)
     $show_script = "$('#$divid').slideDown();$('#${divid}_hide').show();$('#${divid}_show').hide();";
 
     //load button
-    $out .= "<div id=\"${divid}_load\" class=\"button\"><img src='".fullbase()."/images/plusbutton.gif'/> $title";
-    $out .= " <span id=\"${divid}_loading\" class=\"hidden\"><img src='".fullbase()."/images/loading_animation_small.gif' height='10px'/></span>";
+    $out .= "<div id=\"${divid}_load\" class=\"button\" onclick=\"\$('#${divid}_loading').show(); \$('#$divid').load('$url', function() {\$('#${divid}_load').hide();\$('#${divid}_hide').show();\$('#${divid}').slideDown();});\"><img src='".fullbase()."/images/plusbutton.gif'/> $title";
+    $out .= " <span id=\"${divid}_loading\" class=\"hidden\"><img src='".fullbase()."/images/loading_animation_small.gif' height='10'/></span>";
     $out .= "</div>";
 
     //hide button
@@ -57,8 +44,6 @@ function outputAjaxToggle($title, $url)
 
     //content area
     $out .= "<div id=\"${divid}\" class=\"hidden\"></div>";
-
-    $out .= "<script text='text/javascript'>$('#${divid}_load').click(function() {loaditem('$divid', '$url')});</script>";
     return $out;
 }
 

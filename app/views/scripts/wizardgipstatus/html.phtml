@@ -1,3 +1,51 @@
-<h3>GIP Validation Status</h3>
+<?
+foreach($this->resources as $rid=>$record) {
+    $resource_name = $record["name"];
+    $tests = $record["tests"];
 
-<?var_dump($this->resources)?>
+    ?>
+    <div class="border">
+    <div class="resource" style="font-size: 13px;"><h4><?=$resource_name?></h4></div>
+    <div class="indent">
+    <?
+    if(count($tests) == 0) {
+        echo "(No GIP Validation Status is available for this resource)";
+    } else {
+        foreach($tests as $name=>$test) {
+
+            $gip_status = $test["status"];
+            $reason= $test["reason"];
+
+            $status = "UNKNOWN";
+            switch($gip_status) {
+            case "FAIL":
+                $status = "CRITICAL";
+                break;
+            case "OK":
+                $status = "OK";
+                break;
+            }
+            echo outputTestInfo($name, $status, $reason, $rid);
+        }
+    }
+    echo "</div>";//indent
+    echo "</div>";//border
+}
+
+function outputTestInfo($name, $status, $reason, $rid)
+{
+    $out = "";
+    $out .= "<div class=\"bottom_border status_".$status."\">";
+
+    $out .= "<span class=\"h4\">".$name."</span>";
+    if(!isset($_REQUEST["uwa"])) { 
+        if($reason != "") {
+            $out .= "<br/>$reason";
+        }
+        $out .= outputAjaxToggle("Detail", base()."/wizardgipstatus/detail?rid=".$rid."&name=".$name);
+    }
+    $out .= "</div>";
+
+    return $out;
+}
+

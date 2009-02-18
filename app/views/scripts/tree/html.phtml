@@ -1,15 +1,5 @@
 <div id="root"></div>
 <script type="text/javascript">
-function loaditem(id, url)
-{
-    $.ajax({
-        type: "GET",
-        url: url,
-        success: function(content) {
-            $('#'+id).html(content);
-        }
-    });
-}
 $(document).ready(function() {
     $("#root").load("<?=fullbase()."/".pagename()."/item?type=root";?>");
 });

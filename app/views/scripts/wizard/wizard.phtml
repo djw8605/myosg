@@ -15,8 +15,12 @@
 }
 .scrolled_list
 {
-    height: 80px;
+    height: 160px;
     overflow: auto;
+}
+span.disabled
+{
+    color: gray;
 }
 </style>
 
@@ -78,7 +82,6 @@
             </div>
         </p>
         <br/>
-        <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
     </div>
 
     <h3>Resources to display</h3>
@@ -156,7 +159,6 @@
             echo checklist("r", "Specific Resources", $kv);
             ?>
             <br/>
-            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
         </div>
     </div>
 
@@ -205,7 +207,7 @@
             ?>
 
             <br/>
-            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;"/>
+            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
         </div>
 
     </div>
@@ -214,9 +216,9 @@
     <h3>Subscribe</h3>
     <div class="indent">
         <p>Subscribe to the content of this page.</p>
-            <a href="#" onclick="wizard_submit('addigoogle');">iGoogle</a><br/>
-            <a href="#" onclick="wizard_submit('adduwa');">Netvibes</a><br/>
-            <a href="#" onclick="wizard_submit('xml');">XML</a><br/>
+            <a target="_blank" href="#" onclick="wizard_submit('addigoogle');">iGoogle</a><br/>
+            <a target="_blank" href="#" onclick="wizard_submit('adduwa');">Netvibes</a><br/>
+            <a target="_blank" href="#" onclick="wizard_submit('xml');">XML</a><br/>
     </div>
 </form>
 
@@ -258,6 +260,7 @@ $(document).ready(function() {
         switch($datasource) {
         case "summary":
         case "currentstatus":
+        case "gipstatus":
         case "statushistory":
         case "arhistory":
         case "armetric":
@@ -288,12 +291,12 @@ function disable(e)
 {
     var items = $(e).siblings(); 
     $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').css('color', 'gray');
+    $(items).find('span').addClass('disabled');
 }
 function enable(e)
 {
     var items = $(e).siblings(); 
     $(items).find('input').removeAttr('disabled');
-    $(items).find('span').css('color', 'inherit');
+    $(items).find('span').removeClass('disabled');
 }
 </script>

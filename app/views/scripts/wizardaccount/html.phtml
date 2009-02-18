@@ -1,11 +1,15 @@
 <?
-echo "<h3>".$this->sub_title."</h3>";
 echo "<div style='min-height: 400px'>";
 
-echo "<div class='indent'>";
-$title = "Resource that are used to generate this graph";
-echo outputToggle("Show $title", "Hide $title", $this->resource_names);
-echo "</div>";
+if(!uwa()) {
+    echo "<div class='indent'>";
+    $title = "Resource that are used to generate this graph";
+    echo outputToggle("Show $title", "Hide $title", $this->resource_names);
+    echo "</div>";
+    echo "<img src=\"".$this->url."&width=700&height=400&text_size=9&title_size=0&text_padding=3&figure_padding=50\"/>\n";
+} else {
+    //UWA Graph
+    echo "<img src=\"".$this->url."&width=450&height=400&text_size=11&title_size=0&text_padding=3&figure_padding=50\"/>\n";
+}
 
-echo "<img src=\"".$this->url."&width=650&height=400&text_size=10&title_size=0&text_padding=3&figure_padding=60\"/>\n";
 echo "</div>";

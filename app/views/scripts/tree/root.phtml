@@ -18,21 +18,6 @@ echo "</div>";
 ?>
 
 <script type="text/javascript">
-function loaditem(id, url)
-{
-    $('#'+id+'_load').unbind('click');
-    $('#'+id+'_loading').show();
-    $.ajax({
-        type: "GET",
-        url: url,
-        success: function(content) {
-            $('#'+id+'_load').hide();
-            $('#'+id+'_hide').show();
-            $('#'+id).html(content).slideDown();
-            $('#'+id+'_loading').hide();
-        }
-    });
-}
 $(document).ready(function() {
 <?=$js?>
 });

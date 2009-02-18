@@ -14,7 +14,6 @@ abstract class WizardGratiaController extends WizardController
 
         $legend = false;
         list($urlbase, $sub_title, $ylabel) = $this->map();
-        $this->view->sub_title = $sub_title;
 
         $this->load_daterangequery();
 
@@ -31,7 +30,7 @@ abstract class WizardGratiaController extends WizardController
             $this->view->url .= "&legend=False";
         }
         $this->view->resource_names = implode(" / ", $resource_names);
-        $this->setpagetitle(self::default_title());
+        $this->setpagetitle($this->default_title()." ".$sub_title);
     }
 }
 
