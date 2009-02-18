@@ -40,7 +40,7 @@ class WizardgipstatusController extends WizardController
             if(!$found) {
                 $tests = array();
             }
-            $this->view->resources[$resource_id] = array("tests"=>$tests,"name"=>$resource_name);
+            $this->view->resources[$resource_id] = array("tests"=>$tests,"name"=>$resource_name, "interop_bdii"=>$resource_info->interop_bdii);
         }
 
         $this->setpagetitle(self::default_title());

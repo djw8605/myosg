@@ -8,9 +8,9 @@ class Resource extends CachedIndexedModel
         $where = "where 1 = 1";
         if(isset($params["resource_id"])) {
             $resource_id = $params["resource_id"];
-            $where .= " and resource_id = $resource_id";
+            $where .= " and r.resource_id = $resource_id";
         }
-        $sql = "SELECT resource_id id, name, fqdn, description FROM oim.resource $where order by name";
+        $sql = "SELECT r.resource_id id, r.name name , r.fqdn fqdn ,r.description description, ext.interop_bdii interop_bdii FROM oim.resource r join oim.resource_ext_attributes ext on r.resource_id = ext.resource_id $where order by name";
         return $sql;
     }
     public function key() { return "id"; }

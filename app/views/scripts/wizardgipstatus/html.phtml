@@ -2,12 +2,28 @@
 foreach($this->resources as $rid=>$record) {
     $resource_name = $record["name"];
     $tests = $record["tests"];
+    $interop_bdii = $record["interop_bdii"];
 
     ?>
     <div class="border">
+<?
+    echo "<div style='float: right; background-color: #eee; padding: 5px; width: 200px;'>";
+    
+    $raw = "";
+    $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_raw_incoming/gate01.aglt2.org?which=$resource_name'>Incoming Data</a><br/>";
+    $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_osg/gate01.aglt2.org.processed?which=$resource_name'>Fed to OSG BDII (port 2170)</a><br/>";
+    if($interop_bdii) {
+        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_wlcg_interop/gate01.aglt2.org.processed?which=$resource_name'>Fed to Interop BDII (port 2180)</a><br/>";
+    }
+    echo outputToggle("Raw CEMon Data", "Raw CEMon Data", $raw);
+    echo "</div>";
+ 
+?>
     <div class="resource" style="font-size: 13px;"><h4><?=$resource_name?></h4></div>
+
     <div class="indent">
     <?
+   
     if(count($tests) == 0) {
         echo "(No GIP Validation Status is available for this resource)";
     } else {
@@ -29,6 +45,7 @@ foreach($this->resources as $rid=>$record) {
         }
     }
     echo "</div>";//indent
+    echo "<div style='clear: both'></div>";
     echo "</div>";//border
 }
 
