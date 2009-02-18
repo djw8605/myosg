@@ -2,7 +2,7 @@
 class WizardstatushistoryController extends WizardController
 {
     public function breads() { return array("rsv", "wizard"); }
-    public static function default_title() { return "Status History"; }
+    public static function default_title() { return "RSV Status History"; }
     public static function default_url($query) { return ""; }
 
     public function load()

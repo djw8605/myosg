@@ -7,23 +7,24 @@ foreach($this->resources as $rid=>$record) {
     ?>
     <div class="border">
 <?
-    echo "<div style='float: right; background-color: #eee; padding: 5px; width: 200px;'>";
-    
-    $raw = "";
-    $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_raw_incoming/gate01.aglt2.org?which=$resource_name'>Incoming Data</a><br/>";
-    $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_osg/gate01.aglt2.org.processed?which=$resource_name'>Fed to OSG BDII (port 2170)</a><br/>";
-    if($interop_bdii) {
-        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_wlcg_interop/gate01.aglt2.org.processed?which=$resource_name'>Fed to Interop BDII (port 2180)</a><br/>";
+    if(!uwa()) {
+        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 200px;'>";
+        
+        $raw = "";
+        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_raw_incoming/gate01.aglt2.org?which=$resource_name'>Incoming Data</a><br/>";
+        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_osg/gate01.aglt2.org.processed?which=$resource_name'>Fed to OSG BDII (port 2170)</a><br/>";
+        if($interop_bdii) {
+            $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_wlcg_interop/gate01.aglt2.org.processed?which=$resource_name'>Fed to Interop BDII (port 2180)</a><br/>";
+        }
+        //echo outputToggle("Raw CEMon Data", "Raw CEMon Data", $raw);
+        echo "<b>Raw CEMon Data</b><br/>$raw";
+        echo "</div>";
     }
-    echo outputToggle("Raw CEMon Data", "Raw CEMon Data", $raw);
-    echo "</div>";
  
 ?>
-    <div class="resource" style="font-size: 13px;"><h4><?=$resource_name?></h4></div>
-
+    <div class="resource"><h4><?=$resource_name?></h4></div>
     <div class="indent">
     <?
-   
     if(count($tests) == 0) {
         echo "(No GIP Validation Status is available for this resource)";
     } else {
@@ -55,11 +56,15 @@ function outputTestInfo($name, $status, $reason, $rid)
     $out .= "<div class=\"bottom_border status_".$status."\">";
 
     $out .= "<span class=\"h4\">".$name."</span>";
-    if(!isset($_REQUEST["uwa"])) { 
+    if(!uwa()) {
         if($reason != "") {
             $out .= "<br/>$reason";
         }
-        $out .= outputAjaxToggle("Detail", base()."/wizardgipstatus/detail?rid=".$rid."&name=".$name);
+        if($status == "CRITICAL") {
+            $out .= outputAjaxToggle("Issue Detail", base()."/wizardgipstatus/detail?rid=".$rid."&name=".$name);
+        } else {
+            $out .= "<br/>No issues found for this test.";
+        }
     }
     $out .= "</div>";
 

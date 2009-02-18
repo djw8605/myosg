@@ -25,20 +25,21 @@ span.disabled
 </style>
 
 <form method="get" id="wizard">
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     <h3>Information to display</h3>
     <div class="indent" id="datasource_area">
         <select name="datasource">
         <option value="">(Please Select)</option>
         <option value="summary">Resource Summary</option>
-        <option value="currentstatus">RSV Status</option>
-        <option value="gipstatus">GIP Status</option>
-        <option value="statushistory">RSV Status (History)</option>
+        <option value="currentstatus">Current RSV Status</option>
+        <option value="gipstatus">Current GIP validtion Status</option>
+        <option value="statushistory">RSV Status History</option>
         <option value="arhistory">Availability History</option>
         <option value="armetric">Availability Metrics</option>
         <option value="downtime">Downtime Schedule</option>
-        <option value="account">Accounting</option>
-        <option value="ce">Accounting (CE Specific)</option>
-        <option value="se">Accounting (SE Specific)</option>
+        <option value="account">Gratia Accounting</option>
+        <option value="ce">Gratia Accounting (CE Specific)</option>
+        <option value="se">Gratia Accounting (SE Specific)</option>
         </select>
         <p>
             <div id="summary_attrs" class="attrs indent hidden">
@@ -81,7 +82,6 @@ span.disabled
                 <?=$this->render("wizard/wizard__daterange.phtml")?>
             </div>
         </p>
-        <br/>
     </div>
 
     <h3>Resources to display</h3>
@@ -158,7 +158,6 @@ span.disabled
             foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("r", "Specific Resources", $kv);
             ?>
-            <br/>
         </div>
     </div>
 
@@ -175,7 +174,7 @@ span.disabled
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { $kv[$item->grid_type_id] = $item->short_name; }
-            echo checklist("gt", "Grid Type", $kv);
+            echo checklist("gridtype", "Grid Type", $kv);
 
             $model = new Status();
             $list = $model->get();
@@ -205,20 +204,18 @@ span.disabled
             if(isset($_REQUEST["has_status"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"has_status\" $checked/> Resource Status Calculated<br/>";
             ?>
-
-            <br/>
-            <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
         </div>
-
     </div>
 
+    <br/>
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
 
     <h3>Subscribe</h3>
     <div class="indent">
         <p>Subscribe to the content of this page.</p>
-            <a target="_blank" href="#" onclick="wizard_submit('addigoogle');">iGoogle</a><br/>
-            <a target="_blank" href="#" onclick="wizard_submit('adduwa');">Netvibes</a><br/>
-            <a target="_blank" href="#" onclick="wizard_submit('xml');">XML</a><br/>
+            <a target="_blank" href="<?=fullbase()."/".pagename()."/addigoogle?".$_SERVER["QUERY_STRING"];?>">iGoogle</a><br/>
+            <a target="_blank" href="<?=fullbase()."/".pagename()."/adduwa?".$_SERVER["QUERY_STRING"];?>">Netvibes</a><br/>
+            <a target="_blank" href="<?=fullbase()."/".pagename()."/xml?".$_SERVER["QUERY_STRING"];?>">XML</a><br/>
     </div>
 </form>
 
@@ -285,6 +282,7 @@ function wizard_submit(format)
     action += "/"+format;
     $('#wizard').attr('action', action);
     $('#wizard').submit(); 
+    return false;
 }
 
 function disable(e)

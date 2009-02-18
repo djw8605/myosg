@@ -30,7 +30,7 @@ abstract class WizardGratiaController extends WizardController
             $this->view->url .= "&legend=False";
         }
         $this->view->resource_names = implode(" / ", $resource_names);
-        $this->setpagetitle($this->default_title()." ".$sub_title);
+        $this->setpagetitle($this->default_title()." - ".$sub_title);
     }
 }
 

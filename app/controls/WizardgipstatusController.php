@@ -3,7 +3,7 @@
 class WizardgipstatusController extends WizardController
 {
     public function breads() { return array("rsv", "wizard"); }
-    public static function default_title() { return "GIP Validation Status"; }
+    public static function default_title() { return "Current GIP Validation Status"; }
     public static function default_url($query) { return ""; }
 
     public function load()
@@ -13,12 +13,16 @@ class WizardgipstatusController extends WizardController
         $resource_model = new Resource();
         $resources = $resource_model->getindex();
 
-        $cache_xml = file_get_contents("http://is-dev.grid.iu.edu/gip-validator/xml/oim.xml");
-        $this->view->rawxml = $cache_xml; //for xml view
+        //load gip summary (1)
+        $cache_xml = file_get_contents(config()->gip_summary);
         $cache = new SimpleXMLElement($cache_xml);
 
-        $this->view->resources = array();
+        //load gip summary (2) -- for ITB
+        $cache_xml2 = file_get_contents(config()->gip_summary2);
+        $cache2 = new SimpleXMLElement($cache_xml2);
 
+        //merge those xmls
+        $this->view->resources = array();
         foreach($this->resource_ids as $resource_id) {
             $resource_info = $resources[$resource_id][0];
             $resource_name = $resource_info->name;
@@ -36,13 +40,24 @@ class WizardgipstatusController extends WizardController
                     break;
                 }
             }
+            if(!$found) {
+                //search on second xml (for ITB)
+                foreach($cache2->Resource as $resource) {
+                    if($resource_name == $resource->Name) {
+                        foreach($resource->TestCase as $test) {
+                            $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
+                        }
+                        $found = true;
+                        break;
+                    }
+                }
+            }
 
             if(!$found) {
                 $tests = array();
             }
             $this->view->resources[$resource_id] = array("tests"=>$tests,"name"=>$resource_name, "interop_bdii"=>$resource_info->interop_bdii);
         }
-
         $this->setpagetitle(self::default_title());
     }
 
@@ -58,8 +73,9 @@ class WizardgipstatusController extends WizardController
             $this->render("none", null, true);
         } else {
             $resource_name = $resource_info->name;
-
-            $cache_xml = file_get_contents("http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_${resource_name}_detail.xml");
+            $xmlname = config()->gip_detail;
+            $xmlname = str_replace("<resource_name>", $resource_name, $xmlname);
+            $cache_xml = file_get_contents($xmlname);
             $cache = new SimpleXMLElement($cache_xml);
 
             $dirty_name = $_REQUEST["name"];

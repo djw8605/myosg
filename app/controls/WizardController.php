@@ -26,7 +26,6 @@ class WizardController extends ControllerBase
         //find if xml.phtml exists for this control
         $name = $this->getRequest()->getControllerName();
         $path = $this->view->getScriptPath("").$name."/xml.phtml";
-        slog("testint to see if following file exists: $path");
         if(file_exists($path)) {
             //if so, then we support xml
             parent::xmlAction();
@@ -35,6 +34,7 @@ class WizardController extends ControllerBase
         }
     }
 
+/*
     public function flashAction()
     {
         // some typical movie variables
@@ -113,6 +113,7 @@ EOT;
         $movie->output();
         $this->render("none", null, true);
     }
+*/
 
     //from user query, find the list of resources to display information
     private function process_resourcelist()
@@ -212,7 +213,7 @@ EOT;
     private function process_resource_filter($resources)
     {
         //setup filter
-        if(isset($_REQUEST["gt"])) {
+        if(isset($_REQUEST["gridtype"])) {
             $keep = $this->process_resource_filter_gt();
             $resources = array_intersect($keep, $resources);
         }
@@ -363,7 +364,7 @@ EOT;
         $model = new GridTypes();
         $list = $model->get();
         foreach($list as $item) {
-            if(isset($_REQUEST["gt_".$item->grid_type_id])) {
+            if(isset($_REQUEST["gridtype_".$item->grid_type_id])) {
                 //pull resource groups
                 $model = new ResourceGroup();
                 $rgs = $model->get(array("osg_grid_type_id"=>$item->grid_type_id));

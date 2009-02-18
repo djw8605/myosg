@@ -4,7 +4,7 @@ include("WizardGratiaController.php");
 class WizardseController extends WizardGratiaController
 {
     public function breads() { return array("rsv", "wizard"); }
-    public static function default_title() { return "SE Specific Accounting"; }
+    public static function default_title() { return "SE Specific Gratia Accounting"; }
     public static function default_url($query) { return ""; }
 
     public function map() {

@@ -148,8 +148,8 @@ $(document).ready(function() {
 <span class="time-tooltip-content">to be loaded..</span>
 </div>
 <?
-echo "Between ".date(config()->date_format_full, $this->start_time);
-echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+echo "Between ".date(config()->date_format, $this->start_time);
+echo " and ".date(config()->date_format, $this->end_time)."<br/>";
 foreach($this->resources as $rid=>$resource)
 {
     echo "<div class=\"border\">";

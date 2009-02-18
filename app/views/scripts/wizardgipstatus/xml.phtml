@@ -1,1 +1,24 @@
-<?=$this->rawxml?>
+<GIPValidation>
+<?
+foreach($this->resources as $rid=>$record) {
+    $resource_name = $record["name"];
+    $tests = $record["tests"];
+    $interop_bdii = $record["interop_bdii"];
+    echo "<Resource>";
+    echo "<Name>$resource_name</Name>";
+    echo "<ID>$rid</ID>";
+    echo "<Tests>";
+    foreach($tests as $name=>$test) {
+        $gip_status = $test["status"];
+        $reason = $test["reason"];
+        echo "<Test>";
+        echo "<Name>$name</Name>";
+        echo "<Status>$gip_status</Status>";
+        echo "<Reason>$reason</Reason>";
+        echo "</Test>";
+    }
+    echo "</Tests>";
+    echo "</Resource>";
+}
+?>
+</GIPValidation>

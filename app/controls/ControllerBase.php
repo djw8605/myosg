@@ -90,7 +90,6 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         $url = urlencode(fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"]);
         $target = " http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=$url";
-        slog("Redirecting to $target");
         header("Location: $target");
         exit;
     }

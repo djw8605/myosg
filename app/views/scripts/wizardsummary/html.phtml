@@ -59,10 +59,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             $note .= "<b>Internal status:</b>$internal_note</div>";
         }
 
-        $services = $this->resource_services[$rid];
-        if(count($services) == 0) {
+        if(isset($this->resource_services[$rid]) == 0) {
             $service_names = "no applicable service exists";
         } else {
+            $services = $this->resource_services[$rid];
             $service_names = "";
             foreach($services as $service) {
                 if($service_names != "") $service_names .= " / ";
