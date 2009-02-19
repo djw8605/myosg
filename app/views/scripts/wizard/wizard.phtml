@@ -32,7 +32,7 @@ span.disabled
         <option value="">(Please Select)</option>
         <option value="summary">Resource Summary</option>
         <option value="currentstatus">Current RSV Status</option>
-        <option value="gipstatus">Current GIP validtion Status</option>
+        <option value="gipstatus">Current GIP Validtion Status</option>
         <option value="statushistory">RSV Status History</option>
         <option value="arhistory">Availability History</option>
         <option value="armetric">Availability Metrics</option>
@@ -42,12 +42,20 @@ span.disabled
         <option value="se">Gratia Accounting (SE Specific)</option>
         </select>
         <p>
+            <div id="_daterange_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard__daterange.phtml")?>
+            </div>
+
             <div id="summary_attrs" class="attrs indent hidden">
                 <?=$this->render("wizard/wizard_summary.phtml")?>
             </div>
 
             <div id="currentstatus_attrs" class="attrs indent hidden">
                 <?=$this->render("wizard/wizard_currentstatus.phtml")?>
+            </div>
+
+            <div id="gipstatus_attrs" class="attrs indent hidden">
+                <?=$this->render("wizard/wizard_gipstatus.phtml")?>
             </div>
 
             <div id="statushistory_attrs" class="attrs indent hidden">
@@ -78,9 +86,6 @@ span.disabled
                 <?=$this->render("wizard/wizard_se.phtml")?>
             </div>
 
-            <div id="_daterange_attrs" class="attrs indent hidden">
-                <?=$this->render("wizard/wizard__daterange.phtml")?>
-            </div>
         </p>
     </div>
 

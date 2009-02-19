@@ -4,12 +4,16 @@ $url = urlencode($url);
 ?>
 <h3>Contact GOC</h3>
 <div class="indent">
-<p>If you need an assistance from GOC, please open a ticket at <a target="_blank" href="https://oim.grid.iu.edu/gocticket/open">GOC Ticket Submission Form.</a></p>
+<p>If you need assistance or report a problem, please open a ticket at <a target="_blank" href="https://oim.grid.iu.edu/gocticket/open">GOC Ticket Submission Form</a></p>
 <?
 $subject = "Comment on ".config()->app_name;
 $subject=urlencode($subject);
 $body = "GOC,%0a%0aI'd like to comment on following page. %0a$url %0a%0a(YOUR COMMENT HERE)";
 ?>
-<p>Please send us your comment about this page to <a href="mailto:goc-issues@googlegroups.com?subject=<?=$subject?>&body=<?=$body?>">goc-issues@googlegroups.com</a></p>
-<p>Report bugs at <a target="_blank" href="http://code.google.com/p/osggoc/issues/entry">GOC Bug Tracker</a></p>
+</div>
+
+<h3>Feedback on MyOSG Alpha</h3>
+<div class="indent">
+<p>Please send us your comments about this page to <br/><a href="mailto:goc-issues@googlegroups.com?subject=<?=$subject?>&body=<?=$body?>">goc-issues@googlegroups.com</a></p>
+<p>Report bugs and feature requests at <br><a target="_blank" href="http://code.google.com/p/osggoc/issues/entry">GOC Bug Tracker</a></p>
 </div>

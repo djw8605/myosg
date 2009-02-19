@@ -42,7 +42,7 @@ parseQuery();
         $param = "";
         switch($page) {
         case 'wizard':
-            $param = "?all_resources=on&amp;has_status=on&amp;gt=on&amp;gt_1=on";
+            $param = "?all_resources=on&amp;gridtype=on&amp;gridtype_1=on";
         }
         return base()."/".$page.$param;
     }?>
