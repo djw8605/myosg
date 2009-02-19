@@ -296,7 +296,6 @@ background:transparent url(<?=$base?>/images/status_unknown.png) no-repeat 5px 5
 //uwa specific styles (override above styles with uwa specific)
 } else {
 ?>
-
 h1, span.h1
 {
 font-size: 13px;
@@ -312,7 +311,7 @@ font-size: 11px;
 }
 h4, span.h4
 {
-font-weight: normal;
+font-weight: bold;
 font-size: 10px;
 }
 h2,h3
