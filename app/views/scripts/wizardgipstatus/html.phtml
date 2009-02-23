@@ -1,22 +1,30 @@
 <?
 foreach($this->resources as $rid=>$record) {
     $resource_name = $record["name"];
+    $resource_fqdn = $record["fqdn"];
     $tests = $record["tests"];
     $interop_bdii = $record["interop_bdii"];
+    $type = $record["type"];
 
     ?>
     <div class="border">
 <?
     if(!uwa()) {
         echo "<div style='float: right; background-color: #eee; padding: 5px; width: 200px;'>";
-        
-        $raw = "";
-        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_raw_incoming/gate01.aglt2.org?which=$resource_name'>Incoming Data</a><br/>";
-        $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_osg/gate01.aglt2.org.processed?which=$resource_name'>Fed to OSG BDII (port 2170)</a><br/>";
-        if($interop_bdii) {
-            $raw .= "<a target='_blank' href='http://is.grid.iu.edu/data/cemon_processed_wlcg_interop/gate01.aglt2.org.processed?which=$resource_name'>Fed to Interop BDII (port 2180)</a><br/>";
+
+        if($type == "production") {
+            $host = "http://is.grid.iu.edu/data";
+        } else {
+            $host = "http://is-itb.grid.iu.edu/data";
         }
-        //echo outputToggle("Raw CEMon Data", "Raw CEMon Data", $raw);
+
+        $raw = "";
+        $raw .= "<a target='_blank' href='$host/cemon_transitory/$resource_fqdn'>Incoming Data</a><br/>";
+        $raw .= "<a target='_blank' href='$host/cemon_processed_osg/$resource_fqdn.processed'>Fed to OSG BDII (port 2170)</a><br/>";
+        if($interop_bdii) {
+            $raw .= "<a target='_blank' href='$host/cemon_processed_wlcg_interop/$resource_fqdn.processed'>Fed to Interop BDII (port 2180)</a><br/>";
+        }
+
         echo "<b>Raw CEMon Data</b><br/>$raw";
         echo "</div>";
     }

@@ -25,14 +25,14 @@ class WizardgipstatusController extends WizardController
         $this->view->resources = array();
         foreach($this->resource_ids as $resource_id) {
             $resource_info = $resources[$resource_id][0];
-            $resource_name = $resource_info->name;
 
             $tests = array();
 
             //search for this resource name
             $found = false;
+            $type = "production";
             foreach($cache->Resource as $resource) {
-                if($resource_name == $resource->Name) {
+                if($resource_info->name == $resource->Name) {
                     foreach($resource->TestCase as $test) {
                         $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                     }
@@ -43,11 +43,12 @@ class WizardgipstatusController extends WizardController
             if(!$found) {
                 //search on second xml (for ITB)
                 foreach($cache2->Resource as $resource) {
-                    if($resource_name == $resource->Name) {
+                    if($resource_info->name == $resource->Name) {
                         foreach($resource->TestCase as $test) {
                             $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                         }
                         $found = true;
+                        $type = "itb";
                         break;
                     }
                 }
@@ -56,7 +57,12 @@ class WizardgipstatusController extends WizardController
             if(!$found) {
                 $tests = array();
             }
-            $this->view->resources[$resource_id] = array("tests"=>$tests,"name"=>$resource_name, "interop_bdii"=>$resource_info->interop_bdii);
+            $this->view->resources[$resource_id] = array(
+                "tests"=>$tests,
+                "name"=>$resource_info->name, 
+                "fqdn"=>$resource_info->fqdn, 
+                "type"=>$type,
+                "interop_bdii"=>$resource_info->interop_bdii);
         }
         $this->setpagetitle(self::default_title());
     }

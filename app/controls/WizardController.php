@@ -133,7 +133,12 @@ EOT;
                         $this->process_resourcelist_addsc($resource_ids, $matches["id"]);
                     }
                 }
-                if(isset($_REQUEST["site"])) {
+                if(isset($_REQUEST["facility"])) {
+                    if(preg_match("/^facility_(?<id>\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addfacility($resource_ids, $matches["id"]);
+                    }
+                }
+                 if(isset($_REQUEST["site"])) {
                     if(preg_match("/^site_(?<id>\d+)/", $key, $matches)) {
                         $this->process_resourcelist_addsite($resource_ids, $matches["id"]);
                     }
@@ -154,6 +159,24 @@ EOT;
         $resource_ids = $this->process_resource_filter($resource_ids);
 
         return $resource_ids;
+    }
+
+    private function process_resourcelist_addfacility(&$resource_ids, $facility_id) 
+    {
+        $site_ids = array();
+
+        //load all site id under the requested sc
+        $model = new Site();
+        $sites = $model->get(array("facility_id"=>$facility_id));
+        foreach($sites as $site) {
+            if(!in_array($site->site_id, $site_ids)) {
+                $site_ids[] = $site->site_id;
+            }
+        }
+
+        foreach($site_ids as $site_id) {
+            $this->process_resourcelist_addsite($resource_ids, $site_id);
+        }
     }
 
     private function process_resourcelist_addsc(&$resource_ids, $sc_id) 
