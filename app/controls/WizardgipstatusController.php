@@ -21,6 +21,14 @@ class WizardgipstatusController extends WizardController
         $cache_xml2 = file_get_contents(config()->gip_summary2);
         $cache2 = new SimpleXMLElement($cache_xml2);
 
+        //cemon raw file listing for production
+        $cemonbdii_url = file_get_contents(config()->cemonbdii_url);
+        $cemonbdii = new SimpleXMLElement($cemonbdii_url);
+
+        //cemon raw file listing for itb
+        $cemonbdii_itb_url = file_get_contents(config()->cemonbdii_itb_url);
+        $cemonbdii_itb = new SimpleXMLElement($cemonbdii_itb_url);
+
         //merge those xmls
         $this->view->resources = array();
         foreach($this->resource_ids as $resource_id) {
@@ -30,13 +38,14 @@ class WizardgipstatusController extends WizardController
 
             //search for this resource name
             $found = false;
-            $type = "production";
+            //$type = "production";
             foreach($cache->Resource as $resource) {
                 if($resource_info->name == $resource->Name) {
                     foreach($resource->TestCase as $test) {
                         $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                     }
                     $found = true;
+                    $cemon_links = $cemonbdii;
                     break;
                 }
             }
@@ -48,21 +57,33 @@ class WizardgipstatusController extends WizardController
                             $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                         }
                         $found = true;
-                        $type = "itb";
+                        //$type = "itb";
+                        $cemon_links = $cemonbdii_itb;
                         break;
                     }
                 }
             }
 
-            if(!$found) {
-                $tests = array();
+            //search for cemon raw file links
+            $rawdata = array();
+            if($found) {
+                foreach($cemon_links->resource as $resource) {
+                    if($resource->name == $resource_info->name) {
+                        $rawdata["processed_osg_data"] = $resource->processed_osg_data;
+                        $rawdata["processed_wlcg_interop_data"] = $resource->processed_wlcg_interop_data;
+                        $rawdata["cemon_raw_data"] = $resource->cemon_raw_data;
+                    }
+                } 
             }
+
             $this->view->resources[$resource_id] = array(
-                "tests"=>$tests,
                 "name"=>$resource_info->name, 
                 "fqdn"=>$resource_info->fqdn, 
-                "type"=>$type,
-                "interop_bdii"=>$resource_info->interop_bdii);
+                //"type"=>$type,
+                //"interop_bdii"=>$resource_info->interop_bdii,
+                "rawdata"=>$rawdata,
+                "tests"=>$tests
+            );
         }
         $this->setpagetitle(self::default_title());
     }

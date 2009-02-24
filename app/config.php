@@ -106,6 +106,8 @@ class common_config
         $this->gip_summary = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_summary_osg.xml"; 
         $this->gip_summary2 = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_summary_osg_itb.xml"; 
         $this->gip_detail = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_<resource_name>_detail.xml"; 
+        $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";
+        $this->cemonbdii_itb_url = "http://is-dev.grid.iu.edu/cgi-bin/status.cgi?format=xml";
 
         //locale
         $this->date_format_full = "M j, Y H:i:s e";

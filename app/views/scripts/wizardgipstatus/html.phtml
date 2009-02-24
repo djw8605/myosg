@@ -3,29 +3,43 @@ foreach($this->resources as $rid=>$record) {
     $resource_name = $record["name"];
     $resource_fqdn = $record["fqdn"];
     $tests = $record["tests"];
-    $interop_bdii = $record["interop_bdii"];
-    $type = $record["type"];
+    //$interop_bdii = $record["interop_bdii"];
+    //$type = $record["type"];
+    $rawdata = $record["rawdata"];
 
     ?>
     <div class="border">
 <?
     if(!uwa()) {
-        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 200px;'>";
-
-        if($type == "production") {
-            $host = "http://is.grid.iu.edu/data";
-        } else {
-            $host = "http://is-itb.grid.iu.edu/data";
-        }
+        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px;'>";
 
         $raw = "";
-        $raw .= "<a target='_blank' href='$host/cemon_transitory/$resource_fqdn'>Incoming Data</a><br/>";
-        $raw .= "<a target='_blank' href='$host/cemon_processed_osg/$resource_fqdn.processed'>Fed to OSG BDII (port 2170)</a><br/>";
-        if($interop_bdii) {
-            $raw .= "<a target='_blank' href='$host/cemon_processed_wlcg_interop/$resource_fqdn.processed'>Fed to Interop BDII (port 2180)</a><br/>";
+        //show raw data link
+        $link = $rawdata["cemon_raw_data"][0]->link;
+        $age = $rawdata["cemon_raw_data"][0]->age;
+        if($link == "") {
+            $raw .= "(No Incoming Data)<br/>";
+        } else {
+            $raw .= "<a target='_blank' href='$link'>Incoming Data (Age $age)</a><br/>";
+        }
+        //show osg processed link
+        $link = $rawdata["processed_osg_data"][0]->link;
+        $age = $rawdata["processed_osg_data"][0]->age;
+        if($link == "") {
+            $raw .= "(No OSG Data)<br/>";
+        } else {
+            $raw .= "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII (Age $age)</a><br/>";
+        }
+        //show wlcg processed link
+        $link = $rawdata["processed_wlcg_interop_data"][0]->link;
+        $age = $rawdata["processed_wlcg_interop_data"][0]->age;
+        if($link == "") {
+            $raw .= "(No WLCG Data)<br/>";
+        } else {
+            $raw .= "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII (Age $age)</a><br/>";
         }
 
-        echo "<b>Raw CEMon Data</b><br/>$raw";
+        echo "<b>LDIF Data</b><br/>$raw";
         echo "</div>";
     }
  
