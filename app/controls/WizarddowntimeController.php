@@ -18,7 +18,9 @@ class WizarddowntimeController extends WizardController
         $downtime_model = new Downtime();
         $today_start = time()/(3600*24) * (3600*24);
         $today_end = time()/(3600*24) * (3600*24) + 3600*24;
-        $this->view->downtimes = $downtime_model->getindex(array("start_time"=>$today_start, "end_time"=>$today_end));
+
+        $this->view->current_downtimes = $downtime_model->getCurrentDowntimes($today_start, $today_end);
+        $this->view->future_downtimes = $downtime_model->getFutureDowntimes(time());
 
         $model = new ServiceTypes();
         $this->view->service_info = $model->getindex();

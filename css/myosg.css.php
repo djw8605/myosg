@@ -262,6 +262,7 @@ img.screenshot
 
 table.summary_table
 {
+    width: 100%;
     margin: 0px;
     border-collapse: collapse; 
 }
@@ -283,6 +284,11 @@ table.summary_table td
     padding: 3px;
     align: top;
     border-top: 1px solid #ddd;
+}
+div.downtime
+{
+    background-color: #ddf;
+    padding: 3px;
 }
 <?
 ///////////////////////////////////////////////////////////////////////////////////////////////////

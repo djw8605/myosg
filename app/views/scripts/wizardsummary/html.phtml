@@ -54,7 +54,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Optional Information
         echo "<div class=\"indent\">";
-        echo "<table class='summary_table' width='100%'>";
+        echo "<table class='summary_table'>";
 
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<tr>";
@@ -98,7 +98,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $downtime_desc = $downtime->downtime_summary;
                 $internal_note = $note;
                 $note = "This service is currently under maintenance.<br/>";
-                $note .= "<div style='background-color: #ddf; padding: 3px;'><b>Maintenance Summary:</b><div>$downtime_desc</div>";
+                $note .= "<div class=\"downtime\"><b>Maintenance Summary:</b><div>$downtime_desc</div>";
                 $note .= "<b>Internal status:</b>$internal_note</div>";
             }
 
