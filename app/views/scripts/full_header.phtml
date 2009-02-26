@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?=config()->app_name?></title>
@@ -12,7 +13,7 @@
 <link href="<?=base()?>/lib/jquery-1.3.1/theme/ui.all.css" rel="stylesheet" type="text/css" />
 <script type='text/javascript' src='<?=base()?>/lib/jquery-1.3.1/jquery-1.3.1.js'></script>
 <script type='text/javascript' src='<?=base()?>/lib/jquery-1.3.1/jquery.ui.all.js'></script>
-<script type="text/javascript" language='javascript'>
+<script type="text/javascript">
 var query = {};
 function uwa() { return false; }
 function parseQuery() {
@@ -33,7 +34,7 @@ parseQuery();
 
 <div id="outer">
     <div id="header">
-        <img id="logo" src="<?=base()?>/images/myosg.png"/>
+        <img id="logo" src="<?=base()?>/images/myosg.png" alt="myosg logo"/>
         <h1><a href="<?=base()?>"><?=config()->app_name?></a></h1>
         <h2><?=config()->app_subname?></h2>
     </div>
@@ -42,9 +43,9 @@ parseQuery();
         $param = "";
         switch($page) {
         case 'wizard':
-            $param = "?all_resources=on&amp;gridtype=on&amp;gridtype_1=on";
+            $param = "?all_resources=on&gridtype=on&gridtype_1=on";
         }
-        return base()."/".$page.$param;
+        return htmlentities(base()."/".$page.$param);
     }?>
 
     <div class="submenu">

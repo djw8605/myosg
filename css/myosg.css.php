@@ -149,7 +149,7 @@ color: black;
 
 span.note
 {
-color: #ccc;
+color: #aaa;
 }
 .hidden
 {
@@ -243,7 +243,7 @@ p.warning
 }
 p.info
 {
-    background-image: url('<?=image()?>/images/information.png');
+    background-image: url('<?=image()?>/images/bullet_green.png');
     background-repeat: no-repeat;
     background-position: top left;
     padding-left: 20px;
@@ -273,15 +273,16 @@ table.summary_table th
     padding-right: 5px;
     background-color: #eee;
     width: 100px;
+    border-top: 1px solid #ddd;
 }
 table.summary_table tr
 {
-    border-top: 1px solid #ddd;
 }
 table.summary_table td
 {
     padding: 3px;
     align: top;
+    border-top: 1px solid #ddd;
 }
 <?
 ///////////////////////////////////////////////////////////////////////////////////////////////////

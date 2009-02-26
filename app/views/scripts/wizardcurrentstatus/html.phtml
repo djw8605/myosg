@@ -11,7 +11,16 @@ foreach($this->cache as $rid=>$cache) {
     ?>
     <div class="border">
     <div class="status_<?=$status?>">
-    <h4><div class="resource"><?=$resource_name?></div></h4>
+    <span class="h4"><div class="resource">
+    <?
+    if(uwa()) {
+        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
+    } else {
+        echo $resource_name;
+    }
+    ?>
+    </div></span>
+
     <p><?=$note?></p>
     </div>
     <div class="indent">
@@ -79,7 +88,11 @@ function outputMetricInfo($metric, $timestamp)
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
     if($expired) $name .= " (Expired)";
-    $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
+    $out .= "<span class=\"h4\">$name</span>";
+    if(!uwa()) {
+        $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
+        $out .= "<br/><span class=\"note\">$desc</span>";
+    }
     if(!isset($_REQUEST["uwa"])) {
         if(trim($detail) == "") {
             $detail = "(No detail provided)<br/>";
