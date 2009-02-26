@@ -32,7 +32,7 @@ span.disabled
         <option value="">(Please Select)</option>
         <option value="summary">Resource Summary</option>
         <option value="currentstatus">Current RSV Status</option>
-        <option value="gipstatus">Current GIP Validtion Status</option>
+        <option value="gipstatus">Current GIP Validation Status</option>
         <option value="statushistory">RSV Status History</option>
         <option value="arhistory">Availability History</option>
         <option value="armetric">Availability Metrics</option>
@@ -139,36 +139,41 @@ span.disabled
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Resources<br/>";
 
+            function helpbutton($type)
+            {
+                return "<a target=\"_blank2\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
+            }
+
             $model = new Facilities();
             $fs = $model->get();
             $kv = array();
             foreach($fs as $f) { $kv[$f->facility_id] = $f->name; }
-            echo checklist("facility", "Resource in Facility", $kv);
+            echo checklist("facility", "Resources in Facility ".helpbutton("Facility"), $kv);
 
             $model = new Site();
             $list = $model->get();
             $kv = array();
             foreach($list as $site) { $kv[$site->site_id] = $site->name; }
-            echo checklist("site", "Resources in Sites", $kv);
+            echo checklist("site", "Resources in Sites ".helpbutton("Site"), $kv);
 
             $model = new ResourceGroup();
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { $kv[$item->resource_group_id] = $item->name; }
-            echo checklist("rg", "Resources in Resource Groups", $kv);
+            echo checklist("rg", "Resources in Resource Groups".helpbutton("Resource_Group"), $kv);
 
             $model = new SupportCenters();
             $scs = $model->get();
             $kv = array();
             foreach($scs as $sc) { $kv[$sc->sc_id] = $sc->short_name; }
-            echo checklist("sc", "Resource supported by Support Centers", $kv);
+            echo checklist("sc", "Resource supported by Support Centers ".helpbutton("Support_Center"), $kv);
 
 
             $model = new Resource();
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("r", "Specific Resources", $kv);
+            echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
             ?>
         </div>
     </div>

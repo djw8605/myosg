@@ -11,14 +11,12 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     }
     echo "<div class=\"resource_group\">";
     echo "<span class='h3'>".$resource_group->name."</span>";
-    if(!uwa()) {
-        if(isset($_REQUEST["summary_attrs_showdesc"])) {
-            echo "<br/>";
-            if($resource_group->description != "") {
-                echo $resource_group->description;
-            } else {
-                echo "(No resource group description)";
-            }
+    if(isset($_REQUEST["summary_attrs_showdesc"])) {
+        echo "<br/>";
+        if($resource_group->description != "") {
+            echo $resource_group->description;
+        } else {
+            echo "(No resource group description)";
         }
     }
     echo "</div>";
@@ -31,7 +29,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     $col_p = 100 / $cols;
 
     $col = 0; //current column 
-    echo "<table width=\"100%\" style=\"margin: 0px;\"><tr>";
+    echo "<table width=\"100%\"><tr>";
     foreach($resource_list as $rid=>$resource) {
         $col++;
         if($col > $cols) {
@@ -39,65 +37,88 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             echo "</tr><tr>";
         }
 
-        echo "<td style=\"padding: 0px;\" valign=\"top\" width=\"$col_p%\">";
-        if(!isset($this->resource_status[$rid])) {
-            $note = "<div>Resource status is not calculated for this resource</div>";
-            $status = "UNKNOWN";
-        } else {
-            $resource_status = $this->resource_status[$rid][0];
-            $note = "<div>".$resource_status->detail."</div>";
-            $status = Status::getStatus($resource_status->status_id);
-        }
+        echo "<td width=\"$col_p%\">";
 
-        if(isset($this->downtime[$rid])) {
-            $downtime = $this->downtime[$rid][0];
-            $status = "DOWNTIME";
-            $downtime_desc = $downtime->downtime_summary;
-            $internal_note = $note;
-            $note = "This service is currently under maintenance.<br/>";
-            $note .= "<div style='background-color: #ddf; padding: 3px;'><b>Maintenance Summary:</b><div>$downtime_desc</div>";
-            $note .= "<b>Internal status:</b>$internal_note</div>";
-        }
-
-        if(isset($this->resource_services[$rid]) == 0) {
-            $service_names = "no applicable service exists";
-        } else {
-            $services = $this->resource_services[$rid];
-            $service_names = "";
-            foreach($services as $service) {
-                if($service_names != "") $service_names .= " / ";
-                if(isset($this->servicetypes[$service->service_id])) {
-                    $service_names .= $this->servicetypes[$service->service_id][0]->description;
-                } else {
-                    $service_names .= "unknown_service_id:".$service->service_id;
-                }
-            }
-        }
-    
-        if(uwa()) {
-            $cls = "";
-        } else {
-            $cls = "resource";
-        }
-        echo "<div class=\"status_$status\"><h4><div class=\"$cls\">".$resource->name." ($service_names)</div></h4>";
-        echo $note;
-
+        //show resource name & desc
+        echo "<div class=\"resource\"><span class='h4'>".$resource->name."</span>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
-            echo "<b>Description:</b> ";
-            echo "<div>";
+            echo "<br/>";
             if($resource->description != "") {
                 echo $resource->description;
             } else {
                 echo "(No resource description)";
             }
-            echo "</div>";
         }
+        echo "</div>";
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //Optional Information
+        echo "<div class=\"indent\">";
+        echo "<table class='summary_table' width='100%'>";
+
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            echo "<tr>";
+            echo "<th>Services:</th>";
+            echo "<td>";
+            if(isset($this->resource_services[$rid]) == 0) {
+                $service_names = "no applicable service exists";
+            } else {
+                $services = $this->resource_services[$rid];
+                $service_names = "";
+                foreach($services as $service) {
+                    if($service_names != "") $service_names .= "<br/>";
+                    if(isset($this->servicetypes[$service->service_id])) {
+                        $service_names .= $this->servicetypes[$service->service_id][0]->description;
+                    } else {
+                        $service_names .= "unknown_service_id:".$service->service_id;
+                    }
+                }
+            }
+            echo $service_names;
+            echo "</td></tr>";
+        }
+        if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
+            echo "<tr>";
+            echo "<th>RSV&nbsp;Status:</th>";
+            echo "<td>";
+            if(!isset($this->resource_status[$rid])) {
+                $note = "<div>Resource status is not calculated for this resource.</div>";
+                $status = "UNKNOWN";
+            } else {
+                $detail_url = fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&r=on&r_$rid=on";
+                $history_url = fullbase()."/wizardstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=today&r=on&r_$rid=on";
+                $resource_status = $this->resource_status[$rid][0];
+                $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
+                $status = Status::getStatus($resource_status->status_id);
+            }
+
+            if(isset($this->downtime[$rid])) {
+                $downtime = $this->downtime[$rid][0];
+                $status = "DOWNTIME";
+                $downtime_desc = $downtime->downtime_summary;
+                $internal_note = $note;
+                $note = "This service is currently under maintenance.<br/>";
+                $note .= "<div style='background-color: #ddf; padding: 3px;'><b>Maintenance Summary:</b><div>$downtime_desc</div>";
+                $note .= "<b>Internal status:</b>$internal_note</div>";
+            }
+
+            echo "<div class=\"status_$status\">";
+            echo $note;
+            echo "</div>";
+            echo "</td></tr>";
+        }
+
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
-            echo "<div><span class=\"fqdn\">".$resource->fqdn."</span></div>";
+            echo "<tr>";
+            echo "<th>FQDN:</th>";
+            echo "<td>";
+            echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
+            echo "</td></tr>";
         }
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
-            echo "<b>Supported VOs: </b>";
-            echo "<div>";
+            echo "<tr>";
+            echo "<th>Supported&nbsp;VOs:</th>";
+            echo "<td>";
             if(isset($this->vos_supported[$rid])) {
                 $volist = $this->vos_supported[$rid];
                 $vonames = "";
@@ -108,11 +129,11 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             } else {
                 echo "(Information not reported)";
             }
-            echo "</div>";
+            echo "</td></tr>";
         }
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
-            echo "<b>This resource is owned by following VO(s):</b>";
-            echo "<div>";
+            echo "<tr>";
+            echo "<td colspan=2><b>VO&nbsp;Ownership:</b><br/>";
             if(!isset($this->resource_ownerships[$rid])) {
                 echo "(Information not available)<br/>";
             } else {
@@ -137,11 +158,11 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl";
                 echo "<img src='$url'/><br/>";
             }
-            echo "</div>";
+            echo "</td></tr>";
         }
 
-
-        echo "</div>";
+        echo "</table>";
+        echo "</div>";//indent
         echo "</td>";
     }
     echo "</tr></table>";

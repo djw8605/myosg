@@ -4,8 +4,7 @@ class Resource extends CachedIndexedModel
 {
     public function sql($params)
     {
-        //$where = "where active = 1 and disable = 0";
-        $where = "where 1 = 1";
+        $where = "where disable = 0";
         if(isset($params["resource_id"])) {
             $resource_id = $params["resource_id"];
             $where .= " and r.resource_id = $resource_id";

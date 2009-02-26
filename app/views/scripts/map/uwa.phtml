@@ -26,7 +26,7 @@
 
 <style type="text/css">
 <?
-include("css/myosg.css.php?uwa");
+echo file_get_contents(fullbase()."/css/myosg.css.php?uwa");
 ?>
 .moduleContent
 {
@@ -38,7 +38,7 @@ include("css/myosg.css.php?uwa");
     <script type="text/javascript">
 <?=$this->render(pagename()."/js.phtml");?>
 widget.onLoad = function() {
-    text = "<iframe src='<?=fullbase();?>/<?=pagename()?>/iframe' width='100%' height='300px' scrolling='no' frameborder='0'></iframe>";
+    text = "<iframe src='<?=fullbase();?>/<?=pagename()?>/iframe?uwa' width='100%' height='300px' scrolling='no' frameborder='0'></iframe>";
     widget.setBody(text);
 }
 </script>

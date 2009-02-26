@@ -3,6 +3,6 @@ class Facilities extends CachedModel
 {
     public function sql($param)
     {
-        return "select * from oim.facility where active = 1 and disable = 0";
+        return "select * from oim.facility where active = 1 and disable = 0 order by name";
     }
 }

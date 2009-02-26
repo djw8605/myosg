@@ -10,7 +10,7 @@ class WizardarmetricController extends WizardController
     public function load()
     {
         parent::load();
-        $this->load_daterangequery();
+        //$this->load_daterangequery();
 
         //load resource list
         $resource_model = new Resource();

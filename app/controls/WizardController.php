@@ -17,6 +17,7 @@ class WizardController extends ControllerBase
                 $this->view->info = "No resource matches your current criteria. Please adjust your criteria in order to display any data.";
             }
         }
+        $this->load_daterangequery();
     }
 
     public function xmlAction()

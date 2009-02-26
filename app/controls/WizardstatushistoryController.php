@@ -12,7 +12,7 @@ class WizardstatushistoryController extends WizardController
         $resource_model = new Resource();
         $resource_service_model = new ResourceServices();
 
-        $this->load_daterangequery();
+        //$this->load_daterangequery();
 
         $this->view->ruler = $this->generateRuler($this->view->start_time, $this->view->end_time);
 

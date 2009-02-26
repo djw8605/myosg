@@ -15,7 +15,7 @@ abstract class WizardGratiaController extends WizardController
         $legend = false;
         list($urlbase, $sub_title, $ylabel) = $this->map();
 
-        $this->load_daterangequery();
+        //$this->load_daterangequery();
 
         $start_time = date("Y-m-d h:i:s", $this->view->start_time);
         $end_time = date("Y-m-d h:i:s", $this->view->end_time);

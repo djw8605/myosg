@@ -9,7 +9,7 @@ class WizardarhistoryController extends WizardController
     public function load()
     {
         parent::load();
-        $this->load_daterangequery();
+        //$this->load_daterangequery();
 
         $resource_model = new Resource();
         $this->view->resource_info = $resource_model->getindex();

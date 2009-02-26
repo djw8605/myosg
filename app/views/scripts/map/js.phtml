@@ -73,11 +73,12 @@ foreach($this->sites as $site) {
         $rgid = $rg->resource_group_id;
         $rgname = $rg->name;
         if(uwa()) {
-            $target = "target=\"blank\"";
+            $target = "target=\"_blank\"";
         } else {
             $target = "";
         }
-        $html .= "<h3>Resource Group: <a $target href=\"".fullbase()."/wizardsummary?datasource=summary&rg=on&rg_$rgid=on\">$rgname</a></h3>";
+        $gid = $rg->resource_group_id;
+        $html .= "<h3>Resource Group: <a $target href=\"".fullbase()."/wizardsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></h3>";
         if(isset($this->resources_bygid[$rg->resource_group_id])) {
             $rs = $this->resources_bygid[$rg->resource_group_id];
             foreach($rs as $r) {
