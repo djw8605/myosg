@@ -1,6 +1,6 @@
 Start Date:<br/>
 <select name="start_type">
-<option value="yesterday">Yesterday</option>
+<option value="yesterday">Yesterday (0AM)</option>
 <option value="7daysago">7 Days Ago</option>
 <option value="30daysago">30 Days Ago</option>
 <option value="specific">Specific Date</option>
@@ -14,7 +14,8 @@ Start Date:<br/>
 <br/>
 End Date:<br/>
 <select name="end_type">
-<option value="today">Today</option>
+<option value="today">Today (0AM)</option>
+<option value="now">Now</option>
 <option value="specific">Specific Date</option>
 </select>
 <?if(isset($_REQUEST["end_date"])) {

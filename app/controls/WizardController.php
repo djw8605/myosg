@@ -411,6 +411,7 @@ EOT;
     {
         $today_begin = (int)(time() / (3600*24));
         $today_begin *= 3600*24;
+
         //set some defaults
         if(!isset($_REQUEST["start_type"])) {
             $_REQUEST["start_type"] = "7daysago";
@@ -438,6 +439,9 @@ EOT;
         switch($_REQUEST["end_type"]) {
         case "today":
             $this->view->end_time = $today_begin;
+            break;
+        case "now":
+            $this->view->end_time = time();
             break;
         case "specific":
             $str = $_REQUEST["end_date"];

@@ -1,0 +1,23 @@
+<h3>OSG Delicious Bookmarks</h3>
+<div class="indent">
+<p>Following are the latest delicious bookmarks with "opensciencegrid" tag.</p>
+<p>You can add your link to this list by tagging a page with "opensciencegrid" as a delicious tag.</p>
+<?
+require_once "app/rss/rss_fetch.php";
+$url = "http://feeds.delicious.com/v2/rss/tag/opensciencegrid?count=15";
+$rss = fetch_rss($url);
+foreach ($rss->items as $item ) {
+    $title = htmlentities($item[title]);
+    $url   = htmlentities($item[link]);
+    $creator = htmlentities($item[dc][creator]);
+    echo "<a target=\"_blank\" href=$url>$title</a> (by $creator)<br/>";
+    echo "<div class=\"indent\">";
+    if(isset($item[description])) {
+        echo "<i>".htmlentities($item[description])."</i><br/>";
+    }
+    //var_dump($item);
+    echo "</div>";
+}
+?>
+</div>
+

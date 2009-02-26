@@ -137,19 +137,28 @@ class WizardstatushistoryController extends WizardController
 
     private function generateRuler($start_time, $end_time)
     {
+        $period = $end_time - $start_time;
+        if($period < 3600*24) {
+            $marker = "H:i";
+        } else if($period < 3600*24*30) {
+            $marker = "M j H:i";
+        } else {
+            $marker = "M j, Y";
+        }
+
         if($end_time == time()) {
             $end_marker = "now";
         } else {
-            $end_marker = date(config()->date_format, $end_time);
+            $end_marker = date($marker, $end_time);
         }
 
         $total = $end_time - $start_time;
         $q25 = $start_time + $total / 4;
-        $mark_25th = date(config()->date_format, $q25);
+        $mark_25th = date($marker, $q25);
         $q50 = $start_time + $total / 4 * 2;
-        $mark_50th = date(config()->date_format, $q50);
+        $mark_50th = date($marker, $q50);
         $q75 = $start_time + $total / 4 * 3;
-        $mark_75th = date(config()->date_format, $q75);
+        $mark_75th = date($marker, $q75);
         $out = "";
         $out .= "<table align=\"center\" width=\"100%\" class=\"ruler\"><tr>";
         $out .= "<td width=\"25%\">$mark_25th |</td>";
