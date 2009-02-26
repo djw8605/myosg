@@ -1,61 +1,42 @@
 <h3>Currently Under Maintenance</h3>
 <?
-showdowntimes($this->current_downtimes, $this);
+showdowntimes($this->current_downtimes);
 ?>
 
-<br/><br/>
 <h3>Future Maintenance</h3>
 <?
-showdowntimes($this->future_downtimes, $this);
+showdowntimes($this->future_downtimes);
 ?>
 
 <?
-function showdowntimes($downtimes, $view) {
-    foreach($downtimes as $downtime_a)
+function showdowntimes($downtimes) {
+    foreach($downtimes as $downtime)
     {
-        $downtime = $downtime_a[0];
-        if(in_array($downtime->resource_id, $view->resource_ids)) {
-            //only show event that we have pulled resource for
-            $resource = $view->resources[$downtime->resource_id];
-            $resource_name = $resource[0]->name;
-            if($resource_name !== null) {
-                echo "<div class='border'>";
+        echo "<div class='border'>";
 
-                $name = $resource_name;
-                echo "<h4><div class='resource'>".$name."</div></h4>";
-                
-                echo "<div class=\"indent\">";
-                echo "<table class=\"summary_table\">";
+        echo "<h4><div class='resource'>".$downtime["name"]."</div></h4>";
+        
+        echo "<div class=\"indent\">";
+        echo "<table class=\"summary_table\">";
 
-                //show time
-                $start = date(config()->date_format_full, $downtime->unix_start_time);
-                $end = date(config()->date_format_full, $downtime->unix_end_time);
-                echo "<tr><th>Start Time</th><td>$start</td></tr>";
-                echo "<tr><th>End Time</th><td>$end</td></tr>";
+        echo "<tr><th>Start Time</th><td>".$downtime["start_time"]."</td></tr>";
+        echo "<tr><th>End Time</th><td>".$downtime["end_time"]."</td></tr>";
 
-                //show affected services
-                $affected_services = "";
-                foreach($view->downtime_services as $service) {
-                    if($service->downtime_id == $downtime->downtime_id) {
-                        $service_info = $view->service_info[$service->service_id][0];
-                        $affected_services .= $service_info->description. "<br/>";
-                    }
-                }
-                echo "<tr><th>Affected&nbsp;Services</th><td>$affected_services</td></tr>";
-
-                //show downtime detail
-                echo "<tr><th>Detail</th><td><div class=\"downtime\">";
-                $desc = $downtime->downtime_summary;
-                $desc = str_replace(array("\n", "\r"), "", $desc);
-                echo "<p>".$desc."</p>";
-                echo "</div></td></tr>";
-
-                echo "</table>";
-                echo "</div>";
-
-                echo "</div>";//border
-            }
+        echo "<tr><th>Affected&nbsp;Services</th><td>";
+        foreach($downtime["services"] as $service) {
+            echo $service."<br/>";
         }
+        echo "</td></tr>";
+
+        //show downtime detail
+        echo "<tr><th>Detail</th><td><div class=\"downtime\">";
+        echo "<p>".$downtime["desc"]."</p>";
+        echo "</div></td></tr>";
+
+        echo "</table>";
+        echo "</div>";
+
+        echo "</div>";//border
     }
 }
 

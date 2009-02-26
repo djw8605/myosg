@@ -1,38 +1,26 @@
-<Downtime>
+<Downtimes>
 <CurrentDowntime>
-<h3>Currently Under Maintenance</h3>
-<?
-foreach($this->downtimes as $downtime_a)
-{
-    $downtime = $downtime_a[0];
-    if(in_array($downtime->resource_id, $this->resource_ids)) {
-        //only show event that we have pulled resource for
-        $resource = $this->resources[$downtime->resource_id];
-        $resource_name = $resource[0]->name;
-        $resource_id = $resource[0]->id;
-        if($resource_name !== null) {
-            echo "<Resource>";
-            $name = $resource_name;
-            echo "<Name>".htmlentities($name)."</Name>";
-            echo "<ID>".$resource_id."</ID>";
-            echo "<StartTime>$downtime->unix_start_time</StartTime><EndTime>$downtime->unix_end_time</EndTime>";
-
-            $affected_services = "";
-            foreach($this->downtime_services as $service) {
-                if($service->downtime_id == $downtime->downtime_id) {
-                    $service_info = $this->service_info[$service->service_id][0];
-                    $affected_services .= "<Service>".htmlentities($service_info->description)."</Service>";
-                }
-            }
-            echo "<AffectedServices>$affected_services</AffectedServices>";
-            echo "<Summary>".htmlentities($downtime->downtime_summary)."</Summary>";
-            echo "</Resource>";
-        }
-    }
-}
-?>
+<?showdowntimes($this->current_downtimes); ?>
 </CurrentDowntime>
 <FutureDowntime>
-TODO...
+<?showdowntimes($this->future_downtimes); ?>
 </FutureDowntime>
-</Downtime>
+</Downtimes>
+<?
+function showdowntimes($downtimes) {
+    foreach($downtimes as $downtime)
+    {
+        echo "<Downtime>";
+        echo "<ResourceName>".htmlentities($downtime["name"])."</ResourceName>";
+        echo "<StartTime>".$downtime["start_time"]."</StartTime>";
+        echo "<EndTime>".$downtime["end_time"]."</EndTime>";
+
+        echo "<Services>";
+        foreach($downtime["services"] as $service) {
+            echo "<Service>".$service."</Service>";
+        }
+        echo "</Services>";
+        echo "<Description>".htmlentities($downtime["desc"])."</Description>";
+        echo "</Downtime>";
+    }
+}
