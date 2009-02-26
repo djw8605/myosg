@@ -166,8 +166,6 @@ margin-bottom: 3px;
 font-weight: bold;
 font-size: 13px;
 }
-
-
 span.h4
 {
 margin-bottom: 3px;
