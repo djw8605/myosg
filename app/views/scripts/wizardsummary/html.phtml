@@ -58,7 +58,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<tr>";
-            echo "<th>Services:</th>";
+            echo "<th>Services</th>";
             echo "<td>";
             if(isset($this->resource_services[$rid]) == 0) {
                 $service_names = "no applicable service exists";
@@ -79,7 +79,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
         if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
             echo "<tr>";
-            echo "<th>RSV&nbsp;Status:</th>";
+            echo "<th>RSV&nbsp;Status</th>";
             echo "<td>";
             if(!isset($this->resource_status[$rid])) {
                 $note = "<div>Resource status is not calculated for this resource.</div>";
@@ -110,14 +110,14 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<tr>";
-            echo "<th>FQDN:</th>";
+            echo "<th>FQDN</th>";
             echo "<td>";
             echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
             echo "</td></tr>";
         }
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             echo "<tr>";
-            echo "<th>Supported&nbsp;VOs:</th>";
+            echo "<th>Supported&nbsp;VOs</th>";
             echo "<td>";
             if(isset($this->vos_supported[$rid])) {
                 $volist = $this->vos_supported[$rid];
@@ -133,7 +133,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<tr>";
-            echo "<td colspan=2><b>VO&nbsp;Ownership:</b><br/>";
+            echo "<td colspan=2><b>VO&nbsp;Ownership</b><br/>";
             if(!isset($this->resource_ownerships[$rid])) {
                 echo "(Information not available)<br/>";
             } else {
