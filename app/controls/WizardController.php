@@ -417,7 +417,7 @@ EOT;
             $_REQUEST["start_type"] = "7daysago";
         }
         if(!isset($_REQUEST["end_type"])) {
-            $_REQUEST["end_type"] = "today";
+            $_REQUEST["end_type"] = "now";
         }
 
         switch($_REQUEST["start_type"]) {

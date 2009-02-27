@@ -149,7 +149,7 @@ color: black;
 
 span.note
 {
-color: #aaa;
+color: #888;
 }
 .hidden
 {

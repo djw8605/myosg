@@ -69,7 +69,12 @@ function showmetric($metric, $timestamp, $hide_empty)
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
     if($expired) $name .= " (Expired)";
-    $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
+    $out .= "<span class=\"h4\">$name</span>";
+    if(!uwa()) {
+        $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
+        $out .= "<br/><span class=\"note\">$desc</span>";
+    }
+
     if(trim($detail) == "") {
         if($hide_empty) {
             //if hide_empty is true, don't show it..
