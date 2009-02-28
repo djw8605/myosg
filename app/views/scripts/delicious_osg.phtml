@@ -7,14 +7,14 @@ require_once "app/rss/rss_fetch.php";
 
 $url = "http://feeds.delicious.com/v2/rss/tag/opensciencegrid?count=15";
 $rss = fetch_rss($url);
-echo "<h4>opensciencegrid</h4>";
+echo "<h4><img src='".base()."/images/delicious.gif'/> opensciencegrid</h4>";
 showrss($rss);
 
 echo "<br/>";
 
 $url = "http://feeds.delicious.com/v2/rss/tag/myosg?count=15";
 $rss = fetch_rss($url);
-echo "<h4>myosg</h4>";
+echo "<h4><img src='".base()."/images/delicious.gif'/> myosg</h4>";
 showrss($rss);
 
 function showrss($rss) {
