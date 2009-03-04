@@ -30,20 +30,14 @@ class MapController extends ControllerBase
         $rgroups = $rgroup_model->get($params);
         $this->view->rgs = array();
         foreach($sites as $site) {
+            $rgs = array();
             foreach($rgroups as $rgroup) {
                 //elog(print_r($rgroup, true));
                 if($rgroup->site_id == $site->site_id) {
-                    if(!isset($this->view->rgs[$site->site_id])) {
-                        $this->view->rgs[$site->site_id] = array();
-                    }
-                    $this->view->rgs[$site->site_id][] = $rgroup;
-/*
-                    if($site->site_id == 10064) {
-                        slog("adding groupp ".print_r($group, true));
-                    }
-*/
+                    $rgs[] = $rgroup;
                 }
             }
+            $this->view->rgs[$site->site_id] = $rgs;
         }
 
         //pull resources (grouped by resource group id)
@@ -64,4 +58,5 @@ class MapController extends ControllerBase
     {
         $this->load();
     }
+
 }
