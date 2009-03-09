@@ -24,72 +24,94 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
     }
 
+
     foreach($resource_list as $rid=>$resource) {
         echo "<Resource>";
-        if(!isset($this->resource_status[$rid])) {
-            $note = "Resource status is not calculated for this resource";
-            $status = "UNKNOWN";
-        } else {
-            $resource_status = $this->resource_status[$rid][0];
-            $note = $resource_status->detail;
-            $status = Status::getStatus($resource_status->status_id);
+        echo "<Name>".$resource->name."</Name>";
+
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            echo "<Services>";
+            if(isset($this->resource_services[$rid]) == 0) {
+                echo "no applicable service exists";
+            } else {
+                $services = $this->resource_services[$rid];
+                foreach($services as $service) {
+                    if(isset($this->servicetypes[$service->service_id])) {
+                        echo "<Service>".$this->servicetypes[$service->service_id][0]->description."</Service>";
+                    } else {
+                        echo "<Service>unknown_service_id:".$service->service_id."</Service>";
+                    }
+                }
+            }
+            echo "</Services>";
         }
 
-        if(isset($this->downtime[$rid])) {
-            $downtime = $this->downtime[$rid][0];
-            $status = "DOWNTIME";
-            $downtime_desc = $downtime->downtime_summary;
-            $internal_note = $note;
-            $note = "This service is currently under maintenance.\n";
-            $note .= "Maintenance Summary: $downtime_desc\n";
-            $note .= "Internal status: $internal_note\n";
+        if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
+            if(!isset($this->resource_status[$rid])) {
+                $note = "Resource status is not calculated for this resource";
+                $status = "UNKNOWN";
+            } else {
+                $resource_status = $this->resource_status[$rid][0];
+                $note = $resource_status->detail;
+                $status = Status::getStatus($resource_status->status_id);
+            }
+
+            if(isset($this->downtime[$rid])) {
+                $downtime = $this->downtime[$rid][0];
+                $status = "DOWNTIME";
+                $downtime_desc = $downtime->downtime_summary;
+                $internal_note = $note;
+                $note = "This resource is currently under maintenance.\n";
+                $note .= "Maintenance Summary: $downtime_desc\n";
+                $note .= "Internal status: $internal_note\n";
+            }
+            echo "<RSVStatus><Status>$status</Status><Note>".htmlentities($note)."</Note></RSVStatus>";
         }
 
-        if(isset($this->resource_services[$rid]) == 0) {
-            $service_names = "no applicable service exists";
-        } else {
-            $services = $this->resource_services[$rid];
-            $service_names = "";
-            foreach($services as $service) {
-                if($service_names != "") $service_names .= " / ";
-                if(isset($this->servicetypes[$service->service_id])) {
-                    $service_names .= $this->servicetypes[$service->service_id][0]->description;
-                } else {
-                    $service_names .= "unknown_service_id:".$service->service_id;
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            if(isset($this->resource_services[$rid]) == 0) {
+                $service_names = "no applicable service exists";
+            } else {
+                $services = $this->resource_services[$rid];
+                $service_names = "";
+                foreach($services as $service) {
+                    if($service_names != "") $service_names .= " / ";
+                    if(isset($this->servicetypes[$service->service_id])) {
+                        $service_names .= $this->servicetypes[$service->service_id][0]->description;
+                    } else {
+                        $service_names .= "unknown_service_id:".$service->service_id;
+                    }
                 }
             }
         }
-    
-        echo "<ResourceStatus>$status</ResourceStatus>";
-        echo "<ResourceName>".$resource->name."</ResourceName><Services>$service_names</Services>";
-        echo "<Note>".htmlentities($note)."</Note>";
 
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
-            echo "<ResourceDescription>";
+            echo "<Description>";
             if($resource->description != "") {
                 echo htmlentities($resource->description);
             } else {
                 echo "(No resource description)";
             }
-            echo "</ResourceDescription>";
+            echo "</Description>";
         }
+
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<FQDN>".$resource->fqdn."</FQDN>";
         }
+
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             echo "<SupportedVOs>";
             if(isset($this->vos_supported[$rid])) {
                 $volist = $this->vos_supported[$rid];
-                $vonames = "";
                 foreach($volist as $vo) {
-                    $vonames .= $vo." ";
-                }                
-                echo $vonames;
+                    echo "<VO>$vo</VO>";
+                }
             } else {
                 echo "(Information not reported)";
             }
             echo "</SupportedVOs>";
         }
+
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<VOOwnership>";
             $ownership = $this->resource_ownerships[$rid];
@@ -100,6 +122,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $chl = "";
                 $total = 0;
                 foreach($ownership as $item) {
+                    echo "<Ownership><Percent>$item->percent</Percent><VOName>$item->short_name</VOName></Ownership>";
                     if($chd != "") $chd .= ",";
                     $chd .= $item->percent;
                     if($chl != "") $chl .= "|";
@@ -112,6 +135,8 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     $chd .= $left;
                     if($chl != "") $chl .= "|";
                     $chl .= "Other($left%)";
+
+                    echo "<Ownership><Percent>$left</Percent><VOName>Other</VOName></Ownership>";
                 }
                 $url = htmlentities("http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl");
                 echo "<ChartURL>$url</ChartURL>";

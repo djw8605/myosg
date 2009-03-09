@@ -9,9 +9,6 @@
 	margin: 0em;
 	padding: 0em;
 }
-h1,h2
-{
-}
 body
 {
 	font-family: "trebuchet ms", sans-serif;
@@ -67,7 +64,6 @@ vertical-align: top;
 {
 	font-size: 1.1em;
 	font-weight: bold;
-	#text-transform: lowercase;
 	color: #5D5F53;
 	text-decoration: none;
 	margin-right: 1em;

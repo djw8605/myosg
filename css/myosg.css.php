@@ -10,13 +10,6 @@ function uwa()
 }
 
 //determine image base
-/*
-if(uwa()) {
-    $base = "http://myosg.grid.iu.edu";
-} else {
-    $base = "..";
-}
-*/
 function image()
 {
     return fullbase()."/..";

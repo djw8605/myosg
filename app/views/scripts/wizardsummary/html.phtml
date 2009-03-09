@@ -97,7 +97,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $status = "DOWNTIME";
                 $downtime_desc = $downtime->downtime_summary;
                 $internal_note = $note;
-                $note = "This service is currently under maintenance.<br/>";
+                $note = "This resource is currently under maintenance.<br/>";
                 $note .= "<div class=\"downtime\"><b>Maintenance Summary:</b><div>$downtime_desc</div>";
                 $note .= "<b>Internal status:</b>$internal_note</div>";
             }

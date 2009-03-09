@@ -1,10 +1,9 @@
 <?
 foreach($this->resources as $rid=>$record) {
+    $testtime = agoCalculation($record["testtime"]);
     $resource_name = $record["name"];
     $resource_fqdn = $record["fqdn"];
     $tests = $record["tests"];
-    //$interop_bdii = $record["interop_bdii"];
-    //$type = $record["type"];
     $rawdata = $record["rawdata"];
 
     ?>
@@ -12,8 +11,8 @@ foreach($this->resources as $rid=>$record) {
 <?
     if(!uwa()) {
         echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px;'>";
-
         $raw = "";
+
         //show raw data link
         $link = $rawdata["cemon_raw_data"][0]->link;
         $age = $rawdata["cemon_raw_data"][0]->age;
@@ -47,6 +46,7 @@ foreach($this->resources as $rid=>$record) {
     <div class="resource"><h4><?=$resource_name?></h4></div>
     <div class="indent">
     <?
+    echo "<div>Test calculated $testtime ago</div>";
     if(count($tests) == 0) {
         echo "(No GIP Validation Status is available for this resource)";
     } else {

@@ -46,6 +46,7 @@ class WizardgipstatusController extends WizardController
                     }
                     $found = true;
                     $cemon_links = $cemonbdii;
+                    $testtime = strtotime((string)$cache->TestRunTime);
                     break;
                 }
             }
@@ -57,8 +58,8 @@ class WizardgipstatusController extends WizardController
                             $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                         }
                         $found = true;
-                        //$type = "itb";
                         $cemon_links = $cemonbdii_itb;
+                        $testtime = strtotime((string)$cache2->TestRunTime);
                         break;
                     }
                 }
@@ -77,10 +78,9 @@ class WizardgipstatusController extends WizardController
             }
 
             $this->view->resources[$resource_id] = array(
+                "testtime"=>$testtime,
                 "name"=>$resource_info->name, 
                 "fqdn"=>$resource_info->fqdn, 
-                //"type"=>$type,
-                //"interop_bdii"=>$resource_info->interop_bdii,
                 "rawdata"=>$rawdata,
                 "tests"=>$tests
             );
