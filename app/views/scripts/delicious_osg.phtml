@@ -19,13 +19,13 @@ showrss($rss);
 
 function showrss($rss) {
     foreach ($rss->items as $item ) {
-        $title = htmlentities($item[title]);
-        $url   = htmlentities($item[link]);
-        $creator = htmlentities($item[dc][creator]);
+        $title = htmlentities($item["title"]);
+        $url   = htmlentities($item["link"]);
+        $creator = htmlentities($item["dc"]["creator"]);
         echo "<a target=\"_blank\" href=$url>$title</a> (by $creator)<br/>";
         echo "<div class=\"indent\">";
-        if(isset($item[description])) {
-            echo "<i>".htmlentities($item[description])."</i><br/>";
+        if(isset($item["description"])) {
+            echo "<i>".htmlentities($item["description"])."</i><br/>";
         }
         //var_dump($item);
         echo "</div>";

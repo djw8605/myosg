@@ -1,7 +1,7 @@
 <?
 class WizardstatushistoryController extends WizardController
 {
-    public function breads() { return array("rsv", "wizard"); }
+    public function breads() { return array("wizard"); }
     public static function default_title() { return "RSV Status History"; }
     public static function default_url($query) { return ""; }
 
@@ -36,60 +36,66 @@ class WizardstatushistoryController extends WizardController
             $service_id = (int)$_REQUEST["service_id"];
             $time = (int)$_REQUEST["time"];
 
-            $this->view->detail_service_id = $service_id;
-            $this->view->detail_time = $time;
-
-            //get service information
-            $model = new ResourceServices();
-            $params = array("resource_id" => $resource_id, "service_id" => $service_id);
-            $this->view->detail_service = $model->get($params);
-
-            //get statuses at specified timestamp
-            $metricdata_model = new MetricData();
-            $params = array("resource_id" => $resource_id, "time" => $time);
-            $metrics = $metricdata_model->get($params); 
-
             //load cache (for template use.)
             $cache_filename_template = config()->current_resource_status_xml_cache;
             $cache_filename = str_replace("<ResourceID>", $resource_id, $cache_filename_template); 
-            $cache_xml = file_get_contents($cache_filename);
-            $cache = new SimpleXMLElement($cache_xml);
-            foreach($cache->Services[0] as $service) {
-                if($service->ServiceID[0] == $service_id) {
-                    $critical_metrics = $service->CriticalMetrics[0];
-                    $noncritical_metrics = $service->NonCriticalMetrics[0];
-                    break;
+
+            if(file_exists($cache_filename)) {
+                $this->view->detail_service_id = $service_id;
+                $this->view->detail_time = $time;
+
+                //get service information
+                $model = new ResourceServices();
+                $params = array("resource_id" => $resource_id, "service_id" => $service_id);
+                $this->view->detail_service = $model->get($params);
+
+                //get statuses at specified timestamp
+                $metricdata_model = new MetricData();
+                $params = array("resource_id" => $resource_id, "time" => $time);
+                $metrics = $metricdata_model->get($params); 
+
+                    $cache_xml = file_get_contents($cache_filename);
+                $cache = new SimpleXMLElement($cache_xml);
+                foreach($cache->Services[0] as $service) {
+                    if($service->ServiceID[0] == $service_id) {
+                        $critical_metrics = $service->CriticalMetrics[0];
+                        $noncritical_metrics = $service->NonCriticalMetrics[0];
+                        break;
+                    }
                 }
-            }
-            foreach($critical_metrics as $metric) {
-                $this->metric_overwrite($metric, $metrics);
-            }
-            foreach($noncritical_metrics as $metric) {
-                $this->metric_overwrite($metric, $metrics);
-            }
-            $this->view->detail_critical_metrics = $critical_metrics;
-            $this->view->detail_noncritical_metrics = $noncritical_metrics;
+                foreach($critical_metrics as $metric) {
+                    $this->metric_overwrite($metric, $metrics);
+                }
+                foreach($noncritical_metrics as $metric) {
+                    $this->metric_overwrite($metric, $metrics);
+                }
+                $this->view->detail_critical_metrics = $critical_metrics;
+                $this->view->detail_noncritical_metrics = $noncritical_metrics;
 
-            //load service status
-            $service_status_model = new ServiceStatusChange();
-            $params = array();
-            $params["resource_id"] = $resource_id;
-            $params["service_id"] = $service_id;
-            $params["start_time"] = $time;
-            $params["end_time"] = $time;
-            $service_statuses = $service_status_model->get($params);
-            $this->view->detail_service_status = null;
-            if(isset($service_statuses[0])) {
-                $this->view->detail_service_status = $service_statuses[0];
-            }
+                //load service status
+                $service_status_model = new ServiceStatusChange();
+                $params = array();
+                $params["resource_id"] = $resource_id;
+                $params["service_id"] = $service_id;
+                $params["start_time"] = $time;
+                $params["end_time"] = $time;
+                $service_statuses = $service_status_model->get($params);
+                $this->view->detail_service_status = null;
+                if(isset($service_statuses[0])) {
+                    $this->view->detail_service_status = $service_statuses[0];
+                }
 
-            //load downtime
-            $downtime_model = new Downtime();
-            $params = array("resource_id" => $resource_id, "start_time"=>$time, "end_time"=>$time);
-            $downtimes = $downtime_model->get($params);
-            $downtimes_forservice = $this->getDowntimesForService($downtimes, $service_id);
-            if(count($downtimes_forservice) > 0) {
-                $this->view->downtime = $downtimes_forservice[0];//grab first one for this service
+                //load downtime
+                $downtime_model = new Downtime();
+                $params = array("resource_id" => $resource_id, "start_time"=>$time, "end_time"=>$time);
+                $downtimes = $downtime_model->get($params);
+                $downtimes_forservice = $this->getDowntimesForService($downtimes, $service_id);
+                if(count($downtimes_forservice) > 0) {
+                    $this->view->downtime = $downtimes_forservice[0];//grab first one for this service
+                }
+            } else {
+                echo "<p class='warning'>No RSV status is available for this resource</div>";
+                $this->render("none", null, true); 
             }
         }
     }

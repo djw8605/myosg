@@ -2,7 +2,7 @@
 
 class WizardController extends ControllerBase
 {
-    public function breads() { return array("rsv"); }
+    //public function breads() { return array("wizard"); }
     public static function default_title() { return "OSG Resource"; }
     public static function default_url($query) { return ""; }
 

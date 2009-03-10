@@ -2,7 +2,7 @@
 
 class AdminController extends ControllerBase
 { 
-    public function breads() { return array("admin"); }
+    //public function breads() { return array("admin"); }
     public static function default_title() { return "Administration"; }
     public static function default_url($query) { return ""; }
 

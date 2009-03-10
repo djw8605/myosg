@@ -9,10 +9,7 @@ echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
         if(count($resource) == 0) continue;
 
         $resource_info = $this->resources[$resource_id];
-        $resource_name = "<a href=\"".base()."/current?resource_id=$resource_id"."\">".$resource_info[0]->name."</a>";
-        $history_url = fullbase()."/history?resource_id=$resource_id&amp;period=".$_REQUEST["period"];
-        //$functions = "<a href=\"$history_url\">Status History</a> &nbsp;&nbsp;&nbsp;";
-        //$functions .= "<a href=\"".base()."/aandrhistory?resource_id=".$resource_id."\">Availability History</a>";
+        $resource_name = $resource_info[0]->name;
 
         $first = true;
         foreach($resource as $service_id=>$data) {
@@ -31,11 +28,6 @@ echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
                 echo $resource_name;
             }
             echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
-/*
-            if($first) {
-                echo $functions;
-            }
-*/
             echo "</td></tr>";
             $first = false;
         }

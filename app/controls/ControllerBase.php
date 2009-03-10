@@ -13,11 +13,12 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function init()
     {
         setpagename($this->pagename());
-        $this->initbread();
+        //$this->initbread();
         $this->selectmenu($this->pagename());
         $this->setpagetitle("Untitled Page");
     }
 
+/*
     private function composeControllerName($page)
     {
         return strtoupper(substr($page, 0, 1)).substr($page, 1)."Controller";
@@ -40,14 +41,17 @@ abstract class ControllerBase extends Zend_Controller_Action
             $this->view->breadcrumbs[] = array($title, $url);
         }
     }
+*/
 
     public function setpagetitle($title)
     {
+/*
         if(!isset($_SESSION["crumbs"])) {
             $_SESSION["crumbs"] = array();
         }
 
         $_SESSION["crumbs"][$this->pagename()] = array($this->pagename()."?".$_SERVER["QUERY_STRING"], $title);
+*/
         $this->view->page_title = $title;
     }
 

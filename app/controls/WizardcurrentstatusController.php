@@ -2,7 +2,7 @@
 
 class WizardcurrentstatusController extends WizardController
 {
-    public function breads() { return array("rsv", "wizard"); }
+    public function breads() { return array("wizard"); }
     public static function default_title() { return "Current RSV Status"; }
     public static function default_url($query) { return ""; }
 

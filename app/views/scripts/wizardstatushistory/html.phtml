@@ -82,7 +82,7 @@ function checkAnchor(){
             //hide all previously opened detail (we have only one mark..)
             $(".history_detail").html("");
 
-            //$("#history_detail_"+mark_resource_id).html("Loading..");
+            //load detail content
             $("#history_detail_"+mark_resource_id).html("<img src='<?=fullbase()?>/images/loading_animation_small.gif'/> Loading...").load("<?=fullbase()."/".pagename()?>/"+anchor, 
                 function() {
                     mark();
