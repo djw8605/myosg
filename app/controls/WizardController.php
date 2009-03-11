@@ -239,27 +239,27 @@ EOT;
         //setup filter
         if(isset($_REQUEST["gridtype"])) {
             $keep = $this->process_resource_filter_gt();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
         if(isset($_REQUEST["service"])) {
             $keep = $this->process_resource_filter_service();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
         if(isset($_REQUEST["vosup"])) {
             $keep = $this->process_resource_filter_vosup();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
         if(isset($_REQUEST["voown"])) {
             $keep = $this->process_resource_filter_voown();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
         if(isset($_REQUEST["status"])) {
             $keep = $this->process_resource_filter_status();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
         if(isset($_REQUEST["has_status"])) {
             $keep = $this->process_resource_filter_hasstatus();
-            $resources = array_intersect($keep, $resources);
+            $resources = array_intersect($resources, $keep);
         }
 
         return $resources;
