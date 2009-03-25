@@ -13,6 +13,10 @@ if(isset($_REQUEST["summary_attrs_showrsvstatus"])) { $checked = "checked=checke
 <input type="checkbox" name="summary_attrs_showrsvstatus" <?=$checked?>/> Show Current RSV Status<br/>
 
 <?$checked = "";
+if(isset($_REQUEST["summary_attrs_showgipstatus"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showgipstatus" <?=$checked?>/> Show Current GIP Validation Status<br/>
+
+<?$checked = "";
 if(isset($_REQUEST["summary_attrs_showfqdn"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showfqdn" <?=$checked?>/> Show FQDN<br/>
 

@@ -103,9 +103,12 @@ class common_config
         $this->aandr_cache = $this->getCacheDir()."/cache.aandr_<start_time>_to_<end_time>.xml";
         
         //gip validation
-        $this->gip_summary = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_summary_osg.xml"; 
-        $this->gip_summary2 = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_summary_osg_itb.xml"; 
-        $this->gip_detail = "http://is-dev.grid.iu.edu/gip-validator/xml/gipvalidate_<resource_name>_detail.xml"; 
+        $this->gip_summary = "/usr/local/gip-validator/var/results/xml_osg/gipvalidate_summary.xml"; 
+        $this->gip_summary_itb = "/usr/local/gip-validator/var/results/xml_osg_itb/gipvalidate_summary.xml"; 
+        $this->gip_detail = "/usr/local/gip-validator/var/results/xml_osg/gipvalidate_<resource_name>_detail.xml"; 
+        $this->gip_detail_itb = "/usr/local/gip-validator/var/results/xml_osg_itb/gipvalidate_<resource_name>_detail.xml"; 
+
+        //bdii raw files
         $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";
         $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml";
 

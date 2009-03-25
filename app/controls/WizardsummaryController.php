@@ -57,6 +57,10 @@ class WizardsummaryController extends WizardController
             $downtime_model = new Downtime();
             $this->view->downtime = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
         }
+        if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
+            $model = new LDIF();
+            $this->view->gipstatus = $model->getValidationSummary();
+        }
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             $cache_filename = config()->vomatrix_xml_cache;
             $cache_xml = file_get_contents($cache_filename);
@@ -77,4 +81,5 @@ class WizardsummaryController extends WizardController
 
         $this->setpagetitle(self::default_title());
     }
+
 }

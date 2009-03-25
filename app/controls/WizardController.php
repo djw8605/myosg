@@ -257,6 +257,10 @@ EOT;
             $keep = $this->process_resource_filter_status();
             $resources = array_intersect($resources, $keep);
         }
+        if(isset($_REQUEST["gipstatus"])) {
+            $keep = $this->process_resource_filter_gipstatus();
+            $resources = array_intersect($resources, $keep);
+        }
         if(isset($_REQUEST["has_status"])) {
             $keep = $this->process_resource_filter_hasstatus();
             $resources = array_intersect($resources, $keep);
@@ -354,6 +358,35 @@ EOT;
             }
 
             if(isset($_REQUEST["status_".$status_id])) {
+                if(!in_array($rid, $resources_to_keep)) {
+                    $resources_to_keep[] = $rid;
+                }
+            }
+        }
+        return $resources_to_keep;
+    }
+
+    private function process_resource_filter_gipstatus()
+    {
+        $resources_to_keep = array();
+
+        $model = new LDIF();
+        $summary = $model->getValidationSummary();
+
+        $model = new Resource();
+        $resources = $model->getindex();
+        foreach($resources as $rid=>$r) {
+            //search for the gip status
+            $found = false;
+            $overallstatus = "UNKNOWN"; //if not found, treat it as unknown
+            foreach($summary->Resource as $gip) {
+                if($r[0]->name == (string)$gip->Name) {
+                    $overallstatus = (string)$gip->OverAllStatus;
+                    break;
+                }
+            }
+            //check the status
+            if(isset($_REQUEST["gipstatus_".$overallstatus])) {
                 if(!in_array($rid, $resources_to_keep)) {
                     $resources_to_keep[] = $rid;
                 }

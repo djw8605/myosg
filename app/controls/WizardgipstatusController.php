@@ -13,68 +13,49 @@ class WizardgipstatusController extends WizardController
         $resource_model = new Resource();
         $resources = $resource_model->getindex();
 
-        //load gip summary (1)
-        $cache_xml = file_get_contents(config()->gip_summary);
-        $cache = new SimpleXMLElement($cache_xml);
-
-        //load gip summary (2) -- for ITB
-        $cache_xml2 = file_get_contents(config()->gip_summary2);
-        $cache2 = new SimpleXMLElement($cache_xml2);
-
-        //cemon raw file listing for production
-        $cemonbdii_url = file_get_contents(config()->cemonbdii_url);
-        $cemonbdii = new SimpleXMLElement($cemonbdii_url);
-
-        //cemon raw file listing for itb
-        $cemonbdii_itb_url = file_get_contents(config()->cemonbdii_itb_url);
-        $cemonbdii_itb = new SimpleXMLElement($cemonbdii_itb_url);
+        $model = new LDIF();
+        $gip = $model->getValidationSummary();
+        $cemonbdii = $model->getBdii();
 
         //merge those xmls
         $this->view->resources = array();
         foreach($this->resource_ids as $resource_id) {
             $resource_info = $resources[$resource_id][0];
-
             $tests = array();
+
+            //if not found use following defaults
+            $testtime = null;
+            $overallstatus = "NA";
 
             //search for this resource name
             $found = false;
-            //$type = "production";
-            foreach($cache->Resource as $resource) {
+            foreach($gip->Resource as $resource) {
                 if($resource_info->name == $resource->Name) {
                     foreach($resource->TestCase as $test) {
                         $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
                     }
                     $found = true;
-                    $cemon_links = $cemonbdii;
-                    $testtime = strtotime((string)$cache->TestRunTime);
+                    $testtime = strtotime((string)$gip->TestRunTime);
+                    $overallstatus = $resource->OverAllStatus;
                     break;
-                }
-            }
-            if(!$found) {
-                //search on second xml (for ITB)
-                foreach($cache2->Resource as $resource) {
-                    if($resource_info->name == $resource->Name) {
-                        foreach($resource->TestCase as $test) {
-                            $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
-                        }
-                        $found = true;
-                        $cemon_links = $cemonbdii_itb;
-                        $testtime = strtotime((string)$cache2->TestRunTime);
-                        break;
-                    }
                 }
             }
 
             //search for cemon raw file links
             $rawdata = array();
-            if($found) {
-                foreach($cemon_links->resource as $resource) {
-                    if($resource->name == $resource_info->name) {
-                        $rawdata["processed_osg_data"] = $resource->processed_osg_data;
-                        $rawdata["processed_wlcg_interop_data"] = $resource->processed_wlcg_interop_data;
-                        $rawdata["cemon_raw_data"] = $resource->cemon_raw_data;
-                    }
-                } 
+            $cemon = null;
+            //search prod..
+            foreach($cemonbdii->resource as $resource) {
+                if($resource->name == $resource_info->name) {
+                    $cemon = $resource;
+                    break;
+                }
+            } 
+            //if we have data, pull it out
+            if($cemon !== null) {
+                $rawdata["processed_osg_data"] = $cemon->processed_osg_data;
+                $rawdata["processed_wlcg_interop_data"] = $cemon->processed_wlcg_interop_data;
+                $rawdata["cemon_raw_data"] = $cemon->cemon_raw_data;
             }
 
             $this->view->resources[$resource_id] = array(
@@ -82,6 +63,7 @@ class WizardgipstatusController extends WizardController
                 "name"=>$resource_info->name, 
                 "fqdn"=>$resource_info->fqdn, 
                 "rawdata"=>$rawdata,
+                "overallstatus"=>$overallstatus,
                 "tests"=>$tests
             );
         }
@@ -100,8 +82,15 @@ class WizardgipstatusController extends WizardController
             $this->render("none", null, true);
         } else {
             $resource_name = $resource_info->name;
+        
+            //try to find the detail in prod directory first
             $xmlname = config()->gip_detail;
             $xmlname = str_replace("<resource_name>", $resource_name, $xmlname);
+            if(!file_exists($xmlname)) {
+                //try the itb directory
+                $xmlname = config()->gip_detail_itb;
+                $xmlname = str_replace("<resource_name>", $resource_name, $xmlname);
+            }
             $cache_xml = file_get_contents($xmlname);
             $cache = new SimpleXMLElement($cache_xml);
 

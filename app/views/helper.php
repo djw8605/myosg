@@ -94,6 +94,7 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
 
 function agoCalculation($timestamp)
 {
+    if($timestamp === null) return null;
     $ago = time() - $timestamp;
     return humanDuration($ago);
 }

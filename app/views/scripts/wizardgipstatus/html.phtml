@@ -5,51 +5,77 @@ foreach($this->resources as $rid=>$record) {
     $resource_fqdn = $record["fqdn"];
     $tests = $record["tests"];
     $rawdata = $record["rawdata"];
+    $overallstatus = $record["overallstatus"];
 
     ?>
     <div class="border">
 <?
     if(!uwa()) {
         echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px;'>";
-        $raw = "";
+        if(isset($rawdata["cemon_raw_data"])) {
+            $raw = "";
 
-        //show raw data link
-        $link = $rawdata["cemon_raw_data"][0]->link;
-        $age = $rawdata["cemon_raw_data"][0]->age;
-        if($link == "") {
-            $raw .= "(No Incoming Data)<br/>";
+            //show raw data link
+            $link = $rawdata["cemon_raw_data"][0]->link;
+            $age = $rawdata["cemon_raw_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No Incoming Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link'>Incoming Data (Age $age)</a><br/>";
+            }
+            //show osg processed link
+            $link = $rawdata["processed_osg_data"][0]->link;
+            $age = $rawdata["processed_osg_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No OSG Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII (Age $age)</a><br/>";
+            }
+            //show wlcg processed link
+            $link = $rawdata["processed_wlcg_interop_data"][0]->link;
+            $age = $rawdata["processed_wlcg_interop_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No WLCG Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII (Age $age)</a><br/>";
+            }
         } else {
-            $raw .= "<a target='_blank' href='$link'>Incoming Data (Age $age)</a><br/>";
+            $raw = "Not available";
         }
-        //show osg processed link
-        $link = $rawdata["processed_osg_data"][0]->link;
-        $age = $rawdata["processed_osg_data"][0]->age;
-        if($link == "") {
-            $raw .= "(No OSG Data)<br/>";
-        } else {
-            $raw .= "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII (Age $age)</a><br/>";
-        }
-        //show wlcg processed link
-        $link = $rawdata["processed_wlcg_interop_data"][0]->link;
-        $age = $rawdata["processed_wlcg_interop_data"][0]->age;
-        if($link == "") {
-            $raw .= "(No WLCG Data)<br/>";
-        } else {
-            $raw .= "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII (Age $age)</a><br/>";
-        }
-
         echo "<b>LDIF Data</b><br/>$raw";
         echo "</div>";
     }
  
+    switch($overallstatus) {
+    case "FAIL":
+        $overall = "CRITICAL";
+        $overall_detail = "At least one of the tests are failing.";
+        break;
+    case "OK":
+        $overall = "OK";
+        $overall_detail = "No issue found for this resource.";
+        break;
+    case "NA":
+        $overall = "UNKNOWN";
+        $overall_detail = "GIP validation result is not available for this resource.";
+        break;
+    default:
+        //????
+        $overall = "UNKNOWN";
+        $overall_detail = "Validation script is returning unknown overall status.";
+    }
 ?>
-    <div class="resource"><h4><?=$resource_name?></h4></div>
+    <div class="status_<?=$overall?>">
+    <span class="h4"><div class="resource"><?=$resource_name?></div></span>
+    <p><?=$overall_detail?></p>
+    </div>
+    
     <div class="indent">
     <?
-    echo "<div>Test calculated $testtime ago</div>";
-    if(count($tests) == 0) {
-        echo "(No GIP Validation Status is available for this resource)";
-    } else {
+    if($testtime !== null) {
+        echo "<div>Tests performed $testtime ago</div>";
+    }
+    if(count($tests) != 0) {
         foreach($tests as $name=>$test) {
 
             $gip_status = $test["status"];

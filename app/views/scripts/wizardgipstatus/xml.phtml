@@ -4,8 +4,10 @@ foreach($this->resources as $rid=>$record) {
     $resource_name = $record["name"];
     $tests = $record["tests"];
     $interop_bdii = $record["interop_bdii"];
+    $overallstatus = $record["overallstatus"];
     echo "<Resource>";
     echo "<Name>$resource_name</Name>";
+    echo "<OverallStatus>$overallstatus</OverallStatus>";
     echo "<ID>$rid</ID>";
     echo "<Tests>";
     foreach($tests as $name=>$test) {
