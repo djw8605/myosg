@@ -9,10 +9,12 @@ foreach($this->cache as $rid=>$cache) {
 
     $resource = $this->resources[$rid];
     $resource_name = $resource->name;
+    $resource_fqdn = $resource->fqdn;
 
     ?>
     <Status><?=$status?></Status>
     <ResourceName><?=$resource_name?></ResourceName>
+    <Fqdn><?=$resource_fqdn?></Fqdn>
     <Note><?=htmlentities($note)?></Note>
     <?
     foreach($services as $service) {

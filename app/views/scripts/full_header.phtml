@@ -48,7 +48,7 @@ parseQuery();
         $param = "";
         switch($page) {
         case 'wizard':
-            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on";
+            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";
         }
         return htmlentities(base()."/".$page.$param);
     }?>

@@ -66,7 +66,13 @@ foreach($this->resources as $rid=>$record) {
     }
 ?>
     <div class="status_<?=$overall?>">
-    <span class="h4"><div class="resource"><?=$resource_name?></div></span>
+    <span class="h4"><div class="resource"><?=$resource_name?>
+<?
+       if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
+	 echo " (<tt>$resource_fqdn</tt>) ";
+       }
+?>
+    </div></span>
     <p><?=$overall_detail?></p>
     </div>
     
@@ -75,23 +81,23 @@ foreach($this->resources as $rid=>$record) {
     if($testtime !== null) {
         echo "<div>Tests performed $testtime ago</div>";
     }
-    if(count($tests) != 0) {
-        foreach($tests as $name=>$test) {
+    if ((count($tests) != 0) and isset($_REQUEST["gip_status_attrs_showtestresults"])) {
+      foreach($tests as $name=>$test) {
+	
+	$gip_status = $test["status"];
+	$reason= $test["reason"];
 
-            $gip_status = $test["status"];
-            $reason= $test["reason"];
-
-            $status = "UNKNOWN";
-            switch($gip_status) {
-            case "FAIL":
-                $status = "CRITICAL";
-                break;
-            case "OK":
-                $status = "OK";
-                break;
-            }
-            echo outputTestInfo($name, $status, $reason, $rid);
-        }
+	$status = "UNKNOWN";
+	switch($gip_status) {
+	case "FAIL":
+	  $status = "CRITICAL";
+	  break;
+	case "OK":
+	  $status = "OK";
+	  break;
+	}
+	echo outputTestInfo($name, $status, $reason, $rid);
+      }
     }
     echo "</div>";//indent
     echo "<div style='clear: both'></div>";

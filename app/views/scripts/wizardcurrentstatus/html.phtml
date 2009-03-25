@@ -7,6 +7,7 @@ foreach($this->cache as $rid=>$cache) {
 
     $resource = $this->resources[$rid];
     $resource_name = $resource->name;
+    $resource_fqdn = $resource->fqdn;
 
     ?>
     <div class="border">
@@ -14,9 +15,9 @@ foreach($this->cache as $rid=>$cache) {
     <span class="h4"><div class="resource">
     <?
     if(uwa()) {
-        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
+        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name (<tt>$resource_fqdn</tt>)</a>";
     } else {
-        echo $resource_name;
+        echo $resource_name . " (<tt>" . $resource_fqdn . "</tt>)";
     }
     ?>
     </div></span>
