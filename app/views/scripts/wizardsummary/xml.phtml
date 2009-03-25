@@ -15,6 +15,11 @@ Structure:
                     Services (0 or 1)                   Services that are supported by this resource
                         Service (N)
                             Name (1)                    Name of the service
+                    RSVStatus (0 or 1)
+                        Status (1)
+                        Note (1)
+                    GIPStatus (0 or 1)
+                        Status (1)
                     Description (0 or 1)
                     FQDN (0 or 1)
                     SupportedVOs (0 or 1)
@@ -92,6 +97,18 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             }
             echo "<RSVStatus><Status>$status</Status><Note>".htmlentities($note)."</Note></RSVStatus>";
         }
+
+        if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
+            $status = "UNKNOWN";
+            foreach($this->gipstatus as $gip) {
+                if($resource->name == $gip->Name) {
+                    $status = (string)$gip->OverAllStatus;
+                    break;
+                }
+            } 
+            echo "<GIPStatus><Status>$status</Status></GIPStatus>";
+        }
+
 
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             if(isset($this->resource_services[$rid]) == 0) {

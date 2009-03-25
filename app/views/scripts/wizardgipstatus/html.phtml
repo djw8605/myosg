@@ -49,7 +49,7 @@ foreach($this->resources as $rid=>$record) {
     switch($overallstatus) {
     case "FAIL":
         $overall = "CRITICAL";
-        $overall_detail = "At least one of the tests is failing.";
+        $overall_detail = "At least one test is failing.";
         break;
     case "OK":
         $overall = "OK";
