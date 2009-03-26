@@ -63,7 +63,6 @@ foreach($this->sites as $site) {
     $status_downtime = 0;
 
     $site_id = $site->site_id;
-    $name = $site->name;
 
     $rgs = $this->rgs[$site_id];
     if(count($rgs) == 0) continue; //don't show site with no resource group
@@ -93,9 +92,8 @@ foreach($this->sites as $site) {
                     $status = "UNKNOWN";
                     $html .= "<div class=\"status_$status\"><h4>$name</h4>";
                     $html .= "Resource status is not calculated for this resource.<br/></div>";
-                    
                 }
-                
+
                 //determine site status
                 if($status == "OK") $status_ok++;
                 if($status == "WARNING") $status_warning++;
@@ -118,12 +116,9 @@ foreach($this->sites as $site) {
 
     $html = addslashes($html);
     echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {icon:icon[\"$status\"]}, '$html'));\n";
-    echo "$(\"#site\").append(\"<option value='$site_id'>$name</option>\");\n";
+    echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
 }
-
 ?>
-    
-
   }
     $("#site").change(function() {
         var id = $(this).val();
