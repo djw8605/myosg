@@ -206,6 +206,7 @@ span.fqdn
 {
 font-family: "Courier New";
 font-size: 12px;
+font-weight: normal;
 }
 
 #banner

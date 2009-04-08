@@ -15,12 +15,12 @@ foreach($this->cache as $rid=>$cache) {
     <span class="h4"><div class="resource">
     <?
     if(uwa()) {
-        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name (<tt>$resource_fqdn</tt>)</a>";
+        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
     } else {
-        echo $resource_name . " (<tt>" . $resource_fqdn . "</tt>)";
+        echo $resource_name;
     }
     ?>
-    </div></span>
+    <span class="fqdn"><?=$resource_fqdn?></span></div></span>
 
     <p><?=$note?></p>
     </div>
@@ -45,9 +45,11 @@ foreach($this->cache as $rid=>$cache) {
             echo $dnote;
             echo "<div class=\"downtime\">";
             echo "<b>Maintenance Summary</b><div>$summary</div>";
+            echo "<table width=\"100%\"><tr>";
+            echo "<td><b>From</b><div>$from</div></td>";
+            echo "<td><b>To</b><div>$to</div></td>";
+            echo "</tr></table>";
             echo "<b>Internal Status</b><div class=\"status_$internal_status\">$note</div>";
-            echo "<b>From</b><div>$from</div>";
-            echo "<b>To</b><div>$to</div>";
             echo "</div>";
         } else {
             //normal status
