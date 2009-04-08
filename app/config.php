@@ -168,12 +168,12 @@ class common_config
         ///////////////////////////////////////////////////////////////////////
         // RSV Probe help  (metric_id => URL)
         $this->rsvforum = array(
-            1=>"http://groups.google.com/group/goc-issues/browse_thread/thread/4ef0f6297d80c39c#",
-            2=>"http://groups.google.com/group/goc-issues/browse_thread/thread/b3d918719d51a367",
-            3=>"http://groups.google.com/group/goc-issues/browse_thread/thread/a4840f319768c5f2#",
+            //1=>"http://groups.google.com/group/goc-issues/browse_thread/thread/4ef0f6297d80c39c#",
+            //2=>"http://groups.google.com/group/goc-issues/browse_thread/thread/b3d918719d51a367",
+            //3=>"http://groups.google.com/group/goc-issues/browse_thread/thread/a4840f319768c5f2#",
         );
         //if specific metric_id is not found, use following
-        $this->default_rsvforum = "http://groups.google.com/group/goc-issues/topics";
+        $this->default_rsvforum = "http://groups.google.com/group/rsv-issues/topics";
     }
     function getCacheDir() {
         return "/tmp";
