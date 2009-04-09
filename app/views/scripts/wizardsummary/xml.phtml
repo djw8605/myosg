@@ -59,6 +59,14 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         echo "<Resource>";
         echo "<Name>".$resource->name."</Name>";
 
+        echo "<Active>";
+        if($resource->active == 1) { 
+            echo "True"; 
+        } else {
+            echo "False"; 
+        }
+        echo "</Active>";
+
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<Services>";
             if(isset($this->resource_services[$rid]) == 0) {
