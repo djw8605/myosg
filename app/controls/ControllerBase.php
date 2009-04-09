@@ -13,45 +13,13 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function init()
     {
         setpagename($this->pagename());
-        //$this->initbread();
         $this->selectmenu($this->pagename());
         $this->setpagetitle("Untitled Page");
     }
 
-/*
-    private function composeControllerName($page)
-    {
-        return strtoupper(substr($page, 0, 1)).substr($page, 1)."Controller";
-    }
-    protected function initbread()
-    {
-        $pages = $this->breads();
-        $this->view->breadcrumbs = array();
-        foreach($pages as $page) {
-            if(isset($_SESSION["crumbs"][$page])) {
-                $crumb = $_SESSION["crumbs"][$page]; 
-                $url = $crumb[0];
-                $title = $crumb[1];
-            } else {
-                $controllername = $this->composeControllerName($page);
-                include_once("$controllername.php");
-                $title = eval("return $controllername::default_title();");
-                $url = $page."?".eval("return $controllername::default_url(\$_REQUEST);");
-            }
-            $this->view->breadcrumbs[] = array($title, $url);
-        }
-    }
-*/
 
     public function setpagetitle($title)
     {
-/*
-        if(!isset($_SESSION["crumbs"])) {
-            $_SESSION["crumbs"] = array();
-        }
-
-        $_SESSION["crumbs"][$this->pagename()] = array($this->pagename()."?".$_SERVER["QUERY_STRING"], $title);
-*/
         $this->view->page_title = $title;
     }
 
@@ -62,20 +30,6 @@ abstract class ControllerBase extends Zend_Controller_Action
     }
     public function selectmenu($menu)
     {
-/*
-        //based on the breadcrumb select correct menu item
-        $breads = $this->breads();
-        if(isset($breads[0])) {
-            $this->view->menu_selected = $breads[0];
-        } else {
-            $this->view->menu_selected = $this->pagename();
-        }
-        if(isset($breads[1])) {
-            $this->view->submenu_selected = $breads[1];
-        } else {
-            $this->view->submenu_selected = $this->pagename();
-        }
-*/
         $this->view->menu_selected = $menu;
     }
 
@@ -110,6 +64,11 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         $this->load();
         header("Content-type: text/xml");
+        //recreate the original non-xml url
+?><!-- This XML was generated with a query in following MyOSG page
+<?=fullbase()."/".pagename()."/?".$_SERVER["QUERY_STRING"]?>
+--><?
+
     }
 
     public function pagename() {
