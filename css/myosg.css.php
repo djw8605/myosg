@@ -244,7 +244,7 @@ img.screenshot
 {
     background-color: white; 
     padding: 3px;
-    border: 3px solid black;
+    border: 3px solid gray;
     margin-right: 10px;
 }
 .ui-datepicker
