@@ -49,7 +49,7 @@ class common_config
         //application version to use for version specific data structures, etc.
         $this->version = "1.0";
         //application to display or used in email
-        $this->app_name = "My OSG";
+        $this->app_name = "MyOSG";
         $this->app_subname = "by Grid Operations Center";
         $this->copyright = "Copyright &copy; 2009 Indiana University - Developed for Open Science Grid";
         //application name used in places such as session name
