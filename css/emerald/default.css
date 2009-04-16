@@ -41,7 +41,7 @@ vertical-align: top;
 #header h2
 {
 	color: #EfE8C2;
-	font-weight: normal;
+	font-weight: bold;
 	font-size: 13pt;
 }
 /* Menu */
@@ -121,7 +121,8 @@ vertical-align: top;
 #content h1,h2
 {
 	margin-bottom: 10px;
-font-size: 15px;
+font-size: 18px;
+font-family: "Arial";
 }
 
 #content h3,h4,h5,h6
@@ -221,4 +222,26 @@ font-size: 11px;
 .clear
 {
 	clear: both;
+}
+
+div.info_box
+{
+background-color: #ddd;
+border: solid 1px #999;
+margin-bottom: 30px;
+padding: 30px;
+
+-moz-border-radius-topleft: 10px;
+-moz-border-radius-topright: 10px;
+-moz-border-radius-bottomright: 10px;
+-moz-border-radius-bottomleft: 10px;
+-webkit-border-top-left-radius: 10px;
+-webkit-border-top-right-radius: 10px;
+-webkit-border-bottom-left-radius: 10px;
+-webkit-border-bottom-right-radius: 10px;
+}
+
+div.info_box table td
+{
+padding-right: 20px;
 }
