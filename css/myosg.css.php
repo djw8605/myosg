@@ -223,8 +223,8 @@ p.note
 #logo
 {
 position: absolute;
-top: 6px;
-left: 10px;
+top: 2px;
+left: 5px;
 }
 p.warning
 {
