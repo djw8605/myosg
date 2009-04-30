@@ -7,13 +7,16 @@ Structure:
     ResourceSummary (1)
         ResourceGroup (N)
             GridType (1)                                Grid Type for the resource group
+            GroupId (1)                                 Resource Group Id in database
             GroupName (1)                               Name of the Resource Group
             GroupDescription (0 or 1)                   Description for the resource group as stored in OIM
             Resources (1)
-                Resource (N)
+		 Resource (N)
+		      Id (1)                              Resource id in database
                     Name (1)                            Name of the resource
                     Services (0 or 1)                   Services that are supported by this resource
                         Service (N)
+                            Id (1)                      Service id in database
                             Name (1)                    Name of the service
                     RSVStatus (0 or 1)
                         Status (1)
@@ -42,6 +45,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo htmlentities($gridtype_name);
     echo "</GridType>";
 
+    echo "<GroupId>".$resource_group->id."</GroupId>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<GroupDescription>";
@@ -57,6 +61,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo "<Resources>";
     foreach($resource_list as $rid=>$resource) {
         echo "<Resource>";
+        echo "<Id>".$resource->id."</Id>";
         echo "<Name>".$resource->name."</Name>";
 
         echo "<Active>";
@@ -75,7 +80,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $services = $this->resource_services[$rid];
                 foreach($services as $service) {
                     if(isset($this->servicetypes[$service->service_id])) {
-                        echo "<Service><Name>".$this->servicetypes[$service->service_id][0]->description."</Name></Service>";
+                        echo "<Service>\n\t\t\t<Id>".$service->service_id."</Id>\n\t\t\t<Name>".$this->servicetypes[$service->service_id][0]->description."</Name></Service>";
                     } else {
                         echo "<Service>unknown_service_id:".$service->service_id."</Service>";
                     }
@@ -164,7 +169,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<VOOwnership>";
-            $ownership = $this->resource_ownerships[$rid];
+            $ownership = @$this->resource_ownerships[$rid];
             if($ownership === null) {
                 echo "(Information not available)";
             } else {
@@ -172,11 +177,11 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $chl = "";
                 $total = 0;
                 foreach($ownership as $item) {
-                    echo "<Ownership><Percent>$item->percent</Percent><VO>$item->short_name</VO></Ownership>";
+                    echo "<Ownership><Percent>$item->percent</Percent><VO>$item->name</VO></Ownership>";
                     if($chd != "") $chd .= ",";
                     $chd .= $item->percent;
                     if($chl != "") $chl .= "|";
-                    $chl .= $item->short_name."(".$item->percent."%)";
+                    $chl .= $item->name."(".$item->percent."%)";
                     $total += $item->percent;
                 }
                 if($total < 100) {
