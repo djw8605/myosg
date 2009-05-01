@@ -106,9 +106,9 @@ class WizardstatushistoryController extends WizardController
         $downtime_forservice = array();
 
         foreach($downtimes as $downtime) {
-            $id = $downtime->downtime_id;
+            $id = $downtime->id;
             foreach($downtime_service as $service) {
-                if($service->downtime_id == $id) {
+                if($service->resource_downtime_id == $id) {
                     $downtime_forservice[] = $downtime;
                 }
             }

@@ -2,6 +2,7 @@
 
 class VOOwnedResources extends CachedIndexedModel
 {
+    public function ds() { return "oim"; }
     public function sql($params)
     {
         $where = "";
@@ -9,7 +10,7 @@ class VOOwnedResources extends CachedIndexedModel
             $vo_id = $params["vo_id"];
             $where = " where vo_id = $vo_id";
         }
-        $sql = "SELECT * FROM oim.vo_resource_ownership $where";
+        $sql = "SELECT * FROM vo_resource_ownership $where";
         return $sql;
     }
     public function key() { return "vo_id"; }

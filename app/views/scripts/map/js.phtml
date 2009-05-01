@@ -62,24 +62,23 @@ foreach($this->sites as $site) {
     $status_unknown = 0;
     $status_downtime = 0;
 
-    $site_id = $site->site_id;
+    $site_id = $site->id;
 
     $rgs = $this->rgs[$site_id];
     if(count($rgs) == 0) continue; //don't show site with no resource group
 
     $html = "";
     foreach($rgs as $rg) {
-        $rgid = $rg->resource_group_id;
         $rgname = $rg->name;
         if(uwa()) {
             $target = "target=\"_blank\"";
         } else {
             $target = "";
         }
-        $gid = $rg->resource_group_id;
+        $gid = $rg->id;
         $html .= "<h3>Resource Group: <a $target href=\"".fullbase()."/wizardsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></h3>";
-        if(isset($this->resources_bygid[$rg->resource_group_id])) {
-            $rs = $this->resources_bygid[$rg->resource_group_id];
+        if(isset($this->resources_bygid[$rg->id])) {
+            $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
                 if(isset($this->resource_status[$r->resource_id][0])) {
                     $rstatus = $this->resource_status[$r->resource_id][0];

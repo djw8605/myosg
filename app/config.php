@@ -64,7 +64,7 @@ class common_config
         //if metric age is longer than this value, it is considred stale
         $this->metric_considered_old = 3600*24;
 
-        //database info
+        //rsvextra database info
         $this->db_type = "Pdo_Mysql";
         $this->db_host = "overrideme.example.com";
         $this->db_username = "overrideme";
@@ -72,7 +72,12 @@ class common_config
         $this->db_schema = "rsvextra";
         $this->db_port = 49152;
 
-        $this->db_oim_schema = "oim";
+        //oim2 database info
+        $this->db_oim_host = "overrideme.example.com";
+        $this->db_oim_username = "overrideme";
+        $this->db_oim_password = "overrideme";
+        $this->db_oim_schema = "oimnew";
+        $this->db_oim_port = 49152;
 
         //first page to load when user first visit the page
         //$this->initial_page = "home_start"; //needs to be a menu ID

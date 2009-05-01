@@ -2,6 +2,7 @@
 
 class ServiceAR extends CachedModel
 {
+    public function ds() { return "rsv"; }
     public function sql($params)
     {
         $where = "";

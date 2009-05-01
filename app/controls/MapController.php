@@ -33,11 +33,11 @@ class MapController extends ControllerBase
             $rgs = array();
             foreach($rgroups as $rgroup) {
                 //elog(print_r($rgroup, true));
-                if($rgroup->site_id == $site->site_id) {
+                if($rgroup->site_id == $site->id) {
                     $rgs[] = $rgroup;
                 }
             }
-            $this->view->rgs[$site->site_id] = $rgs;
+            $this->view->rgs[$site->id] = $rgs;
         }
 
         //pull resources (grouped by resource group id)

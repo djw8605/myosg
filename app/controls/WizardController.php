@@ -170,8 +170,8 @@ EOT;
         $model = new Site();
         $sites = $model->get(array("facility_id"=>$facility_id));
         foreach($sites as $site) {
-            if(!in_array($site->site_id, $site_ids)) {
-                $site_ids[] = $site->site_id;
+            if(!in_array($site->id, $site_ids)) {
+                $site_ids[] = $site->id;
             }
         }
 
@@ -188,8 +188,8 @@ EOT;
         $model = new Site();
         $sites = $model->get(array("sc_id"=>$sc_id));
         foreach($sites as $site) {
-            if(!in_array($site->site_id, $site_ids)) {
-                $site_ids[] = $site->site_id;
+            if(!in_array($site->id, $site_ids)) {
+                $site_ids[] = $site->id;
             }
         }
 
@@ -206,8 +206,8 @@ EOT;
         $model = new ResourceGroup();
         $rgs = $model->get(array("site_id"=>$site_id));
         foreach($rgs as $rg) {
-            if(!in_array($rg->resource_group_id, $rg_ids)) {
-                $rg_ids[] = $rg->resource_group_id;
+            if(!in_array($rg->id, $rg_ids)) {
+                $rg_ids[] = $rg->id;
             }
         }
 
@@ -275,9 +275,9 @@ EOT;
         $model = new ServiceTypes();
         $list = $model->get(array("service_group_id"=>1));
         foreach($list as $item) {
-            if(isset($_REQUEST["service_".$item->service_id])) {
+            if(isset($_REQUEST["service_".$item->id])) {
                 $model = new ResourceServices();
-                $rs = $model->get(array("service_id"=>$item->service_id));
+                $rs = $model->get(array("service_id"=>$item->id));
                 foreach($rs as $r) {
                     if(!isset($resources_to_keep[$r->resource_id])) {
                         $resources_to_keep[] = $r->resource_id;
@@ -352,7 +352,7 @@ EOT;
             }
 
             //consider status to be down
-            $downtime = $downtimes[(int)$rid];
+            $downtime = @$downtimes[(int)$rid];
             if($downtime !== null) {
                 $status_id = 99;
             }
@@ -402,9 +402,9 @@ EOT;
         $list = $model->get();
 
         foreach($list as $item) {
-            if(isset($_REQUEST["voown_".$item->vo_id])) {
+            if(isset($_REQUEST["voown_".$item->id])) {
                 $model = new VOOwnedResources();
-                $rs = $model->get(array("vo_id"=>$item->vo_id));
+                $rs = $model->get(array("vo_id"=>$item->id));
                 foreach($rs as $r) {
                     if(!in_array($r->resource_id, $resources_to_keep)) {
                         $resources_to_keep[] = $r->resource_id;
@@ -421,14 +421,14 @@ EOT;
         $model = new GridTypes();
         $list = $model->get();
         foreach($list as $item) {
-            if(isset($_REQUEST["gridtype_".$item->grid_type_id])) {
+            if(isset($_REQUEST["gridtype_".$item->id])) {
                 //pull resource groups
                 $model = new ResourceGroup();
-                $rgs = $model->get(array("osg_grid_type_id"=>$item->grid_type_id));
+                $rgs = $model->get(array("osg_grid_type_id"=>$item->id));
                 foreach($rgs as $rg) {
                     //pull resources
                     $model = new ResourceByGroupID();
-                    $rs = $model->get(array("resource_group_id"=>$rg->resource_group_id));
+                    $rs = $model->get(array("resource_group_id"=>$rg->id));
                     foreach($rs as $r) {
                         if(!in_array($r->resource_id, $resources_to_keep)) {
                             $resources_to_keep[] = $r->resource_id;

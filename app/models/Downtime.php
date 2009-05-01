@@ -2,6 +2,7 @@
 
 class Downtime extends CachedIndexedModel
 {
+    public function ds() { return "oim"; }
     public function sql($params)
     {
         $where = " where disable = 0";
@@ -35,7 +36,7 @@ class Downtime extends CachedIndexedModel
         }
 
         $sql = "select rd.*, UNIX_Timestamp(start_time) as unix_start_time, UNIX_Timestamp(end_time) as unix_end_time ".
-                " from oim.resource_downtime rd ". 
+                " from resource_downtime rd ". 
                 $where.
                 " order by start_time";
         return $sql;

@@ -10,24 +10,24 @@
             <h3>Filter</h3>
             <?
             $model = new ResourceGroup();
-            outputSelectBox("resourcegroup", "Resource Group", $model, "resource_group_id", "name");
+            outputSelectBox("resourcegroup", "Resource Group", $model, "id", "name");
 
             $gridtypes = new GridTypes();
-            outputSelectBox("gridtype", "Grid Type", $gridtypes, "grid_type_id", "short_name"/*"description"*/);
+            outputSelectBox("gridtype", "Grid Type", $gridtypes, "id", "name"/*"description"*/);
 
             $model = new VirtualOrganization();
-            outputSelectBox("vo", "Supported Virtual Organization", $model, "vo_id", "short_name");
+            outputSelectBox("vo", "Supported Virtual Organization", $model, "id", "name");
             echo "<div class='indent'><p>* Show resources that supports selected VO.</p></div>";
-            outputSelectBox("voowner", "Virtual Organization Ownership", $model, "vo_id", "short_name");
+            outputSelectBox("voowner", "Virtual Organization Ownership", $model, "id", "name");
             echo "<div class='indent'><p>* Show resources that are owned by selected VO.</p></div>";
 
             $params = array();
             $params["service_group_id"] = 1;
             $servicetypes = new ServiceTypes($params);
-            outputSelectBox("servicetype", "Sevice Type", $servicetypes, "service_id", "description");
+            outputSelectBox("servicetype", "Sevice Type", $servicetypes, "id", "description");
 
             $status_model = new Status();
-            outputSelectBox("status", "Resource Status", $status_model, "metric_status_description", "metric_status_description");
+            outputSelectBox("status", "Resource Status", $status_model, "description", "description");
 
             outputClearFilterButton();
 

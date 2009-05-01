@@ -146,25 +146,25 @@ span.disabled
             $model = new Facilities();
             $fs = $model->get();
             $kv = array();
-            foreach($fs as $f) { $kv[$f->facility_id] = $f->name; }
+            foreach($fs as $f) { $kv[$f->id] = $f->name; }
             echo checklist("facility", "Resources in Facility ".helpbutton("Facility"), $kv);
 
             $model = new Site();
             $list = $model->get();
             $kv = array();
-            foreach($list as $site) { $kv[$site->site_id] = $site->name; }
+            foreach($list as $site) { $kv[$site->id] = $site->name; }
             echo checklist("site", "Resources in Sites ".helpbutton("Site"), $kv);
 
             $model = new ResourceGroup();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->resource_group_id] = $item->name; }
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("rg", "Resources in Resource Groups".helpbutton("Resource_Group"), $kv);
 
             $model = new SupportCenters();
             $scs = $model->get();
             $kv = array();
-            foreach($scs as $sc) { $kv[$sc->sc_id] = $sc->short_name; }
+            foreach($scs as $sc) { $kv[$sc->id] = $sc->name; }
             echo checklist("sc", "Resource supported by Support Centers ".helpbutton("Support_Center"), $kv);
 
 
@@ -189,13 +189,13 @@ span.disabled
             $model = new GridTypes();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->grid_type_id] = $item->short_name; }
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("gridtype", "Grid Type", $kv);
 
             $model = new Status();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->metric_status_id] = $item->metric_status_description; }
+            foreach($list as $item) { $kv[$item->id] = $item->description; }
             echo checklist("status", "Current RSV Status", $kv);
 
             $kv = array("OK"=>"OK", "FAIL"=>"FAIL", "UNKNOWN"=>"UNKNOWN");
@@ -204,19 +204,19 @@ span.disabled
             $model = new ServiceTypes();
             $list = $model->get(array("service_group_id"=>1));
             $kv = array();
-            foreach($list as $item) { $kv[$item->service_id] = $item->name; }
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("service", "Provides following Services", $kv);
 
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->vo_id] = $item->short_name; }
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("vosup", "Allows following VO to access", $kv);
 
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->vo_id] = $item->short_name; }
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("voown", "Owned by VOs", $kv);
 
             $checked = "";
@@ -246,7 +246,13 @@ function showhide_attrs(show_speed)
         $("#resource_area_standby").hide();
         $("#filter_area_standby").hide();
 
-        if(v == "statushistory" || v == "arhistory" || v == "armetric" || v == "account" || v == "se" || v == "ce") {
+        if(
+            v == "statushistory" ||
+            v == "arhistory" ||
+            v == "armetric" ||
+            v == "account" ||
+            v == "se" ||
+            v == "ce") {
             $("#_daterange_attrs").show(show_speed);
         }
     } else {

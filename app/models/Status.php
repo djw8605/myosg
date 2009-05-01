@@ -2,11 +2,12 @@
 
 class Status extends CachedIndexedModel
 {
+    public function ds() { return "oim"; }
     public function sql($param)
     {
-        return "select * from oim.metric_status";
+        return "select * from metric_status";
     }
-    public function key() { return "metric_status_id"; }
+    public function key() { return "id"; }
 
     static public function getStatus($status_id) {
         switch($status_id) {
@@ -18,7 +19,7 @@ class Status extends CachedIndexedModel
 
         case 99: return "DOWNTIME";
         }
-        return "ha?";
+        return "(unknow:$status_id)";
     }
 }
 

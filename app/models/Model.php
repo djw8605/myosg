@@ -11,7 +11,7 @@ abstract class Model
     {
         $params_m = array_merge($this->params, $params);
         $sql = $this->sql($params_m);
-        return db()->fetchAll($sql);
+        return db($this->ds())->fetchAll($sql);
     }
 
     public function get($params = array())
@@ -36,8 +36,11 @@ abstract class Model
     {
         $params_m = array_merge($this->params, $params);
         $sql = "select count(*) from (".$this->sql($params_m).") c";
-        return db()->fetchOne($sql);
+        return db($this->ds())->fetchOne($sql);
     }
 
     public abstract function sql($params);
+
+    //returns which db connection to use
+    public abstract function ds();
 }

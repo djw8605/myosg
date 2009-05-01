@@ -1,6 +1,7 @@
 <?
 class LatestResourceStatus extends Model
 {
+    public function ds() { return "rsv"; }
     public function sql($params) {
 
         $end_time = time();
@@ -9,4 +10,5 @@ class LatestResourceStatus extends Model
         dlog($sql);
         return $sql;
     }
+
 }

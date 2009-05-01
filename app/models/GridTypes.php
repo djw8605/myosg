@@ -2,11 +2,12 @@
 
 class GridTypes extends CachedIndexedModel
 {
+    public function ds() { return "oim"; }
     public function sql($param)
     {
-        return "select * from oim.osg_grid_type";
+        return "select * from osg_grid_type";
     }
-    public function key() { return "grid_type_id"; }
+    public function key() { return "id"; }
 }
 
 

@@ -2,6 +2,7 @@
 
 class ResourceServices extends CachedModel
 {
+    public function ds() { return "oim"; }
     public function sql($params)
     {
         $where = "where 1 = 1";
@@ -11,7 +12,7 @@ class ResourceServices extends CachedModel
         if(isset($params["service_id"])) {
             $where .= " and rs.service_id = ".$params["service_id"];
         }
-        $sql = "SELECT rs.resource_id, rs.service_id, s.description FROM oim.resource_service rs join oim.service s on rs.service_id = s.service_id $where";
+        $sql = "SELECT rs.resource_id, rs.service_id, rs.endpoint_override, rs.hidden, rs.central, s.description FROM resource_service rs join service s on rs.service_id = s.id $where";
         return $sql;
     }
 }

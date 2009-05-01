@@ -39,8 +39,13 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         echo "<td width=\"$col_p%\">";
 
+	/*
+        }
+	*/
+
         //show resource name & desc
-        echo "<div class=\"resource\"><span class='h4'>".$resource->name."</span>";
+        echo "<div class=\"resource\"><span class='h4'>".$resource->name;
+	echo "</span>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
             if($resource->description != "") {
@@ -67,11 +72,26 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $service_names = "";
                 foreach($services as $service) {
                     if($service_names != "") $service_names .= "<br/>";
+
+                    $service_name = "";
                     if(isset($this->servicetypes[$service->service_id])) {
-                        $service_names .= $this->servicetypes[$service->service_id][0]->description;
+                        $service_info = $this->servicetypes[$service->service_id][0];
+                        $service_name .= $service_info->description;
+
+                        //Service URI
+                        $service_name .= "<span class=\"fqdn\"> (";
+                        if ($service->endpoint_override != "") {
+                          $service_name .= $service->endpoint_override;
+                        } else {
+                          $service_name .= $resource->fqdn.":".$service_info->port;
+                        }
+                        $service_name .= ")</span>";
+
                     } else {
-                        $service_names .= "unknown_service_id:".$service->service_id;
+                        $service_name .= "unknown_service_id:".$service->service_id;
                     }
+
+                    $service_names .= $service_name;
                 }
             }
             echo $service_names;
@@ -147,14 +167,17 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             echo "</td></tr>";
         }
 
-
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<tr>";
             echo "<th>FQDN</th>";
             echo "<td>";
-            echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
+            if(isset($_REQUEST["summary_attrs_showfqdn"])) {
+              echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
+            }
+
             echo "</td></tr>";
         }
+
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             echo "<tr>";
             echo "<th>Supported&nbsp;VOs</th>";

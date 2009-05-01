@@ -10,7 +10,7 @@ if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
                 echo "<Ownership>";
                 $total = 0;
                 foreach($ownership as $item) {
-                    echo "<Percentage VO=\"".$item->short_name."\">".$item->percent."</Percentage>";
+                    echo "<Percentage VO=\"".$item->name."\">".$item->percent."</Percentage>";
                     $total += $item->percent;
                 }
                 if($total < 100) {

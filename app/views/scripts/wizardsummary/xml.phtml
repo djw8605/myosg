@@ -39,54 +39,66 @@ Structure:
 foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
     $resource_group = $this->resourcegroups[$resource_group_id][0];
-    echo "<ResourceGroup>";
+    echo "<ResourceGroup>\n";
     $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
-    echo "<GridType>";
+    echo "\t<GridType>\n";
     echo htmlentities($gridtype_name);
-    echo "</GridType>";
+    echo "</GridType>\n";
 
-    echo "<GroupId>".$resource_group->id."</GroupId>";
-    echo "<GroupName>".$resource_group->name."</GroupName>";
+    echo "\t<GroupId>".$resource_group->id."</GroupId>\n";
+    echo "\t<GroupName>".$resource_group->name."</GroupName>\n";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
-        echo "<GroupDescription>";
+        echo "\t<GroupDescription>";
         if($resource_group->description != "") {
             echo htmlentities($resource_group->description);
         } else {
             echo "(No resource group description)";
         }
-        echo "</GroupDescription>";
+        echo "</GroupDescription>\n";
     }
 
 
-    echo "<Resources>";
+    echo "\t<Resources>\n";
     foreach($resource_list as $rid=>$resource) {
-        echo "<Resource>";
-        echo "<Id>".$resource->id."</Id>";
-        echo "<Name>".$resource->name."</Name>";
+        echo "\t\t<Resource>\n";
+        echo "\t\t\t<Id>".$resource->id."</Id>\n";
+        echo "\t\t\t<Name>".$resource->name."</Name>\n";
 
-        echo "<Active>";
+        echo "\t\t\t<Active>";
         if($resource->active == 1) { 
             echo "True"; 
         } else {
             echo "False"; 
         }
-        echo "</Active>";
+        echo "</Active>\n";
 
         if(isset($_REQUEST["summary_attrs_showservice"])) {
-            echo "<Services>";
+            echo "\t\t\t<Services>\n";
             if(isset($this->resource_services[$rid]) == 0) {
                 echo "no applicable service exists";
             } else {
                 $services = $this->resource_services[$rid];
                 foreach($services as $service) {
                     if(isset($this->servicetypes[$service->service_id])) {
-                        echo "<Service>\n\t\t\t<Id>".$service->service_id."</Id>\n\t\t\t<Name>".$this->servicetypes[$service->service_id][0]->description."</Name></Service>";
+                        echo "\t\t\t\t<Service>\n".
+			  "\t\t\t\t<Id>".$service->service_id."</Id>\n".
+			  "\t\t\t\t<Name>".$this->servicetypes[$service->service_id][0]->description."</Name>\n";
+			echo "\t\t\t\t<ServiceUri>";
+
+			if ($service->endpoint_override != "") {
+			  echo $service->endpoint_override;
+			}
+			else {
+			  echo $resource->fqdn.":".$this->servicetypes[$service->service_id][0]->port; 
+			}
+			echo "</ServiceUri>\n";
+			echo "\t\t\t\t</Service>\n";
                     } else {
-                        echo "<Service>unknown_service_id:".$service->service_id."</Service>";
+                        echo "\t\t\t\t<Service>unknown_service_id:".$service->service_id."</Service>\n";
                     }
                 }
             }
-            echo "</Services>";
+            echo "\t\t\t</Services>\n";
         }
 
         if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
@@ -108,7 +120,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $note .= "Maintenance Summary: $downtime_desc\n";
                 $note .= "Internal status: $internal_note\n";
             }
-            echo "<RSVStatus><Status>$status</Status><Note>".htmlentities($note)."</Note></RSVStatus>";
+            echo "\t\t\t<RSVStatus>\n\t\t\t\t<Status>$status</Status>\n\t\t\t\t<Note>".htmlentities($note)."</Note>\n\t\t\t</RSVStatus>\n";
         }
 
         if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
@@ -119,7 +131,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     break;
                 }
             } 
-            echo "<GIPStatus><Status>$status</Status></GIPStatus>";
+            echo "\t\t\t<GIPStatus>\n\t\t\t\t<Status>$status</Status>\n\t\t\t</GIPStatus>\n";
         }
 
 
@@ -141,43 +153,43 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
 
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
-            echo "<Description>";
+            echo "\t\t\t<Description>";
             if($resource->description != "") {
                 echo htmlentities($resource->description);
             } else {
                 echo "(No resource description)";
             }
-            echo "</Description>";
+            echo "\n\t\t\t</Description>\n";
         }
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
-            echo "<FQDN>".$resource->fqdn."</FQDN>";
+            echo "\t\t\t<FQDN>".$resource->fqdn."</FQDN>\n";
         }
 
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
-            echo "<SupportedVOs>";
+            echo "\t\t\t<SupportedVOs>\n";
             if(isset($this->vos_supported[$rid])) {
                 $volist = $this->vos_supported[$rid];
                 foreach($volist as $vo) {
-                    echo "<VO>$vo</VO>";
+                    echo "\t\t\t\t<VO>$vo</VO>\n";
                 }
             } else {
-                echo "(Information not reported)";
+                echo "\t\t\t\t(Information not reported)\n";
             }
-            echo "</SupportedVOs>";
+            echo "\t\t\t</SupportedVOs>\n";
         }
 
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
-            echo "<VOOwnership>";
+            echo "\t\t\t<VOOwnership>\n";
             $ownership = @$this->resource_ownerships[$rid];
             if($ownership === null) {
-                echo "(Information not available)";
+                echo "\t\t\t\t(Information not available)\n";
             } else {
                 $chd = "";
                 $chl = "";
                 $total = 0;
                 foreach($ownership as $item) {
-                    echo "<Ownership><Percent>$item->percent</Percent><VO>$item->name</VO></Ownership>";
+                    echo "\t\t\t\t<Ownership><Percent>$item->percent</Percent><VO>$item->name</VO></Ownership>\n";
                     if($chd != "") $chd .= ",";
                     $chd .= $item->percent;
                     if($chl != "") $chl .= "|";
@@ -191,17 +203,17 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     if($chl != "") $chl .= "|";
                     $chl .= "Other($left%)";
 
-                    echo "<Ownership><Percent>$left</Percent><VO>(Other)</VO></Ownership>";
+                    echo "\t\t\t\t<Ownership><Percent>$left</Percent><VO>(Other)</VO></Ownership>\n";
                 }
                 $url = htmlentities("http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl");
-                echo "<ChartURL>$url</ChartURL>";
+                echo "\t\t\t\t<ChartURL>$url</ChartURL>\n";
             }
-            echo "</VOOwnership>";
+            echo "\t\t\t</VOOwnership>\n";
         }
-        echo "</Resource>";
+        echo "\t\t</Resource>\n";
     }
-    echo "</Resources>";
-    echo "</ResourceGroup>";
+    echo "\t</Resources>\n";
+    echo "</ResourceGroup>\n";
 }
 ?>
 </ResourceSummary>

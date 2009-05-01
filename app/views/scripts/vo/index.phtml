@@ -10,7 +10,7 @@
             <h3>Filter</h3>
             <?
             $model = new VirtualOrganization();
-            outputSelectBox("vo", "Virtual Organization", $model, "vo_id", "short_name");
+            outputSelectBox("vo", "Virtual Organization", $model, "id", "name");
             outputClearFilterButton();
             ?>
             <h3>Subscribe</h3>

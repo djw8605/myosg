@@ -9,7 +9,6 @@ class WizarddowntimeController extends WizardController
     public function load()
     {
         parent::load();
-        
         $this->view->resource_ids = $this->resource_ids;
 
         //pull current downtimes
@@ -26,8 +25,11 @@ class WizarddowntimeController extends WizardController
 
     function formatInfo($downtime_recs)
     {
-        $downtimes = array();
+        if($downtime_recs === null) {
+            return array();
+        }
 
+        $downtimes = array();
         $resource_model = new Resource();
         $resources = $resource_model->getindex();
 
@@ -52,7 +54,7 @@ class WizarddowntimeController extends WizardController
                     //get affected services
                     $affected_services = array();
                     foreach($downtime_services as $service) {
-                        if($service->downtime_id == $downtime->downtime_id) {
+                        if($service->resource_downtime_id == $downtime->id) {
                             $info = $service_info[$service->service_id][0];
                             $affected_services[] = $info->description;
                         }
@@ -73,5 +75,4 @@ class WizarddowntimeController extends WizardController
         }
         return $downtimes;
     }
-    
 }

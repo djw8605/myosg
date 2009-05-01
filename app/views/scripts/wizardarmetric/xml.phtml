@@ -13,7 +13,7 @@ foreach($this->data as $resource_id=>$resource) {
         echo "<Note>(No information)</Note>";
         continue;
     }
-    $history_url = fullbase()."/history?resource_id=$resource_id&amp;period=".$_REQUEST["period"];
+    $history_url = fullbase()."/history?resource_id=$resource_id&amp;period=".@$_REQUEST["period"];
 
     foreach($resource as $service_id=>$data) {
         echo "<Service>";

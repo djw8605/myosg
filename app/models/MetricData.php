@@ -2,6 +2,7 @@
 
 class MetricData extends Model
 {
+    public function ds() { return "rsv"; }
     public function sql($params)
     {
         $where_timestamp = "";

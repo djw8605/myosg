@@ -13,7 +13,7 @@ class WizardsummaryController extends WizardController
         $gridtype_model = new GridTypes();
         $this->view->gridtypes = $gridtype_model->getindex();
         $model = new ResourceGroup();
-        $this->view->resourcegroups = $model->getgroupby("resource_group_id");
+        $this->view->resourcegroups = $model->getgroupby("id");
         $model = new ResourceByGroupID();
         $resourcegroups = $model->get();
         $model = new Resource();
