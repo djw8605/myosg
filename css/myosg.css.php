@@ -257,6 +257,7 @@ table.summary_table
     width: 100%;
     margin: 0px;
     border-collapse: collapse; 
+    margin-bottom: 3px;
 }
 
 table.summary_table th
@@ -268,14 +269,29 @@ table.summary_table th
     width: 100px;
     border-top: 1px solid #ddd;
 }
-table.summary_table tr
-{
-}
 table.summary_table td
 {
     padding: 3px;
     align: top;
     border-top: 1px solid #ddd;
+}
+table.summary_subtable
+{
+    width: 100%;
+    margin: 0px;
+    border-collapse: collapse; 
+}
+table.summary_subtable td, table.summary_subtable th
+{
+    background-color: transparent;
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    width: 60%;
+}
+td.disabled
+{
+    background-color: #eee;
+    color: #999;
 }
 div.downtime
 {

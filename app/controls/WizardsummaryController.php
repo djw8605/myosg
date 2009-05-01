@@ -26,7 +26,7 @@ class WizardsummaryController extends WizardController
             //find resource group_id
             $found = false;
             foreach($resourcegroups as $rg) {
-                if($rg->resource_id == $resource_id) {
+                if($rg->id == $resource_id) {
                     $group_id = $rg->resource_group_id;
                     $found = true;
                     break;
@@ -77,6 +77,10 @@ class WizardsummaryController extends WizardController
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             $model = new ResourceOwnership();
             $this->view->resource_ownerships = $model->getindex();
+        }
+        if(isset($_REQUEST["summary_attrs_showwlcg"])) {
+            $model = new ResourceWLCG();
+            $this->view->resource_wlcg = $model->getindex();
         }
 
         $this->setpagetitle(self::default_title());

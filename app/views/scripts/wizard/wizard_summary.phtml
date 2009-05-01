@@ -28,3 +28,9 @@ if(isset($_REQUEST["summary_attrs_showvomembership"])) { $checked = "checked=che
 if(isset($_REQUEST["summary_attrs_showvoownership"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showvoownership" <?=$checked?>/> Show VO Ownership<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showwlcg"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showwlcg" <?=$checked?>/> Show WLCG Information<br/>
+
+
+

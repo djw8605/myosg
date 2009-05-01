@@ -133,7 +133,52 @@ span.disabled
 
                 return "<div id=\"$id\">".$title.$list."</div>";
             }
-            
+
+            function radiolist($id, $title, $kv, $default)
+            {
+                //output title check box
+                $checked = "";
+                if(isset($_REQUEST[$id])) { 
+                    $checked = "checked=checked"; 
+                    ?>
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#<?=$id?>__list").show();
+                    });
+                    </script>
+                    <?
+                }
+                $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+
+                //determine list class
+                $c = "hidden ";
+                if(count($kv) > 8) { 
+                    $c .= "scrolled_list ";
+                }
+
+                //output list
+                $list = "";
+                $list .= "<div class=\"$c list\" id=\"${id}__list\">";
+
+                //set default 
+                $current_value = $default; 
+                $name = "${id}_value";
+                if(isset($_REQUEST[$name])) {
+                    $current_value = $_REQUEST[$name];
+                }
+
+                foreach($kv as $key=>$value) {
+                    $checked = "";
+                    if($current_value == $key) {
+                        $checked = "checked=checked";
+                    }
+                    $list .= "<input type=\"radio\" name=\"$name\" value=\"$key\" $checked/> <span>$value</span><br/>";
+                }
+                $list .= "</div>";
+
+                return "<div id=\"$id\">".$title.$list."</div>";
+            }
+             
             $checked = "";
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Resources<br/>";
@@ -167,12 +212,16 @@ span.disabled
             foreach($scs as $sc) { $kv[$sc->id] = $sc->name; }
             echo checklist("sc", "Resource supported by Support Centers ".helpbutton("Support_Center"), $kv);
 
-
             $model = new Resource();
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { $kv[$item->id] = $item->name; }
             echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
+            
+            echo "<br/>";
+            $checked = "";
+            if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Resources<br/>";
             ?>
         </div>
     </div>
@@ -222,6 +271,11 @@ span.disabled
             $checked = "";
             if(isset($_REQUEST["has_status"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"has_status\" $checked/> RSV Monitoring Status is available<br/>";
+
+            $kv = array();
+            $kv[0] = "Inactive";
+            $kv[1] = "Active";
+            echo radiolist("active", "Active Status", $kv, 1); //1 by default
             ?>
         </div>
     </div>

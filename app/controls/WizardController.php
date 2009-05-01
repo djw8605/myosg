@@ -125,7 +125,14 @@ EOT;
             $model = new Resource();
             $resources = $model->get();
             foreach($resources as $resource) {
-                $resource_ids[] = (int)$resource->id;
+                if(isset($_REQUEST["show_disabled"])) {
+                    $resource_ids[] = (int)$resource->id;
+                } else {
+                    //filter by disable flag
+                    if($resource->disable == 0) {
+                        $resource_ids[] = (int)$resource->id;
+                    }
+                }
             }
         } else {
             foreach($_REQUEST as $key=>$value) {
@@ -265,6 +272,11 @@ EOT;
             $keep = $this->process_resource_filter_hasstatus();
             $resources = array_intersect($resources, $keep);
         }
+        if(isset($_REQUEST["active"])) {
+            $keep = $this->process_resource_filter_active();
+            $resources = array_intersect($resources, $keep);
+        }
+
 
         return $resources;
     }
@@ -327,7 +339,24 @@ EOT;
             }
         }
         return $resources_to_keep;
+    }
+
+    private function process_resource_filter_active()
+    {
+        $resources_to_keep = array();
+        $model = new Resource();
+        $resources = $model->getindex();
+        $active_value = $_REQUEST["active_value"];
+        foreach($resources as $rid=>$r) {
+            if($r[0]->active == $active_value) {
+                if(!in_array($rid, $resources_to_keep)) {
+                    $resources_to_keep[] = (string)$rid;
+                }
+            }
+        }
+        return $resources_to_keep;
      }
+
 
     private function process_resource_filter_status()
     {
@@ -430,8 +459,8 @@ EOT;
                     $model = new ResourceByGroupID();
                     $rs = $model->get(array("resource_group_id"=>$rg->id));
                     foreach($rs as $r) {
-                        if(!in_array($r->resource_id, $resources_to_keep)) {
-                            $resources_to_keep[] = $r->resource_id;
+                        if(!in_array($r->id, $resources_to_keep)) {
+                            $resources_to_keep[] = $r->id;
                         }
                     }
                 }

@@ -16,8 +16,7 @@ class ResourceByGroupID extends CachedIndexedModel
         }
 
         //return resource that has at least one resource_service
-        $sql = "SELECT r.id resource_id, r.name, r.fqdn, r.resource_group_id FROM resource r 
-            where 1 = 1 $where and r.id in (select resource_id from resource_service $service_condition)";
+        $sql = "SELECT * FROM resource r where 1 = 1 $where and r.id in (select resource_id from resource_service $service_condition)";
         return $sql;
     }
     public function key() { return "resource_group_id"; }
