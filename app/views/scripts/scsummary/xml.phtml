@@ -1,0 +1,28 @@
+<!--
+This XML contains the requested support center summary information.
+
+Structure:
+    * () shows number of elements. N means there could be any number of them
+
+    SupportCenterSummary (1)
+         SupportCenter (N)
+            ID (1)                            Support Center id in OIM database
+            Name (1)                            Name of the resource
+            Active (1)                          Show Active / Inactive Status flag
+            Disable (1)                         Show Disable flag
+
+-->
+<SupportCenterSummary>
+<?
+foreach($this->scs as $sc_id=>$sc) {
+    echo "<SupportCenter>";
+    echo "<ID>$sc->id</ID>";
+    echo "<Name>$sc->name</Name>";
+    echo "<LongName>".$sc->long_name."</LongName>";
+    echo "<Community>".$sc->community."</Community>";
+    echo "<Active>$sc->name</Active>";
+    echo "<Disable>$sc->name</Disable>";
+    echo "</SupportCenter>";
+}
+?>
+</SupportCenterSummary>

@@ -76,6 +76,50 @@ abstract class ControllerBase extends Zend_Controller_Action
         return Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
     } 
 
+    protected function load_daterangequery()
+    {
+        $today_begin = (int)(time() / (3600*24));
+        $today_begin *= 3600*24;
+
+        //set some defaults
+        if(!isset($_REQUEST["start_type"])) {
+            $_REQUEST["start_type"] = "7daysago";
+        }
+        if(!isset($_REQUEST["end_type"])) {
+            $_REQUEST["end_type"] = "now";
+        }
+
+        switch($_REQUEST["start_type"]) {
+        case "yesterday":
+            $this->view->start_time = $today_begin - 3600*24;
+            break;
+        case "7daysago":
+            $this->view->start_time = $today_begin - 3600*24*7;
+            break;
+        case "30daysago":
+            $this->view->start_time = $today_begin - 3600*24*30;
+            break;
+        case "specific":
+            $str = $_REQUEST["start_date"];
+            $this->view->start_time = strtotime($str);
+            break;
+        }
+
+        switch($_REQUEST["end_type"]) {
+        case "today":
+            $this->view->end_time = $today_begin;
+            break;
+        case "now":
+            $this->view->end_time = time();
+            break;
+        case "specific":
+            $str = $_REQUEST["end_date"];
+            $this->view->end_time = strtotime($str);
+            break;
+        }
+    }
+
+
     //abstract public function breads(); //return array containing pagename leading to this page
     abstract public function load();
 

@@ -1,0 +1,29 @@
+<?
+
+foreach($this->scs as $sc_id=>$sc) {
+    //echo $sc_id;
+
+    $name = $sc->name;
+    $ex_class = "";
+    if($sc->disable == 1) {
+        $name .= " (Removed)";
+        $ex_class = "disabled";
+    }
+    if($sc->active == 0) {
+        $name .= " (Inactive)";
+    }
+
+    echo "<div class=\"border $ex_class\">";
+    echo "<span class=\"h3\">".$name."</span>";
+
+    if(isset($_REQUEST["summary_attrs_showdesc"])) {
+        echo "<br/>";
+        echo $sc->description;
+    }
+
+    echo "<table class='summary_table'>";
+    echo "<tr><th>Long Name</th><td>".$sc->long_name."</td></tr>";
+    echo "<tr><th>Community</th><td>".$sc->community."</td></tr>";
+    echo "</table>";
+    echo "</div>";
+}

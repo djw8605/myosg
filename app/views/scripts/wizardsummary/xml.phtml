@@ -7,18 +7,18 @@ Structure:
     ResourceSummary (1)
         ResourceGroup (N)
             GridType (1)                                Grid Type for the resource group
-            GroupId (1)                                 Resource Group Id in database
+            GroupID (1)                                 Resource Group ID in database
             GroupName (1)                               Name of the Resource Group
             GroupDescription (0 or 1)                   Description for the resource group as stored in OIM
             Resources (1)
                  Resource (N)
-                      Id (1)                            Resource id in database
+                      ID (1)                            Resource id in database
                     Name (1)                            Name of the resource
                     Active (1)                          Show Active / Inactive Status flag
                     Disable (1)                         Show Disable flag
                     Services (0 or 1)                   Services that are supported by this resource
                         Service (N)
-                            Id (1)                      Service id in database
+                            ID (1)                      Service id in database
                             Name (1)                    Name of the service
                     RSVStatus (0 or 1)
                         Status (1)
@@ -47,7 +47,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo htmlentities($gridtype_name);
     echo "</GridType>";
 
-    echo "<GroupId>".$resource_group->id."</GroupId>";
+    echo "<GroupID>".$resource_group->id."</GroupID>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<GroupDescription>";
@@ -63,7 +63,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo "<Resources>";
     foreach($resource_list as $rid=>$resource) {
         echo "<Resource>";
-        echo "<Id>".$resource->id."</Id>";
+        echo "<ID>".$resource->id."</ID>";
         echo "<Name>".$resource->name."</Name>";
 
         echo "<Active>";
@@ -91,7 +91,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 foreach($services as $service) {
                     if(isset($this->servicetypes[$service->service_id])) {
                         echo "<Service>".
-                          "<Id>".$service->service_id."</Id>".
+                          "<ID>".$service->service_id."</ID>".
                           "<Name>".$this->servicetypes[$service->service_id][0]->description."</Name>";
                         echo "<ServiceUri>";
 

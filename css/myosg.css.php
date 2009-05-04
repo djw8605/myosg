@@ -288,7 +288,7 @@ table.summary_subtable td, table.summary_subtable th
     border-bottom: 1px solid #ddd;
     width: 60%;
 }
-td.disabled
+.disabled
 {
     background-color: #eee;
     color: #999;

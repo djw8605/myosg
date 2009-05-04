@@ -30,71 +30,21 @@ span.disabled
     <div class="indent" id="datasource_area">
         <select name="datasource">
         <option value="">(Please Select)</option>
-        <option value="summary">Resource Summary</option>
-        <option value="currentstatus">Current RSV Status</option>
-        <option value="gipstatus">Current GIP Validation Status</option>
-        <option value="statushistory">RSV Status History</option>
-        <option value="arhistory">Availability History</option>
-        <option value="armetric">Availability Metrics</option>
-        <option value="downtime">Downtime Schedule</option>
-        <option value="account">Gratia Accounting</option>
-        <option value="ce">Gratia Accounting (CE Specific)</option>
-        <option value="se">Gratia Accounting (SE Specific)</option>
+        <option value="summary">Support Center Summary</option>
         </select>
 
         <div id="summary_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_summary.phtml")?>
+            <?=$this->render("sc/wizard_summary.phtml")?>
         </div>
-
-        <div id="currentstatus_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_currentstatus.phtml")?>
-        </div>
-
-        <div id="gipstatus_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_gipstatus.phtml")?>
-        </div>
-
-        <div id="statushistory_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_statushistory.phtml")?>
-        </div>
-
-        <div id="arhistory_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_arhistory.phtml")?>
-        </div>
-
-        <div id="armetric_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_armetric.phtml")?>
-        </div>
-
-        <div id="downtime_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_downtime.phtml")?>
-        </div>
-
-        <div id="account_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_account.phtml")?>
-        </div>
-
-        <div id="ce_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_ce.phtml")?>
-        </div>
-
-        <div id="se_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard_se.phtml")?>
-        </div>
-
-        <div id="_daterange_attrs" class="attrs indent hidden">
-            <?=$this->render("wizard/wizard__daterange.phtml")?>
-        </div>
-
     </div>
 
-    <h3>Resources to display</h3>
+    <h3>Support Centers to display</h3>
     <div class="indent">
-        <div id="resource_area_standby">
+        <div id="sc_area_standby">
             <p>Please select the information to display first.</p>
         </div>
-        <div id="resource_area" class="hidden">
-            <p>Select resources that you want to show above information (conditions are or-ed).</p>
+        <div id="sc_area" class="hidden">
+            <p>Select support center that you want to show above information (conditions are or-ed).</p>
             <?
             function checklist($id, $title, $kv)
             {
@@ -180,12 +130,12 @@ span.disabled
             }
              
             $checked = "";
-            if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
-            echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Resources<br/>";
-            echo "<div class=\"list\" id=\"all_resources_attrs\">";
+            if(isset($_REQUEST["all_scs"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"all_scs\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Support Centers<br/>";
+            echo "<div class=\"hidden list\" id=\"all_scs_attrs\">";
                 $checked = "";
                 if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
-                echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Resources<br/>";
+                echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Support Centers<br/>";
             echo "</div>";
 
             function helpbutton($type)
@@ -193,40 +143,11 @@ span.disabled
                 return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
             }
 
-            $model = new Facilities();
-            $fs = $model->get();
-            $kv = array();
-            foreach($fs as $f) { $kv[$f->id] = $f->name; }
-            echo checklist("facility", "Resources in Facility ".helpbutton("Facility"), $kv);
-
-            $model = new Site();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $site) { $kv[$site->id] = $site->name; }
-            echo checklist("site", "Resources in Sites ".helpbutton("Site"), $kv);
-
-            $model = new ResourceGroup();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("rg", "Resources in Resource Groups".helpbutton("Resource_Group"), $kv);
-
             $model = new SupportCenters();
             $scs = $model->get();
             $kv = array();
-            foreach($scs as $sc) { 
-                //grab active, non-disabled records
-                if($sc->active == 1 and $sc->disable == 0) {
-                    $kv[$sc->id] = $sc->name; 
-                }
-            }
-            echo checklist("sc", "Resource supported by Support Centers ".helpbutton("Support_Center"), $kv);
-
-            $model = new Resource();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
+            foreach($scs as $sc) { $kv[$sc->id] = $sc->name; }
+            echo checklist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
             
             ?>
         </div>
@@ -238,46 +159,8 @@ span.disabled
             <p>Please select the information to display first.</p>
         </div>
         <div id="filter_area" class="hidden">
-            <p>Only show resources that matches following criteria (conditions are and-ed).</p>
-
+            <p>Only show sc that matches following criteria (conditions are and-ed).</p>
             <?
-            $model = new GridTypes();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("gridtype", "Grid Type", $kv);
-
-            $model = new Status();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->description; }
-            echo checklist("status", "Current RSV Status", $kv);
-
-            $kv = array("OK"=>"OK", "FAIL"=>"FAIL", "UNKNOWN"=>"UNKNOWN");
-            echo checklist("gipstatus", "Current GIP Status", $kv);
-
-            $model = new ServiceTypes();
-            $list = $model->get(array("service_group_id"=>1));
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("service", "Provides following Services", $kv);
-
-            $model = new VirtualOrganization();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("vosup", "Allows following VO to access", $kv);
-
-            $model = new VirtualOrganization();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("voown", "Owned by VOs", $kv);
-
-            $checked = "";
-            if(isset($_REQUEST["has_status"])) { $checked = "checked=checked"; }
-            echo "<input type=\"checkbox\" name=\"has_status\" $checked/> RSV Monitoring Status is available<br/>";
-
             $kv = array();
             $kv[0] = "Inactive";
             $kv[1] = "Active";
@@ -301,24 +184,20 @@ function showhide_attrs(show_speed)
     $(".attrs").hide();
     if(v != "") {
         $("#"+v+"_attrs").show(show_speed);
-        $("#resource_area").show(show_speed);
+        $("#sc_area").show(show_speed);
         $("#filter_area").show(show_speed);
-        $("#resource_area_standby").hide();
+        $("#sc_area_standby").hide();
         $("#filter_area_standby").hide();
 
         if(
-            v == "statushistory" ||
-            v == "arhistory" ||
-            v == "armetric" ||
-            v == "account" ||
-            v == "se" ||
-            v == "ce") {
+            v == "foo_page_that_hasdatarange"
+        ) {
             $("#_daterange_attrs").show(show_speed);
         }
     } else {
-        $("#resource_area").hide();
+        $("#sc_area").hide();
         $("#filter_area").hide();
-        $("#resource_area_standby").show();
+        $("#sc_area_standby").show();
         $("#filter_area_standby").show();
     }
 }
@@ -336,29 +215,20 @@ $(document).ready(function() {
         $datasource = $_REQUEST["datasource"];
         switch($datasource) {
         case "summary":
-        case "currentstatus":
-        case "gipstatus":
-        case "statushistory":
-        case "arhistory":
-        case "armetric":
-        case "downtime":
-        case "account":
-        case "se":
-        case "ce":
             echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
             echo "showhide_attrs();\n";
         }
     }
 
-    if(isset($_REQUEST["all_resources"])) {
-        echo "disable($('input[name=all_resources]'));";
+    if(isset($_REQUEST["all_scs"])) {
+        echo "disable($('input[name=all_scs]'));";
     }
     ?>
 });
 
 function wizard_submit(format)
 {
-    var action = '<?=fullbase()?>/wizard'+$('select[name=datasource]').val(); 
+    var action = '<?=fullbase()?>/sc'+$('select[name=datasource]').val(); 
     action += "/"+format;
     $('#wizard').attr('action', action);
     $('#wizard').submit(); 
@@ -370,15 +240,15 @@ function disable(e)
     var items = $(e).siblings(); 
     $(items).find('input').attr('disabled', 'disabled');
     $(items).find('span').addClass('disabled');
-    $("#all_resources_attrs").show();
-    $("#all_resources_attrs").find('input').removeAttr('disabled');
+    $("#all_scs_attrs").show();
+    $("#all_scs_attrs").find('input').removeAttr('disabled');
 }
 function enable(e)
 {
     var items = $(e).siblings(); 
     $(items).find('input').removeAttr('disabled');
     $(items).find('span').removeClass('disabled');
-    $("#all_resources_attrs").hide();
-    $("#all_resources_attrs").find('input').addAttr('disabled');
+    $("#all_scs_attrs").hide();
+    $("#all_scs_attrs").find('input').addAttr('disabled');
 }
 </script>
