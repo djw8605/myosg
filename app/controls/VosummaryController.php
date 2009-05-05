@@ -23,9 +23,11 @@ class VosummaryController extends VoController
             $rs = $rmodel->getindex();
             foreach($this->vo_ids as $vo_id) {
                 $resource_list = array();
-                foreach($resource_ownerships[$vo_id] as $resource_ownership) {
-                    $resource = $rs[$resource_ownership->resource_id][0];
-                    $resource_list[$resource->id] = $resource;
+                if(isset($resource_ownerships[$vo_id])) {
+                    foreach($resource_ownerships[$vo_id] as $resource_ownership) {
+                        $resource = $rs[$resource_ownership->resource_id][0];
+                        $resource_list[$resource->id] = $resource;
+                    }
                 }
                 $this->view->resource_ownerships[$vo_id] = $resource_list;
             }
