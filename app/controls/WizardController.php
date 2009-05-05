@@ -145,8 +145,8 @@ class WizardController extends ControllerBase
         $model = new ResourceByGroupID();
         $rs = $model->get(array("resource_group_id"=>$rg_id));
         foreach($rs as $r) {
-            if(!in_array($r->resource_id, $resource_ids)) {
-                $resource_ids[] = (int)$r->resource_id;
+            if(!in_array($r->id, $resource_ids)) {
+                $resource_ids[] = (int)$r->id;
             }
         }
     }

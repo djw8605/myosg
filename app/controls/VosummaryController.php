@@ -1,7 +1,7 @@
 <?
 class VosummaryController extends VoController
 {
-    public static function default_title() { return "Virtual Organization"; }
+    public static function default_title() { return "Virtual Organization Summary"; }
     public static function default_url($query) { return ""; }
 
     public function load()

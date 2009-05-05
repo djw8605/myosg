@@ -31,6 +31,7 @@ span.disabled_span
         <select name="datasource">
         <option value="">(Please Select)</option>
         <option value="summary">Resource Summary</option>
+        <option value="env">Environment Parameters</option>
         <option value="currentstatus">Current RSV Status</option>
         <option value="gipstatus">Current GIP Validation Status</option>
         <option value="statushistory">RSV Status History</option>
@@ -44,6 +45,10 @@ span.disabled_span
 
         <div id="summary_attrs" class="attrs indent hidden">
             <?=$this->render("wizard/wizard_summary.phtml")?>
+        </div>
+
+        <div id="env_attrs" class="attrs indent hidden">
+            <?=$this->render("wizard/wizard_env.phtml")?>
         </div>
 
         <div id="currentstatus_attrs" class="attrs indent hidden">
@@ -344,6 +349,7 @@ $(document).ready(function() {
         $datasource = $_REQUEST["datasource"];
         switch($datasource) {
         case "summary":
+        case "env":
         case "currentstatus":
         case "gipstatus":
         case "statushistory":

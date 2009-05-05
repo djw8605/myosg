@@ -1,0 +1,75 @@
+<!--
+This XML contains the requested resource summary information.
+
+Structure:
+    * () shows number of elements. N means there could be any number of them
+
+    ResourceSummary (1)
+        ResourceGroup (N)
+            GridType (1)                                Grid Type for the resource group
+            GroupID (1)                                 Resource Group ID in database
+            GroupName (1)                               Name of the Resource Group
+            GroupDescription (0 or 1)                   Description for the resource group as stored in OIM
+            Resources (1)
+                 Resource (N)
+                      ID (1)                            Resource id in database
+                    Name (1)                            Name of the resource
+                    Active (1)                          Show Active / Inactive Status flag
+                    Disable (1)                         Show Disable flag
+                    Services (0 or 1)                   Services that are supported by this resource
+                        Service (N)
+                            ID (1)                      Service id in database
+                            Name (1)                    Name of the service
+                    RSVStatus (0 or 1)
+                        Status (1)
+                        Note (1)
+                    GIPStatus (0 or 1)
+                        Status (1)
+                    Description (0 or 1)
+                    FQDN (0 or 1)
+                    SupportedVOs (0 or 1)
+                        VO (N)
+                            (Name of the VO)
+                    VOOwnership (0 or 1)                Shows the list of VOs that owns this resource and how much percentage it owns
+                        Ownership (1)
+                            Percent (1)
+                            VO (1)                      Name of the VO (could be "(Other)"
+
+-->
+<ResourceENV>
+<?
+foreach($this->envs as $resource_id=>$xml) {
+    $resource = $this->resources[$resource_id][0];
+    echo "<Resource>";
+    echo "<ID>".$resource->id."</ID>";
+    echo "<Name>".$resource->name."</Name>";
+
+    echo "<Active>";
+    if($resource->active == 1) { 
+        echo "True"; 
+    } else {
+        echo "False"; 
+    }
+    echo "</Active>";
+
+    echo "<Disable>";
+    if($resource->disable == 1) { 
+        echo "True"; 
+    } else {
+        echo "False"; 
+    }
+    echo "</Disable>";
+
+    echo "<ENV>";
+    if($xml === null) {
+        echo "(Information Not available)";
+    } else {
+        foreach($xml as $key=>$value) {
+            echo "<".htmlentities($key).">".htmlentities($value)."</".htmlentities($key).">";
+        }
+    }
+    echo "</ENV>";
+    echo "</Resource>";
+}
+?>
+</ResourceENV>

@@ -1,0 +1,26 @@
+<?
+foreach($this->envs as $resource_id=>$xml) {
+    $resource = $this->resources[$resource_id][0];
+    echo "<div class=\"resource h4 round\">".$resource->name;
+    if($resource->disable == 1) {
+        echo " (Removed)";
+    }
+    if($resource->active == 0) {
+        echo " (Inactive)";
+    }
+    echo "</div>";
+
+    echo "<div class=\"indent\">";
+
+    if($xml === null) {
+        echo "<p class=\"warning\">Information Not available</p>";
+    } else {
+        echo "<table class=\"summary_table\">";
+        foreach($xml as $key=>$value) {
+            echo "<tr><th>".htmlentities($key)."</th><td>".htmlentities($value)."</td></tr>";
+        }
+        echo "</table>";
+    }
+    echo "</div>";
+
+}

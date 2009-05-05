@@ -6,9 +6,15 @@ Structure:
 
     SupportCenterSummary (1)
          SupportCenter (N)
-            ID (1)                            Support Center id in OIM database
+            ID (1)                              Support Center id in OIM database
             Name (1)                            Name of the resource
-            Active (1)                          Show Active / Inactive Status flag
+            LongName (1)
+            Community (1)
+            PrimaryOperationsContact (optional) Only available if the Support Center has this information 
+                Name (1)
+                Email (1)
+                Phone (1)
+            Active (1)                         
             Disable (1)                         Show Disable flag
 
 -->
@@ -20,6 +26,16 @@ foreach($this->scs as $sc_id=>$sc) {
     echo "<Name>".htmlentities($sc->name)."</Name>";
     echo "<LongName>".htmlentities($sc->long_name)."</LongName>";
     echo "<Community>".htmlentities($sc->community)."</Community>";
+
+    if(count($sc->contact) > 0) {
+        echo "<PrimaryOperationsContact>";
+        $contact = $sc->contact[0];
+        echo "<Name>".htmlentities($contact->name)."</Name>";
+        echo "<Email>".htmlentities($contact->primary_email)."</Email>";
+        echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+        echo "</PrimaryOperationsContact>";
+    }
+
     if($sc->active == 1) {
         echo "<Active>True</Active>";
     } else {

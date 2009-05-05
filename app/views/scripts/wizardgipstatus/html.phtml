@@ -8,10 +8,39 @@ foreach($this->resources as $rid=>$record) {
     $overallstatus = $record["overallstatus"];
 
     ?>
-    <div class="border">
+<?
+ 
+    switch($overallstatus) {
+    case "FAIL":
+        $overall = "CRITICAL";
+        $overall_detail = "At least one test is failing.";
+        break;
+    case "OK":
+        $overall = "OK";
+        $overall_detail = "No issue found for this resource.";
+        break;
+    case "NA":
+        $overall = "UNKNOWN";
+        $overall_detail = "GIP validation result is not available for this resource.";
+        break;
+    default:
+        //????
+        $overall = "UNKNOWN";
+        $overall_detail = "Validation script is returning unknown overall status.";
+    }
+?>
+    <div class="resource h4 round">
+    <?=$resource_name?>
+
+<?  if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
+	 echo "<br/><span class=\"fqdn\">$resource_fqdn</span>";
+} ?>
+
+    </div>
+
 <?
     if(!uwa()) {
-        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px;'>";
+        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px; margin-bottom: 5px;'>";
         if(isset($rawdata["cemon_raw_data"])) {
             $raw = "";
 
@@ -45,34 +74,8 @@ foreach($this->resources as $rid=>$record) {
         echo "<b>LDIF Data</b><br/>$raw";
         echo "</div>";
     }
- 
-    switch($overallstatus) {
-    case "FAIL":
-        $overall = "CRITICAL";
-        $overall_detail = "At least one test is failing.";
-        break;
-    case "OK":
-        $overall = "OK";
-        $overall_detail = "No issue found for this resource.";
-        break;
-    case "NA":
-        $overall = "UNKNOWN";
-        $overall_detail = "GIP validation result is not available for this resource.";
-        break;
-    default:
-        //????
-        $overall = "UNKNOWN";
-        $overall_detail = "Validation script is returning unknown overall status.";
-    }
 ?>
     <div class="status_<?=$overall?>">
-    <span class="h4"><div class="resource"><?=$resource_name?>
-<?
-       if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
-	 echo " (<tt>$resource_fqdn</tt>) ";
-       }
-?>
-    </div></span>
     <p><?=$overall_detail?></p>
     </div>
     
@@ -101,7 +104,6 @@ foreach($this->resources as $rid=>$record) {
     }
     echo "</div>";//indent
     echo "<div style='clear: both'></div>";
-    echo "</div>";//border
 }
 
 function outputTestInfo($name, $status, $reason, $rid)

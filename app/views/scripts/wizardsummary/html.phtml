@@ -1,12 +1,11 @@
 <?
 foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
-    echo "<div class=\"border\">";
     $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
-    echo "<div class='resource_group_header'>";
+    echo "<div class='resource_group_header round'>";
     if(!uwa()) {
         echo "<div class=\"sidenote\">";
-        echo $gridtype_name;
+        echo $gridtype_name. " Group";
         echo "</div>";
     }
     echo "<div class=\"resource_group\">";
@@ -22,7 +21,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo "</div>";
     echo "</div>";
 
-    $cols = 2; //number of columns to show
+    $cols = 1; //number of columns to show
     if(uwa()) {
         $cols = 1; //only show sequentially on UWA mode
     }
@@ -44,14 +43,13 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         echo "<td width=\"$col_p%\" class=\"$disabled\">";
 
         //show resource name & desc
-        echo "<div class=\"resource\"><span class='h4'>".$resource->name;
+        echo "<div class=\"h4 round resource\">".$resource->name;
         if($resource->disable == 1) {
             echo " (Removed)";
         }
         if($resource->active == 0) {
             echo " (Inactive)";
         }
-        echo "</span>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
             if($resource->description != "") {
@@ -262,6 +260,4 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         echo "</td>";
     }
     echo "</tr></table>";
-
-    echo "</div>"; //border
 }

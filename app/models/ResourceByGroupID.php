@@ -9,7 +9,7 @@ class ResourceByGroupID extends CachedIndexedModel
         if(isset($params["servicetype"])) {
             $service_condition .= " and service_id = ".$params["servicetype"];
         }
-        
+
         $where = "";
         if(isset($params["resource_group_id"])) {
             $where .= " and r.resource_group_id = ".$params["resource_group_id"];

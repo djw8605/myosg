@@ -92,7 +92,8 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     if(isset($this->servicetypes[$service->service_id])) {
                         echo "<Service>".
                           "<ID>".$service->service_id."</ID>".
-                          "<Name>".$this->servicetypes[$service->service_id][0]->description."</Name>";
+                          "<Name>".$this->servicetypes[$service->service_id][0]->name."</Name>".
+                          "<Description>".htmlentities($this->servicetypes[$service->service_id][0]->description)."</Description>";
                         echo "<ServiceUri>";
 
                         if ($service->endpoint_override != "") {

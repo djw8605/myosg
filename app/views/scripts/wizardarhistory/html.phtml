@@ -4,8 +4,7 @@ echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
 
 foreach($this->services as $rid=>$services) {
     $resource_info = $this->resource_info[$rid][0];
-    echo "<div class=\"border\">";
-    echo "<h4><div class=\"resource\">$resource_info->name</div></h4>";
+    echo "<div class=\"resource h4 round\">$resource_info->name</div>";
     if(!uwa()) {
         echo "<div class=\"indent\">";
     }
@@ -63,5 +62,4 @@ foreach($this->services as $rid=>$services) {
     if(!uwa()) {
         echo "</div>";//indent
     }
-    echo "</div>";//border
 }

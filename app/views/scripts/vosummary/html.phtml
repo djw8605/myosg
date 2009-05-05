@@ -1,7 +1,7 @@
 <?
 
 foreach($this->vos as $vo_id=>$vo) {
-    $name = $vo->name;
+    $name = htmlentities($vo->name);
     $ex_class = "";
     if($vo->disable == 1) {
         $name .= " (Removed)";
@@ -16,27 +16,27 @@ foreach($this->vos as $vo_id=>$vo) {
 
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
-        echo $vo->description;
+        echo htmlentities($vo->description);
     }
 
     echo "<table class='summary_table'>";
-    echo "<tr><th>Long Name</th><td>".$vo->long_name."</td></tr>";
-    echo "<tr><th>Primary URL</th><td>".$vo->primary_url."</td></tr>";
-    echo "<tr><th>Membership Services URL</th><td>".$vo->membership_services_url."</td></tr>";
-    echo "<tr><th>Purpose URL</th><td>".$vo->purpose_url."</td></tr>";
-    echo "<tr><th>Support URL</th><td>".$vo->support_url."</td></tr>";
-    echo "<tr><th>App Description</th><td>".$vo->app_description."</td></tr>";
-    echo "<tr><th>Community</th><td>".$vo->community."</td></tr>";
+    echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
+    echo "<tr><th>Primary URL</th><td>".htmlentities($vo->primary_url)."</td></tr>";
+    echo "<tr><th>Membership Services URL</th><td>".htmlentities($vo->membership_services_url)."</td></tr>";
+    echo "<tr><th>Purpose URL</th><td>".htmlentities($vo->purpose_url)."</td></tr>";
+    echo "<tr><th>Support URL</th><td>".htmlentities($vo->support_url)."</td></tr>";
+    echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
+    echo "<tr><th>Community</th><td>".htmlentities($vo->community)."</td></tr>";
 
     $scid = $vo->sc->id;
-    echo "<tr><th>Support Center</th><td><a href=\"".fullbase()."/scsummary/index?datasource=summary&sc=on&sc_$scid=on\">".$vo->sc->name."</a></td></tr>";
+    echo "<tr><th>Support Center</th><td><a href=\"".fullbase()."/scsummary/index?datasource=summary&sc=on&sc_$scid=on\">".htmlentities($vo->sc->name)."</a></td></tr>";
 
     if(isset($_REQUEST["summary_attrs_showmember_resource"])) {
         echo "<tr><th>Member Resources</th><td>";
         $resource_ownerships = $this->resource_ownerships[$vo_id];
         foreach($resource_ownerships as $resource_ownership) {
             $rid = $resource_ownership->id;
-            echo "<a href=\"".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">".$resource_ownership->name."</a> ";
+            echo "<a href=\"".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">".htmlentities($resource_ownership->name)."</a> ";
         }
         echo "</td></tr>";
     }

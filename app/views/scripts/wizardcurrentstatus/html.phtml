@@ -10,18 +10,19 @@ foreach($this->cache as $rid=>$cache) {
     $resource_fqdn = $resource->fqdn;
 
     ?>
-    <div class="border">
-    <div class="status_<?=$status?>">
-    <span class="h4"><div class="resource">
+    <div class="resource h4 round">
     <?
     if(uwa()) {
         echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
     } else {
         echo $resource_name;
+        echo "<br/>";
     }
     ?>
-    <span class="fqdn"><?=$resource_fqdn?></span></div></span>
+    <span class="fqdn"><?=$resource_fqdn?></span>
+    </div>
 
+    <div class="status_<?=$status?>">
     <p><?=$note?></p>
     </div>
     <div class="indent">
@@ -85,7 +86,6 @@ foreach($this->cache as $rid=>$cache) {
         echo "</div>";
     }
     echo "</div>";//indent
-    echo "</div>";//border
 }
 
 

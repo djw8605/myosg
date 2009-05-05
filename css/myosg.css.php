@@ -36,16 +36,22 @@ margin-bottom: 10px;
 
 div.resource
 {
+padding: 2px;
 padding-left:20px;
-background:transparent url(<?=image()?>/images/server.png) no-repeat 0 0px;
+background:transparent url(<?=image()?>/images/server.png) no-repeat 2px 3px;
 min-height: 16px;
+margin-bottom: 5px;
+}
+div.h4
+{
+background-color: #ddd;
+font-weight: bold;
+font-size: 12px;
 }
 
 div.resource_group
 {
-padding-left:50px;
-background:transparent url(<?=image()?>/images/resource_group.png) no-repeat 0 0px;
-min-height: 20px;
+padding-left:5px;
 }
 div.site
 {
@@ -101,15 +107,28 @@ padding: 3px;
 
 div.resource_group_header
 {
-border-bottom: dotted 1px #aaa;
-padding-bottom: 0.3em;
+background-color: gray;
+color: white;
+margin-bottom: 0.3em;
+padding: 3px;
+}
+.round
+{
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
 }
 
 div.sidenote
 {
 float: right;
-color: gray;
 text-align: right;
+margin-right: 5px;
 }
 
 
@@ -266,7 +285,7 @@ table.summary_table th
     padding-left: 3px;
     padding-right: 5px;
     background-color: #eee;
-    width: 100px;
+    width: 130px;
     border-top: 1px solid #ddd;
 }
 table.summary_table td
