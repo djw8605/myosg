@@ -18,10 +18,9 @@
     height: 160px;
     overflow: auto;
 }
-span.disabled
+span.disabled_span
 {
     color: gray;
-    background-color: white;
 }
 </style>
 
@@ -266,13 +265,21 @@ span.disabled
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            foreach($list as $item) { 
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("vosup", "Allows following VO to access", $kv);
 
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            foreach($list as $item) { 
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("voown", "Owned by VOs", $kv);
 
             $checked = "";
@@ -370,7 +377,7 @@ function disable(e)
 {
     var items = $(e).siblings(); 
     $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').addClass('disabled');
+    $(items).find('span').addClass('disabled_span');
     $("#all_resources_attrs").show();
     $("#all_resources_attrs").find('input').removeAttr('disabled');
 }
@@ -378,7 +385,7 @@ function enable(e)
 {
     var items = $(e).siblings(); 
     $(items).find('input').removeAttr('disabled');
-    $(items).find('span').removeClass('disabled');
+    $(items).find('span').removeClass('disabled_span');
     $("#all_resources_attrs").hide();
     $("#all_resources_attrs").find('input').addAttr('disabled');
 }

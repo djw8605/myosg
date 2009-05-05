@@ -344,10 +344,10 @@ class WizardController extends ControllerBase
         $model = new VirtualOrganization();
         $list = $model->get();
 
-        foreach($list as $item) {
-            if(isset($_REQUEST["voown_".$item->id])) {
+        foreach($list as $vo_id=>$item) {
+            if(isset($_REQUEST["voown_".$vo_id])) {
                 $model = new VOOwnedResources();
-                $rs = $model->get(array("vo_id"=>$item->id));
+                $rs = $model->get(array("vo_id"=>$vo_id));
                 foreach($rs as $r) {
                     if(!in_array($r->resource_id, $resources_to_keep)) {
                         $resources_to_keep[] = $r->resource_id;

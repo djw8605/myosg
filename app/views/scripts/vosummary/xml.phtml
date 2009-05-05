@@ -1,0 +1,68 @@
+<!--
+This XML contains the requested support center summary information.
+
+Structure:
+    * () shows number of elements. N means there could be any number of them
+
+    SupportCenterSummary (1)
+         SupportCenter (N)
+            ID (1)                            Support Center id in OIM database
+            Name (1)                            Name of the resource
+            LongName (1)
+            PrimaryURL (1)
+            MembershipServicesURL (1)
+            PurposeURL (1)
+            SupportURL (1)
+            AppDescription (1)
+            Community (1)
+            MemberResources (optional)
+                Resource (N)
+                    ID (1)
+                    Name (1)
+            Active (1)                          Show Active / Inactive Status flag
+            Disable (1)                         Show Disable flag
+
+-->
+<VOSummary>
+<?
+foreach($this->vos as $vo_id=>$vo) {
+    echo "<VO>";
+    echo "<ID>$vo_id</ID>";
+    echo "<Name>".htmlentities($vo->name)."</Name>";
+
+    echo "<LongName>".htmlentities($vo->long_name)."</LongName>";
+    echo "<PrimaryURL>".htmlentities($vo->primary_url)."</PrimaryURL>";
+    echo "<MembershipServicesURL>".htmlentities($vo->membership_services_url)."</MembershipServicesURL>";
+    echo "<PurposeURL>".htmlentities($vo->purpose_url)."</PurposeURL>";
+    echo "<SupportURL>".htmlentities($vo->support_url)."</SupportURL>";
+    echo "<AppDescription>".htmlentities($vo->app_description)."</AppDescription>";
+    echo "<Community>".htmlentities($vo->community)."</Community>";
+
+    if(isset($_REQUEST["summary_attrs_showmember_resource"])) {
+        echo "<MemeberResources>";
+        $resource_ownerships = $this->resource_ownerships[$vo_id];
+        foreach($resource_ownerships as $resource_ownership) {
+            $rid = $resource_ownership->id;
+            echo "<Resource>";
+            echo "<ID>$rid</ID>";
+            echo "<Name>".htmlentities($resource_ownership->name)."</Name>";
+            echo "</Resource>";
+        }
+        echo "</MemeberResources>";
+    }
+
+    if($vo->active == 1) {
+        echo "<Active>True</Active>";
+    } else {
+        echo "<Active>False</Active>";
+    }
+    if($vo->disable == 1) {
+        echo "<Disable>True</Disable>";
+    } else {
+        echo "<Disable>False</Disable>";
+    }
+
+    echo "</VO>";
+}
+?>
+</VOSummary>

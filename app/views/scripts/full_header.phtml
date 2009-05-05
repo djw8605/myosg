@@ -51,6 +51,8 @@ parseQuery();
             $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
         case 'sc':
             $param = "?summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
+        case 'vo':
+            $param = "?all_vos=on&active_value=1";break;
         }
         
         return htmlentities(base()."/".$page.$param);
@@ -60,6 +62,7 @@ parseQuery();
         <span id="menu_about"><a href="<?=default_url("about")?>">Home</a></span>
         <span id="menu_wizard"><a href="<?=default_url("wizard")?>">Resource</a></span>
         <span id="menu_sc"><a href="<?=default_url("sc")?>">Support Center</a></span>
+        <span id="menu_vo"><a href="<?=default_url("vo")?>">Virtual Organization</a></span>
         <span id="menu_map"><a href="<?=default_url("map")?>">Status Map</a></span>
     </div>
 

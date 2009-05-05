@@ -1,6 +1,6 @@
 <?
 
-class VirtualOrganization extends CachedModel
+class VirtualOrganization extends CachedIndexedModel
 {
     public function ds() { return "oim"; }
     public function sql($params)
@@ -9,7 +9,8 @@ class VirtualOrganization extends CachedModel
         if(isset($params["sc_id"])) {
             $where = " and sc_id = ".$params["sc_id"];
         }
-        $sql = "SELECT * FROM vo where active = 1 and disable = 0 $where order by name";
+        $sql = "SELECT * FROM vo $where order by name";
         return $sql;
     }
+    public function key() { return "id"; }
 }

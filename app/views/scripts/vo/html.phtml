@@ -1,59 +1,9 @@
-<?
-foreach($this->vos as $vo) {
+<p>Here you can find various information that are specific to Virtual Organization.</p>
+<p>Please follow these 3 easy steps.</p>
+<div class="indent">
+    <p><b>1.</b> Start by selecting "Information to display" on the right.</p>
+    <p><b>2.</b> Select support centers that you'd liked to see the requested information.</p>
+    <p><b>3.</b> Optionally, you can filter the list of support center by applying various filters.</p>
+    <p>* Click Update button when you change your query</p>
+</div>
 
-    //ownership chart
-    $attrs = $vo->attributes();
-    $void = (int)$attrs["id"];
-    echo "<h3>".$vo->Name[0]."</h3>"; 
-    if(isset($this->voinfo[$void])) {
-        $info = $this->voinfo[$void];
-        $url = $info[0]->primary_url;
-        echo "<p class='note'>".$info[0]->community."</p>";
-    } 
-
-    echo "<div class=\"indent\">";
-    $resources = @$this->voownership[$void];
-    if($resources !== null) {
-        $out = "<table class='real' width='300'><tr><th>Resource Name</th><th>Percentage</th></tr>";
-        $rclass = "rowA";
-        foreach($resources as $resource) {
-            if($rclass == "rowA") {
-                $rclass = "rowB";
-            } else {
-                $rclass = "rowA";
-            }
-            //find resource info
-            foreach($this->resources as $resinfo) {
-                if($resinfo->id == $resource->resource_id) {
-                    $rid = $resinfo->id;
-                    $url = base()."/wizardcurrentstatus?datasource=currentstatus&r=on&r_$rid=on";
-                    $out .= "<tr class='$rclass'><td><a href='$url'>".$resinfo->name."</a></td><td>".$resource->percent."%</td></tr>";
-                    break;
-                }
-            }
-        }
-        $out .= "</table>";
-        echo outputToggle("Show Resource Ownership", "Hide Resource Ownership", $out);
-    } else {
-        echo "This VO does not own any resource";
-    }
-    echo "</div>";
-
-    //member resources
-
-    $out = "";
-    foreach($vo->Members[0]->Resource as $resource) {
-        $rid = $resource->ResourceID;
-        $url = base()."/wizardcurrentstatus?datasource=currentstatus&r=on&r_$rid=on";
-        $out .= "<a href=\"$url\">".$resource->ResourceName[0]."</a><br/>";
-    }
-    if($out == "") {
-        echo "No Member Resources";
-    } else {
-        //echo "<h4>Member Resources</h4>";
-        $out = "<p>$out<p>";
-        echo "<div class=\"indent\">";
-        echo outputToggle("Show Member Resources", "Hide Member Resources", $out);
-        echo "</div>";
-    }
-}

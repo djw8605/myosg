@@ -1,82 +1,102 @@
 <?
 
 class VoController extends ControllerBase
-{ 
-    public function breads() { return array("rsv"); }
+{
     public static function default_title() { return "Virtual Organization"; }
     public static function default_url($query) { return ""; }
 
-    public function load() 
-    { 
-        if(isset($_REQUEST["group"]) && $_REQUEST["group"] == "resource") {
-            $this->load_resourcegrouped();
-        }  else {
-            $this->load_vogrouped();
-        }
-    }
-
-    public function load_resourcegrouped()
+    public function load()
     {
-        $model = new Resource();
-        $this->view->resources = $model->get();
+        $this->setpagetitle($this->default_title());
+        $this->selectmenu("vo");
 
-        $model = new ResourceOwnership();
-        $this->view->resource_ownerships = $model->getindex();
-
-        ///////////////////////////////////////////////////////////////////////
-        //Filter
-        if(isset($_REQUEST["resource"])) {
-            if(trim($_REQUEST["resource"]) != "") {
-                $id = (int)$_REQUEST["resource"];
-                $newlist = array();
-                $newlist[$id] = $this->view->resource_ownerships[$id];
-                $this->view->resource_ownerships = $newlist;
+        if(isset($_REQUEST["datasource"])) {
+            $this->vo_ids = $this->process_volist();
+            if(count($this->vo_ids) == 0) {
+                $this->view->info = "No Virtual Organization matches your current criteria. Please adjust your criteria in order to display any data.";
             }
         }
-        $this->setpagetitle(self::default_title(). " - Grouped by Resource");
+        $this->load_daterangequery();
     }
 
-    public function load_vogrouped()
+    public function xmlAction()
     {
-        ///////////////////////////////////////////////////////////////////////
-        //load vo cache
-        $cache_filename = config()->vomatrix_xml_cache;
-        $cache_xml = file_get_contents($cache_filename);
-        $this->view->xml = $cache_xml;
-        $vos = new SimpleXMLElement($cache_xml);
-        $this->view->vos = array();
-        foreach($vos->VOGrouped[0] as $vos) {
-            $attributes = $vos->attributes();
-            $this->view->vos[(string)$vos->Name[0]] = $vos;
-        }        
+        $this->setpagetitle($this->default_title());
 
-        $model = new VOOwnedResources();
-        $this->view->voownership = $model->getindex();
-        $model = new Resource();
-        $this->view->resources = $model->get();
-        $model = new VirtualOrganization();
-        $this->view->voinfo = $model->getgroupby("vo_id");
+        //find if xml.phtml exists for this control
+        $name = $this->getRequest()->getControllerName();
+        $path = $this->view->getScriptPath("").$name."/xml.phtml";
+        if(file_exists($path)) {
+            //if so, then we support xml
+            parent::xmlAction();
+        } else {
+            $this->render("noxml", null, true);
+        }
+    }
 
-        ///////////////////////////////////////////////////////////////////////
-        //Filter
-        if(isset($_REQUEST["vo"])) {
-            if(trim($_REQUEST["vo"]) != "") {
-                $void = $_REQUEST["vo"];
+    //from user query, find the list of vos to display information
+    private function process_volist()
+    {
+        $vo_ids = array();
 
-                $newlist = array();
-                foreach($this->view->vos as $vo) {
-                    $attrs = $vo->attributes();
-                    if($attrs->id[0] == $void) {
-                        $newlist[(string)$vo->Name[0]] = $vo;
+        if(isset($_REQUEST["all_vos"])) {
+            $model = new VirtualOrganization();
+            $vos = $model->get();
+            foreach($vos as $vo) {
+                if(isset($_REQUEST["show_disabled"])) {
+                    $vo_ids[] = (int)$vo->id;
+                } else {
+                    //filter by disable flag
+                    if($vo->disable == 0) {
+                        $vo_ids[] = (int)$vo->id;
                     }
                 }
-                $this->view->vos = $newlist;
+            }
+        } else {
+            foreach($_REQUEST as $key=>$value) {
+                if(isset($_REQUEST["vo"])) {
+                    if(preg_match("/^vo_(?<id>\d+)/", $key, $matches)) {
+                        $this->process_volist_addvo($vo_ids, $matches["id"]);
+                    }
+                }
             }
         }
+        //filter the vo list based on user query
+        $vo_ids = $this->process_vo_filter($vo_ids);
 
-        //this doesn't sort case-insensitively... maybe this should be done via rsv-process
-        ksort($this->view->vos, SORT_STRING);
-
-        $this->setpagetitle(self::default_title());
+        return $vo_ids;
     }
+
+    private function process_volist_addvo(&$vo_ids, $vo_id)
+    {
+        if(!in_array($vo_id, $vo_ids)) {
+            $vo_ids[] = (int)$vo_id;
+        }
+    }
+
+    private function process_vo_filter($vos)
+    {
+        //setup filter
+        if(isset($_REQUEST["active"])) {
+            $keep = $this->process_vo_filter_active();
+            $vos = array_intersect($vos, $keep);
+        }
+        return $vos;
+    }
+
+    private function process_vo_filter_active()
+    {
+        $vos_to_keep = array();
+        $model = new VirtualOrganization();
+        $vos = $model->getindex();
+        $active_value = $_REQUEST["active_value"];
+        foreach($vos as $rid=>$r) {
+            if($r[0]->active == $active_value) {
+                if(!in_array($rid, $vos_to_keep)) {
+                    $vos_to_keep[] = (string)$rid;
+                }
+            }
+        }
+        return $vos_to_keep;
+     }
 }

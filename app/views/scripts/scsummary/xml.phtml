@@ -17,11 +17,19 @@ Structure:
 foreach($this->scs as $sc_id=>$sc) {
     echo "<SupportCenter>";
     echo "<ID>$sc->id</ID>";
-    echo "<Name>$sc->name</Name>";
-    echo "<LongName>".$sc->long_name."</LongName>";
-    echo "<Community>".$sc->community."</Community>";
-    echo "<Active>$sc->name</Active>";
-    echo "<Disable>$sc->name</Disable>";
+    echo "<Name>".htmlentities($sc->name)."</Name>";
+    echo "<LongName>".htmlentities($sc->long_name)."</LongName>";
+    echo "<Community>".htmlentities($sc->community)."</Community>";
+    if($sc->active == 1) {
+        echo "<Active>True</Active>";
+    } else {
+        echo "<Active>False</Active>";
+    }
+    if($sc->disable == 1) {
+        echo "<Disable>True</Disable>";
+    } else {
+        echo "<Disable>False</Disable>";
+    }
     echo "</SupportCenter>";
 }
 ?>
