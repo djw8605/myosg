@@ -35,7 +35,7 @@ class WizardController extends ControllerBase
     }
 
     //from user query, find the list of resources to display information
-    private function process_resourcelist()
+    protected function process_resourcelist()
     {
         $resource_ids = array();
 
@@ -267,7 +267,7 @@ class WizardController extends ControllerBase
         $model = new Resource();
         $resources = $model->getindex();
         foreach($resources as $rid=>$r) {
-            if(isset($wlcgs[$rid])) {
+            if(isset($wlcgs[$rid]) and $wlcgs[$rid][0]->interop_bdii == 1) {
                 if(!in_array($rid, $resources_to_keep)) {
                     $resources_to_keep[] = (string)$rid;
                 }
