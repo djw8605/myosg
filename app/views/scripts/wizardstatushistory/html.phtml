@@ -6,7 +6,10 @@
     padding-bottom: 8px;
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
 }
-
+div.resource
+{
+background-color: transparent;
+}
 .graph
 {
     cursor: pointer;
@@ -157,7 +160,7 @@ foreach($this->resources as $rid=>$resource)
     echo "<div id=\"resource_$rid\" class=\"indent\">";
     
     foreach($this->services[$rid] as $service) {
-        echo "<h3>$service->description</h3>";
+        echo "<h4>$service->description</h4>";
         echo "<div class=\"history_graph\">";
         echo "<img sid=\"$service->service_id\" rid=\"$rid\" class=\"graph\" src=\"".fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
         echo $this->ruler;

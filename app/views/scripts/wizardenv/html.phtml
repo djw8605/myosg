@@ -10,17 +10,5 @@ foreach($this->envs as $resource_id=>$xml) {
     }
     echo "</div>";
 
-    echo "<div class=\"indent\">";
-
-    if($xml === null) {
-        echo "<p class=\"warning\">Information Not available</p>";
-    } else {
-        echo "<table class=\"summary_table\">";
-        foreach($xml as $key=>$value) {
-            echo "<tr><th>".htmlentities($key)."</th><td>".htmlentities($value)."</td></tr>";
-        }
-        echo "</table>";
-    }
-    echo "</div>";
 
 }

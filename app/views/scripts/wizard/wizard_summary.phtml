@@ -32,5 +32,13 @@ if(isset($_REQUEST["summary_attrs_showvoownership"])) { $checked = "checked=chec
 if(isset($_REQUEST["summary_attrs_showwlcg"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showwlcg" <?=$checked?>/> Show WLCG Information<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showenv"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showenv" <?=$checked?>/> Show Environment Parameters<br/>
+
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
+
 
 

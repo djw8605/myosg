@@ -1,18 +1,15 @@
 <?
 
-class ResourceContact extends CachedModel
+class ResourceContact extends CachedIndexedModel
 {
+    public function ds() { return "oim"; }
     public function sql($params)
     {
-        $where = "";
-        if(isset($params["resource_id"])) {
-            $where .= " and sc.resource_id = ".$params["resource_id"];
-        }
-        $sql = "SELECT sc.person_id, p.first_name, p.last_name, t.description as contact_type, r.description as rank_type from oim.resource_contact sc ".
-                "join oim.person p on sc.person_id = p.person_id ".
-                "join oim.contact_type t on sc.type_id = t.type_id ".
-                "join oim.contact_rank r on sc.rank_id = r.rank_id ".
-                "where sc.active = 1 $where order by sc.type_id"; 
+        $sql = "SELECT rc.*, c.*, t.name as contact_type, r.name as rank_type from resource_contact rc ".
+                "join contact c on rc.contact_id = c.id ".
+                "join contact_type t on rc.contact_type_id = t.id ".
+                "join contact_rank r on rc.contact_rank_id = r.id ";
         return $sql;
     }
+    public function key() { return "resource_id"; }
 }

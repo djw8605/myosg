@@ -13,13 +13,13 @@ foreach($this->scs as $sc_id=>$sc) {
         $name .= " (Inactive)";
     }
 
-    echo "<div class=\"border $ex_class\">";
+    echo "<div class=\"support_center round\">";
     echo "<span class=\"h3\">".$name."</span>";
-
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
         echo htmlentities($sc->description);
     }
+    echo "</div>";
 
     echo "<table class='summary_table'>";
     echo "<tr><th>Long Name</th><td>".htmlentities($sc->long_name)."</td></tr>";
@@ -39,5 +39,4 @@ foreach($this->scs as $sc_id=>$sc) {
 
     echo "</td></tr>";
     echo "</table>";
-    echo "</div>";
 }

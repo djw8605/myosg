@@ -82,6 +82,38 @@ class WizardsummaryController extends WizardController
             $model = new ResourceWLCG();
             $this->view->resource_wlcg = $model->getindex();
         }
+        if(isset($_REQUEST["summary_attrs_showenv"])) {
+            $envmodel = new ResourceEnv();
+            $details = $envmodel->getindex(array("metric_id"=>0));
+            $this->view->envs = array();
+            foreach($this->resource_ids as $resource_id) {
+                $rec = @$details[$resource_id][0];
+                if($rec !== null) {
+                    $env = new SimpleXMLElement($rec->xml);
+                } else {
+                    $env = null;
+                }
+                $this->view->envs[$resource_id] = $env;
+            }
+        }
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            $this->view->contacts = array();
+            $cmodel = new ResourceContact();
+            $contacts = $cmodel->getindex();
+            //group by contact_type_id
+            foreach($this->resource_ids as $resource_id) {
+                $types = array();
+                if(isset($contacts[$resource_id])) {
+                    foreach($contacts[$resource_id] as $contact) {
+                        if(!isset($types[$contact->contact_type])) {
+                            $types[$contact->contact_type] = array();
+                        }
+                        $types[$contact->contact_type][] = $contact;
+                    }
+                    $this->view->contacts[$resource_id] = $types;
+                }
+            }
+        }
 
         $this->setpagetitle(self::default_title());
     }

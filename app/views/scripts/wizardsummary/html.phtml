@@ -43,7 +43,8 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         echo "<td width=\"$col_p%\" class=\"$disabled\">";
 
         //show resource name & desc
-        echo "<div class=\"h4 round resource\">".$resource->name;
+        echo "<div class=\"round resource\">";
+        echo "<span class=\"h4\">".$resource->name."</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
         }
@@ -62,7 +63,6 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Optional Information
-        echo "<div class=\"indent\">";
         echo "<table class='summary_table'>";
 
         if(isset($_REQUEST["summary_attrs_showservice"])) {
@@ -196,9 +196,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {
             echo "<tr>";
-            echo "<td colspan=2><b>VO&nbsp;Ownership</b><br/>";
+            echo "<th>VO&nbsp;Ownership</th>";
+            echo "<td>";
             if(!isset($this->resource_ownerships[$rid])) {
-                echo "(Information not available)<br/>";
+                echo "(Information not available)";
             } else {
                 $ownership = $this->resource_ownerships[$rid];
                 $chd = "";
@@ -219,7 +220,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     $chl .= "Other($left%)";
                 }
                 $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl";
-                echo "<img src='$url'/><br/>";
+                echo "<img src='$url'/>";
             }
             echo "</td></tr>";
         }
@@ -255,8 +256,34 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             echo "</td></tr>";
         }
 
+        if(isset($_REQUEST["summary_attrs_showenv"])) {
+            echo "<tr><th>Environment Parameters</th><td>";
+            $xml = @$this->envs[$rid];
+            if($xml === null) {
+                echo "<p class=\"warning\">Information Not available</p>";
+            } else {
+                echo "<table class=\"summary_subtable\">";
+                foreach($xml as $key=>$value) {
+                    echo "<tr><th>".htmlentities($key)."</th><td>".htmlentities($value)."</td></tr>";
+                }
+                echo "</table>";
+            }
+            echo "</td></tr>";
+        }
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            echo "<tr><th>Contacts</th><td>";
+            $contact_types = @$this->contacts[$rid];
+            foreach($contact_types as $type_name=>$contacts) {
+                echo "<h4>$type_name</h4>";
+                foreach($contacts as $contact) {
+                    echo $contact->name."<br/>";
+                    //($contact->rank_type)<br/>";
+                }
+            }
+            echo "</td></tr>";
+        }
+
         echo "</table>";
-        echo "</div>";//indent
         echo "</td>";
     }
     echo "</tr></table>";

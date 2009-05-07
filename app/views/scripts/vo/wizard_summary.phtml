@@ -8,3 +8,15 @@ if(isset($_REQUEST["summary_attrs_showdesc"])) { $checked = "checked=checked"; }
 if(isset($_REQUEST["summary_attrs_showmember_resource"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showmember_resource" <?=$checked?>/> Show Member Resources<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showfield_of_science"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showfield_of_science" <?=$checked?>/> Show Fields Of Science<br/>
+
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showreporting_group"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showreporting_group" <?=$checked?>/> Show Reporting Groups<br/>
+
+
+
+
+

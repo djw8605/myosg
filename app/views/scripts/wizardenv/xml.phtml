@@ -60,15 +60,6 @@ foreach($this->envs as $resource_id=>$xml) {
     }
     echo "</Disable>";
 
-    echo "<ENV>";
-    if($xml === null) {
-        echo "(Information Not available)";
-    } else {
-        foreach($xml as $key=>$value) {
-            echo "<".htmlentities($key).">".htmlentities($value)."</".htmlentities($key).">";
-        }
-    }
-    echo "</ENV>";
     echo "</Resource>";
 }
 ?>

@@ -11,13 +11,14 @@ foreach($this->vos as $vo_id=>$vo) {
         $name .= " (Inactive)";
     }
 
-    echo "<div class=\"border $ex_class\">";
+    echo "<div class=\"vo round\">";
     echo "<span class=\"h3\">".$name."</span>";
-
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
         echo htmlentities($vo->description);
     }
+    echo "</div>";
+    echo "<div class=\"$ex_class\">";
 
     echo "<table class='summary_table'>";
     echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
@@ -41,6 +42,44 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</td></tr>";
     }
 
+    if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
+        echo "<tr><th>Field Of Science</th><td>";
+        $fss = $this->field_of_science[$vo_id];
+        foreach($fss as $fs) {
+            echo htmlentities($fs->name)."<br/>";
+        }
+        echo "</td></tr>";
+    }
+
+    if(isset($_REQUEST["summary_attrs_showreporting_group"])) {
+        echo "<tr><th>Reporting Group</th><td>";
+        $reports = $this->reports[$vo_id];
+        
+        foreach($reports as $report) {
+            echo "<div class=\"vo_report\">";
+            echo "<h4>".htmlentities($report->name)."</h4>";
+            if($report->fqans !== null) {
+                echo "<h3>FQANs</h3>";
+                foreach($report->fqans as $fqan) {
+                    echo "<div class=\"vo_report_fqan\">";
+                    echo "<b>Group Name:</b>".htmlentities($fqan->group_name)."<br/>";
+                    echo "<b>Role:</b>".htmlentities($fqan->role);
+                    echo "</div>";
+                }
+            }
+            if($report->contacts !== null) {
+                echo "<h3>Report Contacts</h3>";
+                foreach($report->contacts as $contact) {
+                    echo "<div class=\"vo_report_contact\">";
+                    echo htmlentities($contact->name)."<br/>";
+                    echo "</div>";
+                }
+            }
+            echo "</div>";
+        }
+        echo "</td></tr>";
+    }
+
     echo "</table>";
-    echo "</div>";
+    echo "</div>"; //ex-class
 }

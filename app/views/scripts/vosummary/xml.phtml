@@ -4,9 +4,9 @@ This XML contains the requested support center summary information.
 Structure:
     * () shows number of elements. N means there could be any number of them
 
-    SupportCenterSummary (1)
-         SupportCenter (N)
-            ID (1)                            Support Center id in OIM database
+    VOSummary (1)
+         VO (N)
+            ID (1)                            VO id in OIM database
             Name (1)                            Name of the resource
             LongName (1)
             PrimaryURL (1)
@@ -19,6 +19,18 @@ Structure:
                 Resource (N)
                     ID (1)
                     Name (1)
+            FieldsOfScience (optional)
+                Field (N)
+            ReportingGroups (optional)
+                Name (1)
+                FQANs (0 or 1)
+                    FQAN (N)
+                        GroupName (1)
+                        Role (1)
+                Contacts (0 or 1)
+                    Contact (N)
+                        Name (1)
+                        Email (1)
             Active (1)                          Show Active / Inactive Status flag
             Disable (1)                         Show Disable flag
 
@@ -49,6 +61,45 @@ foreach($this->vos as $vo_id=>$vo) {
             echo "</Resource>";
         }
         echo "</MemeberResources>";
+    }
+    if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
+        echo "<FieldsOfScience>";
+        $fss = $this->field_of_science[$vo_id];
+        foreach($fss as $fs) {
+            echo "<Field>".htmlentities($fs->name)."</Field>";
+        }
+        echo "</FieldsOfScience>";
+    }
+
+    if(isset($_REQUEST["summary_attrs_showreporting_group"])) {
+        echo "<ReportingGroups>";
+        $reports = $this->reports[$vo_id];
+        foreach($reports as $report) {
+            echo "<ReportingGroup>";
+            echo "<Name>".htmlentities($report->name)."</Name>";
+            if($report->fqans !== null) {
+                echo "<FQANs>";
+                foreach($report->fqans as $fqan) {
+                    echo "<FQAN>";
+                    echo "<GroupName>".$fqan->group_name."</GroupName>";
+                    echo "<Role>".$fqan->role."</Role>";
+                    echo "</FQAN>";
+                }
+                echo "</FQANs>";
+            }
+            if($report->contacts !== null) {
+                echo "<Contacts>";
+                foreach($report->contacts as $contact) {
+                    echo "<Contact>";
+                    echo "<Name>".$contact->name."</Name>";
+                    echo "<Email>".$contact->primary_email."</Email>";
+                    echo "</Contact>";
+                }
+                echo "</Contacts>";
+            }
+            echo "</ReportingGroup>";
+        }
+        echo "</ReportingGroups>";
     }
 
     if($vo->active == 1) {

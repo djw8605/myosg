@@ -23,6 +23,17 @@ a img
 border: 0;
 }
 
+.vo_report h4
+{
+padding: 3px;
+background-color: #ccc;
+}
+.vo_report_fqan
+{
+padding: 1px;
+margin: 1px;
+background-color: #eee;
+}
 
 div.error_message
 {
@@ -38,7 +49,7 @@ div.resource
 {
 padding: 2px;
 padding-left:20px;
-background:transparent url(<?=image()?>/images/server.png) no-repeat 2px 3px;
+background:#ccc url(<?=image()?>/images/server.png) no-repeat 2px 3px;
 min-height: 16px;
 margin-bottom: 5px;
 }
@@ -52,6 +63,7 @@ font-size: 12px;
 div.resource_group
 {
 padding-left:5px;
+padding-right:5px;
 }
 div.site
 {
@@ -62,9 +74,11 @@ min-height: 16px;
 
 div.support_center
 {
-padding-left:20px;
-background:transparent url(<?=image()?>/images/medal_bronze_2.png) no-repeat 0 0px;
-min-height: 16px;
+padding: 2px;
+padding-left:5px;
+padding-right:5px;
+background-color: #ccc;
+margin-bottom: 5px;
 }
 
 div.facility
@@ -81,9 +95,11 @@ min-height: 16px;
 }
 div.vo
 {
+padding: 2px;
 padding-left:20px;
-background:transparent url(<?=image()?>/images/group.png) no-repeat 0 0px;
-min-height: 16px;
+padding-right:5px;
+background:#ccc url(<?=image()?>/images/group.png) no-repeat 3px 3px;
+margin-bottom: 5px;
 }
 div.metric
 {
@@ -112,7 +128,7 @@ color: white;
 margin-bottom: 0.3em;
 padding: 3px;
 }
-.round
+.round, .vo_report h4
 {
 -moz-border-radius-topleft: 4px;
 -moz-border-radius-topright: 4px;
@@ -188,6 +204,7 @@ font-size: 12px;
 div.history_graph
 {
     width: 100%;
+    line-height: 100%;
 }
 div.history_graph img.graph
 {
@@ -202,9 +219,8 @@ table.ruler
 {
     border-collapse: collapse; 
     font-size: 10px;
-    border-top:1px solid #999;
     color: #333;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 }
 table.ruler td
 {
@@ -282,10 +298,8 @@ table.summary_table
 table.summary_table th
 {
     text-align: left;
-    padding-left: 3px;
-    padding-right: 5px;
+    padding: 3px;
     background-color: #eee;
-    width: 130px;
     border-top: 1px solid #ddd;
 }
 table.summary_table td
@@ -305,7 +319,10 @@ table.summary_subtable td, table.summary_subtable th
     background-color: transparent;
     border-top: none;
     border-bottom: 1px solid #ddd;
-    width: 60%;
+}
+table.summary_subtable th
+{
+    width: 130px;
 }
 .disabled
 {
@@ -337,7 +354,10 @@ min-height: 25px;
 height: auto !important;
 height: 25px;
 }
-
+table.summary_table th
+{
+width: 170px;
+}
 .status_CRITICAL
 {
 background:transparent url(<?=image()?>/images/button_cancel.png) no-repeat 5px 5px;
@@ -390,7 +410,10 @@ h2,h3
 padding-bottom: 2px;
 border-bottom: solid 1px #bbb;
 }
-
+table.summary_table th
+{
+width: 130px;
+}
 .status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {
     margin: 1px;

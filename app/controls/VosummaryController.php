@@ -32,6 +32,49 @@ class VosummaryController extends VoController
                 $this->view->resource_ownerships[$vo_id] = $resource_list;
             }
         }
+    
+        if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
+            $fsmodel = new FieldOfScience();
+            $fss = $fsmodel->getindex();
+            
+            $vofsmodel = new VOFieldOfScience();
+            $vofss = $vofsmodel->getindex();
+
+            $this->view->field_of_science = array();
+            foreach($this->vo_ids as $vo_id) {
+                $list = array();
+                $fs_for_vo = @$vofss[$vo_id];
+                if($fs_for_vo !== null) {
+                    foreach($fs_for_vo as $fs) {
+                        $list[] = $fss[$fs->field_of_science_id][0];
+                    }
+                }
+                $this->view->field_of_science[$vo_id] = $list;
+            }
+        }
+
+        if(isset($_REQUEST["summary_attrs_showreporting_group"])) {
+            $reportmodel = new VOReport();
+            $reports = $reportmodel->getindex();
+            
+            $fqanmodel = new VOReportFQAN();
+            $fqans = $fqanmodel->getindex();
+
+            $contactmodel = new VOReportContact();
+            $contacts = $contactmodel->getindex();
+
+            $this->view->reports = array();
+            foreach($this->vo_ids as $vo_id) {
+                $this->view->reports[$vo_id] = array();
+                if(isset($reports[$vo_id])) {
+                    foreach($reports[$vo_id] as $report) {
+                        $report->fqans = @$fqans[$report->id];
+                        $report->contacts = @$contacts[$report->id];
+                        $this->view->reports[$vo_id][] = $report;
+                    }
+                }
+            }
+        }
 
         $this->view->vos = array();
         foreach($this->vo_ids as $vo_id) {

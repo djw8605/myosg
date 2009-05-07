@@ -34,7 +34,28 @@ Structure:
                         Ownership (1)
                             Percent (1)
                             VO (1)                      Name of the VO (could be "(Other)"
-
+                    WLCGInformation (0 or 1)
+                        InteropBDII (1)
+                            (True / False)
+                        InteropMonitoring (1)
+                            (True / False)
+                        InteropAccounting (1)
+                            (True / False)
+                        AccountingName (1)
+                        KSI2KMin (1)
+                        KSI2KMax (1)
+                        StorageCapacityMin (1)
+                        StorageCapacityMax (1)
+                    ENV (0 or 1)                       Environment Parameters
+                        (Various ENV parameters)
+                    ContactLists (0 or 1)
+                        ContactList (N)
+                            ContactType (1)
+                            Contacts (1)
+                                Contact (N)
+                                    Name (1)
+                                    Email (1)
+                                    Rank (1)
 -->
 <ResourceSummary>
 <?
@@ -247,6 +268,40 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 echo "<StorageCapacityMax>$info->storage_capacity_maximum TB</StorageCapacityMax>";
             }
             echo "</WLCGInformation>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showenv"])) {
+            echo "<ENV>";
+            $xml = @$this->envs[$rid];
+            if($xml === null) {
+                echo "(Information Not available)";
+            } else {
+                foreach($xml as $key=>$value) {
+                    echo "<".htmlentities($key).">".htmlentities($value)."</".htmlentities($key).">";
+                }
+            }
+            echo "</ENV>";
+        }
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            $contact_types = @$this->contacts[$rid];
+            echo "<ContactLists>";
+            foreach($contact_types as $type_name=>$contacts) {
+                echo "<ContactList>";
+                echo "<ContactType>$type_name</ContactType>";
+                echo "<Contacts>";
+                foreach($contacts as $contact) {
+                    echo "<Contact>";
+                    echo "<Name>".$contact->name."</Name>";
+                    if(isset($contact->primary_email)) {
+                        echo "<Email>".$contact->primary_email."</Email>";
+                    }
+                    echo "<ContactRank>".$contact->rank_type."</ContactRank>";
+                    echo "</Contact>";
+                }
+                echo "</Contacts>";
+                echo "</ContactList>";
+            }
+            echo "</ContactLists>";
         }
 
         echo "</Resource>";
