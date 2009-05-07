@@ -192,6 +192,10 @@ class WizardController extends ControllerBase
             $keep = $this->process_resource_filter_active();
             $resources = array_intersect($resources, $keep);
         }
+        if(isset($_REQUEST["has_wlcg"])) {
+            $keep = $this->process_resource_filter_haswlcg();
+            $resources = array_intersect($resources, $keep);
+        }
         return $resources;
     }
 
@@ -247,6 +251,23 @@ class WizardController extends ControllerBase
         $resources = $model->getindex();
         foreach($resources as $rid=>$r) {
             if(isset($resource_status[$rid])) {
+                if(!in_array($rid, $resources_to_keep)) {
+                    $resources_to_keep[] = (string)$rid;
+                }
+            }
+        }
+        return $resources_to_keep;
+    }
+
+    private function process_resource_filter_haswlcg()
+    {
+        $resources_to_keep = array();
+        $model = new ResourceWLCG();
+        $wlcgs = $model->getindex();
+        $model = new Resource();
+        $resources = $model->getindex();
+        foreach($resources as $rid=>$r) {
+            if(isset($wlcgs[$rid])) {
                 if(!in_array($rid, $resources_to_keep)) {
                     $resources_to_keep[] = (string)$rid;
                 }

@@ -290,6 +290,11 @@ span.disabled_span
             $kv[0] = "Inactive";
             $kv[1] = "Active";
             echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+            $checked = "";
+            if(isset($_REQUEST["has_wlcg"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"has_wlcg\" $checked/> Has WLCG Information<br/>";
+
             ?>
         </div>
     </div>
