@@ -75,7 +75,8 @@ parseQuery();
         echo "<div id=\"banner\">".config()->banner."</div>";
     }
     if(config()->debug) {
-        echo "<p class=\"warning\">Running in Debug mode</p>";
+        exec("svn info | grep \"Revision:\" |  awk '{print $2}'", $out);
+        echo "<p class=\"warning\">Running in Debug mode -- Version ".config()->version." (Rev. ".$out[0].")</p>";
     }
 ?>
 
