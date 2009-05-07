@@ -118,4 +118,18 @@ class WizardsummaryController extends WizardController
         $this->setpagetitle(self::default_title());
     }
 
+    public function wlcgldaplistAction()
+    {
+        $this->load();
+        header("Content-type: text/plain");
+
+        $model = new Resource();
+        $resources = $model->getindex();
+        foreach($this->resource_ids as $resource_id) {
+            $resource = $resources[$resource_id][0];
+            $name = $resource->name;
+            echo "$name ldap://is.grid.iu.edu:2180/mds-vo-name=$name,o=grid\n";
+        }
+        $this->render("none", null, true);
+    }
 }

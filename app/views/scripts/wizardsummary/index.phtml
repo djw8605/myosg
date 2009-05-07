@@ -9,6 +9,12 @@
         </div>
         <div id="sideContent">
             <?=$this->render("wizard/wizard.phtml")?>
+
+            <h3>Legacy Links</h3>
+            <div class="indent">
+                <a target="_blank" href="<?=fullbase()."/".pagename()."/wlcgldaplist?".htmlentities($_SERVER["QUERY_STRING"]);?>">Interop BDII LDAP List</a><br/>
+            </div>
+
             <?=$this->render("legend_rsvstatus.phtml")?>
             <?=$this->render("feedback.phtml", true)?>
         </div>
