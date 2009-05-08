@@ -81,6 +81,12 @@ class WizardsummaryController extends WizardController
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             $model = new ResourceWLCG();
             $this->view->resource_wlcg = $model->getindex();
+
+            //append bdii link
+            foreach($this->resource_ids as $resource_id) {
+                $rname = $resources[$resource_id][0]->name;
+                $this->view->resource_wlcg[$resource_id][0]->ldap_url = "ldap://is.grid.iu.edu:2180/mds-vo-name=$rname,o=grid";
+            }
         }
         if(isset($_REQUEST["summary_attrs_showenv"])) {
             $envmodel = new ResourceEnv();

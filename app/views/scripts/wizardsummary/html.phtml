@@ -234,7 +234,9 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 echo "<table class=\"summary_subtable\">";
 
                 $value = "False";
-                if($info->interop_bdii == 1) { $value = "True"; }
+                if($info->interop_bdii == 1) { 
+                    $value = "True ($info->ldap_url)"; 
+                }
                 echo "<tr><th>Interop BDII</th><td>$value</td></tr>";
 
                 $value = "False";
@@ -250,6 +252,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 echo "<tr><th>KSI2K Max</th><td>$info->ksi2k_maximum</td></tr>";
                 echo "<tr><th>Storage Capacity Min</th><td>$info->storage_capacity_minimum TB</td></tr>";
                 echo "<tr><th>Storage Capacity Max</th><td>$info->storage_capacity_maximum TB</td></tr>";
+
 
                 echo "</table>";
             }

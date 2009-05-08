@@ -252,6 +252,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $value = "False";
                 if($info->interop_bdii == 1) { $value = "True"; }
                 echo "<InteropBDII>$value</InteropBDII>";
+                echo "<LDAPURL>$info->ldap_url</LDAPURL>";
 
                 $value = "False";
                 if($info->interop_monitoring == 1) { $value = "True"; }
