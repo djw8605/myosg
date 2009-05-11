@@ -32,7 +32,9 @@ class MapController extends ControllerBase
         foreach($sites as $site) {
             $rgs = array();
             foreach($rgroups as $rgroup) {
-                //elog(print_r($rgroup, true));
+                if($rgroup->active == 0 || $rgroup->disable == 1) {
+                    continue;
+                }
                 if($rgroup->site_id == $site->id) {
                     $rgs[] = $rgroup;
                 }

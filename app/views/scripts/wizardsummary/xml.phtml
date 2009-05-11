@@ -245,10 +245,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             echo "<WLCGInformation>";
-            $info = @$this->resource_wlcg[$rid][0];
-            if($info == null) {
+            if(isset($this->resource_wlcg[$rid])) {
                 echo "(Information not available)";
             } else {
+                $info = $this->resource_wlcg[$rid][0];
                 $value = "False";
                 if($info->interop_bdii == 1) { $value = "True"; }
                 echo "<InteropBDII>$value</InteropBDII>";

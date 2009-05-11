@@ -9,7 +9,14 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         echo "</div>";
     }
     echo "<div class=\"resource_group\">";
-    echo "<span class='h3'>".$resource_group->name."</span>";
+    if($resource_group->disable == 1) {
+        $group_name .= " (Removed)";
+    }
+    if($resource_group->active == 0) {
+        $group_name .= " (Inactive)";
+    }
+    $group_name = $resource_group->name;
+    echo "<span class='h3'>".$group_name."</span>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
         if($resource_group->description != "") {

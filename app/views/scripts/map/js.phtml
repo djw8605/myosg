@@ -55,6 +55,8 @@ function init() {
     }
 <?
 foreach($this->sites as $site) {
+    if($site->active == 0 || $site->disable == 1) continue;
+
     //status counter    
     $status_ok = 0;
     $status_warning = 0;
@@ -70,6 +72,7 @@ foreach($this->sites as $site) {
     $html = "";
     foreach($rgs as $rg) {
         $rgname = $rg->name;
+        if($rg->active == 0 || $rg->disable == 1) continue;
         if(uwa()) {
             $target = "target=\"_blank\"";
         } else {
@@ -77,9 +80,11 @@ foreach($this->sites as $site) {
         }
         $gid = $rg->id;
         $html .= "<h3>Resource Group: <a $target href=\"".fullbase()."/wizardsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></h3>";
+        $resource_count = 0;
         if(isset($this->resources_bygid[$rg->id])) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
+                if($r->active == 0 || $r->disable == 1) continue;
                 if(isset($this->resource_status[$r->id][0])) {
                     $rstatus = $this->resource_status[$r->id][0];
                     $name = $r->name;
@@ -99,8 +104,11 @@ foreach($this->sites as $site) {
                 if($status == "CRITICAL") $status_critical++;
                 if($status == "UNKNOWN") $status_unknown++;
                 if($status == "DOWNTIME") $status_downtime++;
+                
+                $resource_count++;
             }
-        } else {
+        }
+        if($resource_count == 0) {
             $html .= "No active resource exists under this resource group.";
             $status_unknown++; //treat this as unknown
         }
@@ -114,6 +122,8 @@ foreach($this->sites as $site) {
     else $status = "ok";
 
     $html = addslashes($html);
+    if($site->latitude == null) $site->latitude = 0;
+    if($site->longitude == null) $site->longitude = 0;
     echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {icon:icon[\"$status\"]}, '$html'));\n";
     echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
 }
