@@ -55,7 +55,6 @@ function init() {
     }
 <?
 foreach($this->sites as $site) {
-    if($site->active == 0 || $site->disable == 1) continue;
 
     //status counter    
     $status_ok = 0;
@@ -68,6 +67,7 @@ foreach($this->sites as $site) {
 
     $rgs = $this->rgs[$site_id];
     if(count($rgs) == 0) continue; //don't show site with no resource group
+    if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
 
     $html = "";
     foreach($rgs as $rg) {
@@ -110,7 +110,6 @@ foreach($this->sites as $site) {
         }
         if($resource_count == 0) {
             $html .= "No active resource exists under this resource group.";
-            $status_unknown++; //treat this as unknown
         }
     }
 
@@ -119,7 +118,8 @@ foreach($this->sites as $site) {
     else if($status_downtime > 0) $status = "downtime";
     else if($status_warning > 0) $status = "warning";
     else if($status_unknown > 0) $status = "unknown";
-    else $status = "ok";
+    else if($status_ok > 0) $status = "ok";
+    else $status = "unknown"; //no info!?
 
     $html = addslashes($html);
     if($site->latitude == null) $site->latitude = 0;

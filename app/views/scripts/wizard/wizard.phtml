@@ -194,21 +194,36 @@ span.disabled_span
             }
 
             $model = new Facilities();
-            $fs = $model->get();
+            $list = $model->get();
             $kv = array();
-            foreach($fs as $f) { $kv[$f->id] = $f->name; }
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("facility", "Resources in Facility ".helpbutton("Facility"), $kv);
 
             $model = new Site();
             $list = $model->get();
             $kv = array();
-            foreach($list as $site) { $kv[$site->id] = $site->name; }
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("site", "Resources in Sites ".helpbutton("Site"), $kv);
 
             $model = new ResourceGroup();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("rg", "Resources in Resource Groups".helpbutton("Resource_Group"), $kv);
 
             $model = new SupportCenters();
@@ -225,7 +240,12 @@ span.disabled_span
             $model = new Resource();
             $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
             echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
             
             ?>
