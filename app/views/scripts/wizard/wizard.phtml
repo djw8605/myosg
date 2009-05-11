@@ -182,11 +182,13 @@ span.disabled_span
             $checked = "";
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Resources<br/>";
+            /*
             echo "<div class=\"list\" id=\"all_resources_attrs\">";
                 $checked = "";
                 if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
                 echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Resources<br/>";
             echo "</div>";
+            */
 
             function helpbutton($type)
             {
@@ -241,10 +243,8 @@ span.disabled_span
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
-                }
+                //add all(including removed) resources
+                $kv[$item->id] = $item->name; 
             }
             echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
             
@@ -310,6 +310,11 @@ span.disabled_span
             $kv[0] = "Inactive";
             $kv[1] = "Active";
             echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+            $kv = array();
+            $kv[0] = "Not Disabled (Normal)";
+            $kv[1] = "Disabled (Removed)";
+            echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
 
             $checked = "";
             if(isset($_REQUEST["has_wlcg"])) { $checked = "checked=checked"; }

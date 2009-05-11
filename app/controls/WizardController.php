@@ -43,14 +43,7 @@ class WizardController extends ControllerBase
             $model = new Resource();
             $resources = $model->get();
             foreach($resources as $resource) {
-                if(isset($_REQUEST["show_disabled"])) {
-                    $resource_ids[] = (int)$resource->id;
-                } else {
-                    //filter by disable flag
-                    if($resource->disable == 0) {
-                        $resource_ids[] = (int)$resource->id;
-                    }
-                }
+                $resource_ids[] = (int)$resource->id;
             }
         } else {
             foreach($_REQUEST as $key=>$value) {
@@ -192,6 +185,10 @@ class WizardController extends ControllerBase
             $keep = $this->process_resource_filter_active();
             $resources = array_intersect($resources, $keep);
         }
+        if(isset($_REQUEST["disable"])) {
+            $keep = $this->process_resource_filter_disable();
+            $resources = array_intersect($resources, $keep);
+        }
         if(isset($_REQUEST["has_wlcg"])) {
             $keep = $this->process_resource_filter_haswlcg();
             $resources = array_intersect($resources, $keep);
@@ -290,8 +287,23 @@ class WizardController extends ControllerBase
             }
         }
         return $resources_to_keep;
-     }
+    }
 
+    private function process_resource_filter_disable()
+    {
+        $resources_to_keep = array();
+        $model = new Resource();
+        $resources = $model->getindex();
+        $disable_value = $_REQUEST["disable_value"];
+        foreach($resources as $rid=>$r) {
+            if($r[0]->disable == $disable_value) {
+                if(!in_array($rid, $resources_to_keep)) {
+                    $resources_to_keep[] = (string)$rid;
+                }
+            }
+        }
+        return $resources_to_keep;
+    }
 
     private function process_resource_filter_status()
     {
