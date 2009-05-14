@@ -23,4 +23,38 @@ class ScsummaryController extends ScController
         $this->setpagetitle(self::default_title());
     }
 
+    // View for http://www.opensciencegrid.org/Support_Centers - yuck! (quite ugly looking page)
+    public function legacyosgwebsiteviewAction()
+    {
+      $sc_ids = $this->process_sclist();
+      header("Content-type: text/html");
+      echo "<html>\n<head></head>\n<body>\n\n<h3>Support Centers</h3>\n\n<table border='1' width=\'100%\'>\n <tr><th rowspan=2 align=left>Support Center</th><th align=left>Primary Operations Contact</th><th align=left>Email</th><th align=left>Phone</th></tr><tr><th colspan=3 align=left>Community</th></tr>\n";
+
+      $model = new SupportCenters();
+      $scs = $model->getindex();
+      $cmodel = new SupportCenterContact();
+      $sccontacts = $cmodel->getindex(array("contact_type_id"=>4, "contact_rank_id"=>1));
+
+      foreach($sc_ids as $sc_id) {
+	$sc = $scs[$sc_id][0];
+	$name = $sc->name;
+	$long_name = $sc->long_name;
+	$community = $sc->community;
+
+	$contact = @$sccontacts[$sc_id];
+	$contact_name = $contact[0]->name . "<br>";
+	$contact_email = $contact[0]->primary_email . "<br>";
+	$contact_phone = $contact[0]->primary_phone. "<br>";
+	if ($contact[0]->primary_phone_ext != "") {
+	  $contact_phone = $contact_phone . " (" . $contact[0]->primary_phone_ext . ")";
+	}
+
+	echo " <tr><td rowspan=2>$long_name ($name) </td><td>$contact_name </td><td>$contact_email </td><td>$contact_phone </td></tr>".
+	  "<tr><td colspan=3>$community </td></tr>\n";
+      }
+      echo "</table>\n\n</body>";
+
+      $this->render("none", null, true);
+    }
+
 }

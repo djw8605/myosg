@@ -35,7 +35,7 @@ class VoController extends ControllerBase
     }
 
     //from user query, find the list of vos to display information
-    private function process_volist()
+    protected function process_volist()
     {
         $vo_ids = array();
 

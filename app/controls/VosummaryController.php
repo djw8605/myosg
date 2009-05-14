@@ -88,4 +88,28 @@ class VosummaryController extends VoController
         $this->setpagetitle(self::default_title());
     }
 
+    // View for http://www.opensciencegrid.org/VO_List - yuck! (quite ugly looking page) 
+    public function legacyosgwebsiteviewAction()
+    {
+      $vo_ids = $this->process_volist();
+      header("Content-type: text/html");
+      echo "<html>\n<head></head>\n<body>\n\n<h3>Virtual Organizations</h3>\n\n<table width=\'100%\'>\n <tr><th align=left>VO Name</th><th align=left>Primary URL</th></tr>\n";
+
+      $model = new VirtualOrganization();
+      $vos = $model->getindex();
+      
+      $scmodel = new SupportCenters();
+      $scs = $scmodel->getindex();
+      
+      foreach($vo_ids as $vo_id) {
+	$vo = $vos[$vo_id][0];
+	$long_name = $vo->long_name;
+	$name = $vo->name;
+	$primary_url = $vo->primary_url;
+	echo " <tr><td>$long_name ($name)</td><td><a href=\"$primary_url\">$primary_url</a></td></tr>\n";
+      }
+      echo "</table>\n\n</body>";
+
+      $this->render("none", null, true);
+    }
 }

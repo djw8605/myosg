@@ -35,7 +35,7 @@ class ScController extends ControllerBase
     }
 
     //from user query, find the list of scs to display information
-    private function process_sclist()
+    protected function process_sclist()
     {
         $sc_ids = array();
 

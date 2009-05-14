@@ -9,7 +9,10 @@
         </div>
         <div id="sideContent">
             <?=$this->render("sc/wizard.phtml")?>
-            <?=$this->render("legend_rsvstatus.phtml")?>
+            <h3>Legacy Links</h3>
+            <div class="indent">
+                <a target="_blank" href="<?=fullbase()."/".pagename()."/legacyosgwebsiteview?".htmlentities($_SERVER["QUERY_STRING"]);?>">Table for main OSG website</a><br/>
+            </div>
             <?=$this->render("feedback.phtml", true)?>
         </div>
 <?=$this->render("full_footer.phtml", true)?>
