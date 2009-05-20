@@ -247,6 +247,6 @@ function enable(e)
     $(items).find('input').removeAttr('disabled');
     $(items).find('span').removeClass('disabled_span');
     $("#all_vos_attrs").hide();
-    $("#all_vos_attrs").find('input').addAttr('disabled');
+    $("#all_vos_attrs").find('input').attr('disabled', 'disabled');
 }
 </script>
