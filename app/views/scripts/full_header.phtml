@@ -53,6 +53,8 @@ parseQuery();
             $param = "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
         case 'vosummary':
             $param = "?datasource=summary&all_vos=on&active_value=1";break;
+        case 'map':
+            $param = "?all_sites=on&active=on&active_value=1&disable_value=1";break;
         }
         
         return htmlentities(base()."/".$page.$param);

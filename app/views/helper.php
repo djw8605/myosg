@@ -68,13 +68,7 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
         <div class='<?=$detail_style?>' id='detail_<?=$divid?>'><?=$content?></div>
         <script type='text/javascript'>
         $('#show_<?=$divid?>').click(function() {
-            $('#detail_<?=$divid?>').slideDown("normal", function() {
-/*
-                if(uwa()) {
-                    widget.callback('onUpdateBody');
-                }
-*/
-            });
+            $('#detail_<?=$divid?>').slideDown("normal");
             $('#show_<?=$divid?>').hide();
             $('#hide_<?=$divid?>').show();
         });
@@ -209,4 +203,93 @@ function outputClearFilterButton()
     <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename$cleared_q";?>';">Clear All Filters</a></p>
     <?
 }
+
+function checklist($id, $title, $kv)
+{
+    //output title check box
+    $checked = "";
+    if(isset($_REQUEST[$id])) { 
+        $checked = "checked=checked"; 
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#<?=$id?>__list").show();
+        });
+        </script>
+        <?
+    }
+    $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+
+    //determine list class
+    $c = "hidden ";
+    if(count($kv) > 8) { 
+        $c .= "scrolled_list ";
+    }
+
+    //output list
+    $list = "";
+    $list .= "<div class=\"$c list\" id=\"${id}__list\">";
+    foreach($kv as $key=>$value) {
+        $name = "${id}_$key";
+        $checked = "";
+        if(isset($_REQUEST[$name])) {
+            $checked = "checked=checked";
+        }
+        $list .= "<input type=\"checkbox\" name=\"$name\" $checked/> <span>$value</span><br/>";
+    }
+    $list .= "</div>";
+
+    return "<div id=\"$id\">".$title.$list."</div>";
+}
+
+function radiolist($id, $title, $kv, $default)
+{
+    //output title check box
+    $checked = "";
+    if(isset($_REQUEST[$id])) { 
+        $checked = "checked=checked"; 
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#<?=$id?>__list").show();
+        });
+        </script>
+        <?
+    }
+    $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+
+    //determine list class
+    $c = "hidden ";
+    if(count($kv) > 8) { 
+        $c .= "scrolled_list ";
+    }
+
+    //output list
+    $list = "";
+    $list .= "<div class=\"$c list\" id=\"${id}__list\">";
+
+    //set default 
+    $current_value = $default; 
+    $name = "${id}_value";
+    if(isset($_REQUEST[$name])) {
+        $current_value = $_REQUEST[$name];
+    }
+
+    foreach($kv as $key=>$value) {
+        $checked = "";
+        if($current_value == $key) {
+            $checked = "checked=checked";
+        }
+        $list .= "<input type=\"radio\" name=\"$name\" value=\"$key\" $checked/> <span>$value</span><br/>";
+    }
+    $list .= "</div>";
+
+    return "<div id=\"$id\">".$title.$list."</div>";
+}
+
+function helpbutton($type)
+{
+    return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
+}
+
 

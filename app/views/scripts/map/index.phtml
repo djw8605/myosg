@@ -6,6 +6,25 @@ $(document).ready(function() {
     init();
 });
 </script>
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+span.disabled_span
+{
+    color: gray;
+}
+</style>
 <div id="primaryContentContainer">
     <div id="primaryContent">
         <?=$this->render("breadcrumb.phtml", true)?>
@@ -14,13 +33,69 @@ $(document).ready(function() {
     </div>
 </div>
 <div id="sideContent">
-    <h3>Filter</h3>
-    <?
-    $gridtypes = new GridTypes();
-    outputSelectBox("gridtype", "Grid Type", $gridtypes, "id", "name"/*"description"*/);
-    ?>
 
-     <h3>Subscribe</h3>
+<form method="get" id="wizard">
+    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <h3>Sites to display</h3>
+    <div class="indent">
+<?
+            $checked = "";
+            if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Sites<br/>";
+
+            $model = new Facilities();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = $item->name; 
+                }
+            }
+            echo checklist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
+
+            $model = new SupportCenters();
+            $scs = $model->get();
+            $kv = array();
+            foreach($scs as $sc) { 
+                //grab active, non-disabled records
+                if($sc->active == 1 and $sc->disable == 0) {
+                    $kv[$sc->id] = $sc->name; 
+                }
+            }
+            echo checklist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
+
+?>
+    </div>
+
+
+    <h3>Filter</h3>
+    <div class="indent">
+            <p>Only show sites that matches following criteria (conditions are and-ed).</p>
+    <?
+        $model = new GridTypes();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { $kv[$item->id] = $item->name; }
+        echo checklist("gridtype", "Has resource Group with grid type of", $kv);
+
+        $kv = array();
+        $kv[0] = "Inactive";
+        $kv[1] = "Active";
+        echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+        $kv = array();
+        $kv[0] = "Not Disabled (Normal)";
+        $kv[1] = "Disabled (Removed)";
+        echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
+
+    ?>
+    </div>
+    <br/>
+    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+
+    <h3>Subscribe</h3>
+    <div class="indent">
     <?
     $param = $_SERVER["QUERY_STRING"];
     $moduleurl = urlencode(fullbase()."/".pagename()."/uwa?$param");
@@ -29,5 +104,26 @@ $(document).ready(function() {
     <p><a href="http://www.google.com/ig/add?moduleurl=http%3A%2F%2Fwww.netvibes.com%2Fapi%2Fuwa%2Fcompile%2Fgoogle.php%3FmoduleUrl%3D<?=urlencode($moduleurl)?>"><img src="images/google.png"/></a></p>
     <?=$this->render("status_legend.phtml", true)?>
     <?=$this->render("feedback.phtml", true)?>
+    </div>
+
 </div>
+<script type="text/javascript">
+function disable(e)
+{
+    var items = $(e).siblings(); 
+    $(items).find('input').attr('disabled', 'disabled');
+    $(items).find('span').addClass('disabled_span');
+    $("#all_resources_attrs").show();
+    $("#all_resources_attrs").find('input').removeAttr('disabled');
+}
+function enable(e)
+{
+    var items = $(e).siblings(); 
+    $(items).find('input').removeAttr('disabled');
+    $(items).find('span').removeClass('disabled_span');
+    $("#all_resources_attrs").hide();
+    $("#all_resources_attrs").find('input').attr('disabled', 'disabled');
+}
+</script>
+
 <?=$this->render("full_footer.phtml", true)?>

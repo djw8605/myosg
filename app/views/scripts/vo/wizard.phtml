@@ -46,89 +46,6 @@ span.disabled_span
         <div id="vo_area" class="hidden">
             <p>Select VO that you want to show above information (conditions are or-ed).</p>
             <?
-            function checklist($id, $title, $kv)
-            {
-                //output title check box
-                $checked = "";
-                if(isset($_REQUEST[$id])) { 
-                    $checked = "checked=checked"; 
-                    ?>
-                    <script type="text/javascript">
-                    $(document).ready(function() {
-                        $("#<?=$id?>__list").show();
-                    });
-                    </script>
-                    <?
-                }
-                $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
-
-                //determine list class
-                $c = "hidden ";
-                if(count($kv) > 8) { 
-                    $c .= "scrolled_list ";
-                }
-
-                //output list
-                $list = "";
-                $list .= "<div class=\"$c list\" id=\"${id}__list\">";
-                foreach($kv as $key=>$value) {
-                    $name = "${id}_$key";
-                    $checked = "";
-                    if(isset($_REQUEST[$name])) {
-                        $checked = "checked=checked";
-                    }
-                    $list .= "<input type=\"checkbox\" name=\"$name\" $checked/> <span>$value</span><br/>";
-                }
-                $list .= "</div>";
-
-                return "<div id=\"$id\">".$title.$list."</div>";
-            }
-
-            function radiolist($id, $title, $kv, $default)
-            {
-                //output title check box
-                $checked = "";
-                if(isset($_REQUEST[$id])) { 
-                    $checked = "checked=checked"; 
-                    ?>
-                    <script type="text/javascript">
-                    $(document).ready(function() {
-                        $("#<?=$id?>__list").show();
-                    });
-                    </script>
-                    <?
-                }
-                $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
-
-                //determine list class
-                $c = "hidden ";
-                if(count($kv) > 8) { 
-                    $c .= "scrolled_list ";
-                }
-
-                //output list
-                $list = "";
-                $list .= "<div class=\"$c list\" id=\"${id}__list\">";
-
-                //set default 
-                $current_value = $default; 
-                $name = "${id}_value";
-                if(isset($_REQUEST[$name])) {
-                    $current_value = $_REQUEST[$name];
-                }
-
-                foreach($kv as $key=>$value) {
-                    $checked = "";
-                    if($current_value == $key) {
-                        $checked = "checked=checked";
-                    }
-                    $list .= "<input type=\"radio\" name=\"$name\" value=\"$key\" $checked/> <span>$value</span><br/>";
-                }
-                $list .= "</div>";
-
-                return "<div id=\"$id\">".$title.$list."</div>";
-            }
-             
             $checked = "";
             if(isset($_REQUEST["all_vos"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_vos\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Virtual Organization<br/>";
@@ -137,11 +54,6 @@ span.disabled_span
                 if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
                 echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Virtual Organization<br/>";
             echo "</div>";
-
-            function helpbutton($type)
-            {
-                return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
-            }
 
             $model = new VirtualOrganization();
             $vos = $model->get();

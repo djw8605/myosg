@@ -65,6 +65,7 @@ foreach($this->sites as $site) {
 
     $site_id = $site->id;
 
+    if(!isset($this->rgs[$site_id])) continue;
     $rgs = $this->rgs[$site_id];
     if(count($rgs) == 0) continue; //don't show site with no resource group
     if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
