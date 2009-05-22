@@ -75,6 +75,7 @@ function saveScroll() {
 function loadScroll() {
   if (!scroll) return;
   var xy = getCookie("xy");
+    console.log(xy);
   if (!xy) return;
   var ar = xy.split("_");
   if (ar.length == 2) scrollTo(parseInt(ar[0]), parseInt(ar[1]));
