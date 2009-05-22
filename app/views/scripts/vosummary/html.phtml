@@ -71,7 +71,17 @@ foreach($this->vos as $vo_id=>$vo) {
                 echo "<h3>Report Contacts</h3>";
                 foreach($report->contacts as $contact) {
                     echo "<div class=\"vo_report_contact\">";
-                    echo htmlentities($contact->name)."<br/>";
+                    if(user()->isGuest()) {
+                        echo htmlentities($contact->name)."<br/>";
+                    } else {
+                        echo "<div class=\"contact_info\">";
+                        echo "<h3>".htmlentities($contact->name)."</h3>";
+                        echo "<table class=\"summary_subtable\">"; 
+                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                        echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        echo "</table>";
+                        echo "</div>";
+                    }
                     echo "</div>";
                 }
             }

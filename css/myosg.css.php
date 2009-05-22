@@ -27,7 +27,6 @@ a.mailto
 {
 padding-left:20px;
 background:transparent url(<?=image()?>/images/email.png) no-repeat 0px 0px;
-
 }
 
 .vo_report h4
@@ -37,8 +36,8 @@ background-color: #ccc;
 }
 .vo_report_fqan
 {
-padding: 1px;
-margin: 1px;
+padding: 10px;
+margin: 3px;
 background-color: #eee;
 }
 
@@ -135,7 +134,15 @@ color: white;
 margin-bottom: 0.3em;
 padding: 3px;
 }
-.round, .vo_report h4
+
+.contact_info
+{
+    background-color: #eee;
+    padding: 10px;
+    margin: 3px;
+}
+
+.round, .vo_report h4, .vo_report_fqan, .contact_info
 {
 -moz-border-radius-topleft: 4px;
 -moz-border-radius-topright: 4px;

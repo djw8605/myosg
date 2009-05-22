@@ -28,11 +28,17 @@ foreach($this->scs as $sc_id=>$sc) {
     echo "<tr><th>Primary Operations Contact</th><td>";
 
     if(count($sc->contact) > 0) {
-        echo "<table class=\"summary_subtable\">";
-        echo "<tr><th>Name</th><td>".htmlentities($sc->contact[0]->name)."</td></tr>";
-        echo "<tr><th>Email</th><td>".emailaddress($sc->contact[0]->primary_email)."</td></tr>";
-        echo "<tr><th>Phone</th><td>".htmlentities($sc->contact[0]->primary_phone)."</td></tr>";
-        echo "</table>";
+        if(user()->isGuest()) {
+            echo htmlentities($sc->contact[0]->name)."<br/>";
+        } else {
+            echo "<div class=\"contact_info\">";
+            echo "<h3>".htmlentities($sc->contact[0]->name)."</h3>";
+            echo "<table class=\"summary_subtable\">"; 
+            echo "<tr><th>Email</th><td>".emailaddress($sc->contact[0]->primary_email)."</td></tr>";
+            echo "<tr><th>Phone</th><td>".htmlentities($sc->contact[0]->primary_phone)."</td></tr>";
+            echo "</table>";
+            echo "</div>";
+        }
     } else {
         echo "(No contact specified)";
     }

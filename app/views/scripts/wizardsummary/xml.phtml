@@ -54,8 +54,15 @@ Structure:
                             Contacts (1)
                                 Contact (N)
                                     Name (1)
-                                    Email (1)
+                                    Email (0 or 1)      * shows only if you access via https with correct DN
+                                    Phone (0 or 1)      * shows only if you access via https with correct DN
                                     Rank (1)
+
+<?
+if(user()->isGuest()) {
+    echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+}
+?>
 -->
 <ResourceSummary>
 <?
@@ -296,8 +303,13 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 foreach($contacts as $contact) {
                     echo "<Contact>";
                     echo "<Name>".$contact->name."</Name>";
-                    if(isset($contact->primary_email)) {
-                        echo "<Email>".$contact->primary_email."</Email>";
+                    if(!user()->isGuest()) {
+                        if(isset($contact->primary_email)) {
+                            echo "<Email>".$contact->primary_email."</Email>";
+                        }
+                        if(isset($contact->primary_phone)) {
+                            echo "<Phone>".$contact->primary_phone."</Phone>";
+                        }
                     }
                     echo "<ContactRank>".$contact->rank_type."</ContactRank>";
                     echo "</Contact>";
