@@ -192,7 +192,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $volist = $this->vos_supported[$rid];
                 $vonames = "";
                 foreach($volist as $vo) {
-                    $vonames .= $vo." ";
+                    $vo_name = $vo;
+                    $attrs = $vo->attributes();
+                    $vo_id = $attrs["id"];
+                    $vonames .= "<a href=\"".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_".$vo_id."=on"."\">".$vo_name."</a> ";
                 }                
                 echo $vonames;
             } else {

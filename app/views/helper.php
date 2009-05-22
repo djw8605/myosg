@@ -292,4 +292,18 @@ function helpbutton($type)
     return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
 }
 
+function externalurl($url)
+{
+    if($url == "") {
+        return "";
+    }
+    return "<a target=\"_blank\" href=\"$url\">".htmlentities($url)."</a>";
+}
 
+function emailaddress($email)
+{
+    if($email == "") {
+        return "";
+    }
+    return "<a class=\"mailto\" href=\"mailto:$email\">".htmlentities($email)."</a>";
+}

@@ -23,6 +23,13 @@ a img
 border: 0;
 }
 
+a.mailto
+{
+padding-left:20px;
+background:transparent url(<?=image()?>/images/email.png) no-repeat 0px 0px;
+
+}
+
 .vo_report h4
 {
 padding: 3px;

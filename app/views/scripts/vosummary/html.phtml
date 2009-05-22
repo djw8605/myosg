@@ -22,10 +22,10 @@ foreach($this->vos as $vo_id=>$vo) {
 
     echo "<table class='summary_table'>";
     echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
-    echo "<tr><th>Primary URL</th><td>".htmlentities($vo->primary_url)."</td></tr>";
-    echo "<tr><th>Membership Services URL</th><td>".htmlentities($vo->membership_services_url)."</td></tr>";
-    echo "<tr><th>Purpose URL</th><td>".htmlentities($vo->purpose_url)."</td></tr>";
-    echo "<tr><th>Support URL</th><td>".htmlentities($vo->support_url)."</td></tr>";
+    echo "<tr><th>Primary URL</th><td>".externalurl($vo->primary_url)."</td></tr>";
+    echo "<tr><th>Membership Services URL</th><td>".externalurl($vo->membership_services_url)."</td></tr>";
+    echo "<tr><th>Purpose URL</th><td>".externalurl($vo->purpose_url)."</td></tr>";
+    echo "<tr><th>Support URL</th><td>".externalurl($vo->support_url)."</td></tr>";
     echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
     echo "<tr><th>Community</th><td>".htmlentities($vo->community)."</td></tr>";
 
