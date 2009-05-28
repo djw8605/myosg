@@ -77,35 +77,48 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             echo "<th>Services</th>";
             echo "<td>";
             if(isset($this->resource_services[$rid]) == 0) {
-                $service_names = "no applicable service exists";
+                echo "This resource has no grid service.";
             } else {
                 $services = $this->resource_services[$rid];
                 $service_names = "";
                 foreach($services as $service) {
-                    if($service_names != "") $service_names .= "<br/>";
-
-                    $service_name = "";
+                    echo "<div class=\"service_info\">";
                     if(isset($this->servicetypes[$service->service_id])) {
-                        $service_info = $this->servicetypes[$service->service_id][0];
-                        $service_name .= $service_info->description;
 
-                        //Service URI
-                        $service_name .= "<span class=\"fqdn\"> (";
+                        $service_info = $this->servicetypes[$service->service_id][0];
+                        $service_name = $service_info->description;
+
+                        echo "<h3>".htmlentities($service_name)."</h3>";
+                        echo "<table class=\"summary_subtable\">";
+
+                        echo "<tr><th>Service URI</th><td><span class=\"fqdn\">";
                         if ($service->endpoint_override != "") {
-                          $service_name .= $service->endpoint_override;
+                            //bold this since it's not default
+                            echo "<b>$service->endpoint_override</b>";
                         } else {
-                          $service_name .= $resource->fqdn.":".$service_info->port;
+                            echo $resource->fqdn.":".$service_info->port;
                         }
-                        $service_name .= ")</span>";
+                        echo "</span></td></tr>";
+/*
+                        echo "<tr><th>Central</th><td>";
+                        if($service->central == 1) echo "True";
+                        else echo "False";
+                        echo "</td></tr>";
+*/
+
+                        echo "<tr><th>Hidden</th><td>";
+                        if($service->hidden == 1) echo "True";
+                        else echo "False";
+                        echo "</td></tr>";
+
+                        echo "</table>";
 
                     } else {
                         $service_name .= "unknown_service_id:".$service->service_id;
                     }
-
-                    $service_names .= $service_name;
+                    echo "</div>";
                 }
             }
-            echo $service_names;
             echo "</td></tr>";
         }
         if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {

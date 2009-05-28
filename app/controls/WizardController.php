@@ -206,12 +206,13 @@ class WizardController extends ControllerBase
                 $model = new ResourceServices();
                 $rs = $model->get(array("service_id"=>$item->id));
                 foreach($rs as $r) {
-                    if(!isset($resources_to_keep[$r->resource_id])) {
+                    if(!in_array($r->resource_id, $resources_to_keep)) {
                         $resources_to_keep[] = $r->resource_id;
                     }
                 }
             }
         }
+        slog(print_r($resources_to_keep, true));
         return $resources_to_keep;
     }
 

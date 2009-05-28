@@ -70,7 +70,7 @@ foreach($this->sites as $site) {
     if(count($rgs) == 0) continue; //don't show site with no resource group
     if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
 
-    $html = "";
+    $html = "<h2>$site->name</h2>";
     foreach($rgs as $rg) {
         $rgname = $rg->name;
         if($rg->active == 0 || $rg->disable == 1) continue;

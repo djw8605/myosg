@@ -103,7 +103,7 @@ div.vo
 {
 padding: 2px;
 padding-left:20px;
-padding-right:5px;
+padding-right:7px;
 background:#ccc url(<?=image()?>/images/group.png) no-repeat 3px 3px;
 margin-bottom: 5px;
 }
@@ -142,7 +142,14 @@ padding: 3px;
     margin: 3px;
 }
 
-.round, .vo_report h4, .vo_report_fqan, .contact_info
+.service_info
+{
+    background-color: #eee;
+    padding: 10px;
+    margin: 3px;
+}
+
+.round, .vo_report h4, .vo_report_fqan, .contact_info, .service_info
 {
 -moz-border-radius-topleft: 4px;
 -moz-border-radius-topright: 4px;
@@ -298,7 +305,7 @@ img.screenshot
 }
 .ui-datepicker
 {
-    font-size: 10px !important;
+font-size: 10px !important;
 }
 
 table.summary_table

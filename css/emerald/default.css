@@ -64,7 +64,6 @@ vertical-align: top;
 {
 	font-size: 1.1em;
 	font-weight: bold;
-	color: #5D5F53;
 	text-decoration: none;
 	margin-right: 1em;
 }
@@ -187,7 +186,6 @@ font-size: 11px;
 }
 #primaryContent h2, #primaryContent h3
 {
-	color: #5D5F53;
 	border-bottom: dotted 1px #aaa;
 	padding-bottom: 0.3em;
 }
@@ -200,7 +198,6 @@ font-size: 11px;
 	font-weight: bold;
 	padding-left: 15px;
 	padding-top: 5px;
-	color: #5D5F53;
         margin-top: 10px;
         margin-bottom: 10px;
 }

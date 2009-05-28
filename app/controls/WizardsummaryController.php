@@ -129,95 +129,95 @@ class WizardsummaryController extends WizardController
     {
         $resource_ids = $this->process_resourcelist();
 
-	$model = new ResourceGroup();
+        $model = new ResourceGroup();
         $resourcegroups = $model->get();
-	$resourcegroup_gridtype = array();
+        $resourcegroup_gridtype = array();
         foreach($resourcegroups as $key => $value) {
-	  $resourcegroup_gridtype[$resourcegroups[$key]->id] =  $resourcegroups[$key]->grid_type;
-	}
+          $resourcegroup_gridtype[$resourcegroups[$key]->id] =  $resourcegroups[$key]->grid_type;
+        }
 
-	$servicetype_model = new ServiceTypes();
-	$servicetypes = $servicetype_model->getindex();
-	$servicetype_name = array();
-	$servicetype_port = array();
-	foreach ($servicetypes as $key => $value) {
-	  $pair = $servicetypes[$key][0];
-	  if ($pair->name == "CE") {
-	    $servicetype_name[$pair->id] = "compute";
-	  }
-	  else {
-	    $servicetype_name[$pair->id] = "storage";
-	  }
-	  $servicetype_port[$pair->id] = $pair->port;
-	}
-	
-	$resourceservice_model = new ServiceByResourceID();
-	$resource_services = $resourceservice_model->getindex();
-	$resourceservice_map = array ();
-	foreach ($resource_services as $key => $value) {
-	  $pair = $resource_services[$key][0];
-	  // Don't care about hidden or central  resources - VORS did not
-	  if (($pair->central == 1) || ($pair->hidden == 1)) {
-	    next;
-	  }
-	  if (isset($pair->endpoint_override)) {
-	    $resourceservice_map[$pair->resource_id][$pair->service_id]['URI'] = $pair->endpoint_override;
-	  }
-	  else {
-	    $resourceservice_map[$pair->resource_id][$pair->service_id]['URI'] = "";
-	  }
-	}
+        $servicetype_model = new ServiceTypes();
+        $servicetypes = $servicetype_model->getindex();
+        $servicetype_name = array();
+        $servicetype_port = array();
+        foreach ($servicetypes as $key => $value) {
+          $pair = $servicetypes[$key][0];
+          if ($pair->name == "CE") {
+            $servicetype_name[$pair->id] = "compute";
+          }
+          else {
+            $servicetype_name[$pair->id] = "storage";
+          }
+          $servicetype_port[$pair->id] = $pair->port;
+        }
+        
+        $resourceservice_model = new ServiceByResourceID();
+        $resource_services = $resourceservice_model->getindex();
+        $resourceservice_map = array ();
+        foreach ($resource_services as $key => $value) {
+          $pair = $resource_services[$key][0];
+          // Don't care about hidden or central  resources - VORS did not
+          if (($pair->central == 1) || ($pair->hidden == 1)) {
+            next;
+          }
+          if (isset($pair->endpoint_override)) {
+            $resourceservice_map[$pair->resource_id][$pair->service_id]['URI'] = $pair->endpoint_override;
+          }
+          else {
+            $resourceservice_map[$pair->resource_id][$pair->service_id]['URI'] = "";
+          }
+        }
 
-	$model = new LatestResourceStatus();
-	$resource_status = $model->getgroupby("resource_id");
-	$resourcestatus_map = array();
-	$resourcestatusdate_map = array();
-	foreach ($resource_status as $key => $value) {
-	  $pair = $resource_status[$key][0];
-	  $resourcestatusdate_map[$pair->resource_id] = $pair->timestamp;
-	  if (($pair->status_id == 1) || ($pair->status_id == 2)) {
-	    $resourcestatus_map[$pair->resource_id] = "PASS";
-	  } else {
-	    $resourcestatus_map[$pair->resource_id] = "FAIL";
-	  }
-	}
-	$downtime_model = new Downtime();
-	$downtimes = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
-	$downtime_map = array();
-	foreach ($downtimes as $key => $value) {
-	  $resourcestatus_map[$value[0]->resource_id] = "MAINT";
-	}
-	
+        $model = new LatestResourceStatus();
+        $resource_status = $model->getgroupby("resource_id");
+        $resourcestatus_map = array();
+        $resourcestatusdate_map = array();
+        foreach ($resource_status as $key => $value) {
+          $pair = $resource_status[$key][0];
+          $resourcestatusdate_map[$pair->resource_id] = $pair->timestamp;
+          if (($pair->status_id == 1) || ($pair->status_id == 2)) {
+            $resourcestatus_map[$pair->resource_id] = "PASS";
+          } else {
+            $resourcestatus_map[$pair->resource_id] = "FAIL";
+          }
+        }
+        $downtime_model = new Downtime();
+        $downtimes = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
+        $downtime_map = array();
+        foreach ($downtimes as $key => $value) {
+          $resourcestatus_map[$value[0]->resource_id] = "MAINT";
+        }
+        
         $model = new Resource();
         $resources = $model->getindex();
 
         header("Content-type: text/plain");
-	echo "#VORS text interface EMULATION on MyOSG (grid = All, VO = all, res = 0)\n".
-	  "#columns=ID,Name,Gatekeeper,Type,Grid,Status,Last Test Date\n";
+        echo "#VORS text interface EMULATION on MyOSG (grid = All, VO = all, res = 0)\n".
+          "#columns=ID,Name,Gatekeeper,Type,Grid,Status,Last Test Date\n";
 
-	//print_r ($resourceservice_map);
+        //print_r ($resourceservice_map);
         foreach($resourceservice_map as $resource_id => $service_map) {
 
-	  $resource = $resources[$resource_id][0];
+          $resource = $resources[$resource_id][0];
 
-	  foreach($service_map as $service_id => $service_value) {
-	    $uri = $service_value->URI;
-	    if ($uri == "") {
-	      $uri = $resource->fqdn . ":" . $servicetype_port[$service_id];
-	    }
+          foreach($service_map as $service_id => $service_value) {
+            $uri = $service_value->URI;
+            if ($uri == "") {
+              $uri = $resource->fqdn . ":" . $servicetype_port[$service_id];
+            }
 
-	    // Dump output finally
+            // Dump output finally
             echo $resource->id . ",".
-	      $resource->name. ",". 
-	      $uri . ",". 
-	      $servicetype_name[$service_id] . ",".
-	      $resourcegroup_gridtype[$resource->resource_group_id] . ",".
-	      $resourcestatus_map[$resource_id].",".
-	      date('Y-m-d H:i:s', $resourcestatusdate_map[$resource_id]).
-	      "\n";
-	  }
-	}
-	$this->render("none", null, true);
+              $resource->name. ",". 
+              $uri . ",". 
+              $servicetype_name[$service_id] . ",".
+              $resourcegroup_gridtype[$resource->resource_group_id] . ",".
+              $resourcestatus_map[$resource_id].",".
+              date('Y-m-d H:i:s', $resourcestatusdate_map[$resource_id]).
+              "\n";
+          }
+        }
+        $this->render("none", null, true);
     }
 
 

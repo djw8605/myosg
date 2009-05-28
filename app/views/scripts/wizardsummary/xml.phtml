@@ -20,6 +20,9 @@ Structure:
                         Service (N)
                             ID (1)                      Service id in database
                             Name (1)                    Name of the service
+                            Description (1)  
+                            ServiceUri (1)              URI (with port) of the service
+                            HiddenService (1)           Indicates if the service is hidden (True / False)
                     RSVStatus (0 or 1)
                         Status (1)
                         Note (1)
@@ -122,8 +125,8 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                           "<ID>".$service->service_id."</ID>".
                           "<Name>".$this->servicetypes[$service->service_id][0]->name."</Name>".
                           "<Description>".htmlentities($this->servicetypes[$service->service_id][0]->description)."</Description>";
-                        echo "<ServiceUri>";
 
+                        echo "<ServiceUri>";
                         if ($service->endpoint_override != "") {
                           echo $service->endpoint_override;
                         }
@@ -131,6 +134,15 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                           echo $resource->fqdn.":".$this->servicetypes[$service->service_id][0]->port; 
                         }
                         echo "</ServiceUri>";
+
+                        echo "<HiddenService>";
+                        if($service->hidden == 1) {
+                            echo "True";
+                        } else {
+                            echo "False";
+                        }
+                        echo "</HiddenService>";
+                
                         echo "</Service>";
                     } else {
                         echo "<Service>unknown_service_id:".$service->service_id."</Service>";
