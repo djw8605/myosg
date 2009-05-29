@@ -131,8 +131,7 @@ function loadScroll() {
         echo "<div id=\"banner\">".config()->banner."</div>";
     }
     if(config()->debug) {
-        exec("svn info | grep \"Revision:\" |  awk '{print $2}'", $out);
-        echo "<p class=\"warning\">Running in Debug mode -- Version ".config()->version." (Rev. ".$out[0].")</p>";
+        echo "<p class=\"warning\">Running in debug mode</p>";
     }
 ?>
 
