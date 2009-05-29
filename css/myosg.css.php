@@ -102,10 +102,9 @@ min-height: 16px;
 div.vo
 {
 padding: 2px;
-padding-left:20px;
+padding-left:22px;
 padding-right:7px;
 background:#ccc url(<?=image()?>/images/group.png) no-repeat 3px 3px;
-margin-bottom: 5px;
 }
 div.metric
 {
@@ -113,7 +112,20 @@ padding-left:20px;
 background:transparent url(<?=image()?>/images/drive_magnify.png) no-repeat 0 0px;
 min-height: 16px;
 }
-div.grid_type
+div.metricinfo_header
+{
+padding:2px;
+padding-left:22px;
+background:#ccc url(<?=image()?>/images/drive_magnify.png) no-repeat 3px 3px;
+min-height: 16px;
+}
+div.cpuinfo_header
+{
+padding:2px;
+padding-left:22px;
+background:#ccc url(<?=image()?>/images/process.png) no-repeat 3px 3px;
+min-height: 16px;
+}div.grid_type
 {
 padding-left:20px;
 background:transparent url(<?=image()?>/images/list-items.gif) no-repeat 0 0px;
@@ -126,6 +138,7 @@ border: 1px solid #ccc;
 margin: 3px;
 padding: 3px;
 }
+
 
 div.resource_group_header
 {

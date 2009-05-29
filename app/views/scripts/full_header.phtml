@@ -106,6 +106,8 @@ function loadScroll() {
             $param = "?datasource=summary&all_vos=on&active_value=1";break;
         case 'map':
             $param = "?all_sites=on&active=on&active_value=1&disable_value=1";break;
+        case 'misc':
+            $param = "?";break;
         }
         
         return htmlentities(base()."/".$page.$param);
@@ -117,6 +119,7 @@ function loadScroll() {
         <span id="menu_sc"><a href="<?=default_url("scsummary")?>">Support Center</a></span>
         <span id="menu_vo"><a href="<?=default_url("vosummary")?>">Virtual Organization</a></span>
         <span id="menu_map"><a href="<?=default_url("map")?>">Status Map</a></span>
+        <span id="menu_misc"><a href="<?=default_url("misc")?>">Miscellaneous</a></span>
     </div>
 
     <script type="text/javascript">

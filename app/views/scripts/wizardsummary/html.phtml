@@ -183,7 +183,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $note = "GIP Validation is returning unknown status.";
             }
 
-            $detail_url = htmlentities(fullbase()."/wizardgipstatus/index?datasource=gipstatus&r=on&r_$rid=on");
+            $detail_url = htmlentities(fullbase()."/wizardgipstatus/index?datasource=gipstatus&r=on&r_$rid=on&gip_status_attrs_showtestresults=on");
             $note = "<div>$note<br/><a href=\"$detail_url\">Validation Detail</a></div>";
             echo "<div class=\"status_$status\">";
             echo $note;
