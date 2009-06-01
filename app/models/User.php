@@ -54,9 +54,11 @@ class User
         foreach($auth_types as $auth_type) {
             //merge new role sets
             $roles = config()->auth_metrics[$auth_type->auth_type_id];
-            foreach($roles as $role) {
-                if(!in_array($role, $this->roles)) {
-                    $this->roles[] = $role;
+            if(is_array($roles)) {
+                foreach($roles as $role) {
+                    if(!in_array($role, $this->roles)) {
+                        $this->roles[] = $role;
+                    }
                 }
             }
         }
