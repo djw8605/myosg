@@ -250,10 +250,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             echo "<tr><th>WLCG Information</th><td>";
-            $info = @$this->resource_wlcg[$rid][0];
-            if($info == null) {
+            if(!isset($this->resource_wlcg[$rid][0]->interop_bdii)) {
                 echo "(Information not available)<br/>";
             } else {
+                $info = $this->resource_wlcg[$rid][0];
                 echo "<table class=\"summary_subtable\">";
 
                 $value = "False";
@@ -298,20 +298,22 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         }
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             echo "<tr><th>Contacts</th><td>";
-            $contact_types = @$this->contacts[$rid];
-            foreach($contact_types as $type_name=>$contacts) {
-                echo "<h4>$type_name</h4>";
-                foreach($contacts as $contact) {
-                    if(user()->isGuest()) {
-                        echo htmlentities($contact->name)."<br/>";
-                    } else {
-                        echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlentities($contact->name)."</h3>";
-                        echo "<table class=\"summary_subtable\">"; 
-                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
-                        echo "</table>";
-                        echo "</div>";
+            if(isset($this->contacts[$rid])) {
+                $contact_types = $this->contacts[$rid];
+                foreach($contact_types as $type_name=>$contacts) {
+                    echo "<h4>$type_name</h4>";
+                    foreach($contacts as $contact) {
+                        if(user()->isGuest()) {
+                            echo htmlentities($contact->name)."<br/>";
+                        } else {
+                            echo "<div class=\"contact_info\">";
+                            echo "<h3>".htmlentities($contact->name)."</h3>";
+                            echo "<table class=\"summary_subtable\">"; 
+                            echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                            echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                            echo "</table>";
+                            echo "</div>";
+                        }
                     }
                 }
             }
