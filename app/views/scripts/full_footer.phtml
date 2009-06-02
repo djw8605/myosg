@@ -1,10 +1,14 @@
         <div class="clear"></div>
     </div>
     <div id="footer">
-    <?
+<?
+echo "<p style=\"float: right\">".config()->app_name." Version ".config()->version;
+if(config()->debug) {
     exec("svn info | grep \"Revision:\" |  awk '{print $2}'", $out);
-    echo "<p style=\"float: right\">".config()->app_name." Version ".config()->version." (Rev. ".$out[0].")</p>";
-    ?>
+    echo " (Rev. ".$out[0].")";
+}
+echo "</p>";
+?>
         <img src="images/myosg_favi.ico" align="left"/><p>&nbsp;<?=config()->copyright?></p>
     </div>
 </div>
