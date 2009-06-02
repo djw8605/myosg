@@ -265,7 +265,13 @@ class WizardController extends ControllerBase
         $model = new Resource();
         $resources = $model->getindex();
         foreach($resources as $rid=>$r) {
-            if(isset($wlcgs[$rid]) and $wlcgs[$rid][0]->interop_bdii == 1) {
+            if(isset($wlcgs[$rid][0]) and 
+                ($wlcgs[$rid][0]->interop_bdii == 1)
+                    or
+                ($wlcgs[$rid][0]->interop_monitoring == 1)
+                    or
+                ($wlcgs[$rid][0]->interop_accounting == 1)
+            ) {
                 if(!in_array($rid, $resources_to_keep)) {
                     $resources_to_keep[] = (string)$rid;
                 }
