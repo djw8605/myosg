@@ -43,6 +43,27 @@ foreach($this->metrics as $id=>$info)
             <td><a href="<?=$info->help_url?>" target="_blank"><?=htmlentities($info->help_url)?></a></td>
         <?}?>
     </tr>
+
+    <?if(isset($_REQUEST["metric_attrs_showservices"])) {
+    echo "<tr>";
+        echo "<th>Services</th>";
+        echo "<td>";
+        if(isset($this->metricservices[$id])) {
+            foreach($this->metricservices[$id] as $service) {
+                $service_info = $this->services[$service->service_id];
+                echo $service_info[0]->name;
+                if($service->critical == 1) {
+                    echo " (Critical Metric)";
+                }
+                echo "<br/>";
+            }
+        } else {
+            echo "(No Services)";
+        }
+        echo "</td>";
+    echo "</tr>";
+    }?>
+
     </table>
     <?
 }

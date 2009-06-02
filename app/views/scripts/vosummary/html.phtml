@@ -29,6 +29,22 @@ foreach($this->vos as $vo_id=>$vo) {
     echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
     echo "<tr><th>Community</th><td>".htmlentities($vo->community)."</td></tr>";
 
+    if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
+        echo "<tr><th>Parent VO</th><td>";
+        if(isset($this->vovo[$vo_id])) {
+            $parent_vo_id = $this->vovo[$vo_id][0]->parent_vo_id;
+            $parent_vo = $this->vos[$parent_vo_id];
+            echo "<a href=\"".
+                fullbase().
+                "/vosummary?datasource=summary&summary_attrs_showparent_vo=on&vo=on&vo_".
+                $parent_vo_id.
+                "=on&active_value=1\">".htmlentities($parent_vo->name)."</a> ";
+        } else {
+            echo "(No Parent VO)";
+        }
+        echo "</td></tr>";
+    }
+
     $scid = $vo->sc->id;
     echo "<tr><th>Support Center</th><td><a href=\"".fullbase()."/scsummary/index?datasource=summary&sc=on&sc_$scid=on\">".htmlentities($vo->sc->name)."</a></td></tr>";
 

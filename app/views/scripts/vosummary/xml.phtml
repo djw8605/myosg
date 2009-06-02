@@ -19,6 +19,9 @@ Structure:
                 Resource (N)
                     ID (1)
                     Name (1)
+            ParentVO (optional)              Optional, and shown only if parent vo is set
+                ID (1) 
+                Name (1)
             FieldsOfScience (optional)
                 Field (N)
             ReportingGroups (optional)
@@ -75,6 +78,17 @@ foreach($this->vos as $vo_id=>$vo) {
             echo "<Field>".htmlentities($fs->name)."</Field>";
         }
         echo "</FieldsOfScience>";
+    }
+
+    if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
+        echo "<ParentVO>";
+        if(isset($this->vovo[$vo_id])) {
+            $parent_vo_id = $this->vovo[$vo_id][0]->parent_vo_id;
+            echo "<ID>$parent_vo_id</ID>";
+            $parent_vo = $this->vos[$parent_vo_id];
+            echo "<Name>".htmlentities($parent_vo->name)."</Name>";
+        }
+        echo "</ParentVO>";
     }
 
     if(isset($_REQUEST["summary_attrs_showreporting_group"])) {

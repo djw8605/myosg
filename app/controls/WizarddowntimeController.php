@@ -11,14 +11,28 @@ class WizarddowntimeController extends WizardController
         parent::load();
         $this->view->resource_ids = $this->resource_ids;
 
-        //pull current downtimes
-        $downtime_model = new Downtime();
-        $today_start = time()/(3600*24) * (3600*24);
-        $today_end = time()/(3600*24) * (3600*24) + 3600*24;
-        $this->view->current_downtimes = $this->formatInfo($downtime_model->getCurrentDowntimes($today_start, $today_end));
+        $model = new Downtime();
+        $downtimes = $model->getindex();
 
-        //pull future downtimes
-        $this->view->future_downtimes = $this->formatInfo($downtime_model->getFutureDowntimes(time()));
+        $past = array();
+        $current = array();
+        $future = array();
+        
+        foreach($downtimes as $id=>$downtime) {
+            if($downtime[0]->unix_end_time < time()) {
+                if(isset($_REQUEST["downtime_attrs_showpast"])) {
+                    $past[$id] = $downtime;
+                } 
+            } else if($downtime[0]->unix_start_time > time()) {
+                $future[$id] = $downtime;
+            } else {
+                $current[$id] = $downtime;
+            }
+        }
+
+        $this->view->past_downtimes = $this->formatInfo($past);
+        $this->view->current_downtimes = $this->formatInfo($current);
+        $this->view->future_downtimes = $this->formatInfo($future);
 
         $this->setpagetitle(self::default_title());
     }
@@ -38,6 +52,15 @@ class WizarddowntimeController extends WizardController
 
         $model = new ServiceTypes();
         $service_info = $model->getindex();
+
+        $model = new DowntimeClass();
+        $downtime_class = $model->getindex();
+
+        $model = new DowntimeSeverity();
+        $downtime_severity = $model->getindex();
+    
+        $model = new DN();      
+        $dns = $model->getindex();
 
         foreach($downtime_recs as $downtime_a)
         {
@@ -61,13 +84,21 @@ class WizarddowntimeController extends WizardController
                     }
 
                     $desc = $downtime->downtime_summary;
-                    $desc = str_replace(array("\n", "\r"), "", $desc);
+                    //$desc = str_replace(array("\n", "\r"), "", $desc);
 
-                    $downtimes[] = array("id"=>$downtime->resource_id, 
+                    $severity = $downtime_severity[$downtime->downtime_severity_id][0]->name;
+                    $class = $downtime_class[$downtime->downtime_class_id][0]->name;
+                    $dn = $dns[$downtime->dn_id][0]->dn_string;
+
+                    $downtimes[] = array("id"=>$downtime->id, 
                         "name"=>$resource_name,
+                        "resource_id"=>$downtime->resource_id,
                         "desc"=>$desc,
+                        "severity"=>$severity,
+                        "class"=>$class,
                         "services"=>$affected_services,
                         "start_time"=>$start,
+                        "dn"=>$dn,
                         "end_time"=>$end
                     );
                 }

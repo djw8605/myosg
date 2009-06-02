@@ -6,16 +6,22 @@ function connect_db()
     global $g_db;
     $g_db = array();
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // For RSVExtra
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     $rsv_db = Zend_Db::factory(config()->db_type, array(
-        'host'     => config()->db_host,
-        'username' => config()->db_username,
-        'password' => config()->db_password,
-        'dbname'   => config()->db_schema,
-        'port'     => config()->db_port
+        'host'     => config()->db_rsv_host,
+        'username' => config()->db_rsv_username,
+        'password' => config()->db_rsv_password,
+        'dbname'   => config()->db_rsv_schema,
+        'port'     => config()->db_rsv_port
     ));
     $rsv_db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["rsv"] = $rsv_db;
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // For OIM
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     $oim_db = Zend_Db::factory(config()->db_type, array(
         'host'     => config()->db_oim_host,
         'username' => config()->db_oim_username,

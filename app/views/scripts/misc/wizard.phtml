@@ -74,7 +74,19 @@ $(document).ready(function() {
     $("select[name=datasource]").change(function() {
         showhide_attrs('normal');
     });
-});
+
+    <?
+    //select currently selected datasouce
+    if(isset($_REQUEST["datasource"])) {
+        $datasource = $_REQUEST["datasource"];
+        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
+        echo "showhide_attrs();\n";
+    }
+
+    if(isset($_REQUEST["all_vos"])) {
+        echo "disable($('input[name=all_vos]'));";
+    }
+    ?>});
 
 function wizard_submit(format)
 {

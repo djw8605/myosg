@@ -1,23 +1,33 @@
 <Downtimes>
-<CurrentDowntime>
+<?if(isset($_REQUEST["downtime_attrs_showpast"])) {?>
+    <PastDowntimes>
+    <?showdowntimes($this->past_downtimes); ?>
+    </PastDowntimes>
+<?}?>
+<CurrentDowntimes>
 <?showdowntimes($this->current_downtimes); ?>
-</CurrentDowntime>
-<FutureDowntime>
+</CurrentDowntimes>
+<FutureDowntimes>
 <?showdowntimes($this->future_downtimes); ?>
-</FutureDowntime>
+</FutureDowntimes>
 </Downtimes>
 <?
 function showdowntimes($downtimes) {
     foreach($downtimes as $downtime)
     {
         echo "<Downtime>";
+        echo "<ID>".$downtime["id"]."</ID>";
         echo "<ResourceName>".htmlentities($downtime["name"])."</ResourceName>";
+        echo "<ResourceID>".htmlentities($downtime["resource_id"])."</ResourceID>";
         echo "<StartTime>".$downtime["start_time"]."</StartTime>";
         echo "<EndTime>".$downtime["end_time"]."</EndTime>";
+        echo "<Class>".htmlentities($downtime["class"])."</Class>";
+        echo "<Severity>".htmlentities($downtime["severity"])."</Severity>";
+        echo "<DN>".htmlentities($downtime["dn"])."</DN>";
 
         echo "<Services>";
         foreach($downtime["services"] as $service) {
-            echo "<Service>".$service."</Service>";
+            echo "<Service>".htmlentities($service)."</Service>";
         }
         echo "</Services>";
         echo "<Description>".htmlentities($downtime["desc"])."</Description>";

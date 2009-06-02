@@ -16,7 +16,29 @@ foreach($this->metrics as $id=>$info)
 <?if($info->help_url != "") {?>
 <HelpURL><?=htmlentities($info->help_url)?></HelpURL>
 <?}?>
-    </RSVMetric>
+
+<?if(isset($_REQUEST["metric_attrs_showservices"])) {
+echo "<Services>";
+if(isset($this->metricservices[$id])) {
+    foreach($this->metricservices[$id] as $service) {
+        echo "<Service>";
+        echo "<ID>".$service->service_id."</ID>";
+        $service_info = $this->services[$service->service_id];
+        echo "<Name>".htmlentities($service_info[0]->name)."</Name>";
+        echo "<CriticalMetric>";
+        if($service->critical == 1) {
+            echo "True";
+        } else {
+            echo "False";
+        }
+        echo "</CriticalMetric>";
+        echo "</Service>";
+    }
+}
+echo "</Services>";
+}?>
+
+</RSVMetric>
 <?
 }
 ?>

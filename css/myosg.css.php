@@ -140,12 +140,12 @@ padding: 3px;
 }
 
 
-div.resource_group_header
+div.resource_group_header, div.downtime_group
 {
 background-color: gray;
 color: white;
 margin-bottom: 0.3em;
-padding: 3px;
+padding: 4px;
 }
 
 .contact_info
@@ -368,7 +368,10 @@ div.downtime
     background-color: #ddf;
     padding: 3px;
 }
-<?
+div.downtime_detail
+{
+    padding: 3px;
+}<?
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //web(non-uwa) specific styles 
 if(!uwa()) {

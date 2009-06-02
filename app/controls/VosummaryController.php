@@ -76,6 +76,11 @@ class VosummaryController extends VoController
             }
         }
 
+        if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
+            $model = new VOVO();
+            $this->view->vovo = $model->getindex();
+        }
+
         $this->view->vos = array();
         foreach($this->vo_ids as $vo_id) {
             $vo = $vos[$vo_id][0];

@@ -11,12 +11,13 @@ class MiscmetricController extends MiscController
         $model = new Metric();
         $this->view->metrics = $model->getindex();
     
-/*
         //additional info
-        if(isset($_REQUEST["summary_attrs_showsomething"])) {
-            //LOAD information for something..
+        if(isset($_REQUEST["metric_attrs_showservices"])) {
+            $model = new MetricService();
+            $this->view->metricservices = $model->getgroupby("metric_id");
+            $model = new Service();
+            $this->view->services = $model->getindex();
         }
-*/
 
         $this->setpagetitle(self::default_title());
     }

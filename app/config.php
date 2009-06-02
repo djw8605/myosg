@@ -47,7 +47,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "1.3";
+        $this->version = "1.3a";
         //application to display or used in email
         $this->app_name = "MyOSG";
         $this->app_subname = "by Grid Operations Center";
@@ -64,13 +64,14 @@ class common_config
         //if metric age is longer than this value, it is considred stale
         $this->metric_considered_old = 3600*24;
 
-        //rsvextra database info
         $this->db_type = "Pdo_Mysql";
-        $this->db_host = "overrideme.example.com";
-        $this->db_username = "overrideme";
-        $this->db_password = "overrideme";
-        $this->db_schema = "rsvextra";
-        $this->db_port = 49152;
+
+        //rsvextra database info
+        $this->db_rsv_host = "overrideme.example.com";
+        $this->db_rsv_username = "overrideme";
+        $this->db_rsv_password = "overrideme";
+        $this->db_rsv_schema = "rsvextra";
+        $this->db_rsv_port = 49152;
 
         //oim2 database info
         $this->db_oim_host = "overrideme.example.com";
