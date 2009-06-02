@@ -79,7 +79,7 @@ class WizarddowntimeController extends WizardController
                     foreach($downtime_services as $service) {
                         if($service->resource_downtime_id == $downtime->id) {
                             $info = $service_info[$service->service_id][0];
-                            $affected_services[] = $info->description;
+                            $affected_services[] = $info;
                         }
                     }
 

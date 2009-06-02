@@ -54,6 +54,8 @@ foreach($this->metrics as $id=>$info)
                 echo $service_info[0]->name;
                 if($service->critical == 1) {
                     echo " (Critical Metric)";
+                } else {
+                    echo " (Non-critical Metric)";
                 }
                 echo "<br/>";
             }

@@ -27,7 +27,11 @@ function showdowntimes($downtimes) {
 
         echo "<Services>";
         foreach($downtime["services"] as $service) {
-            echo "<Service>".htmlentities($service)."</Service>";
+            echo "<Service>";
+            echo "<ID>".htmlentities($service->id)."</ID>";
+            echo "<Name>".htmlentities($service->name)."</Name>";
+            echo "<Description>".htmlentities($service->description)."</Description>";
+            echo "</Service>";
         }
         echo "</Services>";
         echo "<Description>".htmlentities($downtime["desc"])."</Description>";
