@@ -17,7 +17,7 @@ class WizardarmetricController extends WizardController
         $this->view->resources = $resource_model->getindex();
 
         //load resource services
-        $service_type_model = new ServiceTypes();
+        $service_type_model = new Service();
         $this->view->services = $service_type_model->getindex();
 
         //load AR history

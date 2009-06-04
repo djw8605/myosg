@@ -1,0 +1,27 @@
+<?
+foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
+    $counts = $this->counts[$grid_type_id];
+
+    $gridtype_info = $this->grid_types[$grid_type_id][0];
+    echo "<div class=\"gridtype_header round\"><span class=\"h3\">$gridtype_info->description</span></div>";
+
+    echo "<table class=\"summary_table\">";
+    echo "<tr><th>Total Resource Count</th><td>".count($resources)."</td></tr>";
+
+    foreach($this->service_groups as $service_group_id => $service_group) {
+        echo "<tr><th>".$service_group[0]->name."</th><td>";
+        echo "<table class=\"summary_subtable\">";
+        foreach($this->services as $service_id => $service) {
+            if($service[0]->service_group_id == $service_group_id) {
+                $count = 0;
+                if(isset($counts[$service_id])) {
+                    $count = $counts[$service_id];
+                }
+                echo "<tr><th>".htmlentities($service[0]->name)."</th><td>".$count."</td></tr>";
+            }
+        }
+        echo "</table>";
+        echo "</td></tr>";
+    }
+    echo "</table>";
+}

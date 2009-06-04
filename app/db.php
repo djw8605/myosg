@@ -10,6 +10,7 @@ function connect_db()
     // For RSVExtra
     ///////////////////////////////////////////////////////////////////////////////////////////////
     $rsv_db = Zend_Db::factory(config()->db_type, array(
+        'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
         'host'     => config()->db_rsv_host,
         'username' => config()->db_rsv_username,
         'password' => config()->db_rsv_password,
@@ -23,6 +24,7 @@ function connect_db()
     // For OIM
     ///////////////////////////////////////////////////////////////////////////////////////////////
     $oim_db = Zend_Db::factory(config()->db_type, array(
+        'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
         'host'     => config()->db_oim_host,
         'username' => config()->db_oim_username,
         'password' => config()->db_oim_password,

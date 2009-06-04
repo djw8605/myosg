@@ -199,7 +199,7 @@ class WizardController extends ControllerBase
     private function process_resource_filter_service()
     {
         $resources_to_keep = array();
-        $model = new ServiceTypes();
+        $model = new Service();
         $list = $model->get(array("service_group_id"=>1));
         foreach($list as $item) {
             if(isset($_REQUEST["service_".$item->id])) {

@@ -1,5 +1,6 @@
 <?php
 //session_cache_limiter('private_no_expire');
+//phpinfo();exit;
 
 //init zend framework
 set_include_path('lib/zf-1.7.3/library' . PATH_SEPARATOR . get_include_path());  
@@ -19,7 +20,6 @@ setup_logs();
 greet();
 cert_authenticate();
 
-//set php config
 ini_set('error_log', config()->error_logfile);
 ini_set('display_errors', 0); 
 ini_set('log_errors', 1); 

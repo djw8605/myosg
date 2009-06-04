@@ -23,7 +23,7 @@
 
             $params = array();
             $params["service_group_id"] = 1;
-            $servicetypes = new ServiceTypes($params);
+            $servicetypes = new Service($params);
             outputSelectBox("servicetype", "Sevice Type", $servicetypes, "id", "description");
 
             $status_model = new Status();

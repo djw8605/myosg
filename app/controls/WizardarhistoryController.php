@@ -13,7 +13,7 @@ class WizardarhistoryController extends WizardController
 
         $resource_model = new Resource();
         $this->view->resource_info = $resource_model->getindex();
-        $service_type_model = new ServiceTypes();
+        $service_type_model = new Service();
         $this->view->service_info = $service_type_model->getindex();
 
         ///////////////////////////////////////////////////////////////////////

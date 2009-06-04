@@ -184,7 +184,7 @@ span.disabled_span
             $kv = array("OK"=>"OK", "FAIL"=>"FAIL", "UNKNOWN"=>"UNKNOWN");
             echo checklist("gipstatus", "Current GIP Status", $kv);
 
-            $model = new ServiceTypes();
+            $model = new Service();
             $list = $model->get(array("service_group_id"=>1));
             $kv = array();
             foreach($list as $item) { $kv[$item->id] = $item->name; }

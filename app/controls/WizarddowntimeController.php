@@ -50,7 +50,7 @@ class WizarddowntimeController extends WizardController
         $downtime_service_model = new DowntimeService();
         $downtime_services = $downtime_service_model->get();
 
-        $model = new ServiceTypes();
+        $model = new Service();
         $service_info = $model->getindex();
 
         $model = new DowntimeClass();

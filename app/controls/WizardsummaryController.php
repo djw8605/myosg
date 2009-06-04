@@ -46,7 +46,7 @@ class WizardsummaryController extends WizardController
         ///////////////////////////////////////////////////////////////////////////////////////////
         //pull other optional stuff
         if(isset($_REQUEST["summary_attrs_showservice"])) {
-            $servicetype_model = new ServiceTypes();
+            $servicetype_model = new Service();
             $this->view->servicetypes = $servicetype_model->getindex();
             $resourceservice_model = new ServiceByResourceID();
             $this->view->resource_services = $resourceservice_model->getindex();
@@ -138,7 +138,7 @@ class WizardsummaryController extends WizardController
           $resourcegroup_gridtype[$resourcegroups[$key]->id] =  $resourcegroups[$key]->grid_type;
         }
 
-        $servicetype_model = new ServiceTypes();
+        $servicetype_model = new Service();
         $servicetypes = $servicetype_model->getindex();
         $servicetype_name = array();
         $servicetype_port = array();
