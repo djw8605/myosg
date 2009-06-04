@@ -9,28 +9,14 @@ function connect_db()
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // For RSVExtra
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    $rsv_db = Zend_Db::factory(config()->db_type, array(
-        'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
-        'host'     => config()->db_rsv_host,
-        'username' => config()->db_rsv_username,
-        'password' => config()->db_rsv_password,
-        'dbname'   => config()->db_rsv_schema,
-        'port'     => config()->db_rsv_port
-    ));
+    $rsv_db = Zend_Db::factory(config()->db_type, config()->rsvextra_dbparam);
     $rsv_db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["rsv"] = $rsv_db;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // For OIM
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    $oim_db = Zend_Db::factory(config()->db_type, array(
-        'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
-        'host'     => config()->db_oim_host,
-        'username' => config()->db_oim_username,
-        'password' => config()->db_oim_password,
-        'dbname'   => config()->db_oim_schema,
-        'port'     => config()->db_oim_port
-    ));
+    $oim_db = Zend_Db::factory(config()->db_type, config()->oim_dbparam);
     $oim_db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["oim"] = $oim_db;
 

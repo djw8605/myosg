@@ -67,18 +67,23 @@ class common_config
         $this->db_type = "Pdo_Mysql";
 
         //rsvextra database info
-        $this->db_rsv_host = "overrideme.example.com";
-        $this->db_rsv_username = "overrideme";
-        $this->db_rsv_password = "overrideme";
-        $this->db_rsv_schema = "rsvextra";
-        $this->db_rsv_port = 49152;
+        $this->rsvextra_dbparam = array(
+            'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
+            'host'     => "localhost",
+            'username' => "myosg",
+            'password' => "somepass",
+            'dbname'   => "rsvextra",
+            'port'     => 49152
+        );
 
-        //oim2 database info
-        $this->db_oim_host = "overrideme.example.com";
-        $this->db_oim_username = "overrideme";
-        $this->db_oim_password = "overrideme";
-        $this->db_oim_schema = "oimnew";
-        $this->db_oim_port = 49152;
+        $this->oim_dbparam = array(
+            'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
+            'host'     => "localhost",
+            'username' => "oim",
+            'password' => "somepass",
+            'dbname'   => "oim",
+            'port'     => 49152
+        );
 
         //first page to load when user first visit the page
         //$this->initial_page = "home_start"; //needs to be a menu ID

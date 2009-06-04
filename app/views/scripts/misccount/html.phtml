@@ -6,7 +6,10 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
     echo "<div class=\"gridtype_header round\"><span class=\"h3\">$gridtype_info->description</span></div>";
 
     echo "<table class=\"summary_table\">";
-    echo "<tr><th>Total Resource Count</th><td>".count($resources)."</td></tr>";
+
+    if(isset($_REQUEST["count_total"])) {
+        echo "<tr><th>Total Resource Count</th><td>".count($resources)."</td></tr>";
+    }
 
     foreach($this->service_groups as $service_group_id => $service_group) {
         echo "<tr><th>".$service_group[0]->name."</th><td>";

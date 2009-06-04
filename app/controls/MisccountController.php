@@ -14,21 +14,29 @@ class MisccountController extends MiscController
         $model = new GridTypes();
         $this->view->grid_types = $model->getindex();
 
-        $model = new ServiceGroup();
-        $this->view->service_groups = $model->getindex();
-
         $model = new Service();
         $this->view->services = $model->getindex();
 
         $model = new ResourceServices();
         $this->view->services_by_resource = $model->getgroupby("resource_id");
 
-        //count services
         $this->view->counts = array();
+
+        //filter service groups
+        $this->view->service_groups = array();
+        $model = new ServiceGroup();
+        $service_groups = $model->getindex();
+        foreach($service_groups as $id => $service_group) {
+            if(isset($_REQUEST["count_sg_".$id])) {
+                $this->view->service_groups[$id] = $service_group;
+            }
+        }
+
+        //for each grid type
         foreach($this->view->resources_by_gridtype as $grid_type_id => $resources) {
             //for each resource,
             foreach($resources as $resource)  {
-                //pull grid type
+                //pull counter for current grid type
                 $services = $this->services_by_resource[$resource->id];
                 if(!isset($this->view->counts[$grid_type_id])) {
                     $this->view->counts[$grid_type_id] = array();
@@ -44,13 +52,7 @@ class MisccountController extends MiscController
                 }
                 $this->view->counts[$grid_type_id] = $count_service;
             }
-        } 
-/*
-        //additional info
-        if(isset($_REQUEST["summary_attrs_showsomething"])) {
-            //LOAD information for something..
         }
-*/
 
         $this->setpagetitle(self::default_title());
     }

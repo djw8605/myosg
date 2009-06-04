@@ -7,7 +7,10 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
     $gridtype_info = $this->grid_types[$grid_type_id][0];
     echo "<GridType>";
     echo "<ID>$gridtype_info->id</ID><Name>".htmlentities($gridtype_info->name)."</Name>";
-    echo "<TotalResourceCount>".count($resources)."</TotalResourceCount>";
+
+    if(isset($_REQUEST["count_total"])) {
+        echo "<TotalResourceCount>".count($resources)."</TotalResourceCount>";
+    }
 
     echo "<ServiceGroups>";
     foreach($this->service_groups as $service_group_id => $service_group) {
