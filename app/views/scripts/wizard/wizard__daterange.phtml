@@ -8,7 +8,7 @@ Start Date:<br/>
 <?if(isset($_REQUEST["start_date"])) {
     $start_date = $_REQUEST["start_date"];
 } else {
-    $start_date = date("m/d/Y", time()-3600*24*7);
+    $start_date = date("m/d/Y", time());
 }?>
 <input size="10" type="text" name="start_date" class="hidden" value="<?=$start_date?>"></input>
 <br/>
