@@ -38,7 +38,7 @@ class WizardsummaryController extends WizardController
                 }
                 $groups[$group_id][$resource->id] = $resource;
             } else {
-                dlog("Failed to find group id for resource = ".$resource_id);
+                elog("Failed to find group id for resource = ".$resource_id);
             }
         }
         $this->view->resource_groups = $groups;

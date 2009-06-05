@@ -21,7 +21,6 @@ class AdminController extends ControllerBase
     public function logrotateAction()
     {
         $this->load();
-        dlog("Writing config file for logrotate...");
         $root = getcwd()."/";
         $statepath = "/tmp/viewer.rotate.state";
         $config = "compress \n".
@@ -35,7 +34,6 @@ class AdminController extends ControllerBase
         $fp = fopen($confpath, "w");
         fwrite($fp, $config);
         
-        dlog("running logroate with following config\n$config");
         passthru("/usr/sbin/logrotate -s $statepath $confpath");
 
         $this->render("none");

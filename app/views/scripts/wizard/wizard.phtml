@@ -94,14 +94,7 @@ span.disabled_span
              
             $checked = "";
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
-            echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Resources<br/>";
-            /*
-            echo "<div class=\"list\" id=\"all_resources_attrs\">";
-                $checked = "";
-                if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
-                echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Resources<br/>";
-            echo "</div>";
-            */
+            echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Resources<br/>";
 
             $model = new Facilities();
             $list = $model->get();
@@ -276,29 +269,21 @@ $(document).ready(function() {
         showhide_attrs('normal');
     });
 
+    function list_click()
+    {
+        if(this.checked) { $("input[name=all_resources]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_resources]").siblings(); 
+    $(items).find('input').click(list_click);
+
     <?
     //select currently selected datasouce
     if(isset($_REQUEST["datasource"])) {
         $datasource = $_REQUEST["datasource"];
-        switch($datasource) {
-        case "summary":
-        case "currentstatus":
-        case "gipstatus":
-        case "statushistory":
-        case "arhistory":
-        case "armetric":
-        case "downtime":
-        case "account":
-        case "se":
-        case "ce":
-            echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
-            echo "showhide_attrs();\n";
-        }
+        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
+        echo "showhide_attrs();\n";
     }
 
-    if(isset($_REQUEST["all_resources"])) {
-        echo "disable($('input[name=all_resources]'));";
-    }
     ?>
 });
 
@@ -311,20 +296,11 @@ function wizard_submit(format)
     return false;
 }
 
-function disable(e)
+function uncheck_sibs(e)
 {
+    $('#resource_area .list').hide(); //TODO - hiding of list just doesn't work on opera..
     var items = $(e).siblings(); 
-    $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').addClass('disabled_span');
-    $("#all_resources_attrs").show();
-    $("#all_resources_attrs").find('input').removeAttr('disabled');
+    $(items).find('input[type=checkbox]').attr('checked', '');
 }
-function enable(e)
-{
-    var items = $(e).siblings(); 
-    $(items).find('input').removeAttr('disabled');
-    $(items).find('span').removeClass('disabled_span');
-    $("#all_resources_attrs").hide();
-    $("#all_resources_attrs").find('input').attr('disabled', 'disabled');
-}
+
 </script>

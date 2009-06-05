@@ -42,7 +42,6 @@ class WizardarmetricController extends WizardController
         }
 
         $data = array();
-        dlog($ar_resource_service);
         foreach($ar_resource_service as $rid => $resource) {
             //filter by resource_id
             if(!in_array($rid, $this->resource_ids)) continue;

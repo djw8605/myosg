@@ -57,48 +57,46 @@ function showmetrics($metrics, $timestamp, $hide_empty = false)
 
 function showmetric($metric, $timestamp, $hide_empty)
 {
-    //check expiration
+    $out = "";
+
     $freshfor = $metric->MetricFreshFor;
     $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
-
+    $reported = isset($metric->MetricDataID);
     $detail = $metric->Detail;
-    $out = "";
-    $expired_css = "";
-    if($expired) $expired_css = "expired";
-    $out .= "<div class=\"bottom_border status_".$metric->Status." $expired_css\">";
-    if($metric->Timestamp != "") {
-        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
-    }
+
     $name = $metric->MetricCommonName;
     $desc = $metric->MetricDescription;
     $help_url = config()->default_rsvforum;
     if(isset(config()->rsvforum[(int)$metric->MetricID])) {
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
-    if($expired) $name .= " (Expired)";
+
+    if($reported) {
+        $css = "";
+        if($expired) $css = "expired";
+        $out .= "<div class=\"bottom_border status_".$metric->Status." $css\">";
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+        if($expired) $name .= " (Expired)";
+    } else {
+        $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
+        $name .= " (Not Reporeted)";
+    }
+
     $out .= "<span class=\"h4\">$name</span>";
     if(!uwa()) {
         $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
         $out .= "<br/><span class=\"note\">$desc</span>";
-    }
-
-    if(trim($detail) == "") {
-        if($hide_empty) {
-            //if hide_empty is true, don't show it..
-            return "";
+        if(trim($detail) != "") {
+            $detail = "<pre>$detail</pre>";
+            $id = $metric->MetricDataID;
+            $detail .= "Metric Data ID: $id ";
+            $fresh_for = $metric->MetricFreshFor;
+            $detail .= "Fresh for: ".humanDuration($fresh_for);
+            $detail .= "<br/>";
+            $out .= outputToggle("Show Detail", "Hide Detail", $detail);
         }
-        $detail = "(No detail provided)<br/>";
-    } else {
-        $detail = "<pre>$detail</pre>";
-        $id = $metric->MetricDataID;
-        $detail .= "Metric Data ID: $id ";
-        $fresh_for = $metric->MetricFreshFor;
-        $detail .= "Fresh for: ".humanDuration($fresh_for);
-        $detail .= "<br/>";
     }
-    $out .= outputToggle("Show Detail", "Hide Detail", $detail);
     $out .= "</div>";
-
     return $out;
 } 
 

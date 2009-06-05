@@ -289,7 +289,7 @@ class HistoryController extends ControllerBase
 
     function drawGraph($status_changes, $start_time, $end_time, $downtimes)
     {
-        //let's draw the graph..
+
         $image_width = config()->history_graph_image_width;
         $im = imageCreate($image_width,2);
 
@@ -311,6 +311,8 @@ class HistoryController extends ControllerBase
                 if($first) {
                     if($time < $start_time) $time = $start_time;
                     $decile1 = (float)($time-$start_time)/$total_time*$image_width;
+                    imageline($im, 0, 0, $decile1, 0, $back);
+                    imageline($im, 0, 1, $decile1, 1, $back);
                     $decile_out = $decile1;
                     $status = (int)$change->status_id;
                     $first = false;

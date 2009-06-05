@@ -273,14 +273,19 @@ table.ruler td
     white-space: nowrap;
     text-align: right;
 }
-.expired
-{
-    background-color: #bbb;
-}
 .expired .sidenote
 {
     color: #c00;
 }
+.expired .h4, .notreported .h4
+{
+    color: gray;
+}
+.expired, .notreported
+{
+    background-color: #ddd !important;
+}
+
 span.fqdn
 {
 font-family: "Courier New";
@@ -487,10 +492,6 @@ background:transparent url(http://myosg.grid.iu.edu/images/status_warning_small.
 .status_UNKNOWN, .status_
 {
 background:transparent url(http://myosg.grid.iu.edu/images/status_unknown_small.png) no-repeat 2px 3px;
-}
-.expired
-{
-background-color: #bbb;
 }
 
 .bottom_border

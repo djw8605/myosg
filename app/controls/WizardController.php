@@ -212,7 +212,6 @@ class WizardController extends ControllerBase
                 }
             }
         }
-        slog(print_r($resources_to_keep, true));
         return $resources_to_keep;
     }
 

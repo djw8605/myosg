@@ -19,7 +19,6 @@ class ServiceAR extends CachedModel
             $where .=  " and timestamp <= ".$params["end_time"];
         }
         $sql = "select * from service_ar where 1 = 1 $where order by timestamp";
-        dlog($sql);
         return $sql;
     }
 }

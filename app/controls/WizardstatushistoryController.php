@@ -54,7 +54,7 @@ class WizardstatushistoryController extends WizardController
                 $params = array("resource_id" => $resource_id, "time" => $time);
                 $metrics = $metricdata_model->get($params); 
 
-                    $cache_xml = file_get_contents($cache_filename);
+                $cache_xml = file_get_contents($cache_filename);
                 $cache = new SimpleXMLElement($cache_xml);
                 foreach($cache->Services[0] as $service) {
                     if($service->ServiceID[0] == $service_id) {
@@ -128,10 +128,10 @@ class WizardstatushistoryController extends WizardController
             }
         }
         //didn't find the match - clear it
-        $metric->MetricDataID = null;
-        $metric->Timestamp = null;
-        $metric->Detail = null;
-        $metric->Status = null;
+        unset($metric->MetricDataID);
+        unset($metric->Timestamp);
+        unset($metric->Detail);
+        unset($metric->Status);
     }
     private function fetchMetricDetail($id)
     {
