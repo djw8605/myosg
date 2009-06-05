@@ -23,9 +23,8 @@ function update_anchor() {
 //http://code.google.com/apis/maps/documentation/reference.html#GMapTypeOptions
 function init() {
   if (GBrowserIsCompatible()) {
-    //map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_MAPMAKER_HYBRID_MAP]});
-    //map.setMapType(G_MAPMAKER_HYBRID_MAP); 
-    map = new GMap2(document.getElementById("map_canvas"));
+    map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_MAPMAKER_HYBRID_MAP, G_NORMAL_MAP]});
+    map.setMapType(G_MAPMAKER_HYBRID_MAP); 
     map.addControl(new GSmallMapControl());
     map.addControl(new GMapTypeControl());
     map.enableScrollWheelZoom();
