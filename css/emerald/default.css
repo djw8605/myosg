@@ -15,9 +15,11 @@ body
 	color: #555555;
 	font-size: 11pt;
 }
-a
+a, span.external_link
 {
-	color: #996611;
+text-decoration: underline;
+cursor: pointer;
+color: #996611;
 }
 table tr
 {

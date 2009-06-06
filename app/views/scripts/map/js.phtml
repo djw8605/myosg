@@ -25,7 +25,11 @@ function init() {
   if (GBrowserIsCompatible()) {
     map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_MAPMAKER_HYBRID_MAP, G_NORMAL_MAP]});
     map.setMapType(G_MAPMAKER_HYBRID_MAP); 
+<?if(uwa()) {?>
     map.addControl(new GSmallMapControl());
+<?} else { ?>
+    map.addControl(new GLargeMapControl3D());
+<?}?>
     map.addControl(new GMapTypeControl());
     map.enableScrollWheelZoom();
 
@@ -90,7 +94,10 @@ foreach($this->sites as $site) {
     $html = "<h2>$site->name</h2>";
     foreach($rgs as $rg) {
         $rgname = $rg->name;
-        if($rg->active == 0 || $rg->disable == 1) continue;
+
+        //this is now done by the controller
+        //if($rg->active == 0 || $rg->disable == 1) continue;
+
         if(uwa()) {
             $target = "target=\"_blank\"";
         } else {

@@ -46,8 +46,8 @@ abstract class ControllerBase extends Zend_Controller_Action
 
     public function adduwaAction()
     {
-        $url = urlencode(fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"]);
-        $target = " http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=$url";
+        $url = fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"];
+        $target = "http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=".urlencode($url);
         header("Location: $target");
         exit;
     }

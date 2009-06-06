@@ -391,7 +391,7 @@ div.downtime_detail
 //web(non-uwa) specific styles 
 if(!uwa()) {
 ?>
-a[target=_blank]
+a[target=_blank], span.external_link
 {
 padding-left:15px;
 background:transparent url(<?=image()?>/images/external_link_icon.gif) no-repeat 0 -1px;
