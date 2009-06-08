@@ -21,6 +21,10 @@ if(isset($_REQUEST["summary_attrs_showfqdn"])) { $checked = "checked=checked"; }
 <input type="checkbox" name="summary_attrs_showfqdn" <?=$checked?>/> Show FQDN<br/>
 
 <?$checked = "";
+if(isset($_REQUEST["summary_attrs_showfqdnalias"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showfqdnalias" <?=$checked?>/> Show FQDN Aliases<br/>
+
+<?$checked = "";
 if(isset($_REQUEST["summary_attrs_showvomembership"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showvomembership" <?=$checked?>/> Show Supported VOs<br/>
 
@@ -40,8 +44,5 @@ if(isset($_REQUEST["summary_attrs_showenv"])) { $checked = "checked=checked"; }?
 if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
 
-<?$checked = "";
-if(isset($_REQUEST["summary_attrs_showalias"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="summary_attrs_showalias" <?=$checked?>/> Show Aliases<br/>
 
 

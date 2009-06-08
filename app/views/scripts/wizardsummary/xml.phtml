@@ -30,6 +30,8 @@ Structure:
                         Status (1)
                     Description (0 or 1)
                     FQDN (0 or 1)
+                    FQDNAliases                         
+                        FQDNAlias (N)
                     SupportedVOs (0 or 1)
                         VO (N)
                             (Name of the VO)
@@ -60,8 +62,6 @@ Structure:
                                     Email (0 or 1)      * shows only if you access via https with correct DN
                                     Phone (0 or 1)      * shows only if you access via https with correct DN
                                     Rank (1)
-                    Aliases                             Resource Alias 
-                        Alias (N)
 
 <?
 if(user()->isGuest()) {
@@ -218,6 +218,16 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<FQDN>".$resource->fqdn."</FQDN>";
         }
+        if(isset($_REQUEST["summary_attrs_showfqdnalias"])) {
+            echo "<FQDNAliases>";
+            if(isset($this->aliases[$rid])) {
+                foreach($this->aliases[$rid] as $alias) {
+                    echo "<FQDNAlias>".$alias->resource_alias."</FQDNAlias>";
+                }
+            }
+            echo "</FQDNAliases>";
+        }
+
 
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             echo "<SupportedVOs>";
@@ -267,14 +277,14 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             echo "<WLCGInformation>";
             // if(isset($this->resource_wlcg[$rid])) {
-	    $info = @$this->resource_wlcg[$rid][0];
-	    if($info == null) {
+            $info = @$this->resource_wlcg[$rid][0];
+            if($info == null) {
                 echo "(Information not available)";
             } else {
                 $info = $this->resource_wlcg[$rid][0];
                 $value = "False";
                 if($info->interop_bdii == 1) { $value = "True"; }
-		else {$info->ldap_url = "";}
+                else {$info->ldap_url = "";}
                 echo "<InteropBDII>$value</InteropBDII>";
                 echo "<LDAPURL>$info->ldap_url</LDAPURL>";
 
@@ -332,16 +342,6 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 echo "</ContactList>";
             }
             echo "</ContactLists>";
-        }
-
-        if(isset($_REQUEST["summary_attrs_showalias"])) {
-            echo "<Aliases>";
-            if(isset($this->aliases[$rid])) {
-                foreach($this->aliases[$rid] as $alias) {
-                    echo "<Alias>".$alias->resource_alias."</Alias>";
-                }
-            }
-            echo "</Aliases>";
         }
 
         echo "</Resource>";

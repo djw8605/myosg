@@ -128,7 +128,7 @@ class WizardsummaryController extends WizardController
             }
         }
 
-        if(isset($_REQUEST["summary_attrs_showalias"])) {
+        if(isset($_REQUEST["summary_attrs_showfqdnalias"])) {
             $amodel = new ResourceAlias();
             $this->view->aliases = $amodel->getindex();
         }
