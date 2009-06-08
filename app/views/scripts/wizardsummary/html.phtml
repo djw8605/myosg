@@ -296,6 +296,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             }
             echo "</td></tr>";
         }
+
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             echo "<tr><th>Contacts</th><td>";
             if(isset($this->contacts[$rid])) {
@@ -316,6 +317,18 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                         }
                     }
                 }
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showalias"])) {
+            echo "<tr><th>Alias</th><td>";
+            if(isset($this->aliases[$rid])) {
+                foreach($this->aliases[$rid] as $alias) {
+                    echo "<span class=\"fqdn\">".$alias->resource_alias."</span><br/>";
+                }
+            } else {
+                echo "(No Alias)";
             }
             echo "</td></tr>";
         }

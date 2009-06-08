@@ -40,5 +40,8 @@ if(isset($_REQUEST["summary_attrs_showenv"])) { $checked = "checked=checked"; }?
 if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showalias"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showalias" <?=$checked?>/> Show Aliases<br/>
 
 
