@@ -18,11 +18,7 @@ if(isset($_REQUEST["summary_attrs_showgipstatus"])) { $checked = "checked=checke
 
 <?$checked = "";
 if(isset($_REQUEST["summary_attrs_showfqdn"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="summary_attrs_showfqdn" <?=$checked?>/> Show FQDN<br/>
-
-<?$checked = "";
-if(isset($_REQUEST["summary_attrs_showfqdnalias"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="summary_attrs_showfqdnalias" <?=$checked?>/> Show FQDN Aliases<br/>
+<input type="checkbox" name="summary_attrs_showfqdn" <?=$checked?>/> Show FQDN / Aliases<br/>
 
 <?$checked = "";
 if(isset($_REQUEST["summary_attrs_showvomembership"])) { $checked = "checked=checked"; }?>

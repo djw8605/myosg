@@ -217,8 +217,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<FQDN>".$resource->fqdn."</FQDN>";
-        }
-        if(isset($_REQUEST["summary_attrs_showfqdnalias"])) {
+
             echo "<FQDNAliases>";
             if(isset($this->aliases[$rid])) {
                 foreach($this->aliases[$rid] as $alias) {
