@@ -10,12 +10,16 @@ Structure:
             Name (1)                            Name of the resource
             LongName (1)
             Community (1)
-            PrimaryOperationsContact (optional) Only available if the Support Center has this information 
-                Name (1)
-                Email (0 or 1)      * shows only if you access via https with correct DN
-                Phone (0 or 1)      * shows only if you access via https with correct DN
             Active (1)                         
             Disable (1)                         Show Disable flag
+            ContactTypes (1)
+                ContactType (N)
+                    Type (1)
+                    Contacts (1)
+                        Contact (N)
+                            Name (1)
+                            Email (0 or 1)      * shows only if you access via https with correct DN
+                            Phone (0 or 1)      * shows only if you access via https with correct DN
 <?
 if(user()->isGuest()) {
     echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
@@ -52,6 +56,30 @@ foreach($this->scs as $sc_id=>$sc) {
     } else {
         echo "<Disable>False</Disable>";
     }
+
+    if(isset($_REQUEST["summary_attrs_showcontact"])) {
+        echo "<ContactTypes>";
+        if(isset($this->contacts[$sc_id])) {
+            $contact_types = $this->contacts[$sc_id];
+            foreach($contact_types as $type_name=>$contacts) {
+                echo "<ContactType><Type>$type_name</Type>";
+                echo "<Contacts>";
+                foreach($contacts as $contact) {
+                    echo "<Contact>";
+                    echo "<Name>".htmlentities($contact->name)."</Name>";
+                    if(!user()->isGuest()) {
+                        echo "<Email>".htmlentities($contact->primary_email)."</Email>";
+                        echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+                    }
+                    echo "</Contact>";
+                }
+                echo "</Contacts>";
+                echo "</ContactType>";
+            }
+        }
+        echo "</ContactTypes>";
+    }
+
     echo "</SupportCenter>";
 }
 ?>

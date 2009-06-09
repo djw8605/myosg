@@ -106,6 +106,30 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</td></tr>";
     }
 
+    if(isset($_REQUEST["summary_attrs_showcontact"])) {
+        echo "<tr><th>Contacts</th><td>";
+        if(isset($this->contacts[$vo_id])) {
+            $contact_types = $this->contacts[$vo_id];
+            foreach($contact_types as $type_name=>$contacts) {
+                echo "<h4>$type_name</h4>";
+                foreach($contacts as $contact) {
+                    if(user()->isGuest()) {
+                        echo htmlentities($contact->name)."<br/>";
+                    } else {
+                        echo "<div class=\"contact_info\">";
+                        echo "<h3>".htmlentities($contact->name)."</h3>";
+                        echo "<table class=\"summary_subtable\">"; 
+                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                        echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        echo "</table>";
+                        echo "</div>";
+                    }
+                }
+            }
+        }
+        echo "</td></tr>";
+    }
+
     echo "</table>";
     echo "</div>"; //ex-class
 }

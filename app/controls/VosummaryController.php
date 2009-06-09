@@ -81,6 +81,25 @@ class VosummaryController extends VoController
             $this->view->vovo = $model->getindex();
         }
 
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            $this->view->contacts = array();
+            $cmodel = new VOContact();
+            $contacts = $cmodel->getindex();
+            //group by contact_type_id
+            foreach($this->vo_ids as $vo_id) {
+                $types = array();
+                if(isset($contacts[$vo_id])) {
+                    foreach($contacts[$vo_id] as $contact) {
+                        if(!isset($types[$contact->contact_type])) {
+                            $types[$contact->contact_type] = array();
+                        }
+                        $types[$contact->contact_type][] = $contact;
+                    }
+                    $this->view->contacts[$vo_id] = $types;
+                }
+            }
+        }
+
         $this->view->vos = array();
         foreach($this->vo_ids as $vo_id) {
             $vo = $vos[$vo_id][0];

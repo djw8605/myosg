@@ -9,7 +9,8 @@ class ScsummaryController extends ScController
         parent::load();
 
         $model = new SupportCenters();
-        $scs = $model->getindex();
+        $this->view->scs = $model->getindex();
+/*
         $cmodel = new SupportCenterContact();
         $sccontacts = $cmodel->getindex(array("contact_type_id"=>4, "contact_rank_id"=>1));
 
@@ -19,6 +20,26 @@ class ScsummaryController extends ScController
             $info->contact = @$sccontacts[$sc_id];
             $this->view->scs[$sc_id] = $info;
         }
+*/
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            $this->view->contacts = array();
+            $cmodel = new SupportCenterContact();
+            $contacts = $cmodel->getindex();
+            //group by contact_type_id
+            foreach($this->sc_ids as $sc_id) {
+                $types = array();
+                if(isset($contacts[$sc_id])) {
+                    foreach($contacts[$sc_id] as $contact) {
+                        if(!isset($types[$contact->contact_type])) {
+                            $types[$contact->contact_type] = array();
+                        }
+                        $types[$contact->contact_type][] = $contact;
+                    }
+                    $this->view->contacts[$sc_id] = $types;
+                }
+            }
+        }
+
 
         $this->setpagetitle(self::default_title());
     }

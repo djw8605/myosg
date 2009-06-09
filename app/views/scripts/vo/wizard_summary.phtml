@@ -20,3 +20,7 @@ if(isset($_REQUEST["summary_attrs_showreporting_group"])) { $checked = "checked=
 if(isset($_REQUEST["summary_attrs_showparent_vo"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showparent_vo" <?=$checked?>/> Show Parent VO<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
+
