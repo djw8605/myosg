@@ -9,18 +9,12 @@ class ScsummaryController extends ScController
         parent::load();
 
         $model = new SupportCenters();
-        $this->view->scs = $model->getindex();
-/*
-        $cmodel = new SupportCenterContact();
-        $sccontacts = $cmodel->getindex(array("contact_type_id"=>4, "contact_rank_id"=>1));
-
+        $scs = $model->getindex();
         $this->view->scs = array();
         foreach($this->sc_ids as $sc_id) {
-            $info = $scs[$sc_id][0];
-            $info->contact = @$sccontacts[$sc_id];
-            $this->view->scs[$sc_id] = $info;
+            $this->view->scs[$sc_id] = $scs[$sc_id][0];
         }
-*/
+
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             $this->view->contacts = array();
             $cmodel = new SupportCenterContact();
