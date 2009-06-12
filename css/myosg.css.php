@@ -380,13 +380,16 @@ table.summary_subtable th
 }
 div.downtime
 {
-    background-color: #ddf;
-    padding: 3px;
+    margin-top: 5px;
+    background-color: #dde;
+    padding: 10px;
 }
 div.downtime_detail
 {
     padding: 3px;
-}<?
+}
+
+<?
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //web(non-uwa) specific styles 
 if(!uwa()) {
