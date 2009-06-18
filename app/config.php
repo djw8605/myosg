@@ -189,6 +189,23 @@ class common_config
     function getCacheDir() {
         return "/tmp";
     }
+    function default_url($page) {
+       $param = "";
+        switch($page) {
+        case 'wizard':
+            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
+        case 'scsummary':
+            $param = "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
+        case 'vosummary':
+            $param = "?datasource=summary&all_vos=on&active_value=1";break;
+        case 'map':
+            $param = "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";break;
+        case 'misc':
+            $param = "?count_sg_1";break;
+        }
+        
+        return htmlentities(base()."/".$page.$param);
+    }
 }
 
 function base() {

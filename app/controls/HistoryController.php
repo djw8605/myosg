@@ -10,6 +10,11 @@ class HistoryController extends ControllerBase
         $id = $_REQUEST["resource_id"];
         return "resource_id=$id"; 
     }
+    public function indexAction()
+    {
+        echo "Please use Resource / RSV Status History page.";
+        $this->render("none", null, true);
+    }
 
     public function processPeriodQuery()
     {

@@ -44,31 +44,14 @@ parseQuery();
         <h2><?=config()->app_subname?></h2>
     </div>
 
-    <?function default_url($page) {
-        $param = "";
-        switch($page) {
-        case 'wizard':
-            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
-        case 'scsummary':
-            $param = "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
-        case 'vosummary':
-            $param = "?datasource=summary&all_vos=on&active_value=1";break;
-        case 'map':
-            $param = "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";break;
-        case 'misc':
-            $param = "?count_sg_1";break;
-        }
-        
-        return htmlentities(base()."/".$page.$param);
-    }?>
 
     <div class="submenu">
-        <span id="menu_about"><a href="<?=default_url("about")?>">Home</a></span>
-        <span id="menu_wizard"><a href="<?=default_url("wizard")?>">Resource</a></span>
-        <span id="menu_sc"><a href="<?=default_url("scsummary")?>">Support Center</a></span>
-        <span id="menu_vo"><a href="<?=default_url("vosummary")?>">Virtual Organization</a></span>
-        <span id="menu_map"><a href="<?=default_url("map")?>">Status Map</a></span>
-        <span id="menu_misc"><a href="<?=default_url("misc")?>">Miscellaneous</a></span>
+        <span id="menu_about"><a href="<?=config()->default_url("about")?>">Home</a></span>
+        <span id="menu_wizard"><a href="<?=config()->default_url("wizard")?>">Resource</a></span>
+        <span id="menu_sc"><a href="<?=config()->default_url("scsummary")?>">Support Center</a></span>
+        <span id="menu_vo"><a href="<?=config()->default_url("vosummary")?>">Virtual Organization</a></span>
+        <span id="menu_map"><a href="<?=config()->default_url("map")?>">Status Map</a></span>
+        <span id="menu_misc"><a href="<?=config()->default_url("misc")?>">Miscellaneous</a></span>
     </div>
 
     <script type="text/javascript">
