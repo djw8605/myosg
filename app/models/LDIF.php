@@ -27,9 +27,14 @@ class LDIF
         $cemonbdii = new SimpleXMLElement($cemonbdii_url);
 
         //cemon raw file listing for itb
-        $cemonbdii_itb_url = file_get_contents(config()->cemonbdii_itb_url);
-        $this->merge($cemonbdii, new SimpleXMLElement($cemonbdii_itb_url));
-        return $cemonbdii;
+	$cemonbdii_itb_url = file_get_contents(config()->cemonbdii_itb_url);
+	try {
+		$itb = new SimpleXMLElement($cemonbdii_itb_url);
+		$this->merge($cemonbdii, $itb);
+	} catch(exception $e) {
+		elog("failed to parse for some reason... maybe itb is not available?");
+	}
+	return $cemonbdii;
     }
 
     function merge(SimpleXMLElement &$xml1, SimpleXMLElement $xml2)
