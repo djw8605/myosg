@@ -8,7 +8,7 @@ class WizardceController extends WizardGratiaController
     public static function default_url($query) { return ""; }
 
     public function map() {
-        $dirty_type = $_REQUEST["ce_account_type"];
+        $dirty_type = @$_REQUEST["ce_account_type"];
         switch($dirty_type) 
         {
         case "gip_vo":
@@ -32,7 +32,7 @@ class WizardceController extends WizardGratiaController
             $ylabel = "Probe Names";
             break;
         default:
-            throw new exception("unknown account_type");
+            elog("unknown account_type - maybe bot?");
         }
         return array($urlbase, $sub_title, $ylabel);
     }

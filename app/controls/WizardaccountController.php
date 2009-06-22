@@ -8,7 +8,7 @@ class WizardaccountController extends WizardGratiaController
     public static function default_url($query) { return ""; }
 
     public function map() {
-        $dirty_type = $_REQUEST["account_type"];
+        $dirty_type = @$_REQUEST["account_type"];
         switch($dirty_type) 
         {
         case "cumulative_hours":
@@ -45,7 +45,7 @@ class WizardaccountController extends WizardGratiaController
             $ylabel = "Efficiency";
             break;
         default:
-            throw new exception("unknown account_type");
+            elog("unknown account_type - maybe a bot accessing?");
         }
         return array($urlbase, $sub_title, $ylabel);
     }

@@ -8,7 +8,7 @@ class WizardseController extends WizardGratiaController
     public static function default_url($query) { return ""; }
 
     public function map() {
-        $dirty_type = $_REQUEST["se_account_type"];
+        $dirty_type = @$_REQUEST["se_account_type"];
         switch($dirty_type) 
         {
         case "vo_transfer_volume":
@@ -32,7 +32,7 @@ class WizardseController extends WizardGratiaController
             $ylabel = "GB";
             break;
         default:
-            throw new exception("unknown account_type");
+            elog("unknown account_type - maybe a bot");
         }
         return array($urlbase, $sub_title, $ylabel);
     }
