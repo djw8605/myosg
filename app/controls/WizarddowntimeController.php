@@ -12,18 +12,19 @@ class WizarddowntimeController extends WizardController
         $this->view->resource_ids = $this->resource_ids;
 
         $model = new Downtime();
-        $downtimes = $model->getindex();
+        $downtimes = $model->get();
 
         $past = array();
         $current = array();
         $future = array();
         
-        foreach($downtimes as $id=>$downtime) {
-            if($downtime[0]->unix_end_time < time()) {
+        foreach($downtimes as $downtime) {
+            $id = $downtime->id;
+            if($downtime->unix_end_time < time()) {
                 if(isset($_REQUEST["downtime_attrs_showpast"])) {
                     $past[$id] = $downtime;
                 } 
-            } else if($downtime[0]->unix_start_time > time()) {
+            } else if($downtime->unix_start_time > time()) {
                 $future[$id] = $downtime;
             } else {
                 $current[$id] = $downtime;
@@ -62,9 +63,9 @@ class WizarddowntimeController extends WizardController
         $model = new DN();      
         $dns = $model->getindex();
 
-        foreach($downtime_recs as $downtime_a)
+        foreach($downtime_recs as $downtime)
         {
-            $downtime = $downtime_a[0];
+            //$downtime = $downtime_a[0];
             if(in_array($downtime->resource_id, $this->resource_ids)) {
                 //only show event that we have pulled resource for
                 $resource = $resources[$downtime->resource_id];

@@ -7,9 +7,6 @@ foreach($this->resources as $rid=>$record) {
     $rawdata = $record["rawdata"];
     $overallstatus = $record["overallstatus"];
 
-    ?>
-<?
- 
     switch($overallstatus) {
     case "FAIL":
         $overall = "CRITICAL";

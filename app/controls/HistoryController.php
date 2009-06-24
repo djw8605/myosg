@@ -213,7 +213,7 @@ class HistoryController extends ControllerBase
         list($status_changes, $start_time, $end_time, $downtimes)  = $this->loadStatusChanges();
         $this->drawGraph($status_changes, $start_time, $end_time, $downtimes);
     }
-        
+
     public function loadStatusChanges()
     {
         /////////////////////////////////////////////////////////////////////////////////

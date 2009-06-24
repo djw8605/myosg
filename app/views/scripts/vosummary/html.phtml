@@ -78,8 +78,10 @@ foreach($this->vos as $vo_id=>$vo) {
                 echo "<h3>FQANs</h3>";
                 foreach($report->fqans as $fqan) {
                     echo "<div class=\"vo_report_fqan\">";
-                    echo "<b>Group Name:</b>".htmlentities($fqan->group_name)."<br/>";
-                    echo "<b>Role:</b>".htmlentities($fqan->role);
+                    echo "<table class=\"summary_subtable\">"; 
+                    echo "<tr><th>Group Name:</th><td>".htmlentities($fqan->group_name)."</td></tr>";
+                    echo "<tr><th>Role:</th><td>".htmlentities($fqan->role)."</td></tr>";
+                    echo "</table>";
                     echo "</div>";
                 }
             }
