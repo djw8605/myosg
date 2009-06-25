@@ -148,11 +148,11 @@ class TestController extends Zend_Controller_Action
         $total = 0;
 
         foreach($resources as $id=>$resource) {
-            $total++;
             $resource = $resource[0];
 
             //make sure it's in prod resource group
             if(!isset($groups[$resource->resource_group_id])) continue;
+            $total++;
 
             //search by resource name
             $found = false;
@@ -203,6 +203,7 @@ class TestController extends Zend_Controller_Action
         }
         
         echo "<h2>Total Number $count out of $total<h2>";
+        echo "<h2>".count($resources)."<h2>";
 
         $this->render("none", null, true);
     }
