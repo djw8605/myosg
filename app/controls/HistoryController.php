@@ -355,7 +355,7 @@ class HistoryController extends ControllerBase
         header('Content-type: image/png');
         imagePNG($im); 
 
-        $this->render("none");
+        $this->render("none", null, true);
     }
 
     private function metric_overwrite($metric, $latest)

@@ -36,14 +36,14 @@ class AdminController extends ControllerBase
         
         passthru("/usr/sbin/logrotate -s $statepath $confpath");
 
-        $this->render("none");
+        $this->render("none", null, true);
     }
 
     public function optimizeAction()
     {
         $model = new Admin();
         $model->optimize();
-        $this->render("none");
+        $this->render("none", null, true);
     }
 
     public function dedupdetailAction()
@@ -60,6 +60,6 @@ class AdminController extends ControllerBase
             echo "</blockquote>";
         }
 
-        $this->render("none");
+        $this->render("none", null, true);
     }
 } 

@@ -210,6 +210,10 @@ font-size: 11px;
 	padding: 1.0em 3.5em 1.0em 3.5em;
 	font-size: 0.8em;
 }
+#footer p
+{
+    padding-bottom: 5px;
+}
 .clear
 {
 	clear: both;
