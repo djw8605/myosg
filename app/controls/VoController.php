@@ -55,8 +55,8 @@ class VoController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["vo"])) {
-                    if(preg_match("/^vo_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_volist_addvo($vo_ids, $matches["id"]);
+                    if(preg_match("/^vo_(\d+)/", $key, $matches)) {
+                        $this->process_volist_addvo($vo_ids, $matches[1]);
                     }
                 }
             }

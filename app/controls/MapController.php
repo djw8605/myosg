@@ -72,13 +72,13 @@ class MapController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
-                    if(preg_match("/^sc_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_sitelist_addsc($site_ids, $matches["id"]);
+                    if(preg_match("/^sc_(\d+)/", $key, $matches)) {
+                        $this->process_sitelist_addsc($site_ids, $matches[1]);
                     }
                 }
                 if(isset($_REQUEST["facility"])) {
-                    if(preg_match("/^facility_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_sitelist_addfacility($site_ids, $matches["id"]);
+                    if(preg_match("/^facility_(\d+)/", $key, $matches)) {
+                        $this->process_sitelist_addfacility($site_ids, $matches[1]);
                     }
                 }
             }

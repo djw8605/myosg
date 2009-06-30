@@ -10,22 +10,43 @@ require_once "Zend/Loader.php";
 Zend_Loader::registerAutoload(); 
 Zend_Session::start();
 
+//check to make sure our site installation is done
+if(!file_exists("config.php")) {
+    echo "please create site specific config.php";
+    exit;
+}
+if(!file_exists(".htaccess")) {
+    echo ".htaccess file doesn't exist. please create";
+    exit;
+}
 //load our stuff
 require_once("config.php");
 require_once("app/views/helper.php");
 require_once("app/base.php");
+//bootstrap
+try {
 
-remove_quotes();
-setup_logs();
-greet();
-cert_authenticate();
+    remove_quotes();
+    setup_logs();
+    greet();
+    cert_authenticate();
 
-ini_set('error_log', config()->error_logfile);
-ini_set('display_errors', 0); 
-ini_set('log_errors', 1); 
-ini_set('display_startup_errors', 1);  
-error_reporting(E_ALL | E_STRICT);  
-date_default_timezone_set("UTC");
+    ini_set('error_log', config()->error_logfile);
+    ini_set('display_errors', 0); 
+    ini_set('log_errors', 1); 
+    ini_set('display_startup_errors', 1);  
+    error_reporting(E_ALL | E_STRICT);  
+    date_default_timezone_set("UTC");
+} catch(exception $e) {
+    //when a catastrohpic failure occure (like disk goes read-only..) emailing is the only way we got..
+    if(!config()->debug) {
+        mail(config()->elog_email_address, "[gocticket] Caught exception during bootstrap", $e, "From: ".config()->email_from);
+    }
+    header("HTTP/1.0 500 Internal Server Error");
+    echo "Boot Error";
+    echo "<pre>".$e->getMessage()."</pre>";
+    exit;
+}
 
 //dispatch
 $frontController = Zend_Controller_Front::getInstance(); 

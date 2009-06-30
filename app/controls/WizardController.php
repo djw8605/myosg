@@ -48,28 +48,28 @@ class WizardController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
-                    if(preg_match("/^sc_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_resourcelist_addsc($resource_ids, $matches["id"]);
+                    if(preg_match("/^sc_(\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addsc($resource_ids, $matches[1]);
                     }
                 }
                 if(isset($_REQUEST["facility"])) {
-                    if(preg_match("/^facility_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_resourcelist_addfacility($resource_ids, $matches["id"]);
+                    if(preg_match("/^facility_(\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addfacility($resource_ids, $matches[1]);
                     }
                 }
                  if(isset($_REQUEST["site"])) {
-                    if(preg_match("/^site_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_resourcelist_addsite($resource_ids, $matches["id"]);
+                    if(preg_match("/^site_(\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addsite($resource_ids, $matches[1]);
                     }
                 }
                 if(isset($_REQUEST["rg"])) {
-                    if(preg_match("/^rg_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_resourcelist_addrg($resource_ids, $matches["id"]);
+                    if(preg_match("/^rg_(\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addrg($resource_ids, $matches[1]);
                     }
                 }
                 if(isset($_REQUEST["r"])) {
-                    if(preg_match("/^r_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_resourcelist_addr($resource_ids, $matches["id"]);
+                    if(preg_match("/^r_(\d+)/", $key, $matches)) {
+                        $this->process_resourcelist_addr($resource_ids, $matches[1]);
                     }
                 }
             }

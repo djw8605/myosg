@@ -55,8 +55,8 @@ class ScController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
-                    if(preg_match("/^sc_(?<id>\d+)/", $key, $matches)) {
-                        $this->process_sclist_addsc($sc_ids, $matches["id"]);
+                    if(preg_match("/^sc_(\d+)/", $key, $matches)) {
+                        $this->process_sclist_addsc($sc_ids, $matches[1]);
                     }
                 }
             }

@@ -47,7 +47,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "1.4.1";
+        $this->version = "1.5";
         //application to display or used in email
         $this->app_name = "MyOSG";
         $this->app_subname = "by Grid Operations Center";
@@ -94,6 +94,8 @@ class common_config
         $this->logfile = "app/logs/log.txt";
         $this->error_logfile = "app/logs/error.txt";
         $this->audit_logfile = "app/logs/audit.txt";
+
+        $this->email_from = "goc@opensciencegrid.org";
 
         //elog email
         $this->elog_email = false;
