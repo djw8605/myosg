@@ -5,6 +5,7 @@ class TestController extends Zend_Controller_Action
     public static function default_title() { return "Test"; }
     public static function default_url($query) { return ""; }
 
+/*
     function searchAction()
     {
         //search for resources that are not reported on gratia
@@ -207,4 +208,5 @@ class TestController extends Zend_Controller_Action
 
         $this->render("none", null, true);
     }
+*/
 } 
