@@ -61,6 +61,7 @@ Structure:
                                     Name (1)
                                     Email (0 or 1)      * shows only if you access via https with correct DN
                                     Phone (0 or 1)      * shows only if you access via https with correct DN
+                                    SMSAddress (0 or 1)      * shows only if you access via https with correct DN
                                     Rank (1)
 
 <?
@@ -332,6 +333,9 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                         }
                         if(isset($contact->primary_phone)) {
                             echo "<Phone>".$contact->primary_phone."</Phone>";
+                        }
+                        if(isset($contact->sms_address)) {
+                            echo "<SMSAddress>".$contact->sms_address."</SMSAddress>";
                         }
                     }
                     echo "<ContactRank>".$contact->rank_type."</ContactRank>";
