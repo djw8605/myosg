@@ -20,6 +20,7 @@ Structure:
                             Name (1)
                             Email (0 or 1)      * shows only if you access via https with correct DN
                             Phone (0 or 1)      * shows only if you access via https with correct DN
+                            SMSAddress(0 or 1)      * shows only if you access via https with correct DN
 <?
 if(user()->isGuest()) {
     echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
@@ -35,6 +36,7 @@ foreach($this->scs as $sc_id=>$sc) {
     echo "<LongName>".htmlentities($sc->long_name)."</LongName>";
     echo "<Community>".htmlentities($sc->community)."</Community>";
 
+/*
     if(count($sc->contact) > 0) {
         echo "<PrimaryOperationsContact>";
         $contact = $sc->contact[0];
@@ -42,10 +44,11 @@ foreach($this->scs as $sc_id=>$sc) {
         if(!user()->isGuest()) {
             echo "<Email>".htmlentities($contact->primary_email)."</Email>";
             echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+            echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
         }
         echo "</PrimaryOperationsContact>";
     }
-
+*/
     if($sc->active == 1) {
         echo "<Active>True</Active>";
     } else {
@@ -70,6 +73,7 @@ foreach($this->scs as $sc_id=>$sc) {
                     if(!user()->isGuest()) {
                         echo "<Email>".htmlentities($contact->primary_email)."</Email>";
                         echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+                        echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
                     }
                     echo "</Contact>";
                 }

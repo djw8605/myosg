@@ -97,6 +97,9 @@ foreach($this->vos as $vo_id=>$vo) {
                         echo "<table class=\"summary_subtable\">"; 
                         echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                         echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        if($contact->sms_address != null) {
+                            echo "<tr><th>SMS Address</th><td>".htmlentities($contact->sms_address)."</td></tr>";
+                        }
                         echo "</table>";
                         echo "</div>";
                     }
@@ -123,6 +126,9 @@ foreach($this->vos as $vo_id=>$vo) {
                         echo "<table class=\"summary_subtable\">"; 
                         echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                         echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        if($contact->sms_address != null) {
+                            echo "<tr><th>SMS Address</th><td>".htmlentities($contact->sms_address)."</td></tr>";
+                        }
                         echo "</table>";
                         echo "</div>";
                     }

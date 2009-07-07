@@ -322,23 +322,17 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             echo "<ContactLists>";
             foreach($contact_types as $type_name=>$contacts) {
                 echo "<ContactList>";
-                echo "<ContactType>$type_name</ContactType>";
+                echo "<ContactType>".htmlentities($type_name)."</ContactType>";
                 echo "<Contacts>";
                 foreach($contacts as $contact) {
                     echo "<Contact>";
-                    echo "<Name>".$contact->name."</Name>";
+                    echo "<Name>".htmlentities($contact->name)."</Name>";
                     if(!user()->isGuest()) {
-                        if(isset($contact->primary_email)) {
-                            echo "<Email>".$contact->primary_email."</Email>";
-                        }
-                        if(isset($contact->primary_phone)) {
-                            echo "<Phone>".$contact->primary_phone."</Phone>";
-                        }
-                        if(isset($contact->sms_address)) {
-                            echo "<SMSAddress>".$contact->sms_address."</SMSAddress>";
-                        }
+                        echo "<Email>".htmlentities($contact->primary_email)."</Email>";
+                        echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+                        echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
                     }
-                    echo "<ContactRank>".$contact->rank_type."</ContactRank>";
+                    echo "<ContactRank>".htmlentities($contact->rank_type)."</ContactRank>";
                     echo "</Contact>";
                 }
                 echo "</Contacts>";
