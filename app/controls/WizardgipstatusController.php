@@ -50,7 +50,7 @@ class WizardgipstatusController extends WizardController
                     $cemon = $resource;
                     break;
                 }
-            } 
+            }
             //if we have data, pull it out
             if($cemon !== null) {
                 $rawdata["processed_osg_data"] = $cemon->processed_osg_data;

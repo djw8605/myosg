@@ -28,7 +28,6 @@ class User
         $sql = "select p.* from dn c left join contact p on
                         (c.contact_id = p.id)
                     where
-                        p.active = 1 and
                         p.disable = 0 and
                         dn_string = '$dn'";
         $row = db("oim")->fetchRow($sql);

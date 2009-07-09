@@ -29,7 +29,6 @@ class LDIF
         //cemon raw file listing for production
         slog("loading ".config()->cemonbdii_url);
         $cemonbdii_url = file_get_contents(config()->cemonbdii_url, 0, $ctx);
-
         $cemonbdii = new SimpleXMLElement($cemonbdii_url);
 
         //cemon raw file listing for itb

@@ -123,7 +123,8 @@ class common_config
 
         //bdii raw files
         $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";
-        $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml";
+        #$this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml";
+        $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB";
 
         //locale
         $this->date_format_full = "M j, Y H:i:s e";
