@@ -122,7 +122,7 @@ foreach($this->vos as $vo_id=>$vo) {
                     echo "<Contact>";
                     echo "<Name>".$contact->name."</Name>";
                     if(!user()->isGuest()) {
-                        echo "<Email>".htmlentites($contact->primary_email)."</Email>";
+                        echo "<Email>".htmlentities($contact->primary_email)."</Email>";
                         echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
                         echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
                     }
