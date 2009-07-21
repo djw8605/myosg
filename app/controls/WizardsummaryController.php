@@ -1,7 +1,6 @@
 <?
 class WizardsummaryController extends WizardController
 {
-    //public function breads() { return array("wizard"); }
     public static function default_title() { return "Resource Summary"; }
     public static function default_url($query) { return ""; }
 
@@ -104,10 +103,14 @@ class WizardsummaryController extends WizardController
             $this->view->envs = array();
             foreach($this->resource_ids as $resource_id) {
                 $rec = @$details[$resource_id][0];
+                $env = null;
                 if($rec !== null) {
-                    $env = new SimpleXMLElement($rec->xml);
-                } else {
-                    $env = null;
+                    try {
+                        $env = new SimpleXMLElement($rec->xml);
+                    } catch (exception $e) {
+                        elog((string)$e);
+                        elog($rec->xml);
+                    }
                 }
                 $this->view->envs[$resource_id] = $env;
             }
