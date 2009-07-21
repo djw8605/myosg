@@ -197,6 +197,8 @@ class common_config
         switch($page) {
         case 'wizard':
             $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
+        case 'rg':
+            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
         case 'scsummary':
             $param = "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
         case 'vosummary':

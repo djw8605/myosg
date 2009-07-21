@@ -23,20 +23,36 @@ class LDIF
 
     public function getBdii()
     {
-        //try only for 1 seconds to pull this data
-        $ctx = stream_context_create(array( 'http' => array('timeout' => 2)));
+        //try only for 2 seconds to pull this data
+        $ctx = stream_context_create(array('http' => array('timeout' => 2)));
 
-        //cemon raw file listing for production
-        slog("loading ".config()->cemonbdii_url);
-        $cemonbdii_url = file_get_contents(config()->cemonbdii_url, 0, $ctx);
-        $cemonbdii = new SimpleXMLElement($cemonbdii_url);
+        //cache these xml for little bit
+        $seconds = 60;
 
-        //cemon raw file listing for itb
-        slog("loading ".config()->cemonbdii_itb_url);
-        $cemonbdii_itb_url = file_get_contents(config()->cemonbdii_itb_url, 0, $ctx);
+        $c = new Cache("/tmp/myosg.bdii");
+        if($c->isFresh($seconds)) { 
+            $cemonbdii = $c->get();
+        } else {
+            //cemon raw file listing for production
+            slog("loading ".config()->cemonbdii_url);
+            $cemonbdii_url = file_get_contents(config()->cemonbdii_url, 0, $ctx);
+            $cemonbdii = new SimpleXMLElement($cemonbdii_url);
+            $c->set($cemonbdii);
+        }
 
+        $c = new Cache("/tmp/myosg.bdii-itb");
+        if($c->isFresh($seconds)) { 
+            $cemonbdii_itb = $c->get();
+        } else {
+            //cemon raw file listing for itb
+            slog("loading ".config()->cemonbdii_itb_url);
+            $cemonbdii_itb = file_get_contents(config()->cemonbdii_itb_url, 0, $ctx);
+            $c->set($cemonbdii);
+        }
+
+        //merge itb content to prod content
         try {
-                $itb = new SimpleXMLElement($cemonbdii_itb_url);
+                $itb = new SimpleXMLElement($cemonbdii_itb);
                 $this->merge($cemonbdii, $itb);
         } catch(exception $e) {
                 elog("failed to parse for some reason... maybe itb is not available?");

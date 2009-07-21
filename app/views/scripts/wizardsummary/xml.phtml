@@ -276,12 +276,10 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             echo "<WLCGInformation>";
-            // if(isset($this->resource_wlcg[$rid])) {
             $info = @$this->resource_wlcg[$rid][0];
             if($info == null) {
                 echo "(Information not available)";
             } else {
-                $info = $this->resource_wlcg[$rid][0];
                 $value = "False";
                 if($info->interop_bdii == 1) { $value = "True"; }
                 else {$info->ldap_url = "";}
@@ -320,23 +318,25 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             $contact_types = @$this->contacts[$rid];
             echo "<ContactLists>";
-            foreach($contact_types as $type_name=>$contacts) {
-                echo "<ContactList>";
-                echo "<ContactType>".htmlentities($type_name)."</ContactType>";
-                echo "<Contacts>";
-                foreach($contacts as $contact) {
-                    echo "<Contact>";
-                    echo "<Name>".htmlentities($contact->name)."</Name>";
-                    if(!user()->isGuest()) {
-                        echo "<Email>".htmlentities($contact->primary_email)."</Email>";
-                        echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
-                        echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
+            if(is_array($contact_types)) {
+                foreach($contact_types as $type_name=>$contacts) {
+                    echo "<ContactList>";
+                    echo "<ContactType>".htmlentities($type_name)."</ContactType>";
+                    echo "<Contacts>";
+                    foreach($contacts as $contact) {
+                        echo "<Contact>";
+                        echo "<Name>".htmlentities($contact->name)."</Name>";
+                        if(!user()->isGuest()) {
+                            echo "<Email>".htmlentities($contact->primary_email)."</Email>";
+                            echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
+                            echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
+                        }
+                        echo "<ContactRank>".htmlentities($contact->rank_type)."</ContactRank>";
+                        echo "</Contact>";
                     }
-                    echo "<ContactRank>".htmlentities($contact->rank_type)."</ContactRank>";
-                    echo "</Contact>";
+                    echo "</Contacts>";
+                    echo "</ContactList>";
                 }
-                echo "</Contacts>";
-                echo "</ContactList>";
             }
             echo "</ContactLists>";
         }
