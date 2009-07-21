@@ -80,21 +80,18 @@ class WizardsummaryController extends WizardController
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             $model = new ResourceWLCG();
             $this->view->resource_wlcg = $model->getindex();
-
             //append bdii link
-            foreach($this->resource_ids as $resource_id) {
-
+            foreach($this->view->resource_wlcg as $resource_id=>$info) {
                 //get resource group name
                 $rgroup_id = $resources[$resource_id][0]->resource_group_id;
                 $rgroup = $this->view->resourcegroups[$rgroup_id][0];
                 $rgname = $rgroup->name;
-		## Assign appropriate BDII service end point in LDAP URI 
-		if ($rgroup->grid_type == "OSG") {
-		  $this->view->resource_wlcg[$resource_id][0]->ldap_url = "ldap://is.grid.iu.edu:2180/mds-vo-name=$rgname,o=grid";
-		}
-		else {
-		  $this->view->resource_wlcg[$resource_id][0]->ldap_url = "ldap://is-itb.grid.iu.edu:2180/mds-vo-name=$rgname,o=grid";
-		}
+                if ($rgroup->grid_type == "OSG") {
+                  $info[0]->ldap_url = "ldap://is.grid.iu.edu:2180/mds-vo-name=$rgname,o=grid";
+                }
+                else {
+                  $info[0]->ldap_url = "ldap://is-itb.grid.iu.edu:2180/mds-vo-name=$rgname,o=grid";
+                }
             }
         }
         if(isset($_REQUEST["summary_attrs_showenv"])) {
