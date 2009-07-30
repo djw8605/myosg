@@ -1,0 +1,9 @@
+<p class="info">GIP(Generic Information provider) on each OSG resource publishes detailed information about various services available in that resource group, enabling OSG users to evaluate usability via the OSG BDII. This page provides validation results for the GIP  information enabling administrators to spot inaccuracies and/or inconsistencies.<a target="_blank" href="http://is.grid.iu.edu/documentation.html">CEMon-BDII Documentation</a></p>
+
+<?$checked = "";
+if(isset($_REQUEST["gip_status_attrs_showtestresults"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="gip_status_attrs_showtestresults" <?=$checked?>/> Show Test Results<br/>
+
+<?$checked = "";
+if(isset($_REQUEST["gip_status_attrs_showfqdn"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="gip_status_attrs_showfqdn" <?=$checked?>/> Show FQDN<br/>
