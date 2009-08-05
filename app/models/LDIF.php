@@ -31,31 +31,31 @@ class LDIF
 
         $c = new Cache("/tmp/myosg.bdii");
         if($c->isFresh($seconds)) { 
-            $cemonbdii = $c->get();
+            $cemonbdii_content = $c->get();
         } else {
             //cemon raw file listing for production
             slog("loading ".config()->cemonbdii_url);
-            $cemonbdii_url = file_get_contents(config()->cemonbdii_url, 0, $ctx);
-            $cemonbdii = new SimpleXMLElement($cemonbdii_url);
-            $c->set($cemonbdii);
+            $cemonbdii_content = file_get_contents(config()->cemonbdii_url, 0, $ctx);
+            $c->set($cemonbdii_content);
         }
+        $cemonbdii = new SimpleXMLElement($cemonbdii_content);
 
         $c = new Cache("/tmp/myosg.bdii-itb");
         if($c->isFresh($seconds)) { 
-            $cemonbdii_itb = $c->get();
+            $cemonbdii_itb_content = $c->get();
         } else {
             //cemon raw file listing for itb
             slog("loading ".config()->cemonbdii_itb_url);
-            $cemonbdii_itb = file_get_contents(config()->cemonbdii_itb_url, 0, $ctx);
-            $c->set($cemonbdii);
+            $cemonbdii_itb_content = file_get_contents(config()->cemonbdii_itb_url, 0, $ctx);
+            $c->set($cemonbdii_itb_content);
         }
 
         //merge itb content to prod content
         try {
-                $itb = new SimpleXMLElement($cemonbdii_itb);
-                $this->merge($cemonbdii, $itb);
+            $itb = new SimpleXMLElement($cemonbdii_itb_content);
+            $this->merge($cemonbdii, $itb);
         } catch(exception $e) {
-                elog("failed to parse for some reason... maybe itb is not available?");
+            elog("failed to parse for some reason... maybe itb is not available?");
         }
         return $cemonbdii;
     }

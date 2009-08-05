@@ -52,3 +52,6 @@ try {
 $frontController = Zend_Controller_Front::getInstance(); 
 $frontController->setControllerDirectory('app/controls'); 
 $frontController->dispatch(); 
+
+slog("page rendered");
+

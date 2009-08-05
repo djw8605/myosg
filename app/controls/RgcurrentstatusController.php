@@ -10,6 +10,9 @@ class RgcurrentstatusController extends RgController
         parent::load();
         $this->view->rgs = $this->rgs;
 
+        $model = new ResourceGroup();
+        $this->view->resource_groups = $model->getindex();
+
         //load current status cache for all requested resources
         $this->view->cache = array();
         foreach($this->view->rgs as $rgid=>$rg) {

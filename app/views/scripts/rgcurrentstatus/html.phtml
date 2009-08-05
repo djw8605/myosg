@@ -1,12 +1,18 @@
 <?
 foreach($this->rgs as $rgid=>$rg) {
+    
+    //show resource group header
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<div class=\"resource_group_header round\">";
+    if(!uwa()) {
+        echo "<div class=\"sidenote\">";
+        echo $resource_group->grid_type_description." Group";
+        echo "</div>";
+    }
+    echo "<span class='h3'>".$resource_group->name."</span>";
+    echo "</div>";
+ 
     foreach($rg as $rid=>$resource) {
-        $cache = $this->cache[$rid];
-        $timestamp = (int)$cache->Timestamp[0];
-        $status = $cache->Status[0];
-        $note = $cache->Note[0];
-        $services = $cache->Services[0];
-
         $resource_name = $resource->name;
         $resource_fqdn = $resource->fqdn;
 
@@ -22,6 +28,18 @@ foreach($this->rgs as $rgid=>$rg) {
         ?>
         <span class="fqdn"><?=$resource_fqdn?></span>
         </div>
+
+        <?
+        if(!isset($this->cache[$rid])) {
+            echo "<p class=\"warning\">Current status data is not available for this resource.</p>";
+            continue;
+        }
+        $cache = $this->cache[$rid];
+        $timestamp = (int)$cache->Timestamp[0];
+        $status = $cache->Status[0];
+        $note = $cache->Note[0];
+        $services = $cache->Services[0];
+        ?>
 
         <div class="status_<?=$status?>">
         <p><?=$note?></p>

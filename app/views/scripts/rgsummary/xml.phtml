@@ -72,17 +72,17 @@ if(user()->isGuest()) {
 -->
 <ResourceSummary>
 <?
-foreach($this->resource_groups as $resource_group_id=>$resource_list) {
-
+//foreach($this->resource_groups as $resource_group_id=>$resource_list) {
+foreach($this->rgs as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
     echo "<ResourceGroup>";
     $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
     echo "<GridType>";
     echo htmlentities($gridtype_name);
     echo "</GridType>";
-
     echo "<GroupID>".$resource_group->id."</GroupID>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
+
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<GroupDescription>";
         if($resource_group->description != "") {

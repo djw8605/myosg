@@ -1,0 +1,34 @@
+<StatusHistory>
+<?
+echo "<StartTime>$this->start_time</StartTime>";
+echo "<EndTime>$this->end_time</EndTime>";
+foreach($this->rgs as $rgid=>$rg) {
+    echo "<ResourceGroup>";
+
+    $resource_group = $this->resource_groups[$rgid][0];
+
+    echo "<GridType>".htmlentities($resource_group->grid_type_description)."</GridType>";
+    echo "<GroupID>".$resource_group->id."</GroupID>";
+    echo "<GroupName>".htmlentities($resource_group->name)."</GroupName>";
+
+    foreach($rg as $rid=>$resource) {
+        echo "<Resource>";
+        echo "<Name>".htmlentities($resource->name)."</Name>";
+        echo "<ID>$rid</ID>";
+        
+        foreach($this->services[$rid] as $service) {
+            echo "<Service>";
+            echo "<Description>".htmlentities($service->description)."</Description>";
+            echo "<ID>$service->service_id</ID>";
+            echo "<GraphURL>";
+            $url = fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time";
+            echo htmlentities($url);
+            echo "</GraphURL>";
+            echo "</Service>";
+        }
+        echo "</Resource>";
+    }
+    echo "</ResourceGroup>";
+}
+?>
+</StatusHistory>

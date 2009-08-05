@@ -1,55 +1,65 @@
 <CurrentStatus>
 <?
-foreach($this->cache as $rid=>$cache) {
-    echo "<Resource>";
-    $timestamp = (int)$cache->Timestamp[0];
-    $status = $cache->Status[0];
-    $note = $cache->Note[0];
-    $services = $cache->Services[0];
+foreach($this->rgs as $rgid=>$rg) {
+    
+    //show resource group header
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<ResourceGroup>";
+    echo "<GroupType>".$resource_group->grid_type_description."</GroupType>";
+    echo "<GroupName>".$resource_group->name."</GroupName>";
+ 
+    foreach($rg as $rid=>$resource) {
+        $resource_name = $resource->name;
+        $resource_fqdn = $resource->fqdn;
 
-    $resource = $this->resources[$rid];
-    $resource_name = $resource->name;
-    $resource_fqdn = $resource->fqdn;
+        echo "<Resource>";
+        $cache = $this->cache[$rid];
+        $timestamp = (int)$cache->Timestamp[0];
+        $status = $cache->Status[0];
+        $note = $cache->Note[0];
+        $services = $cache->Services[0];
 
-    ?>
-    <Status><?=$status?></Status>
-    <ResourceName><?=$resource_name?></ResourceName>
-    <Fqdn><?=$resource_fqdn?></Fqdn>
-    <Note><?=htmlentities($note)?></Note>
-    <?
-    foreach($services as $service) {
-        echo "<Service>";
-        $service_status = $service->Status;
-        $note = $service->Note;
+        ?>
+        <Status><?=$status?></Status>
+        <ResourceName><?=$resource_name?></ResourceName>
+        <Fqdn><?=$resource_fqdn?></Fqdn>
+        <Note><?=htmlentities($note)?></Note>
+        <?
+        foreach($services as $service) {
+            echo "<Service>";
+            $service_status = $service->Status;
+            $note = $service->Note;
 
-        echo "<Name>".$service->Name."</Name>";
-        echo "<Description>".$service->ServiceDescription." Service Status</Description>";
-        echo "<Status>$service_status</Status>";
-        echo "<Note>".htmlentities($note)."</Note>";
+            echo "<Name>".$service->Name."</Name>";
+            echo "<Description>".$service->ServiceDescription." Service Status</Description>";
+            echo "<Status>$service_status</Status>";
+            echo "<Note>".htmlentities($note)."</Note>";
 
-        //critical metrics
-        $out = "";
-        foreach($service->CriticalMetrics[0] as $metric) {
-            $out .= outputMetricInfo($metric, $timestamp);
-        }
-        echo "<CriticalMetrics>";
-        echo $out;
-        echo "</CriticalMetrics>";
-
-        //non-critical metrics
-        if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
-            $non_critical_metrics = $service->NonCriticalMetrics[0];
+            //critical metrics
             $out = "";
-            foreach($non_critical_metrics as $metric) {
-                if($metric->Detail != "") {
-                    $out .= outputMetricInfo($metric, $timestamp);
-                }
+            foreach($service->CriticalMetrics[0] as $metric) {
+                $out .= outputMetricInfo($metric, $timestamp);
             }
-            echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
+            echo "<CriticalMetrics>";
+            echo $out;
+            echo "</CriticalMetrics>";
+
+            //non-critical metrics
+            if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                $non_critical_metrics = $service->NonCriticalMetrics[0];
+                $out = "";
+                foreach($non_critical_metrics as $metric) {
+                    if($metric->Detail != "") {
+                        $out .= outputMetricInfo($metric, $timestamp);
+                    }
+                }
+                echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
+            }
+            echo "</Service>";
         }
-        echo "</Service>";
+        echo "</Resource>";
     }
-    echo "</Resource>";
+    echo "</ResourceGroup>";
 }
 
 
