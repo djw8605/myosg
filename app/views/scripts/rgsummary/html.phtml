@@ -159,8 +159,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 $note = "<div>Resource status is not calculated for this resource.</div>";
                 $status = "UNKNOWN";
             } else {
-                $detail_url = htmlentities(fullbase()."/rgcurrentstatus/index?datasource=currentstatus&r=on&r_$rid=on");
-                $history_url = htmlentities(fullbase()."/rgstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=today&r=on&r_$rid=on");
+                $detail_url = htmlentities(fullbase()."/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_$resource_group_id=on");
+                $history_url = htmlentities(fullbase()."/rgstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=today&rg=on&rg_$resource_group_id=on");
                 $resource_status = $this->resource_status[$rid][0];
                 $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
                 $status = Status::getStatus($resource_status->status_id);

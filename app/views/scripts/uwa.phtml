@@ -25,8 +25,8 @@
 
 <style type="text/css">
 <?
-//echo file_get_contents(fullbase()."/css/myosg.css.php?uwa");
-echo file_get_contents("http://localhost/".base()."/css/myosg.css.php?uwa");
+//I need to use fullbase since css path is derived from it
+echo file_get_contents(fullbase()."/css/myosg.css.php?uwa");
 ?>
 </style>
  
