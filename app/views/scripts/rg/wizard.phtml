@@ -13,10 +13,6 @@
     height: 160px;
     overflow: auto;
 }
-span.disabled_span
-{
-    color: gray;
-}
 </style>
 
 <form method="get" id="wizard">
@@ -91,7 +87,6 @@ span.disabled_span
         <div id="resource_area" class="hidden">
             <p>Select resource groups that you want to show above information (conditions are or-ed).</p>
             <?
-             
             $checked = "";
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Resource Groups<br/>";
@@ -139,19 +134,6 @@ span.disabled_span
                 }
             }
             echo fblist("sc", "Supported by Support Centers ".helpbutton("Support_Center"), $kv);
-
-/*
-            $model = new SupportCenters();
-            $scs = $model->get();
-            $kv = array();
-            foreach($scs as $sc) { 
-                //grab active, non-disabled records
-                if($sc->active == 1 and $sc->disable == 0) {
-                    $kv[$sc->id] = $sc->name; 
-                }
-            }
-            echo checklist("sc", "Supported by Support Centers ".helpbutton("Support_Center"), $kv);
-*/
             ?>
         </div>
     </div>

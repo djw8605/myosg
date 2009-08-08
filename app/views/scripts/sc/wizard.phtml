@@ -13,10 +13,6 @@
     height: 160px;
     overflow: auto;
 }
-span.disabled_span
-{
-    color: gray;
-}
 </style>
 
 <form method="get" id="wizard">
@@ -41,10 +37,10 @@ span.disabled_span
         <div id="sc_area" class="hidden">
             <p>Select support center that you want to show above information (conditions are or-ed).</p>
             <?
-             
             $checked = "";
             if(isset($_REQUEST["all_scs"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_scs\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Support Centers<br/>";
+
             echo "<div class=\"hidden list\" id=\"all_scs_attrs\">";
                 $checked = "";
                 if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
@@ -54,8 +50,8 @@ span.disabled_span
             $model = new SupportCenters();
             $scs = $model->get();
             $kv = array();
-            foreach($scs as $sc) { $kv[$sc->id] = $sc->name; }
-            echo checklist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
+            foreach($scs as $sc) { $kv[$sc->id] = array($sc->name, $sc->long_name); }
+            echo fblist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
             
             ?>
         </div>
@@ -117,6 +113,15 @@ $(document).ready(function() {
         showhide_attrs('normal');
     });
 
+    function list_click()
+    {
+        $("#all_scs_attrs").hide();
+        if(this.checked) { $("input[name=all_scs]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_scs]").siblings("input");
+    $(items).click(list_click);
+
+
     <?
     //select currently selected datasouce
     if(isset($_REQUEST["datasource"])) {
@@ -146,17 +151,16 @@ function wizard_submit(format)
 function disable(e)
 {
     var items = $(e).siblings(); 
-    $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').addClass('disabled_span');
     $("#all_scs_attrs").show();
-    $("#all_scs_attrs").find('input').removeAttr('disabled');
+
+    $('#sc_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
 }
+
 function enable(e)
 {
-    var items = $(e).siblings(); 
-    $(items).find('input').removeAttr('disabled');
-    $(items).find('span').removeClass('disabled_span');
     $("#all_scs_attrs").hide();
-    $("#all_scs_attrs").find('input').attr('disabled', 'disabled');
 }
+
 </script>

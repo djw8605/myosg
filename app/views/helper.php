@@ -285,6 +285,8 @@ function fblist($id, $title, $kv)
     $script .= "];";
     $script .= <<<BLOCK
     $("#${id}__list input.autocomplete").autocomplete(${id}__listdata, {
+        max: 9999999,
+        minChars: 0,
         mustMatch: true,
         matchContains: true,
         width: 280,

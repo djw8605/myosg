@@ -13,10 +13,6 @@
     height: 160px;
     overflow: auto;
 }
-span.disabled_span
-{
-    color: gray;
-}
 </style>
 
 <form method="get" id="wizard">
@@ -44,6 +40,7 @@ span.disabled_span
             $checked = "";
             if(isset($_REQUEST["all_vos"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_vos\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Virtual Organization<br/>";
+
             echo "<div class=\"hidden list\" id=\"all_vos_attrs\">";
                 $checked = "";
                 if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
@@ -53,8 +50,8 @@ span.disabled_span
             $model = new VirtualOrganization();
             $vos = $model->get();
             $kv = array();
-            foreach($vos as $vo) { $kv[$vo->id] = $vo->name; }
-            echo checklist("vo", "Specific Virtual Organization".helpbutton("Virtual_Organization"), $kv);
+            foreach($vos as $vo) { $kv[$vo->id] = array($vo->name, $vo->long_name); }
+            echo fblist("vo", "Specific Virtual Organization".helpbutton("Virtual_Organization"), $kv);
             
             ?>
         </div>
@@ -78,7 +75,9 @@ span.disabled_span
 
     <br/>
     <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+
     <?=$this->render("subscribe.phtml")?>
+
 </form>
 
 <script type="text/javascript">
@@ -114,6 +113,15 @@ $(document).ready(function() {
         showhide_attrs('normal');
     });
 
+    function list_click()
+    {
+        $("#all_vos_attrs").hide();
+        if(this.checked) { $("input[name=all_vos]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_vos]").siblings("input");
+    $(items).click(list_click);
+
+
     <?
     //select currently selected datasouce
     if(isset($_REQUEST["datasource"])) {
@@ -143,17 +151,16 @@ function wizard_submit(format)
 function disable(e)
 {
     var items = $(e).siblings(); 
-    $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').addClass('disabled_span');
     $("#all_vos_attrs").show();
-    $("#all_vos_attrs").find('input').removeAttr('disabled');
+
+    $('#vo_area .fblist').hide();
+    var items = $(e).siblings("input");
+    $(items).attr('checked', '');
 }
+
 function enable(e)
 {
-    var items = $(e).siblings(); 
-    $(items).find('input').removeAttr('disabled');
-    $(items).find('span').removeClass('disabled_span');
     $("#all_vos_attrs").hide();
-    $("#all_vos_attrs").find('input').attr('disabled', 'disabled');
 }
+
 </script>
