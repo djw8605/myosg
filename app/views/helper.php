@@ -242,6 +242,75 @@ function checklist($id, $title, $kv)
     return "<div id=\"$id\">".$title.$list."</div>";
 }
 
+function fblist($id, $title, $kv)
+{
+    $out = "";
+
+    //output title check box
+    $checked = "";
+    if(isset($_REQUEST[$id])) { 
+        $checked = "checked=checked"; 
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#<?=$id?>__list").show();
+        });
+        </script>
+        <?
+    }
+    $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+
+    //output list editor
+    $out .= "<div class=\"indent hidden fblist\" id=\"${id}__list\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
+
+    //output script
+    $delete_url = fullbase()."/images/delete.png";
+    $script = "<script type='text/javascript'>$(document).ready(function() {";
+    $script .= "var ${id}__listdata = [";
+    $first = true;
+    $pre_selected ="";
+    foreach($kv as $key=>$value) {
+        $itemid = "${id}_$key";
+        if(isset($_REQUEST[$itemid])) {
+            $pre_selected .= "<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>".$value[0]."<input type=\"hidden\" name=\"$itemid\"/ value=\"on\"></div>";
+        }
+        $name = str_replace(array("\n", "\r"), "", htmlentities($value[0]));
+        $desc = str_replace(array("\n", "\r"), "", htmlentities($value[1]));
+        if(!$first) {
+            $script .= ",\n";
+        }
+        $first = false;
+        $script .= "{ id: \"$itemid\", name: \"$name\", desc: \"$desc\" }";
+    }
+    $script .= "];";
+    $script .= <<<BLOCK
+    $("#${id}__list input.autocomplete").autocomplete(${id}__listdata, {
+        max: 9999999,
+        minChars: 0,
+        mustMatch: true,
+        matchContains: true,
+        width: 280,
+        formatItem: function(row, i, max) {
+            if(row.desc == "") return row.name; 
+            return "<b>" + row.name + "</b><br/>" + row.desc;
+        },
+        formatResult: function(row) {
+            return " ";
+        }
+    }).result(function(event,row) {
+        $(this).before("<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>"+row.name+"<input type=\"hidden\" name=\""+row.id+"\" value=\"on\"/></div>");
+        $(this).val("");
+    });
+});</script>
+BLOCK;
+
+    $out .= $pre_selected;
+    $out .= "<input type='text' class='autocomplete'/>";
+    $out .= $script;
+    $out .= "</div>";
+    return $out;
+}
+
 function radiolist($id, $title, $kv, $default)
 {
     //output title check box

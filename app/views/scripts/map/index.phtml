@@ -20,10 +20,6 @@ $(document).ready(function() {
     height: 160px;
     overflow: auto;
 }
-span.disabled_span
-{
-    color: gray;
-}
 </style>
 <div id="primaryContentContainer">
     <div id="primaryContent">
@@ -41,33 +37,33 @@ span.disabled_span
 <form method="get" id="wizard">
     <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     <h3>RSV Status Map</h3>
-    <div class="indent">
+    <div class="indent" id="site_area">
 <?
-            $checked = "";
-            if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
-            echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Sites<br/>";
+        $checked = "";
+        if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
+        echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Sites<br/>";
 
-            $model = new Facilities();
-            $list = $model->get();
-            $kv = array();
-            foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
-                }
+        $model = new Facilities();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { 
+            //grab active, non-disabled records
+            if($item->active == 1 and $item->disable == 0) {
+                $kv[$item->id] = array($item->name, $item->description);
             }
-            echo checklist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
+        }
+        echo fblist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
 
-            $model = new SupportCenters();
-            $scs = $model->get();
-            $kv = array();
-            foreach($scs as $sc) { 
-                //grab active, non-disabled records
-                if($sc->active == 1 and $sc->disable == 0) {
-                    $kv[$sc->id] = $sc->name; 
-                }
+        $model = new SupportCenters();
+        $scs = $model->get();
+        $kv = array();
+        foreach($scs as $sc) { 
+            //grab active, non-disabled records
+            if($sc->active == 1 and $sc->disable == 0) {
+                $kv[$sc->id] = array($sc->name, $sc->long_name);
             }
-            echo checklist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
+        }
+        echo fblist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
 
 ?>
     </div>
@@ -100,21 +96,20 @@ span.disabled_span
     <?=$this->render("subscribe.phtml")?>
 </div>
 <script type="text/javascript">
-function disable(e)
+$(document).ready(function() {
+    function list_click()
+    {
+        if(this.checked) { $("input[name=all_sites]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_sites]").siblings("input"); 
+    $(items).click(list_click);
+});
+
+function uncheck_sibs(e)
 {
-    var items = $(e).siblings(); 
-    $(items).find('input').attr('disabled', 'disabled');
-    $(items).find('span').addClass('disabled_span');
-    $("#all_resources_attrs").show();
-    $("#all_resources_attrs").find('input').removeAttr('disabled');
-}
-function enable(e)
-{
-    var items = $(e).siblings(); 
-    $(items).find('input').removeAttr('disabled');
-    $(items).find('span').removeClass('disabled_span');
-    $("#all_resources_attrs").hide();
-    $("#all_resources_attrs").find('input').attr('disabled', 'disabled');
+    $('#site_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
 }
 </script>
 

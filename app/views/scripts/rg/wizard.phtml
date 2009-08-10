@@ -13,10 +13,6 @@
     height: 160px;
     overflow: auto;
 }
-span.disabled_span
-{
-    color: gray;
-}
 </style>
 
 <form method="get" id="wizard">
@@ -91,7 +87,6 @@ span.disabled_span
         <div id="resource_area" class="hidden">
             <p>Select resource groups that you want to show above information (conditions are or-ed).</p>
             <?
-             
             $checked = "";
             if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
             echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Resource Groups<br/>";
@@ -102,10 +97,10 @@ span.disabled_span
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
+                    $kv[$item->id] = array($item->name, $item->description); 
                 }
             }
-            echo checklist("facility", "Resource Groups in Facility ".helpbutton("Facility"), $kv);
+            echo fblist("facility", "Resource Groups in Facility ".helpbutton("Facility"), $kv);
 
             $model = new Site();
             $list = $model->get();
@@ -113,10 +108,10 @@ span.disabled_span
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
+                    $kv[$item->id] = array($item->name, $item->long_name);
                 }
             }
-            echo checklist("site", "Resource Groups in Sites ".helpbutton("Site"), $kv);
+            echo fblist("site", "Resource Groups in Sites ".helpbutton("Site"), $kv);
 
             $model = new ResourceGroup();
             $list = $model->get();
@@ -124,33 +119,21 @@ span.disabled_span
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
+                    $kv[$item->id] = array($item->name, $item->grid_type_description);
                 }
             }
-            echo checklist("rg", "Specific Resource Groups".helpbutton("Resource_Group"), $kv);
+            echo fblist("rg", "Specific Resource Groups ".helpbutton("Resource_Group"), $kv);
 
             $model = new SupportCenters();
-            $scs = $model->get();
-            $kv = array();
-            foreach($scs as $sc) { 
-                //grab active, non-disabled records
-                if($sc->active == 1 and $sc->disable == 0) {
-                    $kv[$sc->id] = $sc->name; 
-                }
-            }
-            echo checklist("sc", "Supported by Support Centers ".helpbutton("Support_Center"), $kv);
-
-/*
-            $model = new Resource();
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //add all(including removed) resources
-                $kv[$item->id] = $item->name; 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->long_name);
+                }
             }
-            echo checklist("r", "Specific Resources ".helpbutton("Resource"), $kv);
-*/
-            
+            echo fblist("sc", "Supported by Support Centers ".helpbutton("Support_Center"), $kv);
             ?>
         </div>
     </div>
@@ -194,20 +177,20 @@ span.disabled_span
             $kv = array();
             foreach($list as $item) { 
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
+                    $kv[$item->id] = array($item->name, $item->long_name);
                 }
             }
-            echo checklist("vosup", "Allows following VO to access", $kv);
+            echo fblist("vosup", "Allows following VO to access", $kv);
 
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = $item->name; 
+                    $kv[$item->id] = array($item->name, $item->long_name); 
                 }
             }
-            echo checklist("voown", "Owned by VOs", $kv);
+            echo fblist("voown", "Owned by VOs", $kv);
 
             $checked = "";
             if(isset($_REQUEST["has_status"])) { $checked = "checked=checked"; }
@@ -279,8 +262,8 @@ $(document).ready(function() {
     {
         if(this.checked) { $("input[name=all_resources]").attr("checked", ""); }
     }
-    var items = $("input[name=all_resources]").siblings(); 
-    $(items).find('input').click(list_click);
+    var items = $("input[name=all_resources]").siblings("input"); 
+    $(items).click(list_click);
 
     <?
     //select currently selected datasouce
@@ -304,9 +287,9 @@ function wizard_submit(format)
 
 function uncheck_sibs(e)
 {
-    $('#resource_area .list').hide(); //TODO - hiding of list just doesn't work on opera..
-    var items = $(e).siblings(); 
-    $(items).find('input[type=checkbox]').attr('checked', '');
+    $('#resource_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
 }
 
 </script>

@@ -26,7 +26,6 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function indexAction()
     {
         $this->load();
-
     }
     public function selectmenu($menu)
     {
