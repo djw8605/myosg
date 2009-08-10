@@ -1,0 +1,40 @@
+<?
+$js = "";
+echo "<div class=\"indent\">";
+foreach($this->facilities as $facility)
+{
+    echo "<div class=\"facility\">";
+    echo $facility->name;
+    echo "</div>";
+    $id = $facility->facility_id; 
+
+    $count = $this->site_counts[$id];
+    if($count == 0) {
+        echo "<div class=\"indent\">Has no associated sites</div>";
+    } else {
+        $url = fullbase()."/tree/item?type=facility_site&id=".$id;
+        echo "<div class=\"indent\">";
+        echo outputAjaxToggle("Sites ($count)", $url);
+        echo "</div>";
+    }
+
+/*
+    $count = $this->contact_counts[$id];
+    if($count == 0) {
+        echo "<div class=\"indent\">Has no contact</div>";
+    } else {
+        $url = fullbase()."/tree/item?type=facility_contact&id=".$id;
+        echo "<div class=\"indent\">";
+        echo outputAjaxToggle("Contacts ($count)", $url);
+        echo "</div>";
+    }
+*/
+}
+echo "</div>";
+
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+<?=$js?>
+});
+</script>

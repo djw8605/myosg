@@ -1,0 +1,67 @@
+<ARHistory>
+<?
+echo "<StartTime>$this->start_time</StartTime>";
+echo "<EndTime>$this->end_time</EndTime>";
+
+foreach($this->services as $rid=>$services) {
+    $resource_info = $this->resource_info[$rid][0];
+    echo "<Resource>";
+    echo "<ID>$rid</ID>";
+    echo "<Name>".htmlentities($resource_info->name)."</Name>";
+
+    asort($services);
+    if(count($services) == 0) {
+        echo "<Note>No availability history available for this duration.</Note>";
+    } else {
+        foreach($services as $service_id=>$recs)
+        {
+            echo "<Service>";
+            $service_info = $this->service_info[$service_id];
+            $service_name = $service_info[0]->description;
+            echo "<Name>".htmlentities($service_name)."</Name>";
+            $ax = "0";
+            $ay = "-1";
+            $rx = "0";
+            $ry = "-1";
+            $start_date = date(config()->date_format, $this->start_time);
+            $mid_date = date(config()->date_format, $this->start_time + ($this->end_time-$this->start_time)/2);
+            $end_date = date(config()->date_format, $this->end_time);
+            $period = $this->end_time - $this->start_time;
+            foreach($recs as $rec) {
+                if($ax != "") {
+                    $ax .= ",";
+                    $ay .= ",";
+                    $rx .= ",";
+                    $ry .= ",";
+                }
+                $x = round(($rec->timestamp - $this->start_time) / $period * 100);
+                $ax .= $x;
+                $ay .= $rec->availability*100;
+                $rx .= $x;
+                $ry .= $rec->reliability*100;
+            }
+            if(uwa()) {
+                $size = "270x100";
+            } else {
+                $size = "550x100";
+            }
+            $url = "http://chart.apis.google.com/chart?chs=$size";
+            $url .= "&cht=lxy&chxt=x,y";
+            $url .= "&chxl=0:|$start_date|$mid_date|$end_date|1:|0%|25%|50%|75%|100%";
+            if(!uwa()) {
+                //legend
+                $url .= "&chdl=Availability|Reliability";
+            }
+            $url .= "&chco=00ff00,0000ff";
+            $url .= "&chm=B,99ff99,0,-1,0";
+            $url .= "&chd=t:$ax|$ay|$rx|$ry";
+            $url .= "&chg=10,25,1";
+            $url .= "&chls=2,1,0|2,1,0";
+            echo "<GraphURL>".htmlentities($url)."</GraphURL>";
+            echo "</Service>";
+        }
+    }
+    echo "</Resource>";
+}
+?>
+</ARHistory>

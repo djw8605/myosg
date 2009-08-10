@@ -1,0 +1,18 @@
+<p class="info">Show number of services per grid type.</p>
+
+<?
+
+$checked = "";
+if(isset($_REQUEST["count_total"])) { $checked = "checked=checked"; }
+echo "<input type=\"checkbox\" name=\"count_total\" $checked/> Show Total Resource Count<br/>";
+
+$model = new ServiceGroup();
+$service_groups = $model->getindex();
+echo "<br/><h4>Service Groups To Show</h4>";
+echo "<div style=\"background-color: #eee; padding: 3px;\">";
+foreach($service_groups as $id=>$service_group) {
+    $checked = "";
+    if(isset($_REQUEST["count_sg_".$id])) { $checked = "checked=checked"; }
+    echo "<input type=\"checkbox\" name=\"count_sg_".$id."\" $checked/> ".$service_group[0]->name."<br/>";
+}
+echo "</div>";

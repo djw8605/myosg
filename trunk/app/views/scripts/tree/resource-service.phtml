@@ -1,0 +1,36 @@
+<?
+$js = "";
+echo "<div class='indent'>";
+foreach($this->services as $service)
+{
+    echo $service->description."<br/>";
+    $id = $service->service_id;
+
+    $count = $this->critical_metric_counts[$id];
+    if($count == 0) {
+        echo "<div class=\"indent\">Has no critical metrics</div>";
+    } else {
+        echo "<div class=\"indent\">";
+        $url = fullbase()."/tree/item?type=service_criticalmetrics&id=".$id;
+        echo outputAjaxToggle("Critical Metrics ($count)", $url);
+        echo "</div>";
+    }
+
+    $count = $this->noncritical_metric_counts[$id];
+    if($count == 0) {
+        echo "<div class=\"indent\">Has no noncritical metrics</div>";
+    } else {
+        echo "<div class=\"indent\">";
+        $url = fullbase()."/tree/item?type=service_noncriticalmetrics&id=".$id;
+        echo outputAjaxToggle("Non-Critical Metrics ($count)", $url);
+        echo "</div>";
+    }
+}
+echo "</div>";
+
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+<?=$js?>
+});
+</script>

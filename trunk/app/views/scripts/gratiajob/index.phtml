@@ -1,0 +1,61 @@
+<?=$this->render("full_header.phtml", true)?>
+        <div id="primaryContentContainer">
+            <div id="primaryContent">
+                <?=$this->render("breadcrumb.phtml", true)?>
+                <?=$this->render(pagename()."/html.phtml")?>
+            </div>
+        </div>
+        <div id="sideContent">
+            <h3>Graph Type</h3>
+            <div class="indent">
+                <h4>Computation Hours</h4>
+                <?
+                function selected($current, $type) {
+                    if($current == $type) echo "class=\"selected\"";
+                    return "";
+                }
+                ?>
+                <style>
+                a.selected {
+                    color: orange;
+                    text-decoration: none;
+                }
+                </style>
+                <div class="indent">
+                    <a <?=selected($this->type, "wall")?> href="<?=base()."/".pagename()?>?type=wall">Per Week</a><br/>
+                    <a <?=selected($this->type, "cum_wall")?> href="<?=base()."/".pagename()?>?type=cum_wall">Cumulative</a><br/>
+                </div>
+                <br/>
+                <h4>Hours Spent on Jobs By Facility</h4>
+                <div class="indent">
+                    <a <?=selected($this->type, "hours")?> href="<?=base()."/".pagename()?>?type=hours">Per Week</a><br/>
+                    <a <?=selected($this->type, "cum_hours")?> href="<?=base()."/".pagename()?>?type=cum_hours">Cumulative</a><br/>
+                </div>
+            </div>
+
+            <h3>Subscribe</h3>
+            <?
+            $param = $_SERVER["QUERY_STRING"];
+            $moduleurl = urlencode(fullbase()."/".pagename()."/uwa?$param");
+            ?>
+            <div class="indent">
+                <h4>Subscribe to Current View</h4>
+                <p><a href="http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=<?=$moduleurl?>"><img src="images/subscribe.png"/></a></p>
+                <p><a href="http://www.google.com/ig/add?moduleurl=http%3A%2F%2Fwww.netvibes.com%2Fapi%2Fuwa%2Fcompile%2Fgoogle.php%3FmoduleUrl%3D<?=urlencode($moduleurl)?>"><img src="images/google.png"/></a></p>
+                <p><a href="http://t2.unl.edu/gratia/xml/<?=$this->graph_type?>">XML (External)</a></p>
+            </div>
+
+            <h3>About</h3>
+            <div class="indent">
+                <p>Gratia Shows what OSG is doing right now.</p>
+            </div>
+
+            <h3>Links</h3>
+            <div class="indent">
+                <a href="http://gratia-osg.fnal.gov:8880/gratia-reporting/">Direct Link to Gratia Reporting</a><br/>
+                <a href="http://t2.unl.edu/gratia/xml/">Brian's Gratia Cache</a><br/>
+            </div>
+ 
+            <?=$this->render("feedback.phtml", true)?>
+        </div>
+<?=$this->render("full_footer.phtml", true)?>

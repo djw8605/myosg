@@ -1,0 +1,23 @@
+<?
+$total_count = count($this->recs);
+
+echo "{";
+echo "\"totalCount\":\"$total_count\",";
+echo "\"graphs\":[";
+
+$first = true;
+foreach($this->recs as $rec) {
+    if(!$first) echo ",";
+    $first = false;
+    echo "{";
+        echo "\"resource_id\":\"".$rec["resource_id"]."\",";
+        echo "\"name\":\"".$rec["name"]."\",";
+        echo "\"fqdn\":\"".$rec["fqdn"]."\",";
+        echo "\"graph\":\"".addslashes($rec["graph"])."\",";
+        echo "\"url\":\"".$rec["url"]."\",";
+        echo "\"service_types\":\"".$rec["service_types"]."\"";
+    echo "}";
+}
+
+echo "]";
+echo "}";

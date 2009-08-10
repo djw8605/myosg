@@ -1,0 +1,116 @@
+<?=$this->render("full_header.phtml", true)?>
+<script src="http://maps.google.com/maps?file=api&v=2&key=<?=config()->gmap_key?>" type="text/javascript"></script>
+<script type="text/javascript">
+<?=$this->render(pagename()."/js.phtml");?>
+$(document).ready(function() {
+    init();
+});
+</script>
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+</style>
+<div id="primaryContentContainer">
+    <div id="primaryContent">
+        <?=$this->render("breadcrumb.phtml", true)?>
+        <h2><?=$this->page_title?></h2>
+        <?=$this->render(pagename()."/html.phtml");?>
+    </div>
+</div>
+<div id="sideContent">
+    <h3>Sites to display</h3>
+    <div class="indent">
+        <p class="info">URL of this page is updated everytime you change position / zoom of the map. You can bookmark, or copy & paste the URL of this page in order to go back to where you are right now.</p>
+    </div>
+
+<form method="get" id="wizard">
+    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <h3>RSV Status Map</h3>
+    <div class="indent" id="site_area">
+<?
+        $checked = "";
+        if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
+        echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Sites<br/>";
+
+        $model = new Facilities();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { 
+            //grab active, non-disabled records
+            if($item->active == 1 and $item->disable == 0) {
+                $kv[$item->id] = array($item->name, $item->description);
+            }
+        }
+        echo fblist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
+
+        $model = new SupportCenters();
+        $scs = $model->get();
+        $kv = array();
+        foreach($scs as $sc) { 
+            //grab active, non-disabled records
+            if($sc->active == 1 and $sc->disable == 0) {
+                $kv[$sc->id] = array($sc->name, $sc->long_name);
+            }
+        }
+        echo fblist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
+
+?>
+    </div>
+
+
+    <h3>Filter</h3>
+    <div class="indent">
+            <p>Only show sites that matches following criteria (conditions are and-ed).</p>
+    <?
+        $model = new GridTypes();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { $kv[$item->id] = $item->name; }
+        echo checklist("gridtype", "Has resource Group with grid type of", $kv);
+
+        $kv = array();
+        $kv[0] = "Inactive";
+        $kv[1] = "Active";
+        echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+        $kv = array();
+        $kv[0] = "Not Disabled (Normal)";
+        $kv[1] = "Disabled (Removed)";
+        echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
+
+    ?>
+    </div>
+    <br/>
+    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <?=$this->render("subscribe.phtml")?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    function list_click()
+    {
+        if(this.checked) { $("input[name=all_sites]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_sites]").siblings("input"); 
+    $(items).click(list_click);
+});
+
+function uncheck_sibs(e)
+{
+    $('#site_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
+}
+</script>
+
+<?=$this->render("full_footer.phtml", true)?>

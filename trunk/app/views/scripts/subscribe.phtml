@@ -1,0 +1,20 @@
+<?
+//what's all these complexity? 
+//first of all, I can't use simpl a-href tag because I have to dynamically create
+//the link target based on the document.location which may include anchor..
+//
+//secondly.. I have to pass anchor somehow down to the receiving widget - not to
+//the widget compiler.. since anchor isn't passed to the server, I have to convert 
+//it to a query parameter "__anchor", and let uwa handler convert it back to anchor.
+?>
+<h3>Subscribe</h3>
+<div class="indent">
+    <p>Subscribe to the content of this page.</p>
+    <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/addigoogle'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">iGoogle</span><br/>
+    <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/adduwa'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">Netvibes</span><br/>
+    <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/xml'+(document.location.search));">XML</span><br/>
+    <br/>
+
+    <span class="external_link" onclick="window.open('http://tinyurl.com/create.php?url='+escape(document.location));">Create TinyURL</span><br/>
+</div>
+

@@ -1,0 +1,295 @@
+
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+</style>
+
+<form method="get" id="wizard">
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <h3>Information to display</h3>
+    <div class="indent" id="datasource_area">
+        <select name="datasource">
+        <option value="">(Please Select)</option>
+        <option value="summary">Resource Group Summary</option>
+        <option value="currentstatus">Current RSV Status</option>
+        <option value="gipstatus">Current GIP Validation Status</option>
+        <option value="statushistory">RSV Status History</option>
+        <option value="arhistory">Availability History</option>
+        <option value="armetric">Availability Metrics</option>
+        <option value="downtime">Downtime Schedule</option>
+        <option value="account">Gratia Accounting</option>
+        <option value="ce">Gratia Accounting (CE Specific)</option>
+        <option value="se">Gratia Accounting (SE Specific)</option>
+        </select>
+
+        <div id="summary_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_summary.phtml")?>
+        </div>
+
+        <div id="currentstatus_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_currentstatus.phtml")?>
+        </div>
+
+        <div id="gipstatus_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_gipstatus.phtml")?>
+        </div>
+
+        <div id="statushistory_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_statushistory.phtml")?>
+        </div>
+
+        <div id="arhistory_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_arhistory.phtml")?>
+        </div>
+
+        <div id="armetric_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_armetric.phtml")?>
+        </div>
+
+        <div id="downtime_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_downtime.phtml")?>
+        </div>
+
+        <div id="account_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_account.phtml")?>
+        </div>
+
+        <div id="ce_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_ce.phtml")?>
+        </div>
+
+        <div id="se_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_se.phtml")?>
+        </div>
+
+        <div id="_daterange_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard__daterange.phtml")?>
+        </div>
+
+    </div>
+
+    <h3>Resource Groups to display</h3>
+    <div class="indent">
+        <div id="resource_area_standby">
+            <p>Please select the information to display first.</p>
+        </div>
+        <div id="resource_area" class="hidden">
+            <p>Select resource groups that you want to show above information (conditions are or-ed).</p>
+            <?
+            $checked = "";
+            if(isset($_REQUEST["all_resources"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"all_resources\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Resource Groups<br/>";
+
+            $model = new Facilities();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->description); 
+                }
+            }
+            echo fblist("facility", "Resource Groups in Facility ".helpbutton("Facility"), $kv);
+
+            $model = new Site();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->long_name);
+                }
+            }
+            echo fblist("site", "Resource Groups in Sites ".helpbutton("Site"), $kv);
+
+            $model = new ResourceGroup();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->grid_type_description);
+                }
+            }
+            echo fblist("rg", "Specific Resource Groups ".helpbutton("Resource_Group"), $kv);
+
+            $model = new SupportCenters();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                //grab active, non-disabled records
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->long_name);
+                }
+            }
+            echo fblist("sc", "Supported by Support Centers ".helpbutton("Support_Center"), $kv);
+            ?>
+        </div>
+    </div>
+
+    <h3>Filter</h3>
+    <div class="indent">
+        <div id="filter_area_standby">
+            <p>Please select the information to display first.</p>
+        </div>
+        <div id="filter_area" class="hidden">
+            <p>Only show resource groups that matches following criteria (conditions are and-ed).</p>
+
+            <h4>For Resource Group</h4>
+            <?
+            $model = new GridTypes();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            echo checklist("gridtype", "Grid Type", $kv);
+
+            $kv = array("OK"=>"OK", "FAIL"=>"FAIL", "UNKNOWN"=>"UNKNOWN");
+            echo checklist("gipstatus", "Current GIP Status", $kv);
+
+            ?>
+            <h4>For Resource</h4>
+            <?
+            $model = new Status();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { $kv[$item->id] = $item->description; }
+            echo checklist("status", "Current RSV Status", $kv);
+
+            $model = new Service();
+            $list = $model->get(array("service_group_id"=>1));
+            $kv = array();
+            foreach($list as $item) { $kv[$item->id] = $item->name; }
+            echo checklist("service", "Provides following Services", $kv);
+
+            $model = new VirtualOrganization();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->long_name);
+                }
+            }
+            echo fblist("vosup", "Allows following VO to access", $kv);
+
+            $model = new VirtualOrganization();
+            $list = $model->get();
+            $kv = array();
+            foreach($list as $item) { 
+                if($item->active == 1 and $item->disable == 0) {
+                    $kv[$item->id] = array($item->name, $item->long_name); 
+                }
+            }
+            echo fblist("voown", "Owned by VOs", $kv);
+
+            $checked = "";
+            if(isset($_REQUEST["has_status"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"has_status\" $checked/> RSV Monitoring Status is available<br/>";
+
+            $kv = array();
+            $kv[0] = "Inactive";
+            $kv[1] = "Active";
+            echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+            $kv = array();
+            $kv[0] = "Not Disabled (Normal)";
+            $kv[1] = "Disabled (Removed)";
+            echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
+
+            $checked = "";
+            if(isset($_REQUEST["has_wlcg"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"has_wlcg\" $checked/> At least one WLCG interop. flag is True<br/>";
+
+            ?>
+        </div>
+    </div>
+
+    <br/>
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+
+    <?=$this->render("subscribe.phtml")?>
+
+</form>
+
+<script type="text/javascript">
+
+function showhide_attrs(show_speed)
+{
+    var v = $("select[name=datasource]").val();
+    $(".attrs").hide();
+    if(v != "") {
+        $("#"+v+"_attrs").show(show_speed);
+        $("#resource_area").show(show_speed);
+        $("#filter_area").show(show_speed);
+        $("#resource_area_standby").hide();
+        $("#filter_area_standby").hide();
+
+        if(
+            v == "statushistory" ||
+            v == "arhistory" ||
+            v == "armetric" ||
+            v == "account" ||
+            v == "se" ||
+            v == "ce") {
+            $("#_daterange_attrs").show(show_speed);
+        }
+    } else {
+        $("#resource_area").hide();
+        $("#filter_area").hide();
+        $("#resource_area_standby").show();
+        $("#filter_area_standby").show();
+    }
+}
+
+$(document).ready(function() {
+
+    //setup form
+    $("select[name=datasource]").change(function() {
+        showhide_attrs('normal');
+    });
+
+    function list_click()
+    {
+        if(this.checked) { $("input[name=all_resources]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_resources]").siblings("input"); 
+    $(items).click(list_click);
+
+    <?
+    //select currently selected datasouce
+    if(isset($_REQUEST["datasource"])) {
+        $datasource = $_REQUEST["datasource"];
+        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
+        echo "showhide_attrs();\n";
+    }
+
+    ?>
+});
+
+function wizard_submit(format)
+{
+    var action = '<?=fullbase()?>/rg'+$('select[name=datasource]').val(); 
+    action += "/"+format;
+    $('#wizard').attr('action', action);
+    $('#wizard').submit(); 
+    return false;
+}
+
+function uncheck_sibs(e)
+{
+    $('#resource_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
+}
+
+</script>

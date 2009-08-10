@@ -1,0 +1,126 @@
+<?
+foreach($this->resources as $rid=>$record) {
+    $testtime = agoCalculation($record["testtime"]);
+    $resource_name = $record["name"];
+    $resource_fqdn = $record["fqdn"];
+    $tests = $record["tests"];
+    $rawdata = $record["rawdata"];
+    $overallstatus = $record["overallstatus"];
+
+    switch($overallstatus) {
+    case "FAIL":
+        $overall = "CRITICAL";
+        $overall_detail = "At least one test is failing.";
+        break;
+    case "OK":
+        $overall = "OK";
+        $overall_detail = "No issue found for this resource.";
+        break;
+    case "NA":
+        $overall = "UNKNOWN";
+        $overall_detail = "GIP validation result is not available for this resource.";
+        break;
+    default:
+        //????
+        $overall = "UNKNOWN";
+        $overall_detail = "Validation script is returning unknown overall status.";
+    }
+?>
+    <div class="resource h4 round">
+    <?=$resource_name?>
+
+<?  if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
+	 echo "<br/><span class=\"fqdn\">$resource_fqdn</span>";
+} ?>
+
+    </div>
+
+<?
+    if(!uwa()) {
+        echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px; margin-bottom: 5px;'>";
+        if(isset($rawdata["cemon_raw_data"])) {
+            $raw = "";
+
+            //show raw data link
+            $link = $rawdata["cemon_raw_data"][0]->link;
+            $age = $rawdata["cemon_raw_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No Incoming Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link'>Incoming Data (Age $age)</a><br/>";
+            }
+            //show osg processed link
+            $link = $rawdata["processed_osg_data"][0]->link;
+            $age = $rawdata["processed_osg_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No OSG Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII (Age $age)</a><br/>";
+            }
+            //show wlcg processed link
+            $link = $rawdata["processed_wlcg_interop_data"][0]->link;
+            $age = $rawdata["processed_wlcg_interop_data"][0]->age;
+            if($link == "") {
+                $raw .= "(No WLCG Data)<br/>";
+            } else {
+                $raw .= "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII (Age $age)</a><br/>";
+            }
+        } else {
+            $raw = "Not available";
+        }
+        echo "<b>LDIF Data</b><br/>$raw";
+        echo "</div>";
+    }
+?>
+    <div class="status_<?=$overall?>">
+    <p><?=$overall_detail?></p>
+    </div>
+    
+    <div class="indent">
+    <?
+    if($testtime !== null) {
+        echo "<div>Tests performed $testtime ago</div>";
+    }
+    if ((count($tests) != 0) and isset($_REQUEST["gip_status_attrs_showtestresults"])) {
+      foreach($tests as $name=>$test) {
+	
+	$gip_status = $test["status"];
+	$reason= $test["reason"];
+
+	$status = "UNKNOWN";
+	switch($gip_status) {
+	case "FAIL":
+	  $status = "CRITICAL";
+	  break;
+	case "OK":
+	  $status = "OK";
+	  break;
+	}
+	echo outputTestInfo($name, $status, $reason, $rid);
+      }
+    }
+    echo "</div>";//indent
+    echo "<div style='clear: both'></div>";
+}
+
+function outputTestInfo($name, $status, $reason, $rid)
+{
+    $out = "";
+    $out .= "<div class=\"bottom_border status_".$status."\">";
+
+    $out .= "<span class=\"h4\">".$name."</span>";
+    if(!uwa()) {
+        if($reason != "") {
+            $out .= "<br/>$reason";
+        }
+        if($status == "CRITICAL") {
+            $out .= outputAjaxToggle("Issue Detail", base()."/wizardgipstatus/detail?rid=".$rid."&name=".$name);
+        } else {
+            $out .= "<br/>No issues found for this test.";
+        }
+    }
+    $out .= "</div>";
+
+    return $out;
+}
+

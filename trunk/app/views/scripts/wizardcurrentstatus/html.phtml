@@ -1,0 +1,136 @@
+<?
+foreach($this->cache as $rid=>$cache) {
+    $timestamp = (int)$cache->Timestamp[0];
+    $status = $cache->Status[0];
+    $note = $cache->Note[0];
+    $services = $cache->Services[0];
+
+    $resource = $this->resources[$rid];
+    $resource_name = $resource->name;
+    $resource_fqdn = $resource->fqdn;
+
+    ?>
+    <div class="resource h4 round">
+    <?
+    if(uwa()) {
+        echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
+    } else {
+        echo $resource_name;
+        echo "<br/>";
+    }
+    ?>
+    <span class="fqdn"><?=$resource_fqdn?></span>
+    </div>
+
+    <div class="status_<?=$status?>">
+    <p><?=$note?></p>
+    </div>
+    <div class="indent">
+    <?
+    foreach($services as $service) {
+
+        $service_status = $service->Status;
+        $note = $service->Note;
+        $downtime_note = $service->DowntimeNote;
+
+        echo "<h3>".$service->ServiceDescription." Service Status</h3>"; 
+        echo "<div class=\"status_$service_status\">";
+        if(isset($service->DowntimeNote)) {
+            //downtime info is bit complicated
+            $internal_status = $downtime_note[0]->InternalStatus;
+            $dnote = $downtime_note[0]->Note;
+            $summary = $downtime_note[0]->MaintenanceSummary;
+            $from = $downtime_note[0]->From;
+            $to = $downtime_note[0]->To;
+
+            echo $dnote;
+            echo "<div class=\"downtime\">";
+            echo "<b>Maintenance Summary</b><div>$summary</div>";
+            echo "<table width=\"100%\"><tr>";
+            echo "<td><b>From</b><div>$from</div></td>";
+            echo "<td><b>To</b><div>$to</div></td>";
+            echo "</tr></table>";
+            echo "<b>Internal Status</b><div class=\"status_$internal_status\">$note</div>";
+            echo "</div>";
+        } else {
+            //normal status
+            echo $note;
+        }
+
+        //critical metrics
+        $out = "";
+        foreach($service->CriticalMetrics[0] as $metric) {
+            $out .= outputMetricInfo($metric, $timestamp);
+        }
+        if(!isset($_REQUEST["uwa"])) {
+            $title = "<span class=\"h3\">Critical Metrics</span>";
+            echo outputToggle($title, $title, $out, true);
+        } else {
+            echo $out;
+        }
+
+        //non-critical metrics
+        if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+            $non_critical_metrics = $service->NonCriticalMetrics[0];
+            $out = "";
+            foreach($non_critical_metrics as $metric) {
+                if($metric->Detail != "") {
+                    $out .= outputMetricInfo($metric, $timestamp);
+                }
+            }
+            if($out != "") {
+                $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+                echo outputToggle($title, $title, $out);
+            }
+        }
+        echo "</div>";
+    }
+    echo "</div>";//indent
+}
+
+
+function outputMetricInfo($metric, $timestamp)
+{
+    $out = "";
+
+    $freshfor = $metric->MetricFreshFor;
+    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+    $reported = (int)($metric->MetricDataID[0]) != 0;
+    $detail = $metric->Detail;
+
+    $name = $metric->MetricCommonName;
+    $desc = $metric->MetricDescription;
+    $help_url = config()->default_rsvforum;
+    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    }
+
+    if($reported) {
+        $css = "";
+        if($expired) $css = "expired";
+        $out .= "<div class=\"bottom_border status_".$metric->Status." $css\">";
+        $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)." ago</div>";
+        if($expired) $name .= " (Expired)";
+    } else {
+        $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
+        $name .= " (Not Reported)";
+    }
+
+    $out .= "<span class=\"h4\">$name</span>";
+    if(!uwa()) {
+        $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
+        $out .= "<br/><span class=\"note\">$desc</span>";
+        if(trim($detail) != "") {
+            $detail = "<pre>$detail</pre>";
+            $id = $metric->MetricDataID;
+            $detail .= "Metric Data ID: $id ";
+            $fresh_for = $metric->MetricFreshFor;
+            $detail .= "Fresh for: ".humanDuration($fresh_for);
+            $detail .= "<br/>";
+            $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+        }
+    }
+    $out .= "</div>";
+    return $out;
+}
+

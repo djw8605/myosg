@@ -1,0 +1,43 @@
+<ARMetrics>
+<?
+echo "<StartTime>$this->start_time</StartTime>";
+echo "<EndTime>$this->end_time</EndTime>";
+foreach($this->rgs as $rgid=>$rg) {
+    echo "<ResourceGroup>";
+
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<GridType>";
+    echo htmlentities($resource_group->grid_type_description);
+    echo "</GridType>";
+    echo "<GroupID>".$rgid."</GroupID>";
+    echo "<GroupName>".htmlentities($resource_group->name)."</GroupName>";
+
+    foreach($rg as $resource_id=>$resource_info) {
+        $resource = $this->data[$resource_id];
+        if(count($resource) == 0) {
+            continue;
+        }
+
+        echo "<Resource>";
+        echo "<ID>$resource_id</ID>";
+        echo "<Name>".htmlentities($resource_info->name)."</Name>";
+
+
+        foreach($resource as $service_id=>$data) {
+            echo "<Service>";
+            if($data == null) continue;
+            $service_info = $this->services[$service_id];
+            $service_name = $service_info[0]->name;
+            $a = round((double)$data["availability"]*100, 2);
+            $r = round((double)$data["reliability"]*100, 2);
+
+            echo "<Name>".htmlentities($service_name)."</Name>";
+            echo "<Availability>$a%</Availability><Reliability>$r%</Reliability>";
+            echo "</Service>";
+        }
+        echo "</Resource>";
+    }
+    echo "</ResourceGroup>";
+}
+?>
+</ARMetrics>

@@ -1,0 +1,26 @@
+<?
+$js = "";
+echo "<div class='indent'>";
+foreach($this->vos as $vo)
+{
+    echo "<div class=\"vo\">".$vo->short_name."</div>";
+    $id = $vo->vo_id;
+
+    $count = $this->contact_counts[$id];
+    if($count == 0) {
+        echo "<div class=\"indent\">Has no vo contacts</div>";
+    } else {
+        $url = fullbase()."/tree/item?type=vo_contact&id=".$id;
+        echo "<div class=\"indent\">";
+        echo outputAjaxToggle("VO Contacts ($count)", $url);
+        echo "</div>";
+    }
+}
+echo "</div>";
+
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+<?=$js?>
+});
+</script>

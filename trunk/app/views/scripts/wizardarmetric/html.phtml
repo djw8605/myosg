@@ -1,0 +1,37 @@
+<?
+echo "Between ".date(config()->date_format_full, $this->start_time);
+echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+?>
+<table class="real" width="100%">
+    <tr><th width="100px">Resource</th><th>Service</th><th>Availability</th><th>Reliability</th><th>&nbsp;</th></tr>
+<?
+    foreach($this->data as $resource_id=>$resource) {
+        if(count($resource) == 0) continue;
+
+        $resource_info = $this->resources[$resource_id];
+        $resource_name = $resource_info[0]->name;
+
+        $first = true;
+        foreach($resource as $service_id=>$data) {
+            if($data == null) continue;
+            $service_info = $this->services[$service_id];
+            $service_name = $service_info[0]->name;
+            $a = round((double)$data["availability"]*100, 2);
+            $r = round((double)$data["reliability"]*100, 2);
+
+            if($first) {
+                echo "<tr><td colspan='5'><hr/></td></tr>";
+            }
+            echo "<tr>";
+            echo "<td>";
+            if($first) {
+                echo $resource_name;
+            }
+            echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
+            echo "</td></tr>";
+            $first = false;
+        }
+    }
+?>
+</table>
+

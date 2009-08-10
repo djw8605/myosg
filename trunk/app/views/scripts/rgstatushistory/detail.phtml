@@ -1,0 +1,103 @@
+<?
+
+if(isset($this->downtime)) {
+    //this is in downtime..
+    echo "<div class=\"bottom_border status_DOWNTIME\">";
+    echo "This resource is currently under maintenance.<br/>";
+    echo "<div class=\"downtime\">";
+    echo "<b>Maintenance Summary:</b><div>".$this->downtime->downtime_summary."</div>";
+    echo "<table width=\"100%\"><tr>";
+    $start = date(config()->date_format_full, $this->downtime->unix_start_time);
+    $end = date(config()->date_format_full, $this->downtime->unix_end_time);
+
+    echo "<td><b>From:</b><div>$start</div></td>";
+    echo "<td><b>To:</b><div>$end</div></td>";
+    echo "</tr></table>";
+    if($this->detail_service_status !== null) {
+        $status = Status::getStatus($this->detail_service_status->status_id);
+        echo "<b>Internal Status:</b><div class=\"status_$status\">";
+        echo $this->detail_service_status->detail."</div>";
+    }
+    echo "</div>";
+} else {
+    //process normal status
+    if($this->detail_service_status !== null) {
+        $status = Status::getStatus($this->detail_service_status->status_id);
+        echo "<div class=\"bottom_border status_".$status."\">";
+        $status_time = $this->detail_service_status->timestamp;
+        echo "Status changed to $status at ".date(config()->date_format_full, $status_time)."<br/>";
+        echo $this->detail_service_status->detail."<br/>";
+        if($this->detail_time != $status_time) {
+            echo "(Above reason is applicable at the time when this status change occured.)<br/>";
+        }
+    } else {
+        echo "<div class=\"bottom_border status_UNKNOWN\">";
+        echo "No status change has ever occured for this service.";
+    }
+}
+
+$title = "<span class=\"h3\">Critical Metrics</span>";
+echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics, $this->detail_time), true);
+
+$content = showmetrics($this->detail_noncritical_metrics, $this->detail_time, true);
+if($content != "") {
+    $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+    echo outputToggle($title, $title, $content);
+}
+echo "</div>";
+
+function showmetrics($metrics, $timestamp, $hide_empty = false) 
+{
+    $out = "";
+    foreach($metrics as $metric) {
+        $out .= showmetric($metric, $timestamp, $hide_empty);
+    }
+    return $out;
+}
+
+function showmetric($metric, $timestamp, $hide_empty)
+{
+    $out = "";
+
+    $freshfor = $metric->MetricFreshFor;
+    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+    $reported = isset($metric->MetricDataID);
+    $detail = $metric->Detail;
+
+    $name = $metric->MetricCommonName;
+    $desc = $metric->MetricDescription;
+    $help_url = config()->default_rsvforum;
+    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    }
+
+    if($reported) {
+        $css = "";
+        if($expired) $css = "expired";
+        $out .= "<div class=\"bottom_border status_".$metric->Status." $css\">";
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+        if($expired) $name .= " (Expired)";
+    } else {
+        $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
+        $name .= " (Not Reported)";
+    }
+
+    $out .= "<span class=\"h4\">$name</span>";
+    if(!uwa()) {
+        $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
+        $out .= "<br/><span class=\"note\">$desc</span>";
+        if(trim($detail) != "") {
+            $detail = "<pre>$detail</pre>";
+            $id = $metric->MetricDataID;
+            $detail .= "Metric Data ID: $id ";
+            $fresh_for = $metric->MetricFreshFor;
+            $detail .= "Fresh for: ".humanDuration($fresh_for);
+            $detail .= "<br/>";
+            $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+        }
+    }
+    $out .= "</div>";
+    return $out;
+} 
+
+

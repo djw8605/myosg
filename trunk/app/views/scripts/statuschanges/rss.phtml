@@ -1,0 +1,52 @@
+<?
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+$param = $_SERVER["QUERY_STRING"];
+$self_url = htmlspecialchars(fullbase()."/".pagename()."/rss?$param");
+?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ <title><?=$this->page_title?></title>
+ <subtitle>Here is the latest status change for you..</subtitle>
+ <link href="<?=$self_url?>" rel="self"/>
+ <updated><?=date("Y-m-d\TH:i:s\Z",$this->last_timestamp)?></updated>
+ <author>
+   <name>OSG GOC</name>
+   <email>goc@opensciencegrid.org</email>
+ </author>
+ <id><?=$self_url?></id>
+<?
+
+function getResource($resources, $resource_id)
+{
+    foreach($resources as $resource) {
+        if($resource->id == $resource_id) {
+            return $resource;
+        }
+    }
+    return null;
+}
+foreach($this->status_changes as $change) {
+    $resource_id = $change->resource_id;
+    $service_id = $change->service_id;
+    $time = $change->timestamp;
+    $link = fullbase()."/history?resource_id=$resource_id&service_id=$service_id&time=$time";
+    $link = htmlspecialchars($link);
+
+    $resource = getResource($this->resources, $resource_id);
+    $resource_name = $resource->name;
+
+    $service = $this->services[(int)$service_id];
+    $service_name = $service[0]->name;
+
+    $status_name = Status::getStatus($change->status_id);
+?>
+ <entry>
+   <title><?=$resource_name?> / <?=$service_name?> Status changed to <?=$status_name?></title>
+   <link href="<?=$link?>"/>
+   <id><?=uniqid()?></id>
+   <updated><?=date("Y-m-d\TH:i:s\Z",$change->timestamp)?></updated>
+   <summary><?=htmlspecialchars($change->detail)?></summary>
+ </entry>
+<?
+}
+?>
+</feed>

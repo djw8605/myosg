@@ -1,0 +1,48 @@
+<Downtimes>
+<?
+foreach($this->downtimes as $downtime)
+{
+    //only show event that we have pulled resource for
+    $resource_name = getResourceName($this->resources, $downtime->resource_id);
+    if($resource_name !== null) {
+        echo "<Downtime>";
+
+        $format = "Ymd";
+        $start = date($format, $downtime->unix_start_time);
+        $end = date($format, $downtime->unix_end_time);
+        echo "<StartDate>$start</StartDate>";
+        echo "<EndDate>$end</EndDate>";
+
+        $summary = $resource_name;
+        echo "<Summary>".$summary."</Summary>";
+
+        $start_human = date(config()->date_format_full, $downtime->unix_start_time);
+        $end_human = date(config()->date_format_full, $downtime->unix_end_time);
+        $desc = "(From $start_human To $end_human) ";
+        $desc .= $downtime->downtime_summary;
+        $desc = str_replace(array("\n", "\r"), "", $desc);
+        echo "<Description>".$desc."</Description>";
+
+        echo "<Services>";
+        foreach($this->downtime_services as $service) {
+            if($service->downtime_id == $downtime->downtime_id) {
+                echo "<Service>";
+                echo "<ServiceID>".$service->service_id."</ServiceID>";
+                echo "</Service>";
+            }
+        }
+        echo "</Services>";
+
+        echo "</Downtime>";
+    }
+}
+
+function getResourceName($resources, $id)
+{
+    foreach($resources as $resource) {
+        if($resource->id == $id) return $resource->name;
+    }
+    return null;
+}
+?>
+</Downtimes>

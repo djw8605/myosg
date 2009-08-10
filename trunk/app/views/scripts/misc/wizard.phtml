@@ -1,0 +1,104 @@
+
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+span.disabled_span
+{
+    color: gray;
+}
+</style>
+
+<form method="get" id="wizard">
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <h3>Information to display</h3>
+    <div class="indent" id="datasource_area">
+        <select name="datasource">
+        <option value="">(Please Select)</option>
+        <option value="metric">RSV Metrics</option>
+        <option value="cpuinfo">CPU Information</option>
+        <option value="count">Resource Service Counts</option>
+        </select>
+
+        <div id="metric_attrs" class="attrs indent hidden">
+            <?=$this->render("misc/wizard_metric.phtml")?>
+        </div>
+        <div id="cpuinfo_attrs" class="attrs indent hidden">
+            <?=$this->render("misc/wizard_cpuinfo.phtml")?>
+        </div>
+        <div id="count_attrs" class="attrs indent hidden">
+            <?=$this->render("misc/wizard_count.phtml")?>
+        </div>
+    </div>
+
+    <?=$this->render("subscribe.phtml")?>
+</form>
+
+<script type="text/javascript">
+
+function showhide_attrs(show_speed)
+{
+    var v = $("select[name=datasource]").val();
+    $(".attrs").hide();
+    if(v != "") {
+        $("#"+v+"_attrs").show(show_speed);
+/*
+        $("#vo_area").show(show_speed);
+        $("#filter_area").show(show_speed);
+        $("#vo_area_standby").hide();
+        $("#filter_area_standby").hide();
+        if(
+            v == "foo_page_that_hasdatarange"
+        ) {
+            $("#_daterange_attrs").show(show_speed);
+        }
+*/
+    } else {
+/*
+        $("#vo_area").hide();
+        $("#filter_area").hide();
+        $("#vo_area_standby").show();
+        $("#filter_area_standby").show();
+*/
+    }
+}
+$(document).ready(function() {
+
+    //setup form
+    $("select[name=datasource]").change(function() {
+        showhide_attrs('normal');
+    });
+
+    <?
+    //select currently selected datasouce
+    if(isset($_REQUEST["datasource"])) {
+        $datasource = $_REQUEST["datasource"];
+        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
+        echo "showhide_attrs();\n";
+    }
+
+    if(isset($_REQUEST["all_vos"])) {
+        echo "disable($('input[name=all_vos]'));";
+    }
+    ?>});
+
+function wizard_submit(format)
+{
+    var action = '<?=fullbase()?>/misc'+$('select[name=datasource]').val(); 
+    action += "/"+format;
+    $('#wizard').attr('action', action);
+    $('#wizard').submit(); 
+    return false;
+}
+
+</script>

@@ -1,0 +1,21 @@
+<?=$this->render("full_header.phtml", true)?>
+        <div id="primaryContentContainer">
+            <div id="primaryContent">
+                <?=$this->render("breadcrumb.phtml", true)?>
+                <h2><?=$this->page_title?></h2>
+                <?=$this->info?>
+                <?=$this->render(pagename()."/html.phtml")?>
+            </div>
+        </div>
+        <div id="sideContent">
+            <?=$this->render("wizard/wizard.phtml")?>
+
+            <h3>Legacy Links</h3>
+            <div class="indent">
+                <a target="_blank" href="<?=fullbase()."/".pagename()."/legacyvorscsv?".htmlentities($_SERVER["QUERY_STRING"]);?>">VORS Type CSV Listing</a><br/>
+            </div>
+
+            <?=$this->render("legend_rsvstatus.phtml")?>
+            <?=$this->render("feedback.phtml", true)?>
+        </div>
+<?=$this->render("full_footer.phtml", true)?>

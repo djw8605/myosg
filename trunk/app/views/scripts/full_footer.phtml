@@ -1,0 +1,28 @@
+        <div class="clear"></div>
+    </div>
+    <div id="footer">
+<?
+echo "<p style=\"float: right\">".config()->app_name." Version ".config()->version;
+if(config()->debug) {
+    exec("svn info | grep \"Revision:\" |  awk '{print $2}'", $out);
+    echo " (Rev. ".$out[0].")";
+}
+echo "</p>";
+?>
+        <img src="<?=fullbase();?>/images/myosg_favi.ico" align="left"/><p>&nbsp;<?=config()->copyright?></p>
+        <p>MyOSG | <a href="https://ticket.grid.iu.edu/goc">GOCTicket</a> | <a href="https://oim.grid.iu.edu">OIM</a> | <a href="https://twiki.grid.iu.edu">TWiki</a></p>
+    </div>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("<?=config()->urchin_account?>");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<GIPValidation>
+<?
+foreach($this->resources as $rid=>$record) {
+    $resource_name = $record["name"];
+    $resource_fqdn = $record["fqdn"];
+    $tests = $record["tests"];
+    //$interop_bdii = $record["interop_bdii"];
+    $overallstatus = $record["overallstatus"];
+    echo "<Resource>";
+    echo "<Name>$resource_name</Name>";
+    echo "<Fqdn>$resource_fqdn</Fqdn>";
+    echo "<OverallStatus>$overallstatus</OverallStatus>";
+    echo "<ID>$rid</ID>";
+    echo "<Tests>";
+    foreach($tests as $name=>$test) {
+        $gip_status = $test["status"];
+        $reason = $test["reason"];
+        echo "<Test>";
+        echo "<Name>$name</Name>";
+        echo "<Status>$gip_status</Status>";
+        echo "<Reason>$reason</Reason>";
+        echo "</Test>";
+    }
+    echo "</Tests>";
+    echo "</Resource>";
+}
+?>
+</GIPValidation>

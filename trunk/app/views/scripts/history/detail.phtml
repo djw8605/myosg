@@ -1,0 +1,91 @@
+<h1>Overall status changes</h1>
+<h2>Between <?=date(config()->date_format_full, $this->start_time)?> and 
+<?
+if($this->end_time == time()) {
+    echo "now";
+} else {
+    echo date(config()->date_format_full, $this->end_time);
+}
+
+?></h2>
+
+<?
+if(count($this->status_changes) == 0) {
+    echo "<p>No status change has been recorded.</p>";
+}
+if(count($this->status_changes) == 1) {
+    echo "<p>No overall status change occured.</p>";
+}
+
+$metrics_model = new Metrics();
+
+$first = true;
+foreach($this->status_changes as $status_change) {
+    $timestamp = $status_change->timestamp;
+    $status = $status_change->overall_status;
+    $detail = $status_change->detail;
+    $time = date("F j, Y, g:i a", $timestamp);
+    $responsible_mid = $status_change->responsible_metric_id;
+
+    //pull the responsible info
+    if($responsible_mid === null) {
+        $responsible = "<p>No specific metric is responsible for this status change.</p>";
+    } else {
+        $responsible = outputResponsibleInfo($responsible_mid);
+    }
+
+    if($first) {
+        $first = false;
+        ?><div class="metric status_<?=$status?>">
+            <p>Initial Status: <?=$status?></p>
+            <p>Calculated At: <?=$time?></p>
+            <p><?=$detail?></p>
+            <p><?=$responsible?></p>
+        </div><?
+    } else {
+        echo "<span class=\"post-date\">$time</span>";
+        ?><div class="metric status_<?=$status?>">
+            <p>Overall Status changed to <?=$status?></p>
+            <p><?=$detail?></p>
+            <p><?=$responsible?></p>
+        </div><?
+    }
+}
+
+function outputResponsibleInfo($mid)
+{
+    $show_id = getuid();
+    $hide_id = getuid();
+    $detail_id = getuid();
+    $show_again_id = getuid();
+
+    $out = "<div><pre>";
+    $out .= "<div id=$show_id class='button'><img src='images/plusbutton.gif'/> Show Detail for the Metric responsible for this status change</div>";
+    $out .= "<div id=$show_again_id class='button hidden'><img src='images/plusbutton.gif'/> Show Detail for the Metric responsible for this status change</div>";
+    $out .= "<div id=$hide_id class='hidden button'><img src='images/minusbutton.gif'/> Hide Detail</div>";
+    $out .= "<div id=$detail_id class='hidden'>Loading</div>";
+    $out .= "<script type=\"text/javascript\">".
+        "$('#$show_id').click(function() {".
+            "$('#$show_id').hide();".
+            "$('#$hide_id').show();".
+            "$('#$detail_id').show();".
+            "$('#$detail_id').load('history/metric?id=$mid');".
+        "});".
+        "$('#$hide_id').click(function() {".
+            "$('#$hide_id').hide();".
+            "$('#$detail_id').hide();".
+            "$('#$show_again_id').show();".
+        "});".
+        "$('#$show_again_id').click(function() {".
+            "$('#$show_again_id').hide();".
+            "$('#$hide_id').show();".
+            "$('#$detail_id').show();".
+        "});".
+        "</script>";
+    $out .= "</pre></div>";
+
+    return $out;
+}
+
+
+

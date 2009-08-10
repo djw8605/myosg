@@ -1,0 +1,222 @@
+<?if(!uwa()) {?>
+<style>
+.time-tooltip
+{
+    position: absolute;
+    padding-bottom: 8px;
+    background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
+}
+
+.graph
+{
+    cursor: pointer;
+}
+
+.time-tooltip-content
+{
+    background-color: #ccc;
+    padding: 5px;
+}
+.mark
+{
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background: transparent url(<?=fullbase();?>/images/downarrow.png) no-repeat 0px 0px;
+}
+</style>
+<?}?>
+
+<script language='javascript' src='<?=base()?>/lib/jquery-1.3.1/plugins/jquery.dimensions.min.js'></script>
+<script type="text/javascript">
+function convertXtoUnixTime(graph, x)
+{
+    //convert posititon to unixtimestamp
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var time = (time_width / width) * x + start_time;
+    return parseInt(time);
+}
+function convertUnixTimeToX(graph, time)
+{
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var x = (time - start_time)*(width / time_width);
+    return x;
+}
+
+$(document).ready(function() {
+    $(".graph").click(function(event) {
+        var service_param = $(this).attr("id");
+
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var time = convertXtoUnixTime(this, x);
+
+        document.location = "<?=fullbase()?>/history?resource_id=<?=$this->resource_id?>&period=<?=$this->period?>&time="+time+"&"+service_param;
+    });
+
+    $(".graph").mousemove(function(event) {
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var y = event.pageY - imgpos.top;
+
+        var tool = $("#time-tooltip");
+        tool.css("left", imgpos.left + x);
+        tool.css("top", imgpos.top - 28 );
+
+        //convert timestamp to human readable time
+        var d = new Date(convertXtoUnixTime(this, x)* 1000);
+        $(tool).children("span").html(d.toGMTString());
+        tool.show();
+    });
+    $(".graph").mouseout(function(event) {
+        var tool = $("#time-tooltip");
+        tool.hide();
+
+    });
+
+    <?  if(!uwa() and $this->detail_show) { ?>
+    function mark() {
+        var graph = $("#service_id\\=<?=$this->detail_service_id?>");
+        var pos = graph.position();
+        var x = pos.left + convertUnixTimeToX(graph, <?=$this->detail_time?>)-8;
+        var y = pos.top-16;
+
+        var mark = $("#mark");
+        mark.css("left", x);
+        mark.css("top", y);
+        mark.show();
+    }
+    mark();
+    $(window).resize(mark);
+    <? } ?>
+});
+</script>
+
+<div id="mark" class="hidden mark">&nbsp;</div>
+<div id="time-tooltip" class="hidden time-tooltip">
+<span class="time-tooltip-content">to be loaded..</span>
+</div>
+
+<?
+foreach($this->services as $service) {
+    ?>
+    <h3><?=$service->description?> Status</h3>
+    <div class="history_graph">
+    <img id="service_id=<?=$service->service_id?>" class="graph" src="<?=fullbase()?>/history/graph?resource_id=<?=$this->resource_id?>&amp;period=<?=$this->period?>&service_id=<?=$service->service_id?>&amp;start=<?=$this->start_time?>&amp;end=<?=$this->end_time?>"/>
+    </div>
+    <?=$this->ruler?>
+    <?
+}
+?>
+
+<?
+if(!uwa()) {
+    if($this->detail_show) {
+        echo "<h3>".$this->detail_page_title."</h3>";
+
+        if(isset($this->downtime)) {
+            //this is in downtime..
+            echo "<div class=\"bottom_border status_DOWNTIME\">";
+            echo $this->downtime->downtime_summary;
+            $start = date(config()->date_format_full, $this->downtime->start_time);
+            $end = date(config()->date_format_full, $this->downtime->end_time);
+            echo " (From $start to $end)<br/>";
+            if($this->detail_service_status !== null) {
+                $status = Status::getStatus($this->detail_service_status->status_id);
+                echo "Internal Status :$status<br/>";
+                echo "Internal Status Detail:".$this->detail_service_status->detail."<br/>";
+            }
+        } else {
+            //process normal status
+            if($this->detail_service_status !== null) {
+                $status = Status::getStatus($this->detail_service_status->status_id);
+                echo "<div class=\"bottom_border status_".$status."\">";
+                $status_time = $this->detail_service_status->timestamp;
+                $url = fullbase()."/history?period=".$this->period."&resource_id=".$this->resource_id.
+                    "&amp;service_id=".$this->detail_service_id.
+                    "&amp;time=".$status_time;
+                echo "Status changed to $status at <a href=\"$url\">".date(config()->date_format_full, $status_time)."</a><br/>";
+                echo $this->detail_service_status->detail."<br/>";
+                if($this->detail_time != $status_time) {
+                    echo "(Above reason is valid only at the time when this status change occured.)<br/>";
+                }
+            } else {
+                echo "<div class=\"bottom_border status_UNKNOWN\">";
+                echo "No status change has ever occured for this service.";
+            }
+        }
+
+        $title = "<span class=\"h3\">Critical Metrics</span>";
+        echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics, $this->detail_time), true);
+
+        $content = showmetrics($this->detail_noncritical_metrics, $this->detail_time, true);
+        if($content != "") {
+            $title = "<span class=\"h3\">Non-Critical Metrics</span>";
+            echo outputToggle($title, $title, $content);
+        }
+        echo "</div>";
+    } else {
+    ?>
+        <div id="detail_content">Click inside graphs to show metric details at a particular point in time.</div>
+    <?
+    }
+}
+
+function showmetrics($metrics, $timestamp, $hide_empty = false) 
+{
+    $out = "";
+    foreach($metrics as $metric) {
+        $out .= showmetric($metric, $timestamp, $hide_empty);
+    }
+    return $out;
+}
+
+function showmetric($metric, $timestamp, $hide_empty)
+{
+    //check expiration
+    $freshfor = $metric->MetricFreshFor;
+    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+
+    $detail = $metric->Detail;
+    $out = "";
+    $expired_css = "";
+    if($expired) $expired_css = "expired";
+    $out .= "<div class=\"bottom_border status_".$metric->Status." $expired_css\">";
+    if($metric->Timestamp != "") {
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+    }
+    $name = $metric->MetricCommonName;
+    $desc = $metric->MetricDescription;
+    $help_url = config()->default_rsvforum;
+    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    }
+    if($expired) $name .= " (Expired)";
+    $out .= "<span class=\"h4\"><a title=\"$desc\" href=\"$help_url\">".$name."</a></span>";
+    if(trim($detail) == "") {
+        if($hide_empty) {
+            //if hide_empty is true, don't show it..
+            return "";
+        }
+        $detail = "(No detail provided)<br/>";
+    } else {
+        $detail = "<pre>$detail</pre>";
+        $id = $metric->MetricDataID;
+        $detail .= "Metric Data ID: $id ";
+        $fresh_for = $metric->MetricFreshFor;
+        $detail .= "Fresh for: ".humanDuration($fresh_for);
+        $detail .= "<br/>";
+    }
+    $out .= outputToggle("Show Detail", "Hide Detail", $detail);
+    $out .= "</div>";
+
+    return $out;
+} 
+
+

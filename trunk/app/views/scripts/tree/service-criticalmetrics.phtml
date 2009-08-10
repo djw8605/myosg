@@ -1,0 +1,20 @@
+<?
+$js = "";
+echo "<div class='indent'>";
+foreach($this->metrics as $metric)
+{
+    echo "<div class=\"metric\">";
+    echo $metric->common_name;
+    $id = $metric->metric_id;
+
+    echo "<blockquote>".$metric->description."</blockquote>";
+    echo "</div>";
+}
+echo "</div>";
+
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+<?=$js?>
+});
+</script>

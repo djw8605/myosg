@@ -1,0 +1,186 @@
+<?if(!uwa()) {?>
+<style>
+.time-tooltip
+{
+    position: absolute;
+    padding-bottom: 8px;
+    background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
+}
+div.resource
+{
+background-color: transparent;
+}
+.graph
+{
+    cursor: pointer;
+}
+
+.time-tooltip-content
+{
+    background-color: #ccc;
+    padding: 5px;
+}
+.mark
+{
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background: transparent url(<?=fullbase();?>/images/downarrow.png) no-repeat 0px 0px;
+}
+</style>
+<?}?>
+
+<script language='javascript' src='<?=base()?>/lib/jquery-1.3.1/plugins/jquery.dimensions.min.js'></script>
+<script language='javascript' src='<?=base()?>/lib/jquery-1.3.1/plugins/jquery.lazyload.mini.js'></script>
+
+<script type="text/javascript">
+function convertXtoUnixTime(graph, x)
+{
+    //convert posititon to unixtimestamp
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var time = (time_width / width) * x + start_time;
+    return parseInt(time);
+}
+function convertUnixTimeToX(graph, time)
+{
+    var start_time = <?=$this->start_time?>;
+    var end_time = <?=$this->end_time?>;
+    var time_width = end_time - start_time;
+    var width = $(graph).width();
+    var x = (time - start_time)*(width / time_width);
+    return x;
+}
+
+//On load page, init the timer which check if the there are anchor changes each 300 ms
+$().ready(function(){
+    setInterval("checkAnchor()", 200);
+});
+var currentAnchor = null;
+
+//current mark info
+var mark_resource_id = null;
+var mark_service_id = null;
+var mark_time = null;
+
+//Function which chek if there are anchor changes, if there are, sends the ajax petition
+function checkAnchor(){
+    //Check if it has changes
+    if(currentAnchor != document.location.hash){
+        currentAnchor = document.location.hash;
+        if(currentAnchor)
+        {
+            //Creates the  string callback. This converts the url URL/#main&id=2 in URL/?section=main&id=2
+            //var splits = currentAnchor.substring(1).split('&');
+            var anchor = unescape(currentAnchor.substring(1));
+            var splits = anchor.split('&');
+
+            //store current mark info
+            mark_resource_id = splits[0].split('=')[1];
+            mark_service_id = splits[1].split('=')[1];
+            mark_time = splits[2].split('=')[1];
+
+            //hide all previously opened detail (we have only one mark..)
+            $(".history_detail").html("");
+
+            //load detail content
+            $("#history_detail_"+mark_resource_id).html("<img src='<?=fullbase()?>/images/loading_animation_small.gif'/> Loading...").load("<?=fullbase()."/".pagename()?>/"+anchor, 
+                function() {
+                    mark();
+                    window.scroll(0, $("#resource_"+mark_resource_id).parent().position().top);
+                }
+            );
+        }
+    }
+}
+
+function mark() {
+    if(mark_resource_id) {
+        var graph = $("#resource_"+mark_resource_id).find("img[sid="+mark_service_id+"]");
+        var pos = graph.position();
+        var x = pos.left + convertUnixTimeToX(graph, mark_time)-8;
+        var y = pos.top-16;
+
+        var mark = $("#mark");
+        mark.css("left", x);
+        mark.css("top", y);
+        mark.show();
+    }
+}
+
+$(document).ready(function() {
+    $(".graph").click(function(event) {
+        var service_id = $(this).attr("sid");
+        var resource_id = $(this).attr("rid");
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var time = convertXtoUnixTime(this, x);
+
+        //update anchor
+        document.location = "#"+escape("detail?resource_id="+resource_id+"&service_id="+service_id+"&time="+time);
+    });
+
+    $(".graph").mousemove(function(event) {
+        var imgpos = $(this).position();
+        var x = event.pageX - imgpos.left;
+        var y = event.pageY - imgpos.top;
+
+        var tool = $("#time-tooltip");
+        tool.css("left", imgpos.left + x);
+        tool.css("top", imgpos.top - 28 );
+
+        //convert timestamp to human readable time
+        var d = new Date(convertXtoUnixTime(this, x)* 1000);
+        $(tool).children("span").html(d.toGMTString());
+        tool.show();
+    });
+    $(".graph").mouseout(function(event) {
+        var tool = $("#time-tooltip");
+        tool.hide();
+    });
+    $(window).resize(mark);
+
+    $("img").lazyload({placeholder:"<?=fullbase()?>/images/graph_holder.gif", effect: "fadeIn"});
+});
+</script>
+
+<div id="mark" class="hidden mark">&nbsp;</div>
+<div id="time-tooltip" class="hidden time-tooltip">
+<span class="time-tooltip-content">to be loaded..</span>
+</div>
+<?
+echo "Between ".date(config()->date_format, $this->start_time);
+echo " and ".date(config()->date_format, $this->end_time)."<br/>";
+foreach($this->rgs as $rgid=>$rg) {
+
+    //show resource group header
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<div class=\"resource_group_header round\">";
+    if(!uwa()) {
+        echo "<div class=\"sidenote\">";
+        echo $resource_group->grid_type_description." Group";
+        echo "</div>";
+    }
+    echo "<span class='h3'>".$resource_group->name."</span>";
+    echo "</div>";
+ 
+    foreach($rg as $rid=>$resource)
+    {
+        echo "<div class=\"border\">";
+        echo "<h4><div class=\"resource\">$resource->name</div></h4>";
+        echo "<div id=\"resource_$rid\" class=\"indent\">";
+        
+        foreach($this->services[$rid] as $service) {
+            echo "<h4>$service->description</h4>";
+            echo "<div class=\"history_graph\">";
+            echo "<img sid=\"$service->service_id\" rid=\"$rid\" class=\"graph\" src=\"".fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
+            echo $this->ruler;
+            echo "</div>";
+        }
+        echo "<div class=\"history_detail\" id=\"history_detail_$rid\"></div>";
+        echo "</div>";//indent
+        echo "</div>";//border
+    }
+}

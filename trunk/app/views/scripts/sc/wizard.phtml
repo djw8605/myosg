@@ -1,0 +1,166 @@
+
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+</style>
+
+<form method="get" id="wizard">
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <h3>Information to display</h3>
+    <div class="indent" id="datasource_area">
+        <select name="datasource">
+        <option value="">(Please Select)</option>
+        <option value="summary">Support Center Summary</option>
+        </select>
+
+        <div id="summary_attrs" class="attrs indent hidden">
+            <?=$this->render("sc/wizard_summary.phtml")?>
+        </div>
+    </div>
+
+    <h3>Support Centers to display</h3>
+    <div class="indent">
+        <div id="sc_area_standby">
+            <p>Please select the information to display first.</p>
+        </div>
+        <div id="sc_area" class="hidden">
+            <p>Select support center that you want to show above information (conditions are or-ed).</p>
+            <?
+            $checked = "";
+            if(isset($_REQUEST["all_scs"])) { $checked = "checked=checked"; }
+            echo "<input type=\"checkbox\" name=\"all_scs\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Support Centers<br/>";
+
+            echo "<div class=\"hidden list\" id=\"all_scs_attrs\">";
+                $checked = "";
+                if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
+                echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Support Centers<br/>";
+            echo "</div>";
+
+            $model = new SupportCenters();
+            $scs = $model->get();
+            $kv = array();
+            foreach($scs as $sc) { $kv[$sc->id] = array($sc->name, $sc->long_name); }
+            echo fblist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
+            
+            ?>
+        </div>
+    </div>
+
+    <h3>Filter</h3>
+    <div class="indent">
+        <div id="filter_area_standby">
+            <p>Please select the information to display first.</p>
+        </div>
+        <div id="filter_area" class="hidden">
+            <p>Only show sc that matches following criteria (conditions are and-ed).</p>
+            <?
+            $kv = array();
+            $kv[0] = "Inactive";
+            $kv[1] = "Active";
+            echo radiolist("active", "Active Status", $kv, 1); //1 by default
+            ?>
+        </div>
+    </div>
+
+    <br/>
+    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+
+    <?=$this->render("subscribe.phtml")?>
+
+</form>
+
+<script type="text/javascript">
+
+function showhide_attrs(show_speed)
+{
+    var v = $("select[name=datasource]").val();
+    $(".attrs").hide();
+    if(v != "") {
+        $("#"+v+"_attrs").show(show_speed);
+        $("#sc_area").show(show_speed);
+        $("#filter_area").show(show_speed);
+        $("#sc_area_standby").hide();
+        $("#filter_area_standby").hide();
+
+        if(
+            v == "foo_page_that_hasdatarange"
+        ) {
+            $("#_daterange_attrs").show(show_speed);
+        }
+    } else {
+        $("#sc_area").hide();
+        $("#filter_area").hide();
+        $("#sc_area_standby").show();
+        $("#filter_area_standby").show();
+    }
+}
+
+$(document).ready(function() {
+
+    //setup form
+    $("select[name=datasource]").change(function() {
+        showhide_attrs('normal');
+    });
+
+    function list_click()
+    {
+        $("#all_scs_attrs").hide();
+        if(this.checked) { $("input[name=all_scs]").attr("checked", ""); }
+    }
+    var items = $("input[name=all_scs]").siblings("input");
+    $(items).click(list_click);
+
+
+    <?
+    //select currently selected datasouce
+    if(isset($_REQUEST["datasource"])) {
+        $datasource = $_REQUEST["datasource"];
+        switch($datasource) {
+        case "summary":
+            echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
+            echo "showhide_attrs();\n";
+        }
+    }
+
+    if(isset($_REQUEST["all_scs"])) {
+        echo "disable($('input[name=all_scs]'));";
+    }
+    ?>
+});
+
+function wizard_submit(format)
+{
+    var action = '<?=fullbase()?>/sc'+$('select[name=datasource]').val(); 
+    action += "/"+format;
+    $('#wizard').attr('action', action);
+    $('#wizard').submit(); 
+    return false;
+}
+
+function disable(e)
+{
+    var items = $(e).siblings(); 
+    $("#all_scs_attrs").show();
+
+    $('#sc_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).attr('checked', '');
+}
+
+function enable(e)
+{
+    $("#all_scs_attrs").hide();
+}
+
+</script>

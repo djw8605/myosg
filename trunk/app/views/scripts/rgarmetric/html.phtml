@@ -1,0 +1,61 @@
+<?
+echo "Between ".date(config()->date_format_full, $this->start_time);
+echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
+?>
+<style>
+div.resource
+{
+margin-bottom: 0px;
+}
+</style>
+<table class="real" width="100%">
+    <tr><th width="100px">Resource</th><th>Service</th><th>Availability</th><th>Reliability</th><th>&nbsp;</th></tr>
+<?
+    foreach($this->rgs as $rgid=>$rg) {
+        echo "<tr><td colspan='5'>";
+
+        //show resource group header
+        $resource_group = $this->resource_groups[$rgid][0];
+        echo "<div class=\"resource_group_header round\">";
+        if(!uwa()) {
+            echo "<div class=\"sidenote\">";
+            echo $resource_group->grid_type_description." Group";
+            echo "</div>";
+        }
+        echo "<span class='h3'>".htmlentities($resource_group->name)."</span>";
+        echo "</div>";
+ 
+        echo "</td></tr>";
+
+        foreach($rg as $resource_id=>$resource_info) {
+
+            $resource = $this->data[$resource_id];
+            $resource_name = $resource_info->name;
+
+            $first = true;
+            foreach($resource as $service_id=>$data) {
+                if($data == null) continue;
+                $service_info = $this->services[$service_id];
+                $service_name = $service_info[0]->name;
+                $a = round((double)$data["availability"]*100, 2);
+                $r = round((double)$data["reliability"]*100, 2);
+
+/*
+                if($first) {
+                    echo "<tr><td colspan=\"5\" style=\"border-top: 1px solid gray; height: 1px;\"></td></tr>";
+                }
+*/
+                echo "<tr>";
+                echo "<td>";
+                if($first) {
+                    echo "<div class=\"resource round\">$resource_name</div>";
+                }
+                echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
+                echo "</td></tr>";
+                $first = false;
+            }
+        }
+    }
+?>
+</table>
+

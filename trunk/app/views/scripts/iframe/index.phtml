@@ -1,0 +1,13 @@
+<?=$this->render("full_header.phtml", true)?>
+
+        <div id="primaryContentContainer">
+            <div id="primaryContent">
+                <?=$this->render("breadcrumb.phtml", true)?>
+                <h2><?=$this->page_title?></h2>
+                <a href="<?=fullbase()?>/<?=pagename()?>/oim">OIM</a>
+            </div>
+        </div>
+        <div id="sideContent">
+            <h3>Subscribe</h3>
+        </div>
+<?=$this->render("full_footer.phtml", true)?>
