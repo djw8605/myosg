@@ -66,24 +66,41 @@ class common_config
 
         $this->db_type = "Pdo_Mysql";
 
-        //rsvextra database info
         $this->rsvextra_dbparam = array(
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
+            'port'     => 49152,
             'host'     => "localhost",
             'username' => "myosg",
             'password' => "somepass",
-            'dbname'   => "rsvextra",
-            'port'     => 49152
+            'dbname'   => "rsvprocess"
         );
 
         $this->oim_dbparam = array(
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
+            'port'     => 49152,
             'host'     => "localhost",
-            'username' => "oim",
+            'username' => "myosg",
             'password' => "somepass",
-            'dbname'   => "oim",
-            'port'     => 49152
+            'dbname'   => "oim"
         );
+
+        $this->myosg_dbparam = array(
+            'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
+            'port'     => 49152,
+            'host'     => "localhost",
+            'username' => "myosg",
+            'password' => "somepass",
+            'dbname'   => "myosg"
+        );
+
+        $this->gratia_dbparam = array(
+            'port'     => 49152,
+            'host'     => "dahmer.uits.indiana.edu",
+            'username' => "myosg",
+            'password' => "somepass",
+            'dbname'   => "gratia"
+        );
+
 
         //first page to load when user first visit the page
         //$this->initial_page = "home_start"; //needs to be a menu ID

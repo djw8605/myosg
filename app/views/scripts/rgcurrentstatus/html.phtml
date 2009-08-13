@@ -143,7 +143,6 @@ function outputMetricInfo($metric, $timestamp)
         if(trim($detail) != "") {
             $detail = "<pre>$detail</pre>";
             $id = $metric->MetricDataID;
-            $detail .= "Metric Data ID: $id ";
             $fresh_for = $metric->MetricFreshFor;
             $detail .= "Fresh for: ".humanDuration($fresh_for);
             $detail .= "<br/>";
