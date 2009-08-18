@@ -440,3 +440,9 @@ vertical-align: text-top;
 cursor: pointer;
 padding-right: 2px;
 }
+.hierarchy
+{
+    font-weight: normal;
+    font-size: 10px;
+    color: #ccc;
+}

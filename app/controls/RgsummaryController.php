@@ -120,6 +120,21 @@ class RgsummaryController extends RgController
             $this->view->aliases = $amodel->getindex();
         }
 
+        if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
+            $this->view->hierarchy = array();
+            $model = new Facilities();
+            $facilities = $model->getgroupby("id");
+            $model = new Site();
+            $sites = $model->getgroupby("id");
+            foreach($this->rgs as $rgid=>$rg) {
+                $rginfo = $this->view->resourcegroups[$rgid][0];
+                $siteinfo = $sites[$rginfo->site_id][0];
+                $site = $siteinfo->name;
+                $facilityinfo = $facilities[$siteinfo->facility_id][0];
+                $facility = $facilityinfo->name;
+                $this->view->hierarchy[$rgid] = array("facility"=>$facility, "site"=>$site);
+            }
+        }
 
         $this->setpagetitle(self::default_title());
     }
