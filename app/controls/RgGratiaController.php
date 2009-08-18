@@ -20,16 +20,18 @@ abstract class RgGratiaController extends RgController
         $start_time = date("Y-m-d h:i:s", $this->view->start_time);
         $end_time = date("Y-m-d h:i:s", $this->view->end_time);
 
-        $resource_group_names = array();
+        $resource_names = array();
         foreach($this->rgs as $rgid=>$rg) {
             $resource_group = $resource_groups[$rgid][0];
-            $resource_group_names[] = $resource_group->name;
+            foreach($rg as $rid=>$resource) {
+                $resource_names[] = $resource->name;
+            }
         }
-        $this->view->url = $urlbase."?facility=".implode("|",$resource_group_names)."&title=&ylabel=$ylabel&starttime=$start_time&endtime=$end_time";
+        $this->view->url = $urlbase."?facility=".implode("|",$resource_names)."&title=&ylabel=$ylabel&starttime=$start_time&endtime=$end_time";
         if(!$legend) {
             $this->view->url .= "&legend=False";
         }
-        $this->view->resource_group_names = implode(" / ", $resource_group_names);
+        $this->view->resource_names = implode(" / ", $resource_names);
         $this->setpagetitle($this->default_title()." - ".$sub_title);
     }
 }
