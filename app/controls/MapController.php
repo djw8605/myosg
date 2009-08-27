@@ -44,9 +44,11 @@ class MapController extends ControllerBase
         $rgrouped_model = new ResourceByGroupID();
         $this->view->resources_bygid = $rgrouped_model->getindex();
 
-        //get site statuses
+        //get resource status
         $model = new LatestResourceStatus();
         $this->view->resource_status = $model->getgroupby("resource_id");
+        $downtime_model = new Downtime();
+        $this->view->downtime = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
 
         $this->setpagetitle(self::default_title());
     }
@@ -57,6 +59,73 @@ class MapController extends ControllerBase
     public function iframeAction()
     {
         $this->load();
+    }
+
+    public function promoAction()
+    {
+        $model = new Facilities();
+        $smodel = new Site();
+        $sites = $smodel->getgroupby("facility_id");
+        $this->view->markers = array();
+        foreach($model->get() as $facility) {
+            $site = $sites[$facility->id][0];//pick the first site
+            //create acronym
+            $name = $facility->name;
+            $name2 = str_replace("_", " ", $name);
+            $tokens = split(" ", $name2);
+            $acro = "";
+            foreach($tokens as $token) {
+                if($token == "The") continue;
+                if($token == "of") continue;
+                $acro .= $token[0];
+            }
+            $marker = array("name"=>$name, "acronym"=>$acro, "longitude"=>$site->longitude, "latitude"=>$site->latitude, "sites"=>$sites[$facility->id]);
+            $this->view->markers[] = $marker;
+        }
+        $this->view->page_title = "OSG Promotional View";
+    }
+    public function promoiconAction()
+    {
+        header("Content-type: image/png");
+
+        $text = $_REQUEST["text"];
+        $image_cache = "/tmp/myosg.imagecache.$text";
+        if(file_exists($image_cache) and filectime($image_cache) > time() - 60) {
+        } else {
+            //$image = imagecreatefrompng("./images/rss.png");
+            // Create the image
+
+            $src = imagecreatefrompng('images/small_green_ball.png');
+            $im = imagecreatetruecolor(100, 15);
+            imagesavealpha($im, true);
+            imagealphablending($im, false);
+            // Create some colors
+            $textcolor = imagecolorallocate($im, 0, 0, 0);
+            $shadowcolor = imagecolorallocate($im, 255, 255, 255);
+            $trans = imagecolorallocatealpha($im, 200, 200, 200, 127);
+            imagefill($im, 0, 0, $trans);
+            //drop the anchor image
+            imagecopy($im, $src, 0,0,0,0,15,15);
+
+            // The text to draw
+            // Replace path by your own font path
+            $font = "images/verdanab.ttf";
+
+            $font_size = 10;
+            $xpos = 20;
+            $ypos = 12;
+
+            // Add the text
+            //imagettftext($im, $font_size, 0, $xpos+2, $ypos+2, $shadowcolor, $font, $text);
+            imagettftext($im, $font_size, 0, $xpos, $ypos, $textcolor, $font, $text);
+
+            // Using imagepng() results in clearer text compared with imagejpeg()
+            imagepng($im, $image_cache);
+            imagedestroy($im);
+        }
+        readfile($image_cache);
+
+        $this->render("none", null, true);
     }
 
     protected function process_sitelist()

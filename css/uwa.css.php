@@ -442,6 +442,12 @@ border: 0px;
 }
 div.history_graph img.graph
 {
-    height: 12px; 
+height: 12px; 
+}
+.hierarchy
+{
+font-weight: normal;
+font-size: 10px;
+color: #ccc;
 }
 
