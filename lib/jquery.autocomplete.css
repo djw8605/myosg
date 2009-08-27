@@ -4,6 +4,8 @@
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
+font-size: 11px;
+font-family: verdana;
 }
 
 .ac_results ul {
@@ -43,4 +45,12 @@
 .ac_over {
 	background-color: #f90;
 	color: white;
+}
+span.ac_description
+{
+color: #777;
+}
+.ac_over span.ac_description
+{
+color: white;
 }
