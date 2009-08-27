@@ -23,8 +23,14 @@ abstract class RgGratiaController extends RgController
         $resource_names = array();
         foreach($this->rgs as $rgid=>$rg) {
             $resource_group = $resource_groups[$rgid][0];
+        
+            //add resource group name as resource name as well
+            $resource_names[] = $resource_group->name;
+            //add resource names (if it differes from the resource group name)
             foreach($rg as $rid=>$resource) {
-                $resource_names[] = $resource->name;
+                if($resource->name != $resource_group->name) {
+                    $resource_names[] = $resource->name;
+                }
             }
         }
         $this->view->url = $urlbase."?facility=".implode("|",$resource_names)."&title=&ylabel=$ylabel&starttime=$start_time&endtime=$end_time";
