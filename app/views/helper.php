@@ -292,7 +292,7 @@ function fblist($id, $title, $kv)
         width: 280,
         formatItem: function(item) {
             if(item.desc == "") return item.name; 
-            return item.name + "<br/><span class=\"ac_description\">" + item.desc + "</span>";
+            return item.name + " (" + item.desc + ")";
         }
     }).result(function(event, item) {
         $(this).val("");
