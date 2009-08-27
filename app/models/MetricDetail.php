@@ -2,10 +2,10 @@
 
 class MetricDetail extends Model
 {
-    public function ds() { return "rsv"; }
+    public function ds() { return "gratia"; }
     public function sql($params)
     {
         $id = $params["id"];
-        return "SELECT * from metricdetail where id = $id";
+        return "SELECT dbid as id, DetailsData as detail from MetricRecord where dbid = $id";
     }
 }

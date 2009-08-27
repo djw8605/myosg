@@ -7,7 +7,7 @@ function init_icon(type, img)
     icon.infoWindowAnchor = new GPoint(10, 10);
     icon.iconSize = new GSize(20, 20);
     icon.shadow = "<?=fullbase();?>/images/shadow.png";
-    icon.shadowSize = new GSize(30, 30);
+    icon.shadowSize = new GSize(25, 25);
 
     return icon;
 }
@@ -17,14 +17,14 @@ var map = null;
 
 function update_anchor() {
     var pos = map.getCenter();
-    document.location="#"+pos.toUrlValue()+"|"+map.getZoom();
+    document.location="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getCurrentMapType().getName();
 }
 
 //http://code.google.com/apis/maps/documentation/reference.html#GMapTypeOptions
 function init() {
   if (GBrowserIsCompatible()) {
-    map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_MAPMAKER_HYBRID_MAP, G_NORMAL_MAP]});
-    map.setMapType(G_MAPMAKER_HYBRID_MAP); 
+    map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_PHYSICAL_MAP, G_HYBRID_MAP, G_NORMAL_MAP]});
+    map.setMapType(G_PHYSICAL_MAP); 
 <?if(uwa()) {?>
     map.addControl(new GSmallMapControl());
 <?} else { ?>
@@ -36,9 +36,23 @@ function init() {
     //process anchor (if any)
     var anchor = document.location.hash.split("#")[1];
     if(anchor) {
-        var pos = GLatLng.fromUrlValue(anchor.split("|")[0]);
-        var zoom = anchor.split("|")[1];
+        var params = anchor.split("|");
+        var pos = GLatLng.fromUrlValue(params[0]);
+        var zoom = params[1];
         map.setCenter(pos, parseInt(zoom));
+        if(params.length > 2) {
+            switch(params[2]) {
+            case "Terrain":
+                map.setMapType(G_PHYSICAL_MAP);
+                break;
+            case "Hybrid":
+                map.setMapType(G_HYBRID_MAP);
+                break;
+            case "Map":
+                map.setMapType(G_NORMAL_MAP);
+                break;
+            }
+        }
     } else {
         //set it to default location
         map.setCenter(new GLatLng(38.61687,-96.767578), 4);
@@ -49,19 +63,20 @@ function init() {
     });
     GEvent.addListener(map, "moveend",  update_anchor);
     GEvent.addListener(map, "zoomend",  update_anchor);
+    GEvent.addListener(map, "maptypechanged",  update_anchor);
 
     //generate icons
     var icon = {};
     var type = "ok";
-    icon[type] = init_icon(type, "status_ok.png");
+    icon[type] = init_icon(type, "status_ok_map.png");
     type = "warning";
-    icon[type] = init_icon(type, "status_warning.png");
+    icon[type] = init_icon(type, "status_warning_map.png");
     type = "unknown";
-    icon[type] = init_icon(type, "status_unknown.png");
+    icon[type] = init_icon(type, "status_unknown_map.png");
     type = "critical";
-    icon[type] = init_icon(type, "status_critical.png");
+    icon[type] = init_icon(type, "status_critical_map.png");
     type = "downtime";
-    icon[type] = init_icon(type, "status_downtime.png");
+    icon[type] = init_icon(type, "status_downtime_map.png");
 
     function createMarker(id, point, markerOptions, html) {
       var marker = new GMarker(point, markerOptions);
@@ -110,18 +125,19 @@ foreach($this->sites as $site) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
                 if($r->active == 0 || $r->disable == 1) continue;
-                if(isset($this->resource_status[$r->id][0])) {
+                $name = $r->name;
+                if(isset($this->downtime[$r->id])) {
+                    $status = "DOWNTIME";
+                    $note = "This resource is currently under maintenance.";
+                } else if(isset($this->resource_status[$r->id][0])) {
                     $rstatus = $this->resource_status[$r->id][0];
-                    $name = $r->name;
                     $status = Status::getStatus($rstatus->status_id);
-                    $html .= "<div class=\"status_$status\"><h4>$name</h4>";
-                    $html .= $rstatus->detail . "<br/></div>";
+                    $note = $rstatus->detail;
                 } else {
-                    $name = $r->name;
                     $status = "UNKNOWN";
-                    $html .= "<div class=\"status_$status\"><h4>$name</h4>";
-                    $html .= "Resource status is not calculated for this resource.<br/></div>";
+                    $note = "Resource status is not calculated for this resource.";
                 }
+                $html .= "<div class=\"status_$status\"><h4>$name</h4>$note</div>";
 
                 //determine site status
                 if($status == "OK") $status_ok++;

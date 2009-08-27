@@ -68,8 +68,20 @@ Current GIP validation status for all production resources that provide the CE s
 </div>
 
 <div class="info_box">
-<h2>Use Cases</h2>
+<h2>User Contributed MyOSG Views</h2>
+<p>Following are the user contributed MyOSG Views from a <a href="https://twiki.grid.iu.edu/bin/view/Operations/UserContributedViews">TWiki Page</a>. Anyone with Twiki access can edit these links.</p>
+<?
+foreach($this->ucv as $ucv)
+{
+echo "<div class=\"sidenote\">by ".htmlentities($ucv[4])." (".htmlentities(trim($ucv[3])).")</div>";
+echo "<b><a href=\"".htmlentities($ucv[2])."\">".htmlentities($ucv[1])."</a></b>";
+echo "<p>".$ucv[5]."</p>";
+}
+?>
+</div>
 
+<div class="info_box">
+<h2>Use Cases</h2>
 <p>The use-cases below are provided to give users an idea of how they could potentially use MyOSG.</p>
 
 <b><a href="rgsummary/index?datasource=summary&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showenv=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=04%2F08%2F2009&end_type=now&end_date=04%2F15%2F2009&all_resources=on&gridtype=on&gridtype_1=on&status=on&status_1=on&status_2=on&service=on&service_1=on&service_3=on&vosup=on&vosup_1=on&active=on&active_value=1&disable_value=1">USER FROM A VO</a></b>

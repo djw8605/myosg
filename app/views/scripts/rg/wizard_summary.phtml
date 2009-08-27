@@ -10,6 +10,10 @@ if(isset($_REQUEST["summary_attrs_showdesc"])) { $checked = "checked=checked"; }
 if(isset($_REQUEST["summary_attrs_showgipstatus"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showgipstatus" <?=$checked?>/> Show Current GIP Validation Status<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showhierarchy"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showhierarchy" <?=$checked?>/> Show OIM Hierarchy<br/>
+
 <h4>For Resource</h4>
 
 <?$checked = "";

@@ -97,7 +97,7 @@
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, $item->description); 
+                    $kv[$item->id] = array($item->name, ""/*$item->description*/); 
                 }
             }
             echo fblist("facility", "Resource Groups in Facility ".helpbutton("Facility"), $kv);
@@ -108,7 +108,7 @@
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, $item->long_name);
+                    $kv[$item->id] = array($item->name, ""/*$item->long_name*/);
                 }
             }
             echo fblist("site", "Resource Groups in Sites ".helpbutton("Site"), $kv);
@@ -119,7 +119,7 @@
             foreach($list as $item) { 
                 //grab active, non-disabled records
                 if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, $item->grid_type_description);
+                    $kv[$item->id] = array($item->name, ""/*$item->grid_type_description*/);
                 }
             }
             echo fblist("rg", "Specific Resource Groups ".helpbutton("Resource_Group"), $kv);

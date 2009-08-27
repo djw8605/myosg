@@ -261,7 +261,7 @@ function fblist($id, $title, $kv)
     $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 
     //output list editor
-    $out .= "<div class=\"indent hidden fblist\" id=\"${id}__list\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
+    $out .= "<div class=\"indent hidden\" id=\"${id}__list\"><div class=\"fblist\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
 
     //output script
     $delete_url = fullbase()."/images/delete.png";
@@ -290,24 +290,22 @@ function fblist($id, $title, $kv)
         mustMatch: true,
         matchContains: true,
         width: 280,
-        formatItem: function(row, i, max) {
-            if(row.desc == "") return row.name; 
-            return "<b>" + row.name + "</b><br/>" + row.desc;
-        },
-        formatResult: function(row) {
-            return " ";
+        formatItem: function(item) {
+            if(item.desc == "") return item.name; 
+            return item.name + " (" + item.desc + ")";
         }
-    }).result(function(event,row) {
-        $(this).before("<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>"+row.name+"<input type=\"hidden\" name=\""+row.id+"\" value=\"on\"/></div>");
+    }).result(function(event, item) {
         $(this).val("");
+        $(this).before("<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>"+item.name+"<input type=\"hidden\" name=\""+item.id+"\" value=\"on\"/></div>");
     });
 });</script>
 BLOCK;
 
     $out .= $pre_selected;
-    $out .= "<input type='text' class='autocomplete'/>";
+    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").show(\"normal\");' onblur='$(\"#${id}__acnote\").hide();'/>";
+    //$out .= "<img style=\"float: right; position: relative; top: -17px; cursor: pointer;\" src=\"".fullbase()."/images/telephone.png\" onclick=\"$(this).siblings('.autocomplete').focus();setTimeout(function() {\$('#".$id."__ac').keydown();}, 0)\"/>";
     $out .= $script;
-    $out .= "</div>";
+    $out .= "</div><p id=\"${id}__acnote\" class=\"hidden\" style=\"text-align: right; font-size: 10px;line-height: 100%;\">* Press Down key to show all</p></div>";
     return $out;
 }
 

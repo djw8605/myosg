@@ -46,6 +46,7 @@ class AdminController extends ControllerBase
         $this->render("none", null, true);
     }
 
+/*
     public function dedupdetailAction()
     {
         $model = new DuplicateDetail();
@@ -62,4 +63,5 @@ class AdminController extends ControllerBase
 
         $this->render("none", null, true);
     }
+*/
 } 

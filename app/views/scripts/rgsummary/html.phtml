@@ -9,13 +9,18 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "</div>";
     }
     echo "<div class=\"resource_group\">";
-    if($resource_group->disable == 1) {
-        $group_name .= " (Removed)";
+    $group_name = $resource_group->name;
+    if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
+        $hierarchy = $this->hierarchy[$resource_group_id];
+        $group_name = "<span class=\"hierarchy\">".$hierarchy["facility"]." (Facility) &gt; ".$hierarchy["site"]." (Site) &gt; </span>".$group_name;
     }
+
     if($resource_group->active == 0) {
         $group_name .= " (Inactive)";
     }
-    $group_name = $resource_group->name;
+    if($resource_group->disable == 1) {
+        $group_name .= " (Removed)";
+    }
     echo "<span class='h3'>".$group_name."</span>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
@@ -25,6 +30,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "(No resource group description)";
         }
     }
+
     echo "</div>"; //resource_group
     echo "</div>"; //resourcee_group_header
 

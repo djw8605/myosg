@@ -171,7 +171,6 @@ text-align: right;
 margin-right: 5px;
 }
 
-
 .bottom_border
 {
 border-bottom: 1px dotted #ddd;
@@ -439,4 +438,10 @@ margin:1px;
 vertical-align: text-top;
 cursor: pointer;
 padding-right: 2px;
+}
+.hierarchy
+{
+    font-weight: normal;
+    font-size: 10px;
+    color: #ccc;
 }
