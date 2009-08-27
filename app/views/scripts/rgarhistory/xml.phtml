@@ -23,7 +23,7 @@ foreach($this->rgs as $rgid=>$rg) {
         $services = $this->services[$rid];
         asort($services);
         if(count($services) == 0) {
-            echo "<Note>No availability history available for this duration.</Note>";
+            echo "<!--No availability history available for this duration.-->";
         } else {
             foreach($services as $service_id=>$recs)
             {
