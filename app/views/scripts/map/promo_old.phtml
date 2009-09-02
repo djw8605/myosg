@@ -1,0 +1,73 @@
+<?=$this->render("full_header.phtml", true)?>
+<script src="http://maps.google.com/maps?file=api&v=2&key=<?=config()->gmap_key?>" type="text/javascript"></script>
+<script type="text/javascript">
+var map = null;
+$(document).ready(function() {
+    map = new GMap2(document.getElementById("map_canvas"));
+    map.setMapType(G_PHYSICAL_MAP); 
+    map.enableScrollWheelZoom();
+    map.setCenter(new GLatLng(38,-97.2), 5);
+
+    var baseIcon = new GIcon(G_DEFAULT_ICON);
+    baseIcon.shadow = null;
+    baseIcon.iconSize = new GSize(200, 15);
+    baseIcon.iconAnchor = new GPoint(7, 7);
+    baseIcon.infoWindowAnchor = new GPoint(7, 7);
+
+    var plainIcon = new GIcon(G_DEFAULT_ICON);
+    plainIcon.shadow = null;
+    plainIcon.iconSize = new GSize(15, 15);
+    plainIcon.iconAnchor = new GPoint(7, 7);
+    plainIcon.infoWindowAnchor = new GPoint(7, 7);
+    plainIcon.image = "<?=base()?>/images/small_green_ball.png";
+
+    function createMarker(point, acronym, name) {
+        var marker;
+
+        if(acronym == null) {
+            markerOptions = { icon:plainIcon };
+            marker = new GMarker(point, markerOptions);
+        } else {
+            // Create a lettered icon for this point using our icon class
+            var letteredIcon = new GIcon(baseIcon);
+            letteredIcon.image = "<?=base()?>/map/promoicon?text=" + acronym;
+            markerOptions = { icon:letteredIcon };
+            marker = new GMarker(point, markerOptions);
+        }
+
+        GEvent.addListener(marker, "click", function() {
+            marker.openInfoWindowHtml("<h1>"+name+"</h2>");
+        });
+        return marker;
+    }
+    
+    <?
+    foreach($this->markers as $marker) {
+        echo "var latlng = new GLatLng(".$marker["latitude"].",".$marker["longitude"].");\n";
+        $acro = "null";
+        if(isset($_REQUEST["acro"])) {
+            $acro = "\"".$marker["acronym"]."\"";
+        }
+        echo "map.addOverlay(createMarker(latlng, ".$acro.", \"".$marker["name"]."\"));\n";
+    }
+    ?>
+
+});
+</script>
+<style>
+#content
+{
+padding: 3px;
+margin: 0px;
+}
+</style>
+<div id="primaryContentContainer" style="margin: 0px;padding: 0px;">
+    <div id="primaryContent" style="margin: 0px;padding: 0px;">
+        <h2><?=$this->page_title?></h2>
+        <p class="info">Best viewed on full screen mode with display width larger than 1280 pixels</p>
+        <input type="checkbox" name="acro" <?if(isset($_REQUEST["acro"])) echo "checked=checked";?> onclick="var url = '<?=fullbase()?>/map/promo'; if(this.checked) url += '?acro'; document.location = url;"> Show Acronyms
+        <div id="map_canvas" style="width: 100%; height: 700px"></div>
+        <?/*var_dump($this->marks);*/?>
+    </div>
+</div>
+<?=$this->render("full_footer.phtml", true)?>

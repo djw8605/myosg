@@ -8,7 +8,7 @@ class RgdowntimeController extends RgController
     public function load()
     {
         parent::load();
-        $this->view->rg = $this->rg;
+        //$this->view->rg = $this->rg;
 
         $model = new Downtime();
         $downtimes = $model->get();
@@ -35,6 +35,11 @@ class RgdowntimeController extends RgController
         $this->view->future_downtimes = $this->formatInfo($future);
 
         $this->setpagetitle(self::default_title());
+    }
+
+    function icalAction()
+    {
+        $this->load();
     }
 
     function formatInfo($downtime_recs)
@@ -104,6 +109,8 @@ class RgdowntimeController extends RgController
                         "severity"=>$severity,
                         "class"=>$class,
                         "services"=>$affected_services,
+                        "unix_start_time"=>$downtime->unix_start_time,
+                        "unix_enc_time"=>$downtime->unix_end_time,
                         "start_time"=>$start,
                         "dn"=>$dn,
                         "end_time"=>$end

@@ -63,6 +63,11 @@ class MapController extends ControllerBase
 
     public function promoAction()
     {
+        $this->view->page_title = "OSG Promotional View";
+    }
+
+    public function promoOldAction()
+    {
         $model = new Facilities();
         $smodel = new Site();
         $sites = $smodel->getgroupby("facility_id");
@@ -77,13 +82,34 @@ class MapController extends ControllerBase
             foreach($tokens as $token) {
                 if($token == "The") continue;
                 if($token == "of") continue;
+                if($token == "at") continue;
                 $acro .= $token[0];
             }
-            $marker = array("name"=>$name, "acronym"=>$acro, "longitude"=>$site->longitude, "latitude"=>$site->latitude, "sites"=>$sites[$facility->id]);
-            $this->view->markers[] = $marker;
+            $lat = $site->latitude;
+            $long = $site->longitude;
+
+            //merge to a site nearby
+            $merged = false;
+            foreach($this->view->markers as &$m) {
+                if(abs($m["longitude"] - $long) < 1 and abs($m["latitude"] - $lat) < 0.4) {
+                    $m["name"] .= "/".$name;
+                    $m["acronym"] .= " ".$acro;
+                    $m["longitude"] = ($m["longitude"] + $long) / 2;
+                    $m["latitude"] = ($m["latitude"] + $lat)/ 2;
+                    $merged = true;
+                    break;
+                }
+            }
+
+            if(!$merged) {
+                $marker = array("name"=>$name, "acronym"=>$acro, "longitude"=>$long, "latitude"=>$lat, "sites"=>$sites[$facility->id]);
+                //$this->view->markers[] = $marker;
+            }
         }
+
         $this->view->page_title = "OSG Promotional View";
     }
+
     public function promoiconAction()
     {
         header("Content-type: image/png");
@@ -96,7 +122,7 @@ class MapController extends ControllerBase
             // Create the image
 
             $src = imagecreatefrompng('images/small_green_ball.png');
-            $im = imagecreatetruecolor(100, 15);
+            $im = imagecreatetruecolor(200, 15);
             imagesavealpha($im, true);
             imagealphablending($im, false);
             // Create some colors
@@ -127,6 +153,100 @@ class MapController extends ControllerBase
 
         $this->render("none", null, true);
     }
+
+    public function promo2Action()
+    {
+        header("Content-type: image/png");
+
+        $im = imagecreatefrompng('images/continental.png');
+        imagealphablending($im, true);
+        imagesavealpha($im, true);
+
+        $textcolor = imagecolorallocatealpha($im, 0, 0, 0, 0);
+        $shadowcolor = imagecolorallocatealpha($im, 255, 255, 255, 64);
+        $icon = imagecreatefrompng('images/small_green_ball.png');
+        $icon_width = 10;
+        $icon_height = 10;
+
+        $model = new Facilities();
+        $smodel = new Site();
+        $sites = $smodel->getgroupby("facility_id");
+        $markers = array();
+        foreach($model->get() as $facility) {
+            $site = $sites[$facility->id][0];//pick the first site
+            //create acronym
+            $name = $facility->name;
+            $name2 = str_replace("_", " ", $name);
+            $tokens = split(" ", $name2);
+            $acro = "";
+            foreach($tokens as $token) {
+                if($token == "The") continue;
+                if($token == "of") continue;
+                if($token == "at") continue;
+                $acro .= $token[0];
+            }
+            $lat = $site->latitude;
+            $long = $site->longitude;
+
+            //merge to a site nearby
+            $merged = false;
+            if(isset($_REQUEST["acro"])) {
+                foreach($markers as &$m) {
+                    if(abs($m["longitude"] - $long) < 2.5 and abs($m["latitude"] - $lat) < 0.5) {
+                        $m["name"] .= "/".$name;
+                        $m["acronym"] .= "/".$acro;
+                        $m["longitude"] = ($m["longitude"] + $long) / 2;
+                        $m["latitude"] = ($m["latitude"] + $lat)/ 2;
+                        $merged = true;
+                        break;
+                    }
+                }
+            } else {
+                $acro = "";
+            }
+
+            //draw mark
+            if(!$merged) {
+                $marker = array("name"=>$name, "acronym"=>$acro, "longitude"=>$long, "latitude"=>$lat, "sites"=>$sites[$facility->id]);
+                $markers[] = $marker;
+            }
+        }
+
+        //draw all markers
+        $font = "images/verdanab.ttf";
+        $font_size = 9;
+        foreach($markers as $marker) {
+            list($x, $y) = $this->ll2xy($marker["longitude"], $marker["latitude"]);
+            imagecopy($im, $icon, $x,$y,0,0,$icon_width,$icon_height);
+            imagettftext($im, $font_size, 0, $x+$icon_width+1, $y+$icon_height+1, $shadowcolor, $font, $marker["acronym"]);
+            imagettftext($im, $font_size, 0, $x+$icon_width, $y+$icon_height, $textcolor, $font, $marker["acronym"]);
+        }
+
+        imagepng($im);
+        imagedestroy($im);
+
+        $this->render("none", null, true);
+    }
+    
+    private function ll2xy($long, $lat) 
+    {
+        $width = 1024.0;
+        $height = 530.0;
+
+        $top = 50.0;
+        $bottom = 25.0;
+        $left = -124.0;
+        $right = -64.5;
+
+        $longspan_d = $width/($right - $left);
+        $latspan_d = $height/($bottom - $top);
+
+        $x = $longspan_d * ($long - $left);
+        $y = $latspan_d * ($lat - $top);
+        slog("$long/$lat = $x/$y");
+        return array($x, $y);
+    }
+    
 
     protected function process_sitelist()
     {

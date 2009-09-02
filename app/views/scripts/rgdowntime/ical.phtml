@@ -1,0 +1,56 @@
+<?
+
+//header("Content-Type: text/calendar");
+echo "BEGIN:VCALENDAR\n";
+echo "VERSION:2.0\n";
+echo "PRODID:-//GOC/MYOSG//1.6//EN\n";
+echo "CALSCALE:GREGORIAN\n";
+echo "METHOD:PUBLISH\n";
+echo "X-WR-CALNAME:OSG Resource Downtime\n";
+echo "X-WR-TIMEZONE:UTC\n";
+
+if(isset($_REQUEST["downtime_attrs_showpast"])) {
+    showdowntimes($this->past_downtimes);
+}
+showdowntimes($this->current_downtimes);
+showdowntimes($this->future_downtimes);
+
+echo "END:VCALENDAR\n";
+
+function showdowntimes($downtimes)
+{
+    foreach($downtimes as $downtime)
+    {
+        slog(print_r($downtime, true));
+        //only show event that we have pulled resource for
+        echo "BEGIN:VEVENT\n";
+
+        $format = "Ymd\THis\Z";
+        $start = date($format, $downtime["unix_start_time"]);
+        $end = date($format, $downtime["unix_end_time"]);
+        echo "DTSTART;VALUE=DATE:$start\n";
+        echo "DTEND;VALUE=DATE:$end\n";
+
+        $summary = $downtime["name"];
+        echo "SUMMARY:$summary\n";
+
+        $start_human = $downtime["start_time"];
+        $end_human = $downtime["end_time"];
+        $desc = "(From $start_human To $end_human) ";
+        $desc .= $downtime["desc"];
+
+        //append affected services
+        $desc .= "(Affected Services:";
+        foreach($downtime["services"] as $service) {
+            $desc .= $service->name;
+            $desc .= " ";
+        } 
+        $desc .= ")";
+        
+        $desc = str_replace(array("\n", "\r"), "", $desc);
+        echo "DESCRIPTION:$desc\n";
+
+        echo "END:VEVENT\n";
+    }
+}
+
