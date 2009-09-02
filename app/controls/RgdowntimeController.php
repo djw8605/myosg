@@ -110,7 +110,7 @@ class RgdowntimeController extends RgController
                         "class"=>$class,
                         "services"=>$affected_services,
                         "unix_start_time"=>$downtime->unix_start_time,
-                        "unix_enc_time"=>$downtime->unix_end_time,
+                        "unix_end_time"=>$downtime->unix_end_time,
                         "start_time"=>$start,
                         "dn"=>$dn,
                         "end_time"=>$end

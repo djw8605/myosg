@@ -28,8 +28,11 @@ function showdowntimes($downtimes)
         $format = "Ymd\THis\Z";
         $start = date($format, $downtime["unix_start_time"]);
         $end = date($format, $downtime["unix_end_time"]);
-        echo "DTSTART;VALUE=DATE:$start\n";
-        echo "DTEND;VALUE=DATE:$end\n";
+        //all day format
+        //echo "DTSTART;VALUE=DATE:$start\n";
+        //echo "DTEND;VALUE=DATE:$end\n";
+        echo "DTSTART:$start\n";
+        echo "DTEND:$end\n";
 
         $summary = $downtime["name"];
         echo "SUMMARY:$summary\n";
