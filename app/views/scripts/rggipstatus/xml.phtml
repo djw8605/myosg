@@ -6,9 +6,40 @@ foreach($this->resources as $rid=>$record) {
     $tests = $record["tests"];
     //$interop_bdii = $record["interop_bdii"];
     $overallstatus = $record["overallstatus"];
+    $rawdata = $record["rawdata"]; 
+    $raw = "";
+    if(isset($rawdata["cemon_raw_data"])) {
+      //show raw data link
+      $link = $rawdata["cemon_raw_data"][0]->link;
+      $age = $rawdata["cemon_raw_data"][0]->age;
+      $raw .= "<RawLDIF>";
+      if($link != "") {
+	$raw .= "<URL>$link</URL><Age>$age</Age>";
+      }
+      $raw .= "</RawLDIF>";
+      //show osg processed link
+      $link = $rawdata["processed_osg_data"][0]->link;
+      $age = $rawdata["processed_osg_data"][0]->age;
+      $raw .= "<ProcessedOsgLDIF>";
+      if($link != "") {
+	$raw .= "<URL>$link</URL><Age>$age</Age>";
+      }
+      $raw .= "</ProcessedOsgLDIF>";
+      //show wlcg processed link
+      $link = $rawdata["processed_wlcg_interop_data"][0]->link;
+      $age = $rawdata["processed_wlcg_interop_data"][0]->age;
+      $raw .= "<ProcessedWlcgInteropLDIF>";
+      if($link != "") {
+	$raw .= "<URL>$link</URL><Age>$age</Age>";
+      }
+      $raw .= "</ProcessedWlcgInteropLDIF>";
+    } else {
+      $raw = "Not available";
+    }
     echo "<Resource>";
     echo "<Name>$resource_name</Name>";
     echo "<Fqdn>$resource_fqdn</Fqdn>";
+    echo "<LDIFUrls>$raw</LDIFUrls>";
     echo "<OverallStatus>$overallstatus</OverallStatus>";
     echo "<ID>$rid</ID>";
     echo "<Tests>";

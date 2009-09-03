@@ -40,6 +40,7 @@ function showdowntimes($downtimes)
         $start_human = $downtime["start_time"];
         $end_human = $downtime["end_time"];
         $desc = "(From $start_human To $end_human) ";
+	$desc .= "(FQDN:".$downtime["fqdn"] .") (ResourceGroup:". $downtime["rg_name"]. ")";
         $desc .= $downtime["desc"];
 
         //append affected services
