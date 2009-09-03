@@ -17,8 +17,12 @@ function showdowntimes($downtimes) {
     {
         echo "<Downtime>";
         echo "<ID>".$downtime["id"]."</ID>";
-        echo "<ResourceName>".htmlentities($downtime["name"])."</ResourceName>";
         echo "<ResourceID>".htmlentities($downtime["resource_id"])."</ResourceID>";
+	echo "<ResourceGroup>";
+	echo "<GroupName>".htmlentities($downtime["rg_name"])."</GroupName>";
+	echo "</ResourceGroup>";
+        echo "<ResourceName>".htmlentities($downtime["name"])."</ResourceName>";
+        echo "<ResourceFQDN>".htmlentities($downtime["fqdn"])."</ResourceFQDN>";
         echo "<StartTime>".$downtime["start_time"]."</StartTime>";
         echo "<EndTime>".$downtime["end_time"]."</EndTime>";
         echo "<Class>".htmlentities($downtime["class"])."</Class>";

@@ -55,7 +55,10 @@ class RgdowntimeController extends RgController
         $downtime_service_model = new DowntimeService();
         $downtime_services = $downtime_service_model->get();
 
-        $model = new Service();
+	$model = new resourcegroup ();
+	$rg_info  = $model->getindex();
+
+	$model = new Service();
         $service_info = $model->getindex();
 
         $model = new DowntimeClass();
@@ -81,6 +84,9 @@ class RgdowntimeController extends RgController
                 //only show event that we have pulled resource for
                 $resource = $resources[$downtime->resource_id];
                 $resource_name = $resource[0]->name;
+		$resource_fqdn = $resource[0]->fqdn;
+		$rg_name = $rg_info[$resource[0]->resource_group_id][0]->name;
+
                 if($resource_name !== null) {
 
                     $start = date(config()->date_format_full, $downtime->unix_start_time);
@@ -104,6 +110,8 @@ class RgdowntimeController extends RgController
 
                     $downtimes[] = array("id"=>$downtime->id, 
                         "name"=>$resource_name,
+                        "fqdn"=>$resource_fqdn,
+			"rg_name"=>$rg_name,
                         "resource_id"=>$downtime->resource_id,
                         "desc"=>$desc,
                         "severity"=>$severity,

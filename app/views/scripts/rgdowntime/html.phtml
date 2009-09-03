@@ -27,9 +27,11 @@ function showdowntimes($downtimes) {
     }
     foreach($downtimes as $downtime)
     {
-        echo "<div class='resource h4 round'>".htmlentities($downtime["name"])."</div>";
+        echo "<div class='resource h4 round'>".htmlentities($downtime["name"])." (". htmlentities($downtime["fqdn"]).")</div>";
+        // echo "<div class='resource h4 round'>".htmlentities($downtime["name"])." (". htmlentities($downtime["resourcegroup_name"]).")</div>";
         echo "<table class=\"summary_table\">";
 
+        echo "<tr><th>Resource Group</th><td>".htmlentities($downtime["rg_name"])."</td></tr>";
         echo "<tr><th>Start Time</th><td>".$downtime["start_time"]."</td></tr>";
         echo "<tr><th>End Time</th><td>".$downtime["end_time"]."</td></tr>";
 
@@ -42,7 +44,8 @@ function showdowntimes($downtimes) {
             echo htmlentities($service->name)."<br/>";
         }
         echo "</td></tr>";
-
+	
+	
         //show downtime detail
         echo "<tr><th>Detail</th><td>";
         echo htmlentities($downtime["desc"]);
