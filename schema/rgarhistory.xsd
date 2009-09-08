@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-16"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="ARHistory">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="StartTime" type="xsd:int" />
+        <xsd:element name="EndTime" type="xsd:int" />
+        <xsd:element maxOccurs="unbounded" name="ResourceGroup">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="GridType" type="xsd:string" />
+              <xsd:element name="GroupID" type="xsd:int" />
+              <xsd:element name="GroupName" type="xsd:string" />
+              <xsd:element maxOccurs="unbounded" name="Resource">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="ID" type="xsd:int" />
+                    <xsd:element name="Name" type="xsd:string" />
+                    <xsd:element minOccurs="0" maxOccurs="unbounded" name="Service">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="Name" type="xsd:string" />
+                          <xsd:element name="GraphURL" type="xsd:string" />
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
