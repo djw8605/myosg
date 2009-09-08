@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-16"?>
 <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="ldif_information">
+    <xsd:sequence>
+      <xsd:element name="URL" type="xsd:string" />
+      <xsd:element name="Age" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+
   <xsd:element name="GIPValidation">
     <xsd:complexType>
       <xsd:sequence>
@@ -8,6 +15,17 @@
             <xsd:sequence>
               <xsd:element name="Name" type="xsd:string" />
               <xsd:element name="Fqdn" type="xsd:string" />
+
+              <xsd:element minOccurs="0" name="LDIFUrls">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element minOccurs="0" name="RawLDIF" type="ldif_information"/>
+                    <xsd:element minOccurs="0" name="ProcessedOsgLDIF" type="ldif_information"/>
+                    <xsd:element minOccurs="0" name="ProcessedWlcgInteropLDIF" type="ldif_information"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+
               <xsd:element name="OverallStatus" type="xsd:string" />
               <xsd:element name="ID" type="xsd:int" />
               <xsd:element name="Tests">
