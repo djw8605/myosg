@@ -444,5 +444,12 @@ padding-right: 2px;
 {
     font-weight: normal;
     font-size: 10px;
+}
+.resource_group .hierarchy
+{
     color: #ccc;
+}
+.resource .hierarchy
+{
+    color: #777;
 }

@@ -9,6 +9,9 @@
         </div>
         <div id="sideContent">
             <?=$this->render("rg/wizard.phtml")?>
+            <div class="indent">
+            <a target="_blank" href="<?=fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"]?>">iCal</a>
+            </div>
             <?=$this->render("feedback.phtml", true)?>
         </div>
 <?=$this->render("full_footer.phtml", true)?>
