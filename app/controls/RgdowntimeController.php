@@ -55,7 +55,7 @@ class RgdowntimeController extends RgController
         $downtime_service_model = new DowntimeService();
         $downtime_services = $downtime_service_model->get();
 
-        $model = new resourcegroup ();
+        $model = new ResourceGroup();
         $rg_info  = $model->getindex();
 
         $model = new Service();
@@ -69,6 +69,9 @@ class RgdowntimeController extends RgController
 
         $model = new DN();
         $dns = $model->getindex();
+
+        $model = new Contact();
+        $contacts = $model->getindex();
 
         //pull all resource ids that we are interested in
         $resource_ids = array();
@@ -107,6 +110,8 @@ class RgdowntimeController extends RgController
                     $severity = $downtime_severity[$downtime->downtime_severity_id][0]->name;
                     $class = $downtime_class[$downtime->downtime_class_id][0]->name;
                     $dn = $dns[$downtime->dn_id][0]->dn_string;
+                    $contact_id  = $dns[$downtime->dn_id][0]->contact_id;
+                    $contact_name = $contacts[$contact_id][0]->name;
 
                     $downtimes[] = array("id"=>$downtime->id, 
                         "name"=>$resource_name,
@@ -121,6 +126,7 @@ class RgdowntimeController extends RgController
                         "unix_end_time"=>$downtime->unix_end_time,
                         "start_time"=>$start,
                         "dn"=>$dn,
+                        "contact_name"=>$contact_name,
                         "end_time"=>$end
                     );
                 }

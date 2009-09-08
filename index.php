@@ -3,12 +3,13 @@
 //phpinfo();exit;
 
 //init zend framework
-set_include_path('lib/zf-1.7.3/library' . PATH_SEPARATOR . get_include_path());  
+set_include_path('lib/zf-1.9.2/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/controls' . PATH_SEPARATOR . get_include_path());  
 require_once "Zend/Loader.php"; 
 Zend_Loader::registerAutoload(); 
 Zend_Session::start();
+
 
 //check to make sure our site installation is done
 if(!file_exists("config.php")) {
@@ -23,9 +24,9 @@ if(!file_exists(".htaccess")) {
 require_once("config.php");
 require_once("app/views/helper.php");
 require_once("app/base.php");
-//bootstrap
-try {
 
+try {
+    //bootstrap
     remove_quotes();
     setup_logs();
     greet();

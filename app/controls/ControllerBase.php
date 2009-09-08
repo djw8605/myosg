@@ -17,7 +17,6 @@ abstract class ControllerBase extends Zend_Controller_Action
         $this->setpagetitle("Untitled Page");
     }
 
-
     public function setpagetitle($title)
     {
         $this->view->page_title = $title;

@@ -6,7 +6,8 @@ echo "VERSION:2.0\n";
 echo "PRODID:-//GOC/MYOSG//1.6//EN\n";
 echo "CALSCALE:GREGORIAN\n";
 echo "METHOD:PUBLISH\n";
-echo "X-WR-CALNAME:OSG Resource Downtime\n";
+echo "X-WR-CALDESC:This calendar feed is generated from following URL. ".fullbase()."/rgdowntime?".$_SERVER["QUERY_STRING"]."\n";
+echo "X-WR-CALNAME:OSG Downtime Schedule\n";
 echo "X-WR-TIMEZONE:UTC\n";
 
 if(isset($_REQUEST["downtime_attrs_showpast"])) {
@@ -35,13 +36,16 @@ function showdowntimes($downtimes)
         echo "DTEND:$end\n";
 
         $summary = $downtime["name"];
-        echo "SUMMARY:$summary\n";
+        echo "SUMMARY:$summary (".$downtime["fqdn"].") is down\n";
+
+        $organizer = $downtime["contact_name"];
+        echo "ORGANIZER:$organizer\n";
+
+        echo "LOCATION: ".$downtime["rg_name"]." (Resource Group) \n";
 
         $start_human = $downtime["start_time"];
         $end_human = $downtime["end_time"];
-        $desc = "(From $start_human To $end_human) ";
-	$desc .= "(FQDN:".$downtime["fqdn"] .") (ResourceGroup:". $downtime["rg_name"]. ")";
-        $desc .= $downtime["desc"];
+        $desc = $downtime["desc"];
 
         //append affected services
         $desc .= "(Affected Services:";

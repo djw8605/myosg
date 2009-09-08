@@ -29,7 +29,7 @@ End Date:<br/>
 
 <script type="text/javascript">
 <?if(isset($_REQUEST["start_type"])) {
-    echo "$('select[name=start_type] option[value=".$_REQUEST["start_type"]."]').attr('selected', 'selected');showhide_start_picker();";
+    echo "$('select[name=start_type] option[value=\"".$_REQUEST["start_type"]."\"]').attr('selected', 'selected');showhide_start_picker();";
 }?>
 <?if(isset($_REQUEST["end_type"])) {
     echo "$('select[name=end_type] option[value=".$_REQUEST["end_type"]."]').attr('selected', 'selected');showhide_end_picker();";

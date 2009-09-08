@@ -10,7 +10,28 @@
         <div id="sideContent">
             <?=$this->render("rg/wizard.phtml")?>
             <div class="indent">
-            <a target="_blank" href="<?=fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"]?>">iCal</a>
+
+            <?
+/*
+                $params = explode("&", $_SERVER["QUERY_STRING"]);
+                $downtime_params = "";
+                foreach($params as $param) {
+                    $kv = explode("=", $param);
+                    slog(print_r($kv, true));
+                    if(strstr("downtime_attrs_", $kv[0]) !== 0) {
+                        continue;
+                    }
+                    if($downtime_params != "") {
+                        $downtime_params .= "&";
+                    }
+                    $downtime_params .= $param;
+                }
+*/
+            $url = fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"];
+            $url = "http://tinyurl.com/create.php?url=".urlencode($url);
+            ?>
+            <a onclick="alert('Creating TinyURL version of this iCAL since Google Calendar does not import iCAL feed that is more than 257 characters. Please use generated TinyURL as iCAL feed URL.');" target="_blank" href="<?=$url?>">iCal</a>
+
             </div>
             <?=$this->render("feedback.phtml", true)?>
         </div>
