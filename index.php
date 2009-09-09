@@ -33,11 +33,13 @@ try {
     cert_authenticate();
 
     ini_set('error_log', config()->error_logfile);
-    ini_set('display_errors', 0); 
-    ini_set('log_errors', 1); 
-    ini_set('display_startup_errors', 1);  
-    error_reporting(E_ALL | E_STRICT);  
-    date_default_timezone_set("UTC");
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL | E_STRICT);
+
+    date_default_timezone_set(user()->getTimeZone());
+
 } catch(exception $e) {
     //when a catastrohpic failure occure (like disk goes read-only..) emailing is the only way we got..
     if(!config()->debug) {
