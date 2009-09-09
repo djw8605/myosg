@@ -10,6 +10,7 @@ class User
         $this->person_fullname = "Guest";
         $this->person_email = "";
         $this->person_phone = "";
+        $this->timezone = "UTC";
         $this->dn = $dn;
 
         $this->guest = true;
@@ -28,19 +29,19 @@ class User
         $sql = "select p.* from dn c left join contact p on
                         (c.contact_id = p.id)
                     where
-                        p.disable = 0 and
-                        dn_string = '$dn'";
+                        p.disable = 0 and dn_string = '$dn'";
         $row = db("oim")->fetchRow($sql);
         if($row) {
             $this->person_id = $row->id;
             $this->person_name = $row->name;
             $this->person_email = $row->primary_email;
             $this->person_phone = $row->primary_phone;
+            $this->timezone = $row->timezone;
         }
-    } 
+    }
 
     private function lookupRoles($person_id)
-    { 
+    {
         //lookup auth_types that are associated with this person
         $sql = "select d.authorization_type_id as auth_type_id
             from
@@ -77,4 +78,5 @@ class User
     public function getPersonEmail() { return $this->person_email; }
     public function getPersonPhone() { return $this->person_phone; }
     public function getDN() { return $this->dn; }
+    public function getTimeZone() { return $this->timezone; }
 }

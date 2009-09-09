@@ -91,7 +91,6 @@ class RgdowntimeController extends RgController
                 $rg_name = $rg_info[$resource[0]->resource_group_id][0]->name;
 
                 if($resource_name !== null) {
-
                     $start = date(config()->date_format_full, $downtime->unix_start_time);
                     $end = date(config()->date_format_full, $downtime->unix_end_time);
 
