@@ -55,6 +55,16 @@ class MapController extends ControllerBase
     {
         $this->load();
     }
+    public function kmlAction()
+    {
+        $this->load();
+        header("Content-type: application/vnd.google-earth.kml+xml");
+        //recreate the original non-xml url
+?><!-- This KML was generated with a query in following MyOSG page
+<?=fullbase()."/".pagename()."/?".$_SERVER["QUERY_STRING"]?>
+--><?
+    }
+
     public function iframeAction()
     {
         $this->load();
