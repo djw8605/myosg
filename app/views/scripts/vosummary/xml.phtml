@@ -106,18 +106,18 @@ foreach($this->vos as $vo_id=>$vo) {
         foreach($reports as $report) {
             echo "<ReportingGroup>";
             echo "<Name>".htmlentities($report->name)."</Name>";
+            echo "<FQANs>";
             if($report->fqans !== null) {
-                echo "<FQANs>";
                 foreach($report->fqans as $fqan) {
                     echo "<FQAN>";
                     echo "<GroupName>".$fqan->group_name."</GroupName>";
                     echo "<Role>".$fqan->role."</Role>";
                     echo "</FQAN>";
                 }
-                echo "</FQANs>";
             }
+            echo "</FQANs>";
+            echo "<Contacts>";
             if($report->contacts !== null) {
-                echo "<Contacts>";
                 foreach($report->contacts as $contact) {
                     echo "<Contact>";
                     echo "<Name>".$contact->name."</Name>";
@@ -128,8 +128,8 @@ foreach($this->vos as $vo_id=>$vo) {
                     }
                     echo "</Contact>";
                 }
-                echo "</Contacts>";
             }
+            echo "</Contacts>";
             echo "</ReportingGroup>";
         }
         echo "</ReportingGroups>";
