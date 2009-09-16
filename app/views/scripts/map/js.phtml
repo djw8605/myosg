@@ -89,6 +89,16 @@ function init() {
       });
       return marker;
     }
+    //this function determine what status is shown above what other status
+    function zfunction(marker, something) {
+        var title = marker.getTitle();
+        if(title == "unknown") { 
+            return 0; 
+        } else if(title == "ok") {
+            return 1;
+        }
+        return 2;
+    }
 <?
 foreach($this->sites as $site) {
 
@@ -165,7 +175,7 @@ foreach($this->sites as $site) {
     $html = addslashes($html);
     if($site->latitude == null) $site->latitude = 0;
     if($site->longitude == null) $site->longitude = 0;
-    echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {icon:icon[\"$status\"]}, '$html'));\n";
+    echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$status\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$html'));\n";
     echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
 }
 ?>
