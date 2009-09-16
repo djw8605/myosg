@@ -206,7 +206,7 @@ class common_config
             //3=>"http://groups.google.com/group/goc-issues/browse_thread/thread/a4840f319768c5f2#",
         );
         //if specific metric_id is not found, use following
-        $this->default_rsvforum = "http://groups.google.com/group/rsv-issues/topics";
+        $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
     }
     function getCacheDir() {
         return "/tmp";
