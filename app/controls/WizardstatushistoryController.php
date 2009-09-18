@@ -122,7 +122,7 @@ class WizardstatushistoryController extends WizardController
             if($latest_metric->metric_id == $metric->MetricID[0]) {
                 $metric->MetricDataID = $latest_metric->id;
                 $metric->Timestamp = $latest_metric->timestamp;
-                $metric->Detail = $this->fetchMetricDetail($latest_metric->detail_id);
+                $metric->Detail = $this->fetchMetricDetail($latest_metric->id);
                 $metric->Status = Status::getStatus($latest_metric->metric_status_id);
                 return;
             }

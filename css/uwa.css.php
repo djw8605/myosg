@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: text/css");
+//header("Content-Type: text/css");
 require_once("app/config.php");
 $imagebase = fullbase();
 
