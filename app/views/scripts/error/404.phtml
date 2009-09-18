@@ -1,19 +1,8 @@
-<?
-//lookup short URL (I couldn't figure out how to write RewriteRule to do this more elegantly)
-$uri = $_SERVER["REQUEST_URI"];
-$id = substr($uri, strrpos($uri, "/")+1);
-$model = new URL();
-$url = $model->get($id);
-if($url !== null) {
-    echo file_get_contents($url);
-} else {
-?>
-    <?=$this->render("full_header.phtml", true)?>
-    <div id="primaryContentContainer">
-        <div id="primaryContent">
-            <p>404 Error!</p>
-            <p>Requested page does not exist.</p>
-        </div>
+<?=$this->render("full_header.phtml", true)?>
+<div id="primaryContentContainer">
+    <div id="primaryContent">
+        <p>404 Error!</p>
+        <p>Requested page does not exist.</p>
     </div>
-    <?=$this->render("full_footer.phtml", true)?>
-<?}?>
+</div>
+<?=$this->render("full_footer.phtml", true)?>

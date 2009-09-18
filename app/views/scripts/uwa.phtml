@@ -5,45 +5,31 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";?>
 <html xmlns="http://www.w3.org/1999/xhtml" 
   xmlns:widget="http://www.netvibes.com/ns/">
   <head>
- 
+
     <meta name="author" content="OSG GOC" />
     <meta name="description" content="A descriptive description" />
- 
+
     <meta name="apiVersion" content="1.0" />
     <meta name="autoRefresh" content="60" />
-    <meta name="debugMode" content="true" />
- 
+    <meta name="debugMode" content="false" />
+
     <!--link rel="stylesheet" type="text/css" href="http://www.netvibes.com/themes/uwa/style.css" /-->
     <script type="text/javascript" src="http://www.netvibes.com/js/UWA/load.js.php?env=Standalone"></script>
- 
+
     <title><?=$this->page_title?></title>
-    <link rel="icon" type="image/png" 
-      href="http://www.example.com/favicon.ico" />
- 
-<!-- Add your UWA preferences as needed -->
-    <widget:preferences>
-    </widget:preferences>
+    <link rel="icon" type="image/png" href="<?=fullbase()?>/images/myosg_favi.ico" />
 
 <style type="text/css">
 <?include("css/uwa.css.php");?>
 </style>
- 
-    <script type="text/javascript">
-var CurrentStatusWidget = {};
-CurrentStatusWidget.yourVariable = "My value";
-CurrentStatusWidget.dataInit = function() {
-    UWA.Data.getText(
-        '<?=fullbase()?>/<?=pagename()?>/html?uwa=true&<?=$_SERVER["QUERY_STRING"]?>',
-        CurrentStatusWidget.dataProcessor
-    );
-}
-CurrentStatusWidget.dataProcessor = function(text)
+
+<script type="text/javascript">
+function display(text)
 {
     widget.setBody(text);
 }
-
 widget.onLoad = function() {
-    CurrentStatusWidget.dataInit();
+    UWA.Data.getText( '<?=fullbase()?>/<?=pagename()?>/html?uwa=true&<?=$_SERVER["QUERY_STRING"]?>', display);
 }
 // you can move your start up code to your own method:
 // simply use widget.onLoad = myObject.myStartupMethod;

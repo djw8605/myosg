@@ -13,7 +13,7 @@ foreach($this->rgs as $rgid=>$rg) {
     echo "<GroupName>".htmlentities($resource_group->name)."</GroupName>";
 
     foreach($rg as $resource_id=>$resource_info) {
-        $resource = $this->data[$resource_id];
+        $resource = @$this->data[$resource_id];
         if(count($resource) == 0) {
             continue;
         }

@@ -2,13 +2,23 @@
 <?
 foreach($this->resources as $rid=>$record) {
     $resource_name = $record["name"];
-    $resource_fqdn = $record["fqdn"];
     $tests = $record["tests"];
     $overallstatus = $record["overallstatus"];
+    $resources = $record["resources"];
 
-    echo "<Resource>";
-    echo "<Name>$resource_name</Name>";
-    echo "<Fqdn>$resource_fqdn</Fqdn>";
+    echo "<ResourceGroup>";
+    echo "<GroupName>$resource_name</GroupName>";
+
+    if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
+        echo "<Resources>";
+        foreach($resources as $rid=>$resource) {
+            echo "<Resource>";
+            echo "<Name>".$resource->name."</Name>";
+            echo "<Fqdn>".$resource->fqdn."</Fqdn>";
+            echo "</Resource>";
+        }
+        echo "</Resources>";
+    }    
 
     $rawdata = $record["rawdata"]; 
     if(isset($rawdata["cemon_raw_data"])) {
@@ -55,7 +65,7 @@ foreach($this->resources as $rid=>$record) {
         echo "</Test>";
     }
     echo "</Tests>";
-    echo "</Resource>";
+    echo "</ResourceGroup>";
 }
 ?>
 </GIPValidation>
