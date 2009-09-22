@@ -261,7 +261,7 @@ function fblist($id, $title, $kv)
     $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 
     //output list editor
-    $out .= "<div class=\"indent hidden\" id=\"${id}__list\"><div class=\"fblist\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
+    $out .= "<div class=\"indent hidden fblist_container\" id=\"${id}__list\"><div class=\"fblist\" style=\"position: relative;\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
 
     //output script
     $delete_url = fullbase()."/images/delete.png";
@@ -295,17 +295,24 @@ function fblist($id, $title, $kv)
             return item.name + " (" + item.desc + ")";
         }
     }).result(function(event, item) {
-        $(this).val("");
-        $(this).before("<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>"+item.name+"<input type=\"hidden\" name=\""+item.id+"\" value=\"on\"/></div>");
+        if(item != null) {
+            $(this).val("");
+            $(this).before("<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>"+item.name+"<input type=\"hidden\" name=\""+item.id+"\" value=\"on\"/></div>");
+        }
     });
 });</script>
 BLOCK;
 
     $out .= $pre_selected;
-    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").show(\"normal\");' onblur='$(\"#${id}__acnote\").hide();'/>";
-    //$out .= "<img style=\"float: right; position: relative; top: -17px; cursor: pointer;\" src=\"".fullbase()."/images/telephone.png\" onclick=\"$(this).siblings('.autocomplete').focus();setTimeout(function() {\$('#".$id."__ac').keydown();}, 0)\"/>";
+    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").fadeIn(\"slow\");' onkeydown='$(\"#${id}__acnote\").fadeOut(\"slow\");'/>";
     $out .= $script;
-    $out .= "</div><p id=\"${id}__acnote\" class=\"hidden\" style=\"text-align: right; font-size: 10px;line-height: 100%;\">* Press Down key to show all</p></div>";
+
+    //display note
+    $out .= "<p id=\"${id}__acnote\" class=\"hidden\" style=\"position: absolute; color: #999; font-size: 9px; right: 3px; bottom: 0px; text-align: right; font-size: 10px;line-height: 100%;\">Press Down key to show all</p>";
+
+    $out .= "</div>";
+    $out .= "</div>";
+
     return $out;
 }
 

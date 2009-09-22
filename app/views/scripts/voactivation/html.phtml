@@ -1,0 +1,46 @@
+<?
+
+
+function showvolist($list) {
+    if(count($list) == 0) {
+        echo "<p class=\"info\">No VO under this list.</p>";
+    }
+    foreach($list as $vo_id=>$vo) {
+        $name = htmlentities($vo->name);
+        $ex_class = "";
+        if($vo->disable == 1) {
+            $name .= " (Removed)";
+            $ex_class = "disabled";
+        }
+        if($vo->active == 0) {
+            $name .= " (Inactive)";
+        }
+
+        echo "<div class=\"vo round\">";
+        echo "<span class=\"h3\">".$name."</span>";
+        if(isset($_REQUEST["summary_attrs_showdesc"])) {
+            echo "<br/>";
+            echo htmlentities($vo->description);
+        }
+        echo "</div>";
+        echo "<div class=\"$ex_class\">";
+
+        echo "<table class='summary_table'>";
+        echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
+        echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
+        echo "</table>";
+        echo "</div>"; //ex-class
+    }
+}
+
+echo "<div class=\"group_header round\"><span class=\"h3\">Been active at some point</span></div>";
+echo "<p>Following VOs has been active during the specified date range at least once.</p>";
+showvolist($this->active_once_vos);
+
+echo "<div class=\"group_header round\"><span class=\"h3\">Never been active and never been disabled</span></div>";
+echo "<p>Following VOs has never been active during the specified date range and have never been flaged as disabled.</p>";
+showvolist($this->never_active_enabled_vos);
+
+echo "<div class=\"group_header round\"><span class=\"h3\">Never been active and has been disabled at some point</span></div>";
+echo "<p>Following VOs has never been active during the specified date range and have been flaged as disabled at least once.</p>";
+showvolist($this->disabled_once_vos);

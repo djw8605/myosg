@@ -287,7 +287,7 @@ function wizard_submit(format)
 
 function uncheck_sibs(e)
 {
-    $('#resource_area .fblist').hide(); //TODO - hiding of list just doesn't work on opera..
+    $('#resource_area .fblist_container').hide(); //TODO - hiding of list just doesn't work on opera..
     var items = $(e).siblings("input"); 
     $(items).attr('checked', '');
 }
