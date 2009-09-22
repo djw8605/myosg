@@ -199,7 +199,8 @@ class RgController extends ControllerBase
     {
         $resources_to_keep = array();
         $model = new Service();
-        $list = $model->get(array("service_group_id"=>1));
+        //$list = $model->get(array("service_group_id"=>1));
+        $list = $model->get();
         foreach($list as $item) {
             if(isset($_REQUEST["service_".$item->id])) {
                 $model = new ResourceServices();

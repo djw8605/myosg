@@ -1,5 +1,29 @@
-<VOSummary>
 <?
-echo "TODO";
+echo "<?xml version=\"1.0\"?>\n";
+function showvolist($list) {
+    if(count($list) == 0) {
+        echo "<p class=\"info\">No VO under this list.</p>";
+    }
+    foreach($list as $vo_id=>$vo) {
+        echo "<VO>";
+        echo "<ID>$vo_id</ID>";
+        echo "<Name>".htmlentities($vo->name)."</Name>";
+        echo "<LongName>".htmlentities($vo->long_name)."</LongName>";
+        echo "</VO>";
+    }
+}
+
 ?>
-</VOSummary>
+<VOActivation 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceschemaLocation="<?=fullbase()?>/schema/voactivation.xsd">
+<Active>
+<?showvolist($this->active_once_vos);?>
+</Active>
+<Enabled>
+<?showvolist($this->never_active_enabled_vos);?>
+</Enabled>
+<Disabled>
+<?showvolist($this->never_never_vos);?>
+</Disabled>
+</VOActivation>

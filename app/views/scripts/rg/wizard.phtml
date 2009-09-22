@@ -166,11 +166,17 @@
             foreach($list as $item) { $kv[$item->id] = $item->description; }
             echo checklist("status", "Current RSV Status", $kv);
 
+            $sgmodel = new ServiceGroup();
+            $sgs = $sgmodel->getindex();
             $model = new Service();
-            $list = $model->get(array("service_group_id"=>1));
+            //$list = $model->get(array("service_group_id"=>1));
+            $list = $model->get();
             $kv = array();
-            foreach($list as $item) { $kv[$item->id] = $item->name; }
-            echo checklist("service", "Provides following Services", $kv);
+            foreach($list as $item) { 
+                $service_group_name = $sgs[$item->service_group_id][0]->name;
+                $kv[$item->id] = array($service_group_name. " / ".$item->name, "");
+            }
+            echo fblist("service", "Provides following Services", $kv);
 
             $model = new VirtualOrganization();
             $list = $model->get();
