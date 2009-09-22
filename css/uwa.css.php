@@ -94,9 +94,9 @@ min-height: 16px;
 div.vo
 {
 padding: 2px;
-padding-left:22px;
+padding-left:3px;
 padding-right:7px;
-background:#ccc url(<?=$imagebase?>/images/group.png) no-repeat 3px 3px;
+background-color:#ccc;
 }
 div.metric
 {

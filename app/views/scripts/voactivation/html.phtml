@@ -7,14 +7,6 @@ function showvolist($list) {
     }
     foreach($list as $vo_id=>$vo) {
         $name = htmlentities($vo->name);
-        $ex_class = "";
-        if($vo->disable == 1) {
-            $name .= " (Removed)";
-            $ex_class = "disabled";
-        }
-        if($vo->active == 0) {
-            $name .= " (Inactive)";
-        }
 
         echo "<div class=\"vo round\">";
         echo "<span class=\"h3\">".$name."</span>";
@@ -23,7 +15,7 @@ function showvolist($list) {
             echo htmlentities($vo->description);
         }
         echo "</div>";
-        echo "<div class=\"$ex_class\">";
+        echo "<div>";
 
         echo "<table class='summary_table'>";
         echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
@@ -34,13 +26,13 @@ function showvolist($list) {
 }
 
 echo "<div class=\"group_header round\"><span class=\"h3\">Been active at some point</span></div>";
-echo "<p>Following VOs has been active during the specified date range at least once.</p>";
+echo "<p>Following VOs have been active at least once during the specified date range.</p>";
 showvolist($this->active_once_vos);
 
-echo "<div class=\"group_header round\"><span class=\"h3\">Never been active and never been disabled</span></div>";
-echo "<p>Following VOs has never been active during the specified date range and have never been flaged as disabled.</p>";
+echo "<div class=\"group_header round\"><span class=\"h3\">Never been active but enabled at some point</span></div>";
+echo "<p>Following VOs have never been active and have been flaged as enabled at least once during the specified date range.</p>";
 showvolist($this->never_active_enabled_vos);
 
-echo "<div class=\"group_header round\"><span class=\"h3\">Never been active and has been disabled at some point</span></div>";
-echo "<p>Following VOs has never been active during the specified date range and have been flaged as disabled at least once.</p>";
-showvolist($this->disabled_once_vos);
+echo "<div class=\"group_header round\"><span class=\"h3\">Never been active nor enabled</span></div>";
+echo "<p>Following VOs have never been active and never been enabled during the specified date range.</p>";
+showvolist($this->never_never_vos);
