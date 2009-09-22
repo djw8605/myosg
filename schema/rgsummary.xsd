@@ -74,7 +74,15 @@
                           </xsd:element>
                           <xsd:element name="Description" type="xsd:string" />
                           <xsd:element name="FQDN" type="xsd:string" />
-                          <xsd:element name="FQDNAliases" type="xsd:string" />
+
+                          <xsd:element name="FQDNAliases">
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element minOccurs="0" maxOccurs="unbounded" name="FQDNAlias" type="xsd:string" />
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+
                           <xsd:element name="SupportedVOs">
                             <xsd:complexType>
                               <xsd:sequence>
