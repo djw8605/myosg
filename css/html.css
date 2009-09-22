@@ -82,9 +82,10 @@ min-height: 16px;
 div.vo
 {
 padding: 2px;
-padding-left:22px;
+padding-left:5px;
 padding-right:7px;
-background:#ccc url(../images/group.png) no-repeat 3px 3px;
+background-color:#ccc;
+margin-bottom: 5px;
 }
 div.metric
 {
@@ -130,7 +131,7 @@ padding: 3px;
 }
 
 
-div.resource_group_header, div.downtime_group
+div.resource_group_header, div.downtime_group, div.group_header
 {
 background-color: gray;
 color: white;
