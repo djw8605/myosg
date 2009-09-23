@@ -72,7 +72,7 @@ class MapController extends ControllerBase
 
     public function promoAction()
     {
-        $this->view->page_title = "OSG Promotional View";
+        $this->view->page_title = "OSG Sites in the U.S.";
     }
 
     public function promoOldAction()
