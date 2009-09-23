@@ -164,6 +164,18 @@ class RgController extends ControllerBase
             $keep = $this->process_resource_filter_service();
             $resources = array_intersect($resources, $keep);
         }
+        if(isset($_REQUEST["service_central"])) {
+            $keep = $this->process_resource_filter_service_central();
+            $resources = array_intersect($resources, $keep);
+        }
+        if(isset($_REQUEST["service_hidden"])) {
+            $keep = $this->process_resource_filter_service_hidden();
+            $resources = array_intersect($resources, $keep);
+        }
+        if(isset($_REQUEST["service_hidden"])) {
+            $keep = $this->process_resource_filter_service_hidden();
+            $resources = array_intersect($resources, $keep);
+        }
         if(isset($_REQUEST["vosup"])) {
             $keep = $this->process_resource_filter_vosup();
             $resources = array_intersect($resources, $keep);
@@ -199,16 +211,60 @@ class RgController extends ControllerBase
     {
         $resources_to_keep = array();
         $model = new Service();
-        //$list = $model->get(array("service_group_id"=>1));
         $list = $model->get();
         foreach($list as $item) {
             if(isset($_REQUEST["service_".$item->id])) {
                 $model = new ResourceServices();
                 $rs = $model->get(array("service_id"=>$item->id));
                 foreach($rs as $r) {
+                    /*
+                    if($_REQUEST["service_central"]) {
+                        if(!isset($_REQUEST["service_central_".$r->central])) {
+                            continue;
+                        } 
+                    }
+                    if($_REQUEST["service_hidden"]) {
+                        if(!isset($_REQUEST["service_hidden".$r->hidden])) {
+                            continue;
+                        } 
+                    }
+                    */
+                    if($_REQUEST["service_hidden"]) {
+                        if($r->hidden != 1) continue;
+                    }
                     if(!in_array($r->resource_id, $resources_to_keep)) {
                         $resources_to_keep[] = $r->resource_id;
                     }
+                }
+            }
+        }
+        return $resources_to_keep;
+    }
+
+    private function process_resource_filter_service_central()
+    {
+        $resources_to_keep = array();
+        $model = new ResourceServices();
+        $rs = $model->get();
+        foreach($rs as $r) {
+            if($_REQUEST["service_central_value"] == $r->central) {
+                if(!in_array($r->resource_id, $resources_to_keep)) {
+                    $resources_to_keep[] = $r->resource_id;
+                }
+            }
+        }
+        return $resources_to_keep;
+    }
+
+    private function process_resource_filter_service_hidden()
+    {
+        $resources_to_keep = array();
+        $model = new ResourceServices();
+        $rs = $model->get();
+        foreach($rs as $r) {
+            if($_REQUEST["service_hidden_value"] == $r->hidden) {
+                if(!in_array($r->resource_id, $resources_to_keep)) {
+                    $resources_to_keep[] = $r->resource_id;
                 }
             }
         }

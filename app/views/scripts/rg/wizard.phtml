@@ -176,8 +176,17 @@
                 $service_group_name = $sgs[$item->service_group_id][0]->name;
                 $kv[$item->id] = array($service_group_name. " / ".$item->name, "");
             }
-            echo fblist("service", "Provides following Services", $kv);
+            echo fblist("service", "Provides following Services", $kv, $sub);
 
+            $kv = array();
+            $kv[0] = "Non-Central Service";
+            $kv[1] = "Central Service";
+            echo radiolist("service_central", "Provides Service with central flag of", $kv, 0);
+            $kv = array();
+            $kv[0] = "Non-Hidden Service";
+            $kv[1] = "Hidden Service";
+            echo radiolist("service_hidden", "Provides Serivce with hidden flag of", $kv, 0);
+ 
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
