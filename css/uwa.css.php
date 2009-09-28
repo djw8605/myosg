@@ -363,7 +363,7 @@ table.summary_subtable td, table.summary_subtable th
 }
 table.summary_subtable th
 {
-    width: 130px;
+    width: 70px;
 }
 .disabled
 {
@@ -406,7 +406,7 @@ border-bottom: solid 1px #bbb;
 }
 table.summary_table th
 {
-width: 130px;
+width: 70px;
 }
 .status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {

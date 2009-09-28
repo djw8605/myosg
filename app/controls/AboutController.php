@@ -15,7 +15,7 @@ class AboutController extends ControllerBase
     {
         $this->view->ucv = array();
 
-        system("wget --no-check-certificate -O /tmp/myosg.ucv.html https://twiki.grid.iu.edu/bin/view/Operations/UserContributedViews?raw=on&cover=plain");
+        //myosg.ucv.html is generated via cron
         $html = file_get_contents("/tmp/myosg.ucv.html");
         $lines = explode("\n", $html);
 
