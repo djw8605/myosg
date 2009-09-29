@@ -31,6 +31,9 @@
         <div id="activation_attrs" class="attrs indent hidden">
             <?=$this->render("vo/wizard_activation.phtml")?>
         </div>
+        <div id="_daterange_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard__daterange.phtml")?>
+        </div>
     </div>
 
     <div class="list_filter">
@@ -98,10 +101,7 @@ function showhide_attrs(show_speed)
         $("#filter_area").show(show_speed);
         $("#vo_area_standby").hide();
         $("#filter_area_standby").hide();
-
-        if(
-            v == "foo_page_that_hasdatarange"
-        ) {
+        if(v == "activation") {
             $("#_daterange_attrs").show(show_speed);
         }
     } else {
