@@ -27,6 +27,7 @@ Structure:
                             Description (1)  
                             ServiceUri (1)              URI (with port) of the service
                             HiddenService (1)           Indicates if the service is hidden (True / False)
+                            CentralService (1)          Indicates if the service is central service (True / False)
                     RSVStatus (0 or 1)
                         Status (1)
                         Note (1)
@@ -155,7 +156,15 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                             echo "False";
                         }
                         echo "</HiddenService>";
-                
+
+                        echo "<CentralService>";
+                        if($service->central == 1) {
+                            echo "True";
+                        } else {
+                            echo "False";
+                        }
+                        echo "</CentralService>";
+                 
                         echo "</Service>";
                     } else {
                         echo "<Service>unknown_service_id:".$service->service_id."</Service>";

@@ -51,6 +51,7 @@
                                       <xsd:element name="Description" type="xsd:string" />
                                       <xsd:element name="ServiceUri" type="xsd:string" />
                                       <xsd:element name="HiddenService" type="boolean" />
+                                      <xsd:element name="CentralService" type="boolean" />
                                     </xsd:sequence>
                                   </xsd:complexType>
                                 </xsd:element>
