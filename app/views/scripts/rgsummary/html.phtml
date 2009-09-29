@@ -123,30 +123,42 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                         $service_info = $this->servicetypes[$service->service_id][0];
                         $service_name = $service_info->description;
 
-                        echo "<h3>".htmlentities($service_name)."</h3>";
-                        echo "<table class=\"summary_subtable\">";
+                        echo "<div class=\"service round\">";
 
-                        echo "<tr><th>Service URI</th><td><span class=\"fqdn\">";
+                        if($service->central == 1) {
+                            echo "<span class=\"round tag\" style=\"background-color: #99b\">Central Service</span>";
+                        }
+                        if($service->hidden == 1) {
+                            echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
+                        }
+                        
+
+                        echo "<b>".htmlentities($service_name)."</b>";
+                        echo "<br/><span class=\"fqdn\">";
                         if ($service->endpoint_override != "") {
                             //bold this since it's not default
                             echo "<b>$service->endpoint_override</b>";
                         } else {
                             echo $resource->fqdn.":".$service_info->port;
                         }
-                        echo "</span></td></tr>";
+                        echo "</span>";
+
+                        echo "</div>";
+
 /*
+                        echo "<table class=\"summary_subtable\">";
                         echo "<tr><th>Central</th><td>";
                         if($service->central == 1) echo "True";
                         else echo "False";
                         echo "</td></tr>";
-*/
 
                         echo "<tr><th>Hidden</th><td>";
                         if($service->hidden == 1) echo "True";
                         else echo "False";
                         echo "</td></tr>";
-
                         echo "</table>";
+*/
+
 
                     } else {
                         $service_name .= "unknown_service_id:".$service->service_id;

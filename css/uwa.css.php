@@ -450,4 +450,11 @@ font-weight: normal;
 font-size: 10px;
 color: #ccc;
 }
-
+span.tag
+{
+margin: 1px;
+padding: 2px;
+color: black;
+float: right;
+font-weight: bold;
+}
