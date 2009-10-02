@@ -60,3 +60,9 @@ wget -O /tmp/vosummary.raw.xml $url 2> /dev/null
 xmllint --format /tmp/vosummary.raw.xml > /tmp/vosummary.xml
 xmllint --noout --schema $SCHEMA/vosummary.xsd /tmp/vosummary.xml
 
+echo "Testing VO Activation"
+url="$HOST/voactivation/xml?datasource=activation&start_type=7daysago&start_date=09%2F30%2F2009&end_type=now&end_date=09%2F30%2F2009&all_vos=on&active_value=1"
+wget -O /tmp/voactivation.raw.xml $url 2> /dev/null
+xmllint --format /tmp/voactivation.raw.xml > /tmp/voactivation.xml
+xmllint --noout --schema $SCHEMA/voactivation.xsd /tmp/voactivation.xml
+

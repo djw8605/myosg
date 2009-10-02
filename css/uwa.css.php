@@ -454,7 +454,6 @@ span.tag
 {
 margin: 1px;
 padding: 2px;
-color: black;
+color: white;
 float: right;
-font-weight: bold;
 }
