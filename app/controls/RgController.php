@@ -21,8 +21,6 @@ class RgController extends ControllerBase
 
     public function xmlAction()
     {
-        $this->setpagetitle($this->default_title());
-
         //find if xml.phtml exists for this control
         $name = $this->getRequest()->getControllerName();
         $path = $this->view->getScriptPath("").$name."/xml.phtml";
@@ -30,7 +28,22 @@ class RgController extends ControllerBase
             //if so, then we support xml
             parent::xmlAction();
         } else {
+            $this->setpagetitle($this->default_title());
             $this->render("noxml", null, true);
+        }
+    }
+
+    public function csvAction()
+    {
+        //find if xml.phtml exists for this control
+        $name = $this->getRequest()->getControllerName();
+        $path = $this->view->getScriptPath("").$name."/xml.phtml";
+        if(file_exists($path)) {
+            //if so, then we support xml
+            parent::csvAction();
+        } else {
+            $this->setpagetitle($this->default_title());
+            $this->render("nocsv", null, true);
         }
     }
 

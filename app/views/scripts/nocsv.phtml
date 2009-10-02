@@ -1,0 +1,16 @@
+<?=$this->render("full_header.phtml", true)?>
+    <div id="primaryContentContainer">
+        <div id="primaryContent">
+            <?=$this->render("breadcrumb.phtml", true)?>
+            <h2><?=$this->page_title?></h2>
+            <p>Sorry! CSV is not supported for this page yet.</p>
+            <p>Please submit a feature request.</p>
+            <a href="<?=fullbase()?>/<?=pagename()?>?<?=$_SERVER["QUERY_STRING"]?>">View HTML version</a>
+        </div>
+    </div>
+    <div id="sideContent">
+        <?=$this->render("wizard/wizard.phtml")?>
+        <?=$this->render("feedback.phtml", true)?>
+    </div>
+<?=$this->render("full_footer.phtml", true)?>
+
