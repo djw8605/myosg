@@ -176,7 +176,7 @@
                 $service_group_name = $sgs[$item->service_group_id][0]->name;
                 $kv[$item->id] = array($service_group_name. " / ".$item->name, "");
             }
-            echo fblist("service", "Provides following Services", $kv, $sub);
+            echo fblist("service", "Provides following Services", $kv);
 
             $kv = array();
             $kv[0] = "Non-Central Service";

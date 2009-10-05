@@ -304,7 +304,7 @@ function fblist($id, $title, $kv)
 BLOCK;
 
     $out .= $pre_selected;
-    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").fadeIn(\"slow\");' onkeydown='$(\"#${id}__acnote\").fadeOut(\"slow\");'/>";
+    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").fadeIn(\"slow\");' onblur='$(\"#${id}__acnote\").fadeOut(\"slow\");'/>";
     $out .= $script;
 
     //display note
