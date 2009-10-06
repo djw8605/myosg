@@ -60,14 +60,14 @@ class VoactivationController extends VoController
             $vo = $vo[0];
             if(in_array($vo_id, $this->active_vos)) {
                 //has been active at least once
-                $this->view->active_once_vos[] = $vo;
+                $this->view->active_once_vos[$vo->id] = $vo;
             } else {
                 if(in_array($vo_id, $this->enabled_vos)) {
                     //never active, and enabled at least once
-                    $this->view->never_active_enabled_vos[] = $vo;
+                    $this->view->never_active_enabled_vos[$vo->id] = $vo;
                 } else {
                     //never active, and has never enabled
-                    $this->view->never_never_vos[] = $vo;
+                    $this->view->never_never_vos[$vo->id] = $vo;
                 }
             }
         }
