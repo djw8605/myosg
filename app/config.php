@@ -119,12 +119,8 @@ class common_config
         $this->elog_email = false;
         $this->elog_email_address = "overrideme";
 
-        //log db profile (only available in debug mode)
-        $this->profile_db = false;
-
         //forward http request to https
         $this->force_https = true;
-
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //cache filenames
