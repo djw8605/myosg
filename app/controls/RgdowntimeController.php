@@ -104,7 +104,7 @@ class RgdowntimeController extends RgController
                     }
 
                     $desc = $downtime->downtime_summary;
-                    //$desc = str_replace(array("\n", "\r"), "", $desc);
+                    //slog($desc);
 
                     $severity = $downtime_severity[$downtime->downtime_severity_id][0]->name;
                     $class = $downtime_class[$downtime->downtime_class_id][0]->name;

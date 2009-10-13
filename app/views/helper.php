@@ -274,8 +274,8 @@ function fblist($id, $title, $kv)
         if(isset($_REQUEST[$itemid])) {
             $pre_selected .= "<div><img onclick=\"$(this).parent().remove();\" src=\"$delete_url\"/>".$value[0]."<input type=\"hidden\" name=\"$itemid\"/ value=\"on\"></div>";
         }
-        $name = str_replace(array("\n", "\r"), "", htmlentities($value[0]));
-        $desc = str_replace(array("\n", "\r"), "", htmlentities($value[1]));
+        $name = str_replace(array("\n", "\r"), "", htmlsafe($value[0]));
+        $desc = str_replace(array("\n", "\r"), "", htmlsafe($value[1]));
         if(!$first) {
             $script .= ",\n";
         }
@@ -371,7 +371,7 @@ function externalurl($url)
     if($url == "") {
         return "";
     }
-    return "<a target=\"_blank\" href=\"$url\">".htmlentities($url)."</a>";
+    return "<a target=\"_blank\" href=\"$url\">".htmlsafe($url)."</a>";
 }
 
 function emailaddress($email)
@@ -379,5 +379,10 @@ function emailaddress($email)
     if($email == "") {
         return "";
     }
-    return "<a class=\"mailto\" href=\"mailto:$email\">".htmlentities($email)."</a>";
+    return "<a class=\"mailto\" href=\"mailto:$email\">".htmlsafe($email)."</a>";
+}
+
+function htmlsafe($str)
+{
+    return htmlentities($str, ENT_NOQUOTES, "UTF-8");
 }

@@ -7,7 +7,12 @@ require_once("db.php");
 function greet()
 {
     slog('----------------------------------------------------------------------');
-    slog(config()->app_name. ' session starting.. '.$_SERVER["REQUEST_URI"]);
+    if(isset($_SERVER["HTTPS"])) {
+        $method = "https/";
+    } else {
+        $method = "http/";
+    }
+    slog(config()->app_name. ' session starting.. '.$method.$_SERVER["REQUEST_URI"]);
     slog("POST: ".print_r($_POST, true));
 }
 

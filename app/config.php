@@ -67,6 +67,7 @@ class common_config
         $this->db_type = "Pdo_Mysql";
 
         $this->rsvextra_dbparam = array(
+            'charset' => 'UTF8',
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
             'port'     => 49152,
             'host'     => "localhost",
@@ -76,6 +77,7 @@ class common_config
         );
 
         $this->oim_dbparam = array(
+            'charset' => 'UTF8',
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
             'port'     => 49152,
             'host'     => "localhost",
@@ -85,6 +87,7 @@ class common_config
         );
 
         $this->myosg_dbparam = array(
+            'charset' => 'UTF8',
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
             'port'     => 49152,
             'host'     => "localhost",
@@ -94,6 +97,7 @@ class common_config
         );
 
         $this->gratia_dbparam = array(
+            'charset' => 'UTF8',
             'port'     => 49152,
             'host'     => "dahmer.uits.indiana.edu",
             'username' => "myosg",

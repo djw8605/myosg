@@ -2,6 +2,9 @@
 //session_cache_limiter('private_no_expire');
 //phpinfo();exit;
 
+//mb_internal_encoding("UTF-8"); //doesn't do anything..
+//mb_http_output("UTF-8"); //doesn't do anything..
+
 //init zend framework
 set_include_path('lib/zf-1.9.2/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
@@ -10,6 +13,7 @@ require_once "Zend/Loader/Autoloader.php";
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->setFallbackAutoloader(true);
 Zend_Session::start();
+
 
 //check to make sure our site installation is done
 if(!file_exists("config.php")) {
