@@ -78,7 +78,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     echo "<ResourceGroup>";
     $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
     echo "<GridType>";
-    echo htmlentities($gridtype_name);
+    echo htmlsafe($gridtype_name);
     echo "</GridType>";
 
     echo "<GroupID>".$resource_group->id."</GroupID>";
@@ -86,7 +86,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<GroupDescription>";
         if($resource_group->description != "") {
-            echo htmlentities($resource_group->description);
+            echo htmlsafe($resource_group->description);
         } else {
             echo "(No resource group description)";
         }
@@ -127,7 +127,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                         echo "<Service>".
                           "<ID>".$service->service_id."</ID>".
                           "<Name>".$this->servicetypes[$service->service_id][0]->name."</Name>".
-                          "<Description>".htmlentities($this->servicetypes[$service->service_id][0]->description)."</Description>";
+                          "<Description>".htmlsafe($this->servicetypes[$service->service_id][0]->description)."</Description>";
 
                         echo "<ServiceUri>";
                         if ($service->endpoint_override != "") {
@@ -174,7 +174,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $note .= "Maintenance Summary: $downtime_desc";
                 $note .= "Internal status: $internal_note";
             }
-            echo "<RSVStatus><Status>$status</Status><Note>".htmlentities($note)."</Note></RSVStatus>";
+            echo "<RSVStatus><Status>$status</Status><Note>".htmlsafe($note)."</Note></RSVStatus>";
         }
 
         if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
@@ -209,7 +209,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<Description>";
             if($resource->description != "") {
-                echo htmlentities($resource->description);
+                echo htmlsafe($resource->description);
             } else {
                 echo "(No resource description)";
             }
@@ -268,7 +268,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 
                     echo "<Ownership><Percent>$left</Percent><VO>(Other)</VO></Ownership>";
                 }
-                $url = htmlentities("http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl");
+                $url = htmlsafe("http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl");
                 echo "<ChartURL>$url</ChartURL>";
             }
             echo "</VOOwnership>";
@@ -310,7 +310,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 echo "(Information Not available)";
             } else {
                 foreach($xml as $key=>$value) {
-                    echo "<".htmlentities($key).">".htmlentities($value)."</".htmlentities($key).">";
+                    echo "<".htmlsafe($key).">".htmlsafe($value)."</".htmlsafe($key).">";
                 }
             }
             echo "</ENV>";
@@ -321,17 +321,17 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             if(is_array($contact_types)) {
                 foreach($contact_types as $type_name=>$contacts) {
                     echo "<ContactList>";
-                    echo "<ContactType>".htmlentities($type_name)."</ContactType>";
+                    echo "<ContactType>".htmlsafe($type_name)."</ContactType>";
                     echo "<Contacts>";
                     foreach($contacts as $contact) {
                         echo "<Contact>";
-                        echo "<Name>".htmlentities($contact->name)."</Name>";
+                        echo "<Name>".htmlsafe($contact->name)."</Name>";
                         if(!user()->isGuest()) {
-                            echo "<Email>".htmlentities($contact->primary_email)."</Email>";
-                            echo "<Phone>".htmlentities($contact->primary_phone)."</Phone>";
-                            echo "<SMSAddress>".htmlentities($contact->sms_address)."</SMSAddress>";
+                            echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
+                            echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
+                            echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
                         }
-                        echo "<ContactRank>".htmlentities($contact->rank_type)."</ContactRank>";
+                        echo "<ContactRank>".htmlsafe($contact->rank_type)."</ContactRank>";
                         echo "</Contact>";
                     }
                     echo "</Contacts>";

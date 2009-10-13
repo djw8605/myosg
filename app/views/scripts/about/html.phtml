@@ -69,8 +69,8 @@ Current GIP validation status for all production resources that provide the CE s
 <?
 foreach($this->ucv as $ucv)
 {
-echo "<div class=\"sidenote\">by ".htmlentities($ucv[4])." (".htmlentities(trim($ucv[3])).")</div>";
-echo "<b><a href=\"".htmlentities($ucv[2])."\">".htmlentities($ucv[1])."</a></b>";
+echo "<div class=\"sidenote\">by ".htmlsafe($ucv[4])." (".htmlsafe(trim($ucv[3])).")</div>";
+echo "<b><a href=\"".htmlsafe($ucv[2])."\">".htmlsafe($ucv[1])."</a></b>";
 echo "<p>".$ucv[5]."</p>";
 }
 ?>

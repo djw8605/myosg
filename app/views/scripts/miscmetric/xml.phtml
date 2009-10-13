@@ -5,16 +5,16 @@ foreach($this->metrics as $id=>$info)
     $info = $info[0];
     //header
     ?><RSVMetric>
-<ID><?=htmlentities($info->id)?></ID>
-<Name><?=htmlentities($info->name)?></Name>
-<CommonName><?=htmlentities($info->common_name)?></CommonName>
-<Abbreviation><?=htmlentities($info->abbrev)?></Abbreviation>
-<Description><?=htmlentities($info->description)?></Description>
-<TimeInterval><?=htmlentities($info->time_interval)?></TimeInterval>
-<FreshFor><?=htmlentities($info->fresh_for)?></FreshFor>
-<WLCGMetricType><?=htmlentities($info->wlcg_metric_type)?></WLCGMetricType>
+<ID><?=htmlsafe($info->id)?></ID>
+<Name><?=htmlsafe($info->name)?></Name>
+<CommonName><?=htmlsafe($info->common_name)?></CommonName>
+<Abbreviation><?=htmlsafe($info->abbrev)?></Abbreviation>
+<Description><?=htmlsafe($info->description)?></Description>
+<TimeInterval><?=htmlsafe($info->time_interval)?></TimeInterval>
+<FreshFor><?=htmlsafe($info->fresh_for)?></FreshFor>
+<WLCGMetricType><?=htmlsafe($info->wlcg_metric_type)?></WLCGMetricType>
 <?if($info->help_url != "") {?>
-<HelpURL><?=htmlentities($info->help_url)?></HelpURL>
+<HelpURL><?=htmlsafe($info->help_url)?></HelpURL>
 <?}?>
 
 <?if(isset($_REQUEST["metric_attrs_showservices"])) {
@@ -24,7 +24,7 @@ if(isset($this->metricservices[$id])) {
         echo "<Service>";
         echo "<ID>".$service->service_id."</ID>";
         $service_info = $this->services[$service->service_id];
-        echo "<Name>".htmlentities($service_info[0]->name)."</Name>";
+        echo "<Name>".htmlsafe($service_info[0]->name)."</Name>";
         echo "<CriticalMetric>";
         if($service->critical == 1) {
             echo "True";

@@ -27,7 +27,7 @@ if(isset($this->aandr)) {
             $a = round((double)$service->Availability[0]*100, 2);
             $r = round((double)$service->Reliability[0]*100, 2);
 
-            $graph = htmlentities(fullbase()."/history/graph?resource_id=$resource_id&service_id=$service_id&start=".$this->start_time."&end=".$this->end_time);
+            $graph = htmlsafe(fullbase()."/history/graph?resource_id=$resource_id&service_id=$service_id&start=".$this->start_time."&end=".$this->end_time);
             echo "<Graph>$graph</Graph>";
 
             echo "<Availability>$a%</Availability>";

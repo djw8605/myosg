@@ -10,11 +10,11 @@ foreach($this->cpuinfos as $info)
     <table class="summary_table">
     <tr>
         <th>Normalization Constant</th>
-        <td><?=htmlentities($info->normalization_constant)?></td>
+        <td><?=htmlsafe($info->normalization_constant)?></td>
     </tr>
     <tr>
         <th>Notes</th>
-        <td><?=htmlentities($info->notes)?></td>
+        <td><?=htmlsafe($info->notes)?></td>
     </tr>
     </table>
     <?

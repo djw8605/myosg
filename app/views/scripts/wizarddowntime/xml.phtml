@@ -17,24 +17,24 @@ function showdowntimes($downtimes) {
     {
         echo "<Downtime>";
         echo "<ID>".$downtime["id"]."</ID>";
-        echo "<ResourceName>".htmlentities($downtime["name"])."</ResourceName>";
-        echo "<ResourceID>".htmlentities($downtime["resource_id"])."</ResourceID>";
+        echo "<ResourceName>".htmlsafe($downtime["name"])."</ResourceName>";
+        echo "<ResourceID>".htmlsafe($downtime["resource_id"])."</ResourceID>";
         echo "<StartTime>".$downtime["start_time"]."</StartTime>";
         echo "<EndTime>".$downtime["end_time"]."</EndTime>";
-        echo "<Class>".htmlentities($downtime["class"])."</Class>";
-        echo "<Severity>".htmlentities($downtime["severity"])."</Severity>";
-        echo "<DN>".htmlentities($downtime["dn"])."</DN>";
+        echo "<Class>".htmlsafe($downtime["class"])."</Class>";
+        echo "<Severity>".htmlsafe($downtime["severity"])."</Severity>";
+        echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
 
         echo "<Services>";
         foreach($downtime["services"] as $service) {
             echo "<Service>";
-            echo "<ID>".htmlentities($service->id)."</ID>";
-            echo "<Name>".htmlentities($service->name)."</Name>";
-            echo "<Description>".htmlentities($service->description)."</Description>";
+            echo "<ID>".htmlsafe($service->id)."</ID>";
+            echo "<Name>".htmlsafe($service->name)."</Name>";
+            echo "<Description>".htmlsafe($service->description)."</Description>";
             echo "</Service>";
         }
         echo "</Services>";
-        echo "<Description>".htmlentities($downtime["desc"])."</Description>";
+        echo "<Description>".htmlsafe($downtime["desc"])."</Description>";
         echo "</Downtime>";
     }
 }

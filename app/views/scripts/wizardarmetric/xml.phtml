@@ -7,7 +7,7 @@ foreach($this->data as $resource_id=>$resource) {
 
     echo "<Resource>";
     echo "<ID>$resource_id</ID>";
-    echo "<Name>".htmlentities($resource_info[0]->name)."</Name>";
+    echo "<Name>".htmlsafe($resource_info[0]->name)."</Name>";
 
     if(count($resource) == 0) {
         echo "<Note>(No information)</Note>";
@@ -23,7 +23,7 @@ foreach($this->data as $resource_id=>$resource) {
         $a = round((double)$data["availability"]*100, 2);
         $r = round((double)$data["reliability"]*100, 2);
 
-        echo "<Name>".htmlentities($service_name)."</Name>";
+        echo "<Name>".htmlsafe($service_name)."</Name>";
         echo "<Availability>$a%</Availability><Reliability>$r%</Reliability>";
         echo "</Service>";
     }

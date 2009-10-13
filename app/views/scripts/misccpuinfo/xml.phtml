@@ -4,10 +4,10 @@ foreach($this->cpuinfos as $info)
 {
     //header
     ?><CPUInfo>
-<ID><?=htmlentities($info->id)?></ID>
-<Name><?=htmlentities($info->name)?></Name>
-<NormalizationConstant><?=htmlentities($info->normalization_constant)?></NormalizationConstant>
-<Notes><?=htmlentities($info->notes)?></Notes>
+<ID><?=htmlsafe($info->id)?></ID>
+<Name><?=htmlsafe($info->name)?></Name>
+<NormalizationConstant><?=htmlsafe($info->normalization_constant)?></NormalizationConstant>
+<Notes><?=htmlsafe($info->notes)?></Notes>
 </CPUInfo>
 <?
 }

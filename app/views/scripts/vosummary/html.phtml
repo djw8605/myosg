@@ -1,7 +1,7 @@
 <?
 
 foreach($this->vos as $vo_id=>$vo) {
-    $name = htmlentities($vo->name);
+    $name = htmlsafe($vo->name);
     $ex_class = "";
     if($vo->disable == 1) {
         $name .= " (Removed)";
@@ -15,19 +15,19 @@ foreach($this->vos as $vo_id=>$vo) {
     echo "<span class=\"h3\">".$name."</span>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo "<br/>";
-        echo htmlentities($vo->description);
+        echo htmlsafe($vo->description);
     }
     echo "</div>";
     echo "<div class=\"$ex_class\">";
 
     echo "<table class='summary_table'>";
-    echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
+    echo "<tr><th>Long Name</th><td>".htmlsafe($vo->long_name)."</td></tr>";
     echo "<tr><th>Primary URL</th><td>".externalurl($vo->primary_url)."</td></tr>";
     echo "<tr><th>Membership Services URL</th><td>".externalurl($vo->membership_services_url)."</td></tr>";
     echo "<tr><th>Purpose URL</th><td>".externalurl($vo->purpose_url)."</td></tr>";
     echo "<tr><th>Support URL</th><td>".externalurl($vo->support_url)."</td></tr>";
-    echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
-    echo "<tr><th>Community</th><td>".htmlentities($vo->community)."</td></tr>";
+    echo "<tr><th>App Description</th><td>".htmlsafe($vo->app_description)."</td></tr>";
+    echo "<tr><th>Community</th><td>".htmlsafe($vo->community)."</td></tr>";
 
     if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
         echo "<tr><th>Parent VO</th><td>";
@@ -38,7 +38,7 @@ foreach($this->vos as $vo_id=>$vo) {
                 fullbase().
                 "/vosummary?datasource=summary&summary_attrs_showparent_vo=on&vo=on&vo_".
                 $parent_vo_id.
-                "=on&active_value=1\">".htmlentities($parent_vo->name)."</a> ";
+                "=on&active_value=1\">".htmlsafe($parent_vo->name)."</a> ";
         } else {
             echo "(No Parent VO)";
         }
@@ -46,14 +46,14 @@ foreach($this->vos as $vo_id=>$vo) {
     }
 
     $scid = $vo->sc->id;
-    echo "<tr><th>Support Center</th><td><a href=\"".fullbase()."/scsummary/index?datasource=summary&sc=on&sc_$scid=on\">".htmlentities($vo->sc->name)."</a></td></tr>";
+    echo "<tr><th>Support Center</th><td><a href=\"".fullbase()."/scsummary/index?datasource=summary&sc=on&sc_$scid=on\">".htmlsafe($vo->sc->name)."</a></td></tr>";
 
     if(isset($_REQUEST["summary_attrs_showmember_resource"])) {
         echo "<tr><th>Member Resources</th><td>";
         $resource_ownerships = $this->resource_ownerships[$vo_id];
         foreach($resource_ownerships as $resource_ownership) {
             $rid = $resource_ownership->id;
-            echo "<a href=\"".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">".htmlentities($resource_ownership->name)."</a> ";
+            echo "<a href=\"".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">".htmlsafe($resource_ownership->name)."</a> ";
         }
         echo "</td></tr>";
     }
@@ -62,7 +62,7 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "<tr><th>Field Of Science</th><td>";
         $fss = $this->field_of_science[$vo_id];
         foreach($fss as $fs) {
-            echo htmlentities($fs->name)."<br/>";
+            echo htmlsafe($fs->name)."<br/>";
         }
         echo "</td></tr>";
     }
@@ -73,14 +73,14 @@ foreach($this->vos as $vo_id=>$vo) {
         
         foreach($reports as $report) {
             echo "<div class=\"vo_report\">";
-            echo "<h4>".htmlentities($report->name)."</h4>";
+            echo "<h4>".htmlsafe($report->name)."</h4>";
             if($report->fqans !== null) {
                 echo "<h3>FQANs</h3>";
                 foreach($report->fqans as $fqan) {
                     echo "<div class=\"vo_report_fqan\">";
                     echo "<table class=\"summary_subtable\">"; 
-                    echo "<tr><th>Group Name:</th><td>".htmlentities($fqan->group_name)."</td></tr>";
-                    echo "<tr><th>Role:</th><td>".htmlentities($fqan->role)."</td></tr>";
+                    echo "<tr><th>Group Name:</th><td>".htmlsafe($fqan->group_name)."</td></tr>";
+                    echo "<tr><th>Role:</th><td>".htmlsafe($fqan->role)."</td></tr>";
                     echo "</table>";
                     echo "</div>";
                 }
@@ -90,15 +90,15 @@ foreach($this->vos as $vo_id=>$vo) {
                 foreach($report->contacts as $contact) {
                     echo "<div class=\"vo_report_contact\">";
                     if(user()->isGuest()) {
-                        echo htmlentities($contact->name)."<br/>";
+                        echo htmlsafe($contact->name)."<br/>";
                     } else {
                         echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlentities($contact->name)."</h3>";
+                        echo "<h3>".htmlsafe($contact->name)."</h3>";
                         echo "<table class=\"summary_subtable\">"; 
                         echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
                         if($contact->sms_address != null) {
-                            echo "<tr><th>SMS Address</th><td>".htmlentities($contact->sms_address)."</td></tr>";
+                            echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
                         }
                         echo "</table>";
                         echo "</div>";
@@ -119,15 +119,15 @@ foreach($this->vos as $vo_id=>$vo) {
                 echo "<h4>$type_name</h4>";
                 foreach($contacts as $contact) {
                     if(user()->isGuest()) {
-                        echo htmlentities($contact->name)."<br/>";
+                        echo htmlsafe($contact->name)."<br/>";
                     } else {
                         echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlentities($contact->name)."</h3>";
+                        echo "<h3>".htmlsafe($contact->name)."</h3>";
                         echo "<table class=\"summary_subtable\">"; 
                         echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                        echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
                         if($contact->sms_address != null) {
-                            echo "<tr><th>SMS Address</th><td>".htmlentities($contact->sms_address)."</td></tr>";
+                            echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
                         }
                         echo "</table>";
                         echo "</div>";

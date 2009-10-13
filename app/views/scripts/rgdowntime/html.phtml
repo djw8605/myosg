@@ -28,29 +28,29 @@ function showdowntimes($downtimes) {
     foreach($downtimes as $downtime)
     {
         echo "<div class='resource h4 round'>";
-        echo "<span class=\"hierarchy\">".htmlentities($downtime["rg_name"])." (Resource Group) &gt; </span>";
-        echo htmlentities($downtime["name"]);
+        echo "<span class=\"hierarchy\">".htmlsafe($downtime["rg_name"])." (Resource Group) &gt; </span>";
+        echo htmlsafe($downtime["name"]);
         echo "</div>";
         echo "<table class=\"summary_table\">";
 
-        echo "<tr><th>FQDN</th><td>".htmlentities($downtime["fqdn"])."</td></tr>";
+        echo "<tr><th>FQDN</th><td>".htmlsafe($downtime["fqdn"])."</td></tr>";
         echo "<tr><th>Start Time</th><td>".$downtime["start_time"]."</td></tr>";
         echo "<tr><th>End Time</th><td>".$downtime["end_time"]."</td></tr>";
 
-        echo "<tr><th>Class</th><td>".htmlentities($downtime["class"])."</td></tr>";
-        echo "<tr><th>Severity</th><td>".htmlentities($downtime["severity"])."</td></tr>";
-        echo "<tr><th>DN</th><td>".htmlentities($downtime["dn"])."</td></tr>";
+        echo "<tr><th>Class</th><td>".htmlsafe($downtime["class"])."</td></tr>";
+        echo "<tr><th>Severity</th><td>".htmlsafe($downtime["severity"])."</td></tr>";
+        echo "<tr><th>DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
 
         echo "<tr><th>Affected&nbsp;Services</th><td>";
         foreach($downtime["services"] as $service) {
-            echo htmlentities($service->name)."<br/>";
+            echo htmlsafe($service->name)."<br/>";
         }
         echo "</td></tr>";
         
         
         //show downtime detail
         echo "<tr><th>Detail</th><td>";
-        echo htmlentities($downtime["desc"]);
+        echo htmlsafe($downtime["desc"]);
         echo "</td></tr>";
 
         echo "</table>";

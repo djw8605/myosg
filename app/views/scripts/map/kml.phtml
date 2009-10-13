@@ -33,7 +33,7 @@ foreach($model->get() as $facility) {
 
     //output Placemark
     echo "<Placemark>";
-    echo "<name>".htmlentities($acro)."</name>";
+    echo "<name>".htmlsafe($acro)."</name>";
     echo "<styleUrl>#myosg</styleUrl>";
     echo "<description><![CDATA[";
     echo "<h2>".$facility->name."</h2>";

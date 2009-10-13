@@ -11,7 +11,7 @@
             <?=$this->render("vo/wizard.phtml")?>
             <h3>Legacy Links</h3>
             <div class="indent">
-                <a target="_blank" href="<?=fullbase()."/".pagename()."/legacyosgwebsiteview?".htmlentities($_SERVER["QUERY_STRING"]);?>">Table for main OSG website</a><br/>
+                <a target="_blank" href="<?=fullbase()."/".pagename()."/legacyosgwebsiteview?".htmlsafe($_SERVER["QUERY_STRING"]);?>">Table for main OSG website</a><br/>
             </div>
             <?=$this->render("feedback.phtml", true)?>
         </div>

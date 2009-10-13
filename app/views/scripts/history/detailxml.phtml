@@ -27,7 +27,7 @@ foreach($this->status_changes as $status_change) {
 
     echo "<status>$status</status>";
     echo "<time>$time</time>";
-    echo "<detail>".htmlentities($time)."</detail>";
+    echo "<detail>".htmlsafe($time)."</detail>";
     echo "<responsible_metric>$responsible_mid</responsible_metric>";
 
     if($first) {

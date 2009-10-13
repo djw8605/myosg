@@ -5,20 +5,20 @@ function showvolist($list) {
         echo "<p class=\"info\">No VO under this list.</p>";
     }
     foreach($list as $vo_id=>$vo) {
-        $name = htmlentities($vo->name);
+        $name = htmlsafe($vo->name);
 
         echo "<div class=\"vo round\">";
         echo "<span class=\"h3\">".$name."</span>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
-            echo htmlentities($vo->description);
+            echo htmlsafe($vo->description);
         }
         echo "</div>";
         echo "<div>";
 
         echo "<table class='summary_table'>";
-        echo "<tr><th>Long Name</th><td>".htmlentities($vo->long_name)."</td></tr>";
-        echo "<tr><th>App Description</th><td>".htmlentities($vo->app_description)."</td></tr>";
+        echo "<tr><th>Long Name</th><td>".htmlsafe($vo->long_name)."</td></tr>";
+        echo "<tr><th>App Description</th><td>".htmlsafe($vo->app_description)."</td></tr>";
         echo "</table>";
         echo "</div>"; //ex-class
     }

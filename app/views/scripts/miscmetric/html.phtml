@@ -12,27 +12,27 @@ foreach($this->metrics as $id=>$info)
     <table class="summary_table">
     <tr>
         <th>Common Name</th>
-        <td><?=htmlentities($info->common_name)?></td>
+        <td><?=htmlsafe($info->common_name)?></td>
     </tr>
     <tr>
         <th>Abbreviation</th>
-        <td><?=htmlentities($info->abbrev)?></td>
+        <td><?=htmlsafe($info->abbrev)?></td>
     </tr>
     <tr>
         <th>Description</th>
-        <td><?=htmlentities($info->description)?></td>
+        <td><?=htmlsafe($info->description)?></td>
     </tr>
     <tr>
         <th>Time Interval</th>
-        <td><?=htmlentities($info->time_interval)?></td>
+        <td><?=htmlsafe($info->time_interval)?></td>
     </tr>
     <tr>
         <th>Fresh For</th>
-        <td><?=htmlentities($info->fresh_for)?></td>
+        <td><?=htmlsafe($info->fresh_for)?></td>
     </tr>
     <tr>
         <th>WLCG Metric Type</th>
-        <td><?=htmlentities($info->wlcg_metric_type)?></td>
+        <td><?=htmlsafe($info->wlcg_metric_type)?></td>
     </tr>
     <tr>
         <th>Help URL</th>
@@ -40,7 +40,7 @@ foreach($this->metrics as $id=>$info)
         if($info->help_url == "") {
             echo "<td>(No URL)</td>";
         } else {?>
-            <td><a href="<?=$info->help_url?>" target="_blank"><?=htmlentities($info->help_url)?></a></td>
+            <td><a href="<?=$info->help_url?>" target="_blank"><?=htmlsafe($info->help_url)?></a></td>
         <?}?>
     </tr>
 

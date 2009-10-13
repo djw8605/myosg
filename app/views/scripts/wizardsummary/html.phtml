@@ -88,7 +88,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                         $service_info = $this->servicetypes[$service->service_id][0];
                         $service_name = $service_info->description;
 
-                        echo "<h3>".htmlentities($service_name)."</h3>";
+                        echo "<h3>".htmlsafe($service_name)."</h3>";
                         echo "<table class=\"summary_subtable\">";
 
                         echo "<tr><th>Service URI</th><td><span class=\"fqdn\">";
@@ -129,8 +129,8 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $note = "<div>Resource status is not calculated for this resource.</div>";
                 $status = "UNKNOWN";
             } else {
-                $detail_url = htmlentities(fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&r=on&r_$rid=on");
-                $history_url = htmlentities(fullbase()."/wizardstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=today&r=on&r_$rid=on");
+                $detail_url = htmlsafe(fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&r=on&r_$rid=on");
+                $history_url = htmlsafe(fullbase()."/wizardstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=today&r=on&r_$rid=on");
                 $resource_status = $this->resource_status[$rid][0];
                 $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
                 $status = Status::getStatus($resource_status->status_id);
@@ -183,7 +183,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                 $note = "GIP Validation is returning unknown status.";
             }
 
-            $detail_url = htmlentities(fullbase()."/wizardgipstatus/index?datasource=gipstatus&r=on&r_$rid=on&gip_status_attrs_showtestresults=on");
+            $detail_url = htmlsafe(fullbase()."/wizardgipstatus/index?datasource=gipstatus&r=on&r_$rid=on&gip_status_attrs_showtestresults=on");
             $note = "<div>$note<br/><a href=\"$detail_url\">Validation Detail</a></div>";
             echo "<div class=\"status_$status\">";
             echo $note;
@@ -301,7 +301,7 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
             } else {
                 echo "<table class=\"summary_subtable\">";
                 foreach($xml as $key=>$value) {
-                    echo "<tr><th>".htmlentities($key)."</th><td>".htmlentities($value)."</td></tr>";
+                    echo "<tr><th>".htmlsafe($key)."</th><td>".htmlsafe($value)."</td></tr>";
                 }
                 echo "</table>";
             }
@@ -316,15 +316,15 @@ foreach($this->resource_groups as $resource_group_id=>$resource_list) {
                     echo "<h4>$type_name</h4>";
                     foreach($contacts as $contact) {
                         if(user()->isGuest()) {
-                            echo htmlentities($contact->name)."<br/>";
+                            echo htmlsafe($contact->name)."<br/>";
                         } else {
                             echo "<div class=\"contact_info\">";
-                            echo "<h3>".htmlentities($contact->name)."</h3>";
+                            echo "<h3>".htmlsafe($contact->name)."</h3>";
                             echo "<table class=\"summary_subtable\">"; 
                             echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                            echo "<tr><th>Phone</th><td>".htmlentities($contact->primary_phone)."</td></tr>";
+                            echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
                             if($contact->sms_address != null) {
-                                echo "<tr><th>SMS Address</th><td>".htmlentities($contact->sms_address)."</td></tr>";
+                                echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
                             }
                             echo "</table>";
                             echo "</div>";

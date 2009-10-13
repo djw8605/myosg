@@ -15,7 +15,7 @@ foreach($this->cache as $rid=>$cache) {
     <Status><?=$status?></Status>
     <ResourceName><?=$resource_name?></ResourceName>
     <Fqdn><?=$resource_fqdn?></Fqdn>
-    <Note><?=htmlentities($note)?></Note>
+    <Note><?=htmlsafe($note)?></Note>
     <?
     foreach($services as $service) {
         echo "<Service>";
@@ -25,7 +25,7 @@ foreach($this->cache as $rid=>$cache) {
         echo "<Name>".$service->Name."</Name>";
         echo "<Description>".$service->ServiceDescription." Service Status</Description>";
         echo "<Status>$service_status</Status>";
-        echo "<Note>".htmlentities($note)."</Note>";
+        echo "<Note>".htmlsafe($note)."</Note>";
 
         //critical metrics
         $out = "";
@@ -74,12 +74,12 @@ function outputMetricInfo($metric, $timestamp)
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
     if($expired) $name .= " (Expired)";
-    $out .= "<Description>".htmlentities($desc)."</Description><HelpURL>".htmlentities($help_url)."</HelpURL><Name>$name</Name>";
+    $out .= "<Description>".htmlsafe($desc)."</Description><HelpURL>".htmlsafe($help_url)."</HelpURL><Name>$name</Name>";
     if(!isset($_REQUEST["uwa"])) {
         if(trim($detail) == "") {
             $detail = "<Detail>(No detail provided)</Detail>";
         } else {
-            $detail = "<Detail>".htmlentities($detail)."</Detail>";
+            $detail = "<Detail>".htmlsafe($detail)."</Detail>";
             $id = $metric->MetricDataID;
             $detail .= "<MetricDataID>$id</MetricDataID>";
             $fresh_for = $metric->MetricFreshFor;

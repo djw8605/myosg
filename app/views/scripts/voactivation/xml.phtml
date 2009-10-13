@@ -7,8 +7,8 @@ function showvolist($list) {
     foreach($list as $vo_id=>$vo) {
         echo "<VO>";
         echo "<ID>$vo_id</ID>";
-        echo "<Name>".htmlentities($vo->name)."</Name>";
-        echo "<LongName>".htmlentities($vo->long_name)."</LongName>";
+        echo "<Name>".htmlsafe($vo->name)."</Name>";
+        echo "<LongName>".htmlsafe($vo->long_name)."</LongName>";
         echo "</VO>";
     }
 }

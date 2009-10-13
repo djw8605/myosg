@@ -9,16 +9,16 @@ foreach($this->rgs as $rgid=>$rg) {
 
     $resource_group = $this->resource_groups[$rgid][0];
     echo "<GridType>";
-    echo htmlentities($resource_group->grid_type_description);
+    echo htmlsafe($resource_group->grid_type_description);
     echo "</GridType>";
     echo "<GroupID>".$rgid."</GroupID>";
-    echo "<GroupName>".htmlentities($resource_group->name)."</GroupName>";
+    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
 
     foreach($rg as $rid=>$resource_info) {
     //$resource_info = $this->resource_info[$rid][0];
         echo "<Resource>";
         echo "<ID>$rid</ID>";
-        echo "<Name>".htmlentities($resource_info->name)."</Name>";
+        echo "<Name>".htmlsafe($resource_info->name)."</Name>";
 
         $services = $this->services[$rid];
         asort($services);
@@ -30,7 +30,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 echo "<Service>";
                 $service_info = $this->service_info[$service_id];
                 $service_name = $service_info[0]->description;
-                echo "<Name>".htmlentities($service_name)."</Name>";
+                echo "<Name>".htmlsafe($service_name)."</Name>";
                 $ax = "0";
                 $ay = "-1";
                 $rx = "0";
@@ -69,7 +69,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 $url .= "&chd=t:$ax|$ay|$rx|$ry";
                 $url .= "&chg=10,25,1";
                 $url .= "&chls=2,1,0|2,1,0";
-                echo "<GraphURL>".htmlentities($url)."</GraphURL>";
+                echo "<GraphURL>".htmlsafe($url)."</GraphURL>";
                 echo "</Service>";
             }
         }

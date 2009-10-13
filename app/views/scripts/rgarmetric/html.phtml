@@ -22,7 +22,7 @@ margin-bottom: 0px;
             echo $resource_group->grid_type_description." Group";
             echo "</div>";
         }
-        echo "<span class='h3'>".htmlentities($resource_group->name)."</span>";
+        echo "<span class='h3'>".htmlsafe($resource_group->name)."</span>";
         echo "</div>";
  
         echo "</td></tr>";

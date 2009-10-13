@@ -7,10 +7,10 @@ foreach($this->rgs as $rgid=>$rg) {
 
     $resource_group = $this->resource_groups[$rgid][0];
     echo "<GridType>";
-    echo htmlentities($resource_group->grid_type_description);
+    echo htmlsafe($resource_group->grid_type_description);
     echo "</GridType>";
     echo "<GroupID>".$rgid."</GroupID>";
-    echo "<GroupName>".htmlentities($resource_group->name)."</GroupName>";
+    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
 
     foreach($rg as $resource_id=>$resource_info) {
         $resource = @$this->data[$resource_id];
@@ -20,7 +20,7 @@ foreach($this->rgs as $rgid=>$rg) {
 
         echo "<Resource>";
         echo "<ID>$resource_id</ID>";
-        echo "<Name>".htmlentities($resource_info->name)."</Name>";
+        echo "<Name>".htmlsafe($resource_info->name)."</Name>";
 
 
         foreach($resource as $service_id=>$data) {
@@ -31,7 +31,7 @@ foreach($this->rgs as $rgid=>$rg) {
             $a = round((double)$data["availability"]*100, 2);
             $r = round((double)$data["reliability"]*100, 2);
 
-            echo "<Name>".htmlentities($service_name)."</Name>";
+            echo "<Name>".htmlsafe($service_name)."</Name>";
             echo "<Availability>$a%</Availability><Reliability>$r%</Reliability>";
             echo "</Service>";
         }

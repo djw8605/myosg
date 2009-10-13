@@ -20,7 +20,7 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
                 if(isset($counts[$service_id])) {
                     $count = $counts[$service_id];
                 }
-                echo "<tr><th>".htmlentities($service[0]->name)."</th><td>".$count."</td></tr>";
+                echo "<tr><th>".htmlsafe($service[0]->name)."</th><td>".$count."</td></tr>";
             }
         }
         echo "</table>";

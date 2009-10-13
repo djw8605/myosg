@@ -6,7 +6,7 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
 
     $gridtype_info = $this->grid_types[$grid_type_id][0];
     echo "<GridType>";
-    echo "<ID>$gridtype_info->id</ID><Name>".htmlentities($gridtype_info->name)."</Name>";
+    echo "<ID>$gridtype_info->id</ID><Name>".htmlsafe($gridtype_info->name)."</Name>";
 
     if(isset($_REQUEST["count_total"])) {
         echo "<TotalResourceCount>".count($resources)."</TotalResourceCount>";
@@ -16,7 +16,7 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
     foreach($this->service_groups as $service_group_id => $service_group) {
         echo "<ServiceGroup>";
         echo "<ID>".$service_group[0]->id."</ID>";
-        echo "<Name>".htmlentities($service_group[0]->name)."</Name>";
+        echo "<Name>".htmlsafe($service_group[0]->name)."</Name>";
         
         echo "<Services>";
         foreach($this->services as $service_id => $service) {
@@ -27,7 +27,7 @@ foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
                 }
                 echo "<Service>";
                 echo "<ID>".$service[0]->id."</ID>";
-                echo "<Name>".htmlentities($service[0]->name)."</Name>";
+                echo "<Name>".htmlsafe($service[0]->name)."</Name>";
                 echo "<Count>".$count."</Count>";
                 echo "</Service>";
             }

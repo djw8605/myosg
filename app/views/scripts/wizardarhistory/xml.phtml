@@ -7,7 +7,7 @@ foreach($this->services as $rid=>$services) {
     $resource_info = $this->resource_info[$rid][0];
     echo "<Resource>";
     echo "<ID>$rid</ID>";
-    echo "<Name>".htmlentities($resource_info->name)."</Name>";
+    echo "<Name>".htmlsafe($resource_info->name)."</Name>";
 
     asort($services);
     if(count($services) == 0) {
@@ -18,7 +18,7 @@ foreach($this->services as $rid=>$services) {
             echo "<Service>";
             $service_info = $this->service_info[$service_id];
             $service_name = $service_info[0]->description;
-            echo "<Name>".htmlentities($service_name)."</Name>";
+            echo "<Name>".htmlsafe($service_name)."</Name>";
             $ax = "0";
             $ay = "-1";
             $rx = "0";
@@ -57,7 +57,7 @@ foreach($this->services as $rid=>$services) {
             $url .= "&chd=t:$ax|$ay|$rx|$ry";
             $url .= "&chg=10,25,1";
             $url .= "&chls=2,1,0|2,1,0";
-            echo "<GraphURL>".htmlentities($url)."</GraphURL>";
+            echo "<GraphURL>".htmlsafe($url)."</GraphURL>";
             echo "</Service>";
         }
     }
