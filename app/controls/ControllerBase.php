@@ -41,6 +41,11 @@ abstract class ControllerBase extends Zend_Controller_Action
         $this->load();
         $this->render("uwa", null, true);
     }
+    public function mobileAction()
+    {
+        $this->load();
+        $this->render("mobile", null, true);
+    }
 
     public function adduwaAction()
     {

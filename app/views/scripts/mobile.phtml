@@ -1,0 +1,11 @@
+<html>
+<head>
+<link href="<?=base()?>/css/emerald/default.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    <?include("css/uwa.css.php");?>
+</style>
+</head>
+<body>
+    <?echo file_get_contents(fullbase()."/".pagename()."/html?uwa=true&".$_SERVER["QUERY_STRING"]);?>
+</body>
+</html>

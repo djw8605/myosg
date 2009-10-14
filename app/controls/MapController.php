@@ -51,10 +51,17 @@ class MapController extends ControllerBase
 
         $this->setpagetitle(self::default_title());
     }
+
+    //override these to use page instance of uwa / mobile.phtml
     public function uwaAction()
     {
         $this->load();
     }
+    public function mobileAction()
+    {
+        $this->load();
+    }
+
     public function kmlAction()
     {
         $this->load();

@@ -33,15 +33,16 @@
 }
 </style>
  
-    <script type="text/javascript">
-<?=$this->render(pagename()."/js.phtml");?>
-widget.onLoad = function() {
-    text = "<iframe src='<?=fullbase();?>/<?=pagename()?>/iframe?uwa&<?=$_SERVER["QUERY_STRING"]?>#<?=$_REQUEST["__anchor"]?>' width='100%' height='300px' scrolling='no' frameborder='0'></iframe>";
-    widget.setBody(text);
-}
+<script type="text/javascript">
+    <?=$this->render(pagename()."/js.phtml");?>
+    widget.onLoad = function() {
+        text = "<iframe src='<?=fullbase();?>/<?=pagename()?>/iframe?uwa&<?=$_SERVER["QUERY_STRING"]?>#<?=$_REQUEST["__anchor"]?>' width='100%' height='300px' scrolling='no' frameborder='0'></iframe>";
+        widget.setBody(text);
+    }
 </script>
-  </head>
-  <body>
+</head>
+
+<body>
     <p>Loading...</p>
-  </body>
+</body>
 </html>
