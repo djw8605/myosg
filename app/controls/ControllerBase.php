@@ -72,8 +72,11 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         $this->load();
         $this->render("none", null, true);
-        header("Content-type: text/csv");
+        header("Content-type: text/csv; charset=UTF-8");
         header("Content-Disposition: attachment; filename=\"".pagename().".csv\"");
+
+        //output bom for utf-8 (so that excel will open this as UTF-8 file! UTF-8 should not need BOM but Excel doesn't know that..
+        echo chr(239).chr(187).chr(191);
 
         $xml_content = $this->view->render(pagename()."/xml.phtml");
         require_once("app/xml2csv.php");

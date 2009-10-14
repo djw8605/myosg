@@ -129,7 +129,8 @@ class path
         foreach($this->rows as $row) {
             for($i = 0;$i < $colnum;$i++) {
                 if(isset($row[$i])) {
-                    echo "\"".str_replace("\"", "\\\"", $row[$i])."\"";
+                    $value = "\"".str_replace("\"", "\\\"", $row[$i])."\"";
+                    echo $value;
                 }
                 echo ",";
             }
