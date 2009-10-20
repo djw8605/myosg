@@ -1,5 +1,13 @@
 <p class="info">Resource admin enters resource downtime information on OIM. This page shows all current and future downtime information. Downtime information allows accurate calculation of resource reliability.</p>
 
-<?$checked = "";
-if(isset($_REQUEST["downtime_attrs_showpast"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="downtime_attrs_showpast" <?=$checked?>/> Show Past Downtime<br/>
+Show Past Downtime for
+<?
+//take care previous version - it was checkbox - meaning "all"
+if(isset($_REQUEST["downtime_attrs_showpast"])) { 
+    if($_REQUEST["downtime_attrs_showpast"] == "on") {
+        $_REQUEST["downtime_attrs_showpast"] = "all";
+    }
+}
+
+$kv = array(""=>"None", "all"=>"All", "1"=>"Last 1 Day", "7"=>"Last 7 Days", "30"=>"Last 30 Days", "90"=>"Last 90 Days");
+outputSelectBox2("downtime_attrs_showpast", $kv);

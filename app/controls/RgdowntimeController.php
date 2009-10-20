@@ -21,7 +21,16 @@ class RgdowntimeController extends RgController
             $id = $downtime->id;
             if($downtime->unix_end_time < time()) {
                 if(isset($_REQUEST["downtime_attrs_showpast"])) {
-                    $past[$id] = $downtime;
+                    switch($_REQUEST["downtime_attrs_showpast"]) {
+                    case "": break; //none..
+                    default:
+                        $days = (int)$_REQUEST["downtime_attrs_showpast"];
+                        if($downtime->unix_end_time < (time() - 3600*24*$days)) {
+                            break; //too old
+                        }
+                    case "all":
+                        $past[$id] = $downtime;
+                    }
                 } 
             } else if($downtime->unix_start_time > time()) {
                 $future[$id] = $downtime;
