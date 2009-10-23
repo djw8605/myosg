@@ -83,9 +83,14 @@ abstract class ControllerBase extends Zend_Controller_Action
         //output bom for utf-8 (so that excel will open this as UTF-8 file! UTF-8 should not need BOM but Excel doesn't know that..
         echo chr(239).chr(187).chr(191);
 
-        $xml_content = $this->view->render(pagename()."/xml.phtml");
-        require_once("app/xml2csv.php");
-        xml2csv($xml_content);
+        $xmlpath = $this->view->getScriptPath("").pagename()."/xml.phtml";
+        if(file_exists($xmlpath)) {
+            $xml_content = $this->view->render(pagename()."/xml.phtml");
+            require_once("app/xml2csv.php");
+            xml2csv($xml_content);
+        } else {
+            echo "No CSV content is available for this page.";
+        }
     }
 
     public function pagename() {
