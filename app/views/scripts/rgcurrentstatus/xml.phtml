@@ -12,52 +12,57 @@ foreach($this->rgs as $rgid=>$rg) {
         $resource_name = $resource->name;
         $resource_fqdn = $resource->fqdn;
 
-        echo "<Resource>";
-        $cache = $this->cache[$rid];
-        $timestamp = (int)$cache->Timestamp[0];
-        $status = $cache->Status[0];
-        $note = $cache->Note[0];
-        $services = $cache->Services[0];
+        if(isset($this->cache[$rid])) {
+            echo "<Resource>";
+            $cache = $this->cache[$rid];
+            $status = $cache->Status[0];
+            $note = $cache->Note[0];
 
-        ?>
-        <Status><?=$status?></Status>
-        <ResourceName><?=$resource_name?></ResourceName>
-        <Fqdn><?=$resource_fqdn?></Fqdn>
-        <Note><?=htmlsafe($note)?></Note>
-        <?
-        foreach($services as $service) {
-            echo "<Service>";
-            $service_status = $service->Status;
-            $note = $service->Note;
+            ?>
+            <Status><?=$status?></Status>
+            <ResourceName><?=$resource_name?></ResourceName>
+            <Fqdn><?=$resource_fqdn?></Fqdn>
+            <Note><?=htmlsafe($note)?></Note>
+            <?
 
-            echo "<Name>".$service->Name."</Name>";
-            echo "<Description>".$service->ServiceDescription." Service Status</Description>";
-            echo "<Status>$service_status</Status>";
-            echo "<Note>".htmlsafe($note)."</Note>";
+            if(isset($cache->Services[0])) {
+                $services = $cache->Services[0];
+                $timestamp = (int)$cache->Timestamp[0];
+                foreach($services as $service) {
+                    echo "<Service>";
+                    $service_status = $service->Status;
+                    $note = $service->Note;
 
-            //critical metrics
-            $out = "";
-            foreach($service->CriticalMetrics[0] as $metric) {
-                $out .= outputMetricInfo($metric, $timestamp);
-            }
-            echo "<CriticalMetrics>";
-            echo $out;
-            echo "</CriticalMetrics>";
+                    echo "<Name>".$service->Name."</Name>";
+                    echo "<Description>".$service->ServiceDescription." Service Status</Description>";
+                    echo "<Status>$service_status</Status>";
+                    echo "<Note>".htmlsafe($note)."</Note>";
 
-            //non-critical metrics
-            if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
-                $non_critical_metrics = $service->NonCriticalMetrics[0];
-                $out = "";
-                foreach($non_critical_metrics as $metric) {
-                    if($metric->Detail != "") {
+                    //critical metrics
+                    $out = "";
+                    foreach($service->CriticalMetrics[0] as $metric) {
                         $out .= outputMetricInfo($metric, $timestamp);
                     }
+                    echo "<CriticalMetrics>";
+                    echo $out;
+                    echo "</CriticalMetrics>";
+
+                    //non-critical metrics
+                    if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                        $non_critical_metrics = $service->NonCriticalMetrics[0];
+                        $out = "";
+                        foreach($non_critical_metrics as $metric) {
+                            if($metric->Detail != "") {
+                                $out .= outputMetricInfo($metric, $timestamp);
+                            }
+                        }
+                        echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
+                    }
+                    echo "</Service>";
                 }
-                echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
             }
-            echo "</Service>";
+            echo "</Resource>";
         }
-        echo "</Resource>";
     }
     echo "</ResourceGroup>";
 }

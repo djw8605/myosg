@@ -242,7 +242,7 @@ class RgController extends ControllerBase
                         } 
                     }
                     */
-                    if($_REQUEST["service_hidden"]) {
+                    if(isset($_REQUEST["service_hidden"])) {
                         if($r->hidden != 1) continue;
                     }
                     if(!in_array($r->resource_id, $resources_to_keep)) {
