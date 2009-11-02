@@ -1,81 +1,11 @@
-<!--
-This XML contains the requested resource summary information.
-
-Structure:
-    * () shows number of elements. N means there could be any number of them
-
-    ResourceSummary (1)
-        ResourceGroup (N)
-            GridType (1)                                Grid Type for the resource group
-            GroupID (1)                                 Resource Group ID in database
-            GroupName (1)                               Name of the Resource Group
-            GroupDescription (0 or 1)                   Description for the resource group as stored in OIM
-            Facility (0 or 1)                           Facility that this resource group belongs
-                Name (1)
-            Site (0 or 1)                               Site that this resource group belongs
-                Name (1)
-            Resources (1)
-                 Resource (N)
-                      ID (1)                            Resource id in database
-                    Name (1)                            Name of the resource
-                    Active (1)                          Show Active / Inactive Status flag
-                    Disable (1)                         Show Disable flag
-                    Services (0 or 1)                   Services that are supported by this resource
-                        Service (N)
-                            ID (1)                      Service id in database
-                            Name (1)                    Name of the service
-                            Description (1)  
-                            ServiceUri (1)              URI (with port) of the service
-                            HiddenService (1)           Indicates if the service is hidden (True / False)
-                            CentralService (1)          Indicates if the service is central service (True / False)
-                    RSVStatus (0 or 1)
-                        Status (1)
-                        Note (1)
-                    GIPStatus (0 or 1)
-                        Status (1)
-                    Description (0 or 1)
-                    FQDN (0 or 1)
-                    FQDNAliases                         
-                        FQDNAlias (N)
-                    SupportedVOs (0 or 1)
-                        VO (N)
-                            (Name of the VO)
-                    VOOwnership (0 or 1)                Shows the list of VOs that owns this resource and how much percentage it owns
-                        Ownership (1)
-                            Percent (1)
-                            VO (1)                      Name of the VO (could be "(Other)"
-                    WLCGInformation (0 or 1)
-                        InteropBDII (1)
-                            (True / False)
-                        InteropMonitoring (1)
-                            (True / False)
-                        InteropAccounting (1)
-                            (True / False)
-                        AccountingName (1)
-                        KSI2KMin (1)
-                        KSI2KMax (1)
-                        StorageCapacityMin (1)
-                        StorageCapacityMax (1)
-                    ENV (0 or 1)                       Environment Parameters
-                        (Various ENV parameters)
-                    ContactLists (0 or 1)
-                        ContactList (N)
-                            ContactType (1)
-                            Contacts (1)
-                                Contact (N)
-                                    Name (1)
-                                    Email (0 or 1)      * shows only if you access via https with correct DN
-                                    Phone (0 or 1)      * shows only if you access via https with correct DN
-                                    SMSAddress (0 or 1)      * shows only if you access via https with correct DN
-                                    Rank (1)
-
 <?
 if(user()->isGuest()) {
-    echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "<!--";
+    echo "NOTE: Email address and phone number of contacts are displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
 }
 ?>
--->
-<ResourceSummary>
+<ResourceSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgsummary.xsd">
 <?
 //foreach($this->resource_groups as $resource_group_id=>$resource_list) {
 foreach($this->rgs as $resource_group_id=>$resource_list) {

@@ -1,33 +1,11 @@
-<!--
-This XML contains the requested support center summary information.
-
-Structure:
-    * () shows number of elements. N means there could be any number of them
-
-    SupportCenterSummary (1)
-         SupportCenter (N)
-            ID (1)                              Support Center id in OIM database
-            Name (1)                            Name of the resource
-            LongName (1)
-            Community (1)
-            Active (1)                         
-            Disable (1)                         Show Disable flag
-            ContactTypes (1)
-                ContactType (N)
-                    Type (1)
-                    Contacts (1)
-                        Contact (N)
-                            Name (1)
-                            Email (0 or 1)      * shows only if you access via https with correct DN
-                            Phone (0 or 1)      * shows only if you access via https with correct DN
-                            SMSAddress(0 or 1)      * shows only if you access via https with correct DN
 <?
 if(user()->isGuest()) {
-    echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "<!--";
+    echo "NOTE: Email address and phone number of contacts are only displayed to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
 }
 ?>
--->
-<SupportCenterSummary>
+<SupportCenterSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/scsummary.xsd">
 <?
 foreach($this->scs as $sc_id=>$sc) {
     echo "<SupportCenter>";

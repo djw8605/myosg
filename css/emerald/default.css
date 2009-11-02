@@ -15,6 +15,7 @@ text-decoration: underline;
 cursor: pointer;
 color: #996611;
 }
+
 table tr
 {
 vertical-align: top;
@@ -245,5 +246,5 @@ padding: 30px;
 
 div.info_box table td
 {
-padding-right: 20px;
+padding-right: 5px;
 }

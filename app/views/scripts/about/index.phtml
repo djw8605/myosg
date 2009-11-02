@@ -7,44 +7,42 @@
     </div>
 </div>
 <div id="sideContent">
-    <h3>External Links</h3>
+    <h3>Other GOC Services</h3>
     <div class="indent">
-        <p><a target="_blank" href="https://oim.grid.iu.edu"><b>OSG Information Management System</b><br/>
+        <p><a target="_blank" href="https://oim.grid.iu.edu"><b>OIM</b><br/>
         <img class="screenshot" src="<?=fullbase()?>/images/screenshots/oim.png" align="left"/>
         </a>
-        OSG Information Management System (OIM) manages various aspects of OSG information. This is where OSG users can register their contact information or OSG admin to registere their resources, virtual organization, etc..
+        Register new resources, update your profile and various OSG topology information.
         <br clear="all"/> 
         </p>
 
-        <p><a target="_blank" href="http://osggoc.blogspot.com"><b>GOC Operations News and Announcement</b><br/>
+        <p><a target="_blank" href="http://osggoc.blogspot.com"><b>GOC News</b><br/>
         <img class="screenshot" src="<?=fullbase()?>/images/screenshots/news.png" align="left"/>
         </a>
-        This page shows the latest public GOC news and announcements. You can also subscribe to our<br/>
-        <img src="<?=fullbase()?>/images/rss.png"/> <a href="http://osggoc.blogspot.com/feeds/posts/default">GOC News RSS Feed</a>
+        The latest public GOC news and announcements.<br/>
+        <img src="<?=fullbase()?>/images/rss.png"/> <a href="http://osggoc.blogspot.com/feeds/posts/default">RSS Feed</a>
         <br clear="all"/>
         </p>
 
-        <p><a target="_blank" href="http://twiki.grid.iu.edu/bin/view"><b>OSG TWiki</b><br/>
+        <p><a target="_blank" href="http://twiki.grid.iu.edu/bin/view"><b>TWiki</b><br/>
         <img class="screenshot" src="<?=fullbase()?>/images/screenshots/twiki.png" align="left"/>
         </a>
-    This twiki is the home for OSG's collaborative work. Work in OSG is done in "Activities", coordinated through this TWiki, regularly scheduled phone conferences, and mailing lists. All of these communication modes are open to new members.  The collaborative work area comprises separate "webs" for each of the activities, for documentation, and for other "hands-on" topics. 
+        Online document management system for OSG.
         <br clear="all"/> 
         </p>
 
         <p><a target="_blank" href="http://software.grid.iu.edu/"><b>OSG Software Cache</b><br/>
         <img class="screenshot" src="<?=fullbase()?>/images/screenshots/yum.png" align="left"/>
         </a>
-    This software cache provides OSG-specific components like VO package, GUMS template, etc. that are not provided by the VDT software distribution. The GOC also maintains a <a target="_blank" href="http://yum.grid.iu.edu/"><b>OSG Yum Repository</b></a> that provides components like the OSG CA Certifcates.
+        Provides OSG-specific components that are not provided by the VDT.
         <br clear="all"/> 
         </p>
     </div>
 
     <?if($_SERVER['SERVER_NAME'] != "myosg-itb.grid.iu.edu") {?>
-        <h3>Coming up!</h3>
+        <h3>Upcoming Release</h3>
         <div class="indent">
-            <p><a target="_blank" href="http://myosg-itb.grid.iu.edu/"><b>MyOSG ITB Instance</b></a><br/>
-            <p>If you are interested in an upcoming MyOSG release, you can go to our ITB instance which contains the latest development code for MyOSG. Please test your script against this version if you are pulling data from MyOSG in order to ensure that the next MyOSG release will not break your system.</p>
-            
+            <p>If you use MyOSG as a datasource for your script, please test it against <a target="_blank" href="http://myosg-itb.grid.iu.edu/"><b>MyOSG ITB Instance</b></a></p>
         </div>
     <?}?>
 

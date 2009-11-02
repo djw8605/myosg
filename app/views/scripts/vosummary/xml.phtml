@@ -1,59 +1,11 @@
-<!--
-This XML contains the requested support center summary information.
-
-Structure:
-    * () shows number of elements. N means there could be any number of them
-
-    VOSummary (1)
-         VO (N)
-            ID (1)                            VO id in OIM database
-            Name (1)                            Name of the resource
-            LongName (1)
-            PrimaryURL (1)
-            MembershipServicesURL (1)
-            PurposeURL (1)
-            SupportURL (1)
-            AppDescription (1)
-            Community (1)
-            MemberResources (optional)
-                Resource (N)
-                    ID (1)
-                    Name (1)
-            ParentVO (optional)              Optional, and shown only if parent vo is set
-                ID (1) 
-                Name (1)
-            FieldsOfScience (optional)
-                Field (N)
-            ReportingGroups (optional)
-                Name (1)
-                FQANs (0 or 1)
-                    FQAN (N)
-                        GroupName (1)
-                        Role (1)
-                Contacts (0 or 1)
-                    Contact (N)
-                        Name (1)
-                        Email (0 or 1)      * shows only if you access via https with correct DN
-                        Phone (0 or 1)      * shows only if you access via https with correct DN
-                        SMSAddress (0 or 1)      * shows only if you access via https with correct DN
-            Active (1)                          Show Active / Inactive Status flag
-            Disable (1)                         Show Disable flag
-            ContactTypes (1)
-                ContactType (N)
-                    Type (1)
-                    Contacts (1)
-                        Contact (N)
-                            Name (1)
-                            Email (0 or 1)      * shows only if you access via https with correct DN
-                            Phone (0 or 1)      * shows only if you access via https with correct DN
-                            SMSAddress (0 or 1)      * shows only if you access via https with correct DN
 <?
 if(user()->isGuest()) {
+    echo "<!--";
     echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
 }
 ?>
--->
-<VOSummary>
+<VOSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/vosummary.xsd">
 <?
 foreach($this->vos as $vo_id=>$vo) {
     echo "<VO>";
