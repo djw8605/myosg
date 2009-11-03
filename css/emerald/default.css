@@ -8,6 +8,7 @@ body
 font-family: "Trebuchet MS", sans-serif;
 color: #555555;
 font-size: 11pt;
+min-width: 950px;
 }
 a, span.external_link
 {
@@ -242,6 +243,10 @@ padding: 30px;
 -webkit-border-top-right-radius: 10px;
 -webkit-border-bottom-left-radius: 10px;
 -webkit-border-bottom-right-radius: 10px;
+}
+div.info_box .sidenote
+{
+font-weight: bold;
 }
 
 div.info_box table td

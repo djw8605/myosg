@@ -9,19 +9,26 @@
 <div id="sideContent">
     <h3>Other GOC Services</h3>
     <div class="indent">
-        <p><a target="_blank" href="https://oim.grid.iu.edu"><b>OIM</b><br/>
-        <img class="screenshot" src="<?=fullbase()?>/images/screenshots/oim.png" align="left"/>
-        </a>
-        Register new resources, update your profile and various OSG topology information.
-        <br clear="all"/> 
-        </p>
-
         <p><a target="_blank" href="http://osggoc.blogspot.com"><b>GOC News</b><br/>
         <img class="screenshot" src="<?=fullbase()?>/images/screenshots/news.png" align="left"/>
         </a>
         The latest public GOC news and announcements.<br/>
         <img src="<?=fullbase()?>/images/rss.png"/> <a href="http://osggoc.blogspot.com/feeds/posts/default">RSS Feed</a>
         <br clear="all"/>
+        </p>
+
+        <p><a target="_blank" href="https://ticket.grid.iu.edu/goc"><b>GOC Ticket</b><br/>
+        <img class="screenshot" src="<?=fullbase()?>/images/screenshots/gocticket.png" align="left"/>
+        </a>
+        Submit a problem or assistance request regarding OSG.
+        <br clear="all"/> 
+        </p>
+
+        <p><a target="_blank" href="https://oim.grid.iu.edu"><b>OIM</b><br/>
+        <img class="screenshot" src="<?=fullbase()?>/images/screenshots/oim.png" align="left"/>
+        </a>
+        Register new resources, update your profile and various OSG topology information.
+        <br clear="all"/> 
         </p>
 
         <p><a target="_blank" href="http://twiki.grid.iu.edu/bin/view"><b>TWiki</b><br/>
@@ -46,6 +53,5 @@
         </div>
     <?}?>
 
-    <?=$this->render("feedback.phtml", true)?>
 </div>
 <?=$this->render("full_footer.phtml", true)?>

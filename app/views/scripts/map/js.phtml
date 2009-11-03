@@ -116,7 +116,7 @@ foreach($this->sites as $site) {
     if(count($rgs) == 0) continue; //don't show site with no resource group
     if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
 
-    $html = "<h2>$site->name</h2>";
+    $html = "";
     foreach($rgs as $rg) {
         $rgname = $rg->name;
 
@@ -172,10 +172,11 @@ foreach($this->sites as $site) {
     else if($status_ok > 0) $status = "ok";
     else $status = "unknown"; //no info!?
 
-    $html = addslashes($html);
+    $wrap_html = "<h2>$site->name</h2><div style=\"overflow: auto; max-height: 300px;\">".addslashes($html)."</div>";
+
     if($site->latitude == null) $site->latitude = 0;
     if($site->longitude == null) $site->longitude = 0;
-    echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$status\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$html'));\n";
+    echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$status\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
     echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
 }
 ?>
