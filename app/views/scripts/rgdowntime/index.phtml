@@ -30,8 +30,8 @@
             $url = fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"];
             $url = "http://tinyurl.com/create.php?url=".urlencode($url);
             ?>
-            <a onclick="alert('Creating TinyURL version of this iCAL since Google Calendar does not import iCAL feed that is more than 257 characters. Please use generated TinyURL as iCAL feed URL.');" target="_blank" href="<?=$url?>">iCal</a>
-
+            <a onclick="alert('Creating TinyURL version of this iCAL since Google Calendar does not import iCAL feed that is more than 257 characters. Please use generated TinyURL as iCAL feed URL.');" target="_blank" href="<?=$url?>">iCal</a><br/>
+            <a href="http://www.google.com/calendar/embed?src=aeh4pnhvhi90h2qm36fn9h8897hkqcha%40import.calendar.google.com&ctz=America/New_York" target="_blank">Google Calendar</a><br/>
             </div>
             <?=$this->render("feedback.phtml", true)?>
         </div>
