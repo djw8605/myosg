@@ -9,6 +9,8 @@ echo "-------------------------------------------------------"
 echo -n "Please name your new branch (you can override if you want)> "
 read -e BRANCH
 
+echo "removing old branch (if exist)"
 svn rm -m "removing old branch (if exist)" ${SVN_BRANCHES}/${BRANCH}
+echo "creating new branch"
 svn cp -m "creating new branch via branch script" $trunk ${SVN_BRANCHES}/${BRANCH}
 

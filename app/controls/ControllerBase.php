@@ -73,6 +73,32 @@ abstract class ControllerBase extends Zend_Controller_Action
 --><?
     }
 
+    public function waveAction()
+    {
+        $this->load();
+        header("Content-type: text/xml");
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    ?>
+<Module>
+  <ModulePrefs title="Hello Wave">
+    <Require feature="wave" /> 
+    <Require feature="dynamic-height" /> 
+  </ModulePrefs>
+  <Content type="html">
+<![CDATA[     
+<style type="text/css">
+    <?include("css/mobile.css.php");?>
+</style>
+<div style="height: 200px; overflow-y: scroll">
+    <?echo file_get_contents(fullbase()."/".pagename()."/html?uwa=true&".$_SERVER["QUERY_STRING"]);?>
+</div>
+]]>
+  </Content>
+</Module> 
+<?
+        $this->render("none", null, true);
+    }
+
     public function csvAction()
     {
         $this->load();

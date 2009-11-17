@@ -1,15 +1,30 @@
 <?php
-//header("Content-Type: text/css");
 require_once("app/config.php");
 $imagebase = fullbase();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //common specific styles
 ?>
+*{
+margin: 0px;
+padding: 0px;
+font-size: 11px;
+}
 body
 {
-font-family: Arial;
+font-family:verdana,"trebuchet ms",sans-serif;
 }
+table tr
+{
+vertical-align: top;
+}
+a, a:visited, span.external_link
+{
+text-decoration: underline;
+cursor: pointer;
+color: #996611;
+}
+
 a img
 {
 border: 0;
