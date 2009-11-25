@@ -107,7 +107,7 @@ function outputSelectBox2($field_id, $kv)
 
     $g_filters[] = $field_id;
 ?>
-    <select id="<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
+    <select name="<?=$field_id?>">
 <?
     $current_value = @$_REQUEST[$field_id];
     foreach($kv as $value=>$name) {
