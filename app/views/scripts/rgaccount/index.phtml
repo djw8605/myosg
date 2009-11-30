@@ -3,6 +3,7 @@
             <div id="primaryContent">
                 <?=$this->render("breadcrumb.phtml", true)?>
                 <h2><?=$this->page_title?></h2>
+                <p>This page queries Gratia DB directly. It could take a few minutes to render graphs.</p>
                 <?=$this->info?>
                 <?=$this->render(pagename()."/html.phtml")?>
             </div>

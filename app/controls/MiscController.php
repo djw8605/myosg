@@ -12,10 +12,6 @@ class MiscController extends ControllerBase
 
         //TODO ??
         if(isset($_REQUEST["datasource"])) {
-            /*
-            switch($_REQUEST["datasource"]) {
-            }
-            */
         }
     }
 

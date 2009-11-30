@@ -1,14 +1,13 @@
 <?
-foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
+foreach($this->resource_groups_by_gridtype as $grid_type_id => $resource_groups) {
     $counts = $this->counts[$grid_type_id];
-
     $gridtype_info = $this->grid_types[$grid_type_id][0];
     echo "<div class=\"gridtype_header round\"><span class=\"h3\">$gridtype_info->description</span></div>";
 
     echo "<table class=\"summary_table\">";
 
     if(isset($_REQUEST["count_total"])) {
-        echo "<tr><th>Total Resource Count</th><td>".count($resources)."</td></tr>";
+        echo "<tr><th>Total Resource Count</th><td>".$this->resource_counts[$grid_type_id]."</td></tr>";
     }
 
     foreach($this->service_groups as $service_group_id => $service_group) {

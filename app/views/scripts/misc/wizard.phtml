@@ -28,6 +28,7 @@ span.disabled_span
         <option value="metric">RSV Metrics</option>
         <option value="cpuinfo">CPU Information</option>
         <option value="count">Resource Service Counts</option>
+        <option value="dashboard">OSG dashboard</option>
         </select>
 
         <div id="metric_attrs" class="attrs indent hidden">
@@ -38,6 +39,9 @@ span.disabled_span
         </div>
         <div id="count_attrs" class="attrs indent hidden">
             <?=$this->render("misc/wizard_count.phtml")?>
+        </div>
+        <div id="dashboard_attrs" class="attrs indent hidden">
+            <?=$this->render("misc/wizard_dashboard.phtml")?>
         </div>
     </div>
 
@@ -52,24 +56,6 @@ function showhide_attrs(show_speed)
     $(".attrs").hide();
     if(v != "") {
         $("#"+v+"_attrs").show(show_speed);
-/*
-        $("#vo_area").show(show_speed);
-        $("#filter_area").show(show_speed);
-        $("#vo_area_standby").hide();
-        $("#filter_area_standby").hide();
-        if(
-            v == "foo_page_that_hasdatarange"
-        ) {
-            $("#_daterange_attrs").show(show_speed);
-        }
-*/
-    } else {
-/*
-        $("#vo_area").hide();
-        $("#filter_area").hide();
-        $("#vo_area_standby").show();
-        $("#filter_area_standby").show();
-*/
     }
 }
 $(document).ready(function() {

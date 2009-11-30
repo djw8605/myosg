@@ -16,3 +16,13 @@ foreach($service_groups as $id=>$service_group) {
     echo "<input type=\"checkbox\" name=\"count_sg_".$id."\" $checked/> ".$service_group[0]->name."<br/>";
 }
 echo "</div>";
+
+
+echo "<br/>";
+$checked = "";
+if(isset($_REQUEST["count_active"])) { $checked = "checked=checked"; }
+echo "<input type=\"checkbox\" name=\"count_active\" $checked/> Don't count Inactive resources<br/>";
+
+$checked = "";
+if(isset($_REQUEST["count_enabled"])) { $checked = "checked=checked"; }
+echo "<input type=\"checkbox\" name=\"count_enabled\" $checked/> Don't count Disabled resources<br/>";

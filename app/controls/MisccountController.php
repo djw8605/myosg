@@ -9,7 +9,10 @@ class MisccountController extends MiscController
         parent::load();
 
         $model = new ResourceGroup();
-        $this->view->resources_by_gridtype = $model->getgroupby("osg_grid_type_id");
+        $this->view->resource_groups_by_gridtype = $model->getgroupby("osg_grid_type_id");
+
+        $model = new Resource();
+        $this->view->resources_by_resource_group = $model->getgroupby("resource_group_id");
 
         $model = new GridTypes();
         $this->view->grid_types = $model->getindex();
@@ -32,26 +35,46 @@ class MisccountController extends MiscController
             }
         }
 
+        $this->view->resource_counts = array();
+
         //for each grid type
-        foreach($this->view->resources_by_gridtype as $grid_type_id => $resources) {
-            //for each resource,
-            foreach($resources as $resource)  {
-                //pull counter for current grid type
-                $services = $this->services_by_resource[$resource->id];
-                if(!isset($this->view->counts[$grid_type_id])) {
-                    $this->view->counts[$grid_type_id] = array();
-                }
-                $count_service = $this->view->counts[$grid_type_id];
+        foreach($this->view->resource_groups_by_gridtype as $grid_type_id => $resource_groups) {
+            $resource_counts = 0;
+
+            //for each resource groups,
+            foreach($resource_groups as $resource_group)  {
+                $resources = $this->view->resources_by_resource_group[$resource_group->id];
+
+                //for each resource
+                foreach($resources as $resource)  {
                 
-                //for each services
-                foreach($this->view->services_by_resource[$resource->id] as $service) {
-                    if(!isset($count_service[$service->id])) {
-                        $count_service[$service->id] = 0;
+                    //apply filter
+                    if(isset($_REQUEST["count_active"])) {
+                        if($resource->active == 0) continue;
                     }
-                    $count_service[$service->id] = $count_service[$service->id] + 1;
+                    if(isset($_REQUEST["count_enabled"])) {
+                        if($resource->disable == 1) continue;
+                    }
+                    $resource_counts++;
+
+                    //pull counter for current grid type
+                    $services = $this->services_by_resource[$resource->id];
+                    if(!isset($this->view->counts[$grid_type_id])) {
+                        $this->view->counts[$grid_type_id] = array();
+                    }
+                    $count_service = $this->view->counts[$grid_type_id];
+                    
+                    //for each services
+                    foreach($this->view->services_by_resource[$resource->id] as $service) {
+                        if(!isset($count_service[$service->id])) {
+                            $count_service[$service->id] = 0;
+                        }
+                        $count_service[$service->id] = $count_service[$service->id] + 1;
+                    }
+                    $this->view->counts[$grid_type_id] = $count_service;
                 }
-                $this->view->counts[$grid_type_id] = $count_service;
             }
+            $this->view->resource_counts[$grid_type_id] = $resource_counts;
         }
 
         $this->setpagetitle(self::default_title());

@@ -225,7 +225,7 @@ class common_config
         case 'map':
             $param = "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";break;
         case 'misc':
-            $param = "?count_sg_1";break;
+            $param = "?count_sg_1&count_active=on&count_enabled=on";break;
         }
         
         return htmlentities(base()."/".$page.$param);

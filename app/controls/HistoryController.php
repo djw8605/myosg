@@ -12,7 +12,7 @@ class HistoryController extends ControllerBase
     }
     public function indexAction()
     {
-        echo "Please use Resource / RSV Status History page.";
+        echo "Please use <a href=\"".fullbase()."/rgstatushistory\">Resource Group / RSV Status History</a> page.";
         $this->render("none", null, true);
     }
 
