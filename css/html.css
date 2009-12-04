@@ -99,6 +99,7 @@ padding:2px;
 padding-left:22px;
 background:#ccc url(../images/drive_magnify.png) no-repeat 3px 3px;
 min-height: 16px;
+margin-bottom: 5px;
 }
 
 div.cpuinfo_header
@@ -107,6 +108,7 @@ padding:2px;
 padding-left:22px;
 background:#ccc url(../images/process.png) no-repeat 3px 3px;
 min-height: 16px;
+margin-bottom: 5px;
 }
 
 div.gridtype_header
@@ -115,6 +117,7 @@ padding:2px;
 padding-left:22px;
 background:#ccc url(../images/process.png) no-repeat 3px 3px;
 min-height: 16px;
+margin-bottom: 5px;
 }
 div.grid_type
 {
@@ -133,10 +136,11 @@ padding: 3px;
 
 div.resource_group_header, div.downtime_group, div.group_header
 {
-background-color: gray;
+/*background-color: gray;*/
+background-image:url('../images/h3_back.png');
 color: white;
 margin-bottom: 0.3em;
-padding: 4px;
+padding: 4px 8px 4px 8px;
 }
 
 .contact_info
@@ -445,7 +449,7 @@ padding-right: 2px;
     font-weight: normal;
     font-size: 10px;
 }
-.resource_group .hierarchy
+.resource_group_header .hierarchy
 {
     color: #ccc;
 }

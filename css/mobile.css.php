@@ -159,10 +159,10 @@ padding: 3px;
 
 div.resource_group_header, div.downtime_group
 {
-background-color: gray;
+background-image:url('<?=$imagebase?>/images/h3_back.png');
 color: white;
 margin-bottom: 0.3em;
-padding: 4px;
+padding: 4px 6px 4px 6px;
 }
 
 .contact_info
