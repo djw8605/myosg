@@ -78,6 +78,17 @@
                 $kv[0] = "Inactive";
                 $kv[1] = "Active";
                 echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+                $model = new SupportCenters();
+                $scs = $model->get();
+                $kv = array();
+                foreach($scs as $sc) { 
+                    //grab active, non-disabled records
+                    if($sc->active == 1 and $sc->disable == 0) {
+                        $kv[$sc->id] = array($sc->name, "");
+                    }
+                }
+                echo fblist("sc", "Supported by Following Support Centers".helpbutton("Support_Center"), $kv);
                 ?>
             </div>
         </div>

@@ -81,6 +81,10 @@ class VoController extends ControllerBase
             $keep = $this->process_vo_filter_active();
             $vos = array_intersect($vos, $keep);
         }
+        if(isset($_REQUEST["sc"])) {
+            $keep = $this->process_vo_filter_sc();
+            $vos = array_intersect($vos, $keep);
+        }
         return $vos;
     }
 
@@ -99,4 +103,23 @@ class VoController extends ControllerBase
         }
         return $vos_to_keep;
      }
+    private function process_vo_filter_sc()
+    {
+        $vos_to_keep = array();
+        $model = new SupportCenters();
+        $list = $model->get();
+
+        foreach($list as $sc_id=>$item) {
+            if(isset($_REQUEST["sc_".$sc_id])) {
+                $model = new VirtualOrganization();
+                $vos = $model->get(array("sc_id"=>$sc_id));
+                foreach($vos as $vo) {
+                    if(!in_array($vo->id, $vos_to_keep)) {
+                        $vos_to_keep[] = $vo->id;
+                    }
+                }
+            }
+        }
+        return $vos_to_keep;
+    }
 }
