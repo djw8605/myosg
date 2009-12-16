@@ -229,7 +229,7 @@ class common_config
             $param = "?count_sg_1&count_active=on&count_enabled=on";break;
         }
         
-        return htmlentities(base()."/".$page.$param);
+        return htmlspecialchars(base()."/".$page.$param);
     }
 }
 

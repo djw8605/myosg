@@ -384,5 +384,5 @@ function emailaddress($email)
 
 function htmlsafe($str)
 {
-    return htmlentities($str, ENT_NOQUOTES, "UTF-8");
+    return htmlspecialchars($str, ENT_NOQUOTES, "UTF-8");
 }
