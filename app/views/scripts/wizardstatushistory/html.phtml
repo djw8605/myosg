@@ -6,10 +6,6 @@
     padding-bottom: 8px;
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
 }
-div.resource
-{
-background-color: transparent;
-}
 .graph
 {
     cursor: pointer;
@@ -156,7 +152,7 @@ echo " and ".date(config()->date_format, $this->end_time)."<br/>";
 foreach($this->resources as $rid=>$resource)
 {
     echo "<div class=\"border\">";
-    echo "<h4><div class=\"resource\">$resource->name</div></h4>";
+    echo "<h4><div class=\"resource round\">$resource->name</div></h4>";
     echo "<div id=\"resource_$rid\" class=\"indent\">";
     
     foreach($this->services[$rid] as $service) {

@@ -6,15 +6,15 @@
     padding-bottom: 8px;
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
 }
-div.resource
-{
-background-color: transparent;
-}
 .graph
 {
     cursor: pointer;
 }
-
+div.resource
+{
+    background-color: white;
+    border: none;
+}
 .time-tooltip-content
 {
     background-color: #ccc;
@@ -165,11 +165,10 @@ foreach($this->rgs as $rgid=>$rg) {
     }
     echo "<span class='h3'>".$resource_group->name."</span>";
     echo "</div>";
- 
+
     foreach($rg as $rid=>$resource)
     {
-        echo "<div class=\"border\">";
-        echo "<h4><div class=\"resource\">$resource->name</div></h4>";
+        echo "<h4><div class=\"resource round\">$resource->name</div></h4>";
         echo "<div id=\"resource_$rid\" class=\"indent\">";
         
         foreach($this->services[$rid] as $service) {
@@ -181,6 +180,5 @@ foreach($this->rgs as $rgid=>$rg) {
         }
         echo "<div class=\"history_detail\" id=\"history_detail_$rid\"></div>";
         echo "</div>";//indent
-        echo "</div>";//border
     }
 }

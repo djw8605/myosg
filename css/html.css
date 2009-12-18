@@ -38,6 +38,7 @@ padding-left:20px;
 background:#ccc url(../images/server.png) no-repeat 2px 3px;
 min-height: 16px;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 div.h4
 {
@@ -65,6 +66,7 @@ padding-left:5px;
 padding-right:5px;
 background-color: #ccc;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 
 div.facility
@@ -86,6 +88,7 @@ padding-left:5px;
 padding-right:7px;
 background-color:#ccc;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 div.metric
 {
@@ -100,6 +103,7 @@ padding-left:22px;
 background:#ccc url(../images/drive_magnify.png) no-repeat 3px 3px;
 min-height: 16px;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 
 div.cpuinfo_header
@@ -109,6 +113,7 @@ padding-left:22px;
 background:#ccc url(../images/process.png) no-repeat 3px 3px;
 min-height: 16px;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 
 div.gridtype_header
@@ -118,6 +123,7 @@ padding-left:22px;
 background:#ccc url(../images/process.png) no-repeat 3px 3px;
 min-height: 16px;
 margin-bottom: 5px;
+border: 1px solid #bbb;
 }
 div.grid_type
 {
@@ -365,8 +371,10 @@ table.summary_subtable th
 div.downtime
 {
     margin-top: 5px;
-    background-color: #dde;
+    background-color: #cce;
     padding: 10px;
+    border-right: 1px #aac;
+    border-bottom: 1px #aac;
 }
 div.downtime_detail
 {
