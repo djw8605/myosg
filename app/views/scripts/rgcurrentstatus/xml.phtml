@@ -33,7 +33,7 @@ foreach($this->rgs as $rgid=>$rg) {
                     $service_status = $service->Status;
                     $note = $service->Note;
 
-                    echo "<Name>".$service->Name."</Name>";
+                    echo "<Name>".$service->ServiceName."</Name>";
                     echo "<Description>".$service->ServiceDescription." Service Status</Description>";
                     echo "<Status>$service_status</Status>";
                     echo "<Note>".htmlsafe($note)."</Note>";
