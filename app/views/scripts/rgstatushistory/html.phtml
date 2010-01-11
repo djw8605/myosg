@@ -155,7 +155,7 @@ echo "Between ".date(config()->date_format, $this->start_time);
 echo " and ".date(config()->date_format, $this->end_time)."<br/>";
 foreach($this->rgs as $rgid=>$rg) {
 
-    echo "<div>"; //parent where position() is called
+    echo "<div style=\"padding-bottom: 10px;\">"; //parent where position() is called
 
     //show resource group header
     $resource_group = $this->resource_groups[$rgid][0];

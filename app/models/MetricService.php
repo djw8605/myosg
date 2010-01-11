@@ -20,7 +20,11 @@ class MetricService extends CachedIndexedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        return "SELECT * from metric_service";
+        $where = "where 1=1 ";
+        if(isset($params["service_id"])) {
+            $where .= " and service_id = ".$params["service_id"];
+        }
+        return "SELECT * from metric_service $where";
     }
     public function key() { return "metric_id"; }
 }

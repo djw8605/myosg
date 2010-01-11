@@ -42,5 +42,3 @@ class Downtime extends CachedIndexedModel
     }
     public function key() { return "resource_id"; }
 }
-
-?>

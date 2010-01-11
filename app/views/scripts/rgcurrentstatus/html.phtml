@@ -82,8 +82,10 @@ foreach($this->rgs as $rgid=>$rg) {
                 $out .= outputMetricInfo($metric, $timestamp);
             }
             if(!isset($_REQUEST["uwa"])) {
-                $title = "<span class=\"h3\">Critical Metrics</span>";
-                echo outputToggle($title, $title, $out, true);
+                if($out != "") {
+                    $title = "<span class=\"h3\">Critical Metrics</span>";
+                    echo outputToggle($title, $title, $out, true);
+                }
             } else {
                 echo $out;
             }

@@ -60,11 +60,14 @@ class HistoryController extends ControllerBase
          }
     }
 
+    public function load() {
+        //nothing to load..
+    }
+/*
     //why do we have both graph and service detail page together?
     //bacause having them together greatly increases the usability.. 
     //I know this is against the design policy of having separate pages for diffent
-    //kind of information... but I think we sometime have to make 
-    //compromises..
+    //kind of information... but I think we sometime have to make compromises..
     public function load()
     {
         $this->processPeriodQuery();
@@ -107,9 +110,9 @@ class HistoryController extends ControllerBase
         $this->view->resource_name = $resource->name;
 
         $this->setpagetitle("Status History for ".$resource->name);
-
         ///////////////////////////////////////////////////////////////////////
         // Optionally, load service detail
+
         $this->view->detail_show = false;
         if(isset($_REQUEST["service_id"])) {
             $this->view->detail_show = true;
@@ -130,8 +133,7 @@ class HistoryController extends ControllerBase
 
             //get statuses at specified timestamp
             $metricdata_model = new MetricData();
-            $params = array("resource_id" => $resource_id, "time" => $time);
-            $metrics = $metricdata_model->get($params); 
+            $latest_metrics = $metricdata_model->get(array("resource_id" => $resource_id, "time" => $time));
 
             //load cache (for template use.)
             $cache_filename_template = config()->current_resource_status_xml_cache;
@@ -177,6 +179,33 @@ class HistoryController extends ControllerBase
             }
         }
     }
+
+    private function metric_overwrite($metric, $latest)
+    {
+        //find the update from $latest and apply change to $metric
+        foreach($latest as $latest_metric) {
+            if($latest_metric->metric_id == $metric->MetricID[0]) {
+                $metric->MetricDataID = $latest_metric->id;
+                $metric->Timestamp = $latest_metric->timestamp;
+                $metric->Detail = $this->fetchMetricDetail($latest_metric->detail_id);
+                $metric->Status = Status::getStatus($latest_metric->metric_status_id);
+                return;
+            }
+        }
+        //didn't find the match - clear it
+        $metric->MetricDataID = null;
+        $metric->Timestamp = null;
+        $metric->Detail = null;
+        $metric->Status = null;
+    }
+    private function fetchMetricDetail($id)
+    {
+        static $metric_detail_model = null;
+        if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
+        $detail = $metric_detail_model->get(array("id"=>$id)); 
+        return $detail[0]->detail; 
+    }
+*/
 
     private function getDowntimesForService($downtimes, $service_id)
     {
@@ -373,29 +402,4 @@ class HistoryController extends ControllerBase
         $this->render("none", null, true);
     }
 
-    private function metric_overwrite($metric, $latest)
-    {
-        //find the update from $latest and apply change to $metric
-        foreach($latest as $latest_metric) {
-            if($latest_metric->metric_id == $metric->MetricID[0]) {
-                $metric->MetricDataID = $latest_metric->id;
-                $metric->Timestamp = $latest_metric->timestamp;
-                $metric->Detail = $this->fetchMetricDetail($latest_metric->detail_id);
-                $metric->Status = Status::getStatus($latest_metric->metric_status_id);
-                return;
-            }
-        }
-        //didn't find the match - clear it
-        $metric->MetricDataID = null;
-        $metric->Timestamp = null;
-        $metric->Detail = null;
-        $metric->Status = null;
-    }
-    private function fetchMetricDetail($id)
-    {
-        static $metric_detail_model = null;
-        if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
-        $detail = $metric_detail_model->get(array("id"=>$id)); 
-        return $detail[0]->detail; 
-    }
 }

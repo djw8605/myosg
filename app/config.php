@@ -144,10 +144,8 @@ class common_config
         ///////////////////////////////////////////////////////////////////////////////////////////
         //cache filenames
         
-        //vomatrix
         $this->vomatrix_xml_cache = $this->getCacheDir()."/cache.vomatrix.xml";
         $this->current_resource_status_xml_cache = $this->getCacheDir()."/cache.current_resource_<ResourceID>.xml";
-        $this->aandr_cache = $this->getCacheDir()."/cache.aandr_<start_time>_to_<end_time>.xml";
         
         //gip validation
         $this->gip_summary = "/usr/local/gip-validator/var/results/xml_osg/gipvalidate_summary.xml"; 

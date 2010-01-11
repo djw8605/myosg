@@ -2,7 +2,7 @@
 
 if(isset($this->downtime)) {
     //this is in downtime..
-    echo "<div class=\"bottom_border status_DOWNTIME\">";
+    echo "<div class=\"status_DOWNTIME\">";
     echo "This resource is currently under maintenance.<br/>";
     echo "<div class=\"downtime\">";
     echo "<b>Maintenance Summary:</b><div>".$this->downtime->downtime_summary."</div>";
@@ -23,7 +23,7 @@ if(isset($this->downtime)) {
     //process normal status
     if($this->detail_service_status !== null) {
         $status = Status::getStatus($this->detail_service_status->status_id);
-        echo "<div class=\"bottom_border status_".$status."\">";
+        echo "<div class=\"status_".$status."\">";
         $status_time = $this->detail_service_status->timestamp;
         echo "Status changed to $status at ".date(config()->date_format_full, $status_time)."<br/>";
         echo $this->detail_service_status->detail."<br/>";
@@ -31,51 +31,54 @@ if(isset($this->downtime)) {
             echo "(Above reason is applicable at the time when this status change occured.)<br/>";
         }
     } else {
-        echo "<div class=\"bottom_border status_UNKNOWN\">";
+        echo "<div class=\"status_UNKNOWN\">";
         echo "No status change has ever occured for this service.";
     }
 }
 
 $title = "<span class=\"h3\">Critical Metrics</span>";
-echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics, $this->detail_time), true);
+echo outputToggle($title, $title, showmetrics($this->detail_critical_metrics, $this->metric_details, $this->detail_time), true);
 
-$content = showmetrics($this->detail_noncritical_metrics, $this->detail_time, true);
+$content = showmetrics($this->detail_noncritical_metrics, $this->metric_details, $this->detail_time, true);
 if($content != "") {
     $title = "<span class=\"h3\">Non-Critical Metrics</span>";
     echo outputToggle($title, $title, $content);
 }
 echo "</div>";
 
-function showmetrics($metrics, $timestamp, $hide_empty = false) 
+function showmetrics($metrics, $metric_details, $timestamp, $hide_empty = false) 
 {
     $out = "";
     foreach($metrics as $metric) {
-        $out .= showmetric($metric, $timestamp, $hide_empty);
+        $out .= showmetric($metric, $metric_details, $timestamp, $hide_empty);
     }
     return $out;
 }
 
-function showmetric($metric, $timestamp, $hide_empty)
+function showmetric($metric, $metric_details, $timestamp, $hide_empty)
 {
     $out = "";
 
-    $freshfor = $metric->MetricFreshFor;
-    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
-    $reported = isset($metric->MetricDataID);
-    $detail = $metric->Detail;
+    $metric_id = (int)$metric["metric_id"];
+    $metric_detail = $metric_details[$metric_id][0];
 
-    $name = $metric->MetricCommonName;
-    $desc = $metric->MetricDescription;
+    $freshfor = $metric_detail->fresh_for;
+    $expired = !MetricData::isFresh((int)$metric["timestamp"], (int)$freshfor, $timestamp);
+    $reported = isset($metric["detail_id"]);
+    $detail = $metric["detail"];
+
+    $name = $metric_detail->common_name;
+    $desc = $metric_detail->description;
     $help_url = config()->default_rsvforum;
-    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
-        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    if(isset(config()->rsvforum[$metric_id])) {
+        $help_url = config()->rsvforum[$metric_id];
     }
 
     if($reported) {
         $css = "";
         if($expired) $css = "expired";
-        $out .= "<div class=\"bottom_border status_".$metric->Status." $css\">";
-        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric->Timestamp)."</div>";
+        $out .= "<div class=\"bottom_border status_".$metric["status"]." $css\">";
+        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric["timestamp"])."</div>";
         if($expired) $name .= " (Expired)";
     } else {
         $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
@@ -88,9 +91,8 @@ function showmetric($metric, $timestamp, $hide_empty)
         $out .= "<br/><span class=\"note\">$desc</span>";
         if(trim($detail) != "") {
             $detail = "<pre>$detail</pre>";
-            $id = $metric->MetricDataID;
-            $fresh_for = $metric->MetricFreshFor;
-            $detail .= "Fresh for: ".humanDuration($fresh_for);
+            $id = $metric["detail_id"];
+            $detail .= "Fresh for: ".humanDuration($freshfor);
             $detail .= "<br/>";
             $out .= outputToggle("Show Detail", "Hide Detail", $detail);
         }
