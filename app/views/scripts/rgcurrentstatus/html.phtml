@@ -52,8 +52,8 @@ foreach($this->rgs as $rgid=>$rg) {
             $note = $service->Note;
             $downtime_note = $service->DowntimeNote;
 
-            //echo "<h3>".$service->ServiceDescription." Service Status</h3>"; 
             echo "<h3>".$service->ServiceName." Service Status</h3>"; 
+            //echo "<span class=\"note\">".$service->ServiceDescription." Service Status</span>"; 
             echo "<div class=\"status_$service_status\">";
             if(isset($service->DowntimeNote)) {
                 //downtime info is bit complicated
