@@ -61,7 +61,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "1.14";
+        $this->version = "1.15";
 
         //application to display or used in email
         $this->app_name = "MyOSG";
