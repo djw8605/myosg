@@ -120,8 +120,6 @@ class common_config
             'dbname'   => "gratia"
         );
 
-        //$this->myosgdb = "/tmp/myosg.dbf";
-
         //first page to load when user first visit the page
         //$this->initial_page = "home_start"; //needs to be a menu ID
         $this->initial_page = "current_detail"; //needs to be a menu ID
