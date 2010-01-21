@@ -26,7 +26,7 @@ foreach($this->rgs as $rgid=>$rg) {
             foreach($services as $service_id=>$recs)
             {
                 $service_info = $this->service_info[$service_id];
-                $service_name = $service_info[0]->description;
+                $service_name = $service_info[0]->name;
                 echo "<p><b>$service_name</b></p>";
                 $ax = "0";
                 $ay = "-1";

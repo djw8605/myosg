@@ -18,6 +18,7 @@ foreach($this->rgs as $rgid=>$rg) {
         
         foreach($this->services[$rid] as $service) {
             echo "<Service>";
+            echo "<Name>".htmlsafe($service->name)."</Name>";
             echo "<Description>".htmlsafe($service->description)."</Description>";
             echo "<ID>$service->service_id</ID>";
             echo "<GraphURL>";

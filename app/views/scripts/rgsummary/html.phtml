@@ -121,7 +121,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     if(isset($this->servicetypes[$service->service_id])) {
 
                         $service_info = $this->servicetypes[$service->service_id][0];
-                        $service_name = $service_info->description;
+                        $service_name = $service_info->name;
 
                         echo "<div class=\"service round\">";
 

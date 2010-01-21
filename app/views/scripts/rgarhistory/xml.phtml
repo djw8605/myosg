@@ -29,8 +29,10 @@ foreach($this->rgs as $rgid=>$rg) {
             {
                 echo "<Service>";
                 $service_info = $this->service_info[$service_id];
-                $service_name = $service_info[0]->description;
+                $service_name = $service_info[0]->name;
                 echo "<Name>".htmlsafe($service_name)."</Name>";
+                $service_desc = $service_info[0]->description;
+                echo "<Description>".htmlsafe($service_desc)."</Description>";
                 $ax = "0";
                 $ay = "-1";
                 $rx = "0";
