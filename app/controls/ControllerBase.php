@@ -82,10 +82,14 @@ abstract class ControllerBase extends Zend_Controller_Action
     {
         $this->load();
         header("Content-type: text/xml");
-        //recreate the original non-xml url
-?><!-- This XML was generated with a query in following MyOSG page
-<?=fullbase()."/".pagename()."/?".$_SERVER["QUERY_STRING"]?>
---><?
+        $this->view->header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+        $this->view->header .= "<!--\n";
+        $this->view->header .= "If you are going to use this XML for your production service, please register this URL at\n";
+        $this->view->header .= "GOC in order for us to ensure that any changes to this XML will not break your service.\n";
+        $this->view->header .= "https://spreadsheets.google.com/viewform?hl=en&formkey=dE8xYjUtMk9zZlQ3WktMa2lTWV9MOHc6MA\n\n";
+        $this->view->header .= "This XML was generated via following MyOSG page:\n";
+        $this->view->header .= fullbase()."/".pagename()."/?".$_SERVER["QUERY_STRING"]."\n";
+        $this->view->header .= "-->";
     }
 
     public function waveAction()

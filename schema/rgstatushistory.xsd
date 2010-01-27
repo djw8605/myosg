@@ -19,6 +19,7 @@
                     <xsd:element minOccurs="0" maxOccurs="unbounded" name="Service">
                       <xsd:complexType>
                         <xsd:sequence>
+                          <xsd:element name="Name" type="xsd:string" />
                           <xsd:element name="Description" type="xsd:string" />
                           <xsd:element name="ID" type="xsd:int" />
                           <xsd:element name="GraphURL" type="xsd:string" />

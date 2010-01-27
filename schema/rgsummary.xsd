@@ -118,6 +118,7 @@
                                 <xsd:element name="KSI2KMax" type="xsd:int" />
                                 <xsd:element name="StorageCapacityMin" type="xsd:string" />
                                 <xsd:element name="StorageCapacityMax" type="xsd:string" />
+                                <xsd:element name="HEPSPEC" type="xsd:string" />
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>

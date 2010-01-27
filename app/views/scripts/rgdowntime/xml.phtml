@@ -1,3 +1,4 @@
+<?=$this->header?>
 <Downtimes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgdowntime.xsd">
 <?if(isset($_REQUEST["downtime_attrs_showpast"])) {?>
     <PastDowntimes>
@@ -18,9 +19,9 @@ function showdowntimes($downtimes) {
         echo "<Downtime>";
         echo "<ID>".$downtime["id"]."</ID>";
         echo "<ResourceID>".htmlsafe($downtime["resource_id"])."</ResourceID>";
-	echo "<ResourceGroup>";
-	echo "<GroupName>".htmlsafe($downtime["rg_name"])."</GroupName>";
-	echo "</ResourceGroup>";
+        echo "<ResourceGroup>";
+        echo "<GroupName>".htmlsafe($downtime["rg_name"])."</GroupName>";
+        echo "</ResourceGroup>";
         echo "<ResourceName>".htmlsafe($downtime["name"])."</ResourceName>";
         echo "<ResourceFQDN>".htmlsafe($downtime["fqdn"])."</ResourceFQDN>";
         echo "<StartTime>".$downtime["start_time"]."</StartTime>";

@@ -1,13 +1,14 @@
+<?=$this->header?>
 <CurrentStatus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgcurrentstatus.xsd">
 <?
 foreach($this->rgs as $rgid=>$rg) {
-    
+
     //show resource group header
     $resource_group = $this->resource_groups[$rgid][0];
     echo "<ResourceGroup>";
     echo "<GroupType>".$resource_group->grid_type_description."</GroupType>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
- 
+
     foreach($rg as $rid=>$resource) {
         $resource_name = $resource->name;
         $resource_fqdn = $resource->fqdn;
@@ -66,7 +67,6 @@ foreach($this->rgs as $rgid=>$rg) {
     }
     echo "</ResourceGroup>";
 }
-
 
 function outputMetricInfo($metric, $timestamp)
 {

@@ -20,6 +20,7 @@
                       <xsd:complexType>
                         <xsd:sequence>
                           <xsd:element name="Name" type="xsd:string" />
+                          <xsd:element name="Description" type="xsd:string" />
                           <xsd:element name="GraphURL" type="xsd:string" />
                         </xsd:sequence>
                       </xsd:complexType>
