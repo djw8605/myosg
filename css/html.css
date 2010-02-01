@@ -3,6 +3,8 @@ a img
 border: 0;
 }
 
+img{-ms-interpolation-mode:bicubic;}
+
 a.mailto
 {
 padding-left:20px;

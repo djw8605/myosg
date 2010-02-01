@@ -333,7 +333,13 @@ class HistoryController extends ControllerBase
     {
         $html = config()->graph_color[$id];
         $rgb = $this->html2rgb($html);
-        return imagecolorallocate($im, $rgb[0], $rgb[1], $rgb[2]);
+        $light = imagecolorallocate($im, $rgb[0], $rgb[1], $rgb[2]);
+
+
+        //I can't make this work nice on IE...
+        //$dark = imagecolorallocate($im, $rgb[0]*2/3, $rgb[1]*2/3, $rgb[2]*2/3);
+        $dark = imagecolorallocate($im, $rgb[0], $rgb[1], $rgb[2]);
+        return array($light, $dark);
     }
 
     function drawGraph($status_changes, $start_time, $end_time, $downtimes)
@@ -344,12 +350,13 @@ class HistoryController extends ControllerBase
 
         //should I have this configurable via OIM DB?
         $color = array();
-        $color[1] = $this->get_graphcolor(1, $im);
-        $color[2] = $this->get_graphcolor(2, $im);
-        $color[3] = $this->get_graphcolor(3, $im);
-        $color[4] = $this->get_graphcolor(4, $im);
-        $color_downtime = $this->get_graphcolor(99, $im);
-        $back = $this->get_graphcolor(-1, $im);
+        $color_light = array();
+        list($color_light[1], $color[1]) = $this->get_graphcolor(1, $im);
+        list($color_light[2], $color[2]) = $this->get_graphcolor(2, $im);
+        list($color_light[3], $color[3]) = $this->get_graphcolor(3, $im);
+        list($color_light[4], $color[4]) = $this->get_graphcolor(4, $im);
+        list($color_downtime_light, $color_downtime) = $this->get_graphcolor(99, $im);
+        list($back_light, $back) = $this->get_graphcolor(-1, $im);
 
         $total_time = $end_time - $start_time;
         $decile_out = 0; //used to calculate the reminder area
@@ -360,7 +367,7 @@ class HistoryController extends ControllerBase
                 if($first) {
                     if($time < $start_time) $time = $start_time;
                     $decile1 = (float)($time-$start_time)/$total_time*$image_width;
-                    imageline($im, 0, 0, $decile1, 0, $back);
+                    imageline($im, 0, 0, $decile1, 0, $back_light);
                     imageline($im, 0, 1, $decile1, 1, $back);
                     $decile_out = $decile1;
                     $status = (int)$change->status_id;
@@ -368,7 +375,7 @@ class HistoryController extends ControllerBase
                 } else {
                     $next_status = (int)$change->status_id;
                     $decile2 = (float)($time-$start_time)/$total_time*$image_width;
-                    imageline($im, $decile1, 0, $decile2, 0, $color[$status]);
+                    imageline($im, $decile1, 0, $decile2, 0, $color_light[$status]);
                     imageline($im, $decile1, 1, $decile2, 1, $color[$status]);
                     $size = ($decile2 - $decile1);
                     $decile_out += $size;
@@ -379,11 +386,11 @@ class HistoryController extends ControllerBase
             }
             if(count($status_changes) > 0) {
                 //fill leftover
-                imageline($im, $decile_out, 0, $image_width, 0, $color[$status]);
+                imageline($im, $decile_out, 0, $image_width, 0, $color_light[$status]);
                 imageline($im, $decile_out, 1, $image_width, 1, $color[$status]);
             } else {
                 //no data?
-                imageline($im, 0, 0, $image_width, 0, $back);
+                imageline($im, 0, 0, $image_width, 0, $back_light);
                 imageline($im, 0, 1, $image_width, 1, $back);
             }
         }
