@@ -61,7 +61,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "1.15";
+        $this->version = "1.16";
 
         //application to display or used in email
         $this->app_name = "MyOSG";
@@ -153,8 +153,10 @@ class common_config
 
         //bdii raw files
         $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";
-        #$this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml";
         $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB";
+
+        //VOMS stauts XML
+        $this->voms_xml = "/home/hayashis/tmp/voms.xml";
 
         //locale
         $this->date_format_full = "M j, Y H:i:s e";
