@@ -1,0 +1,11 @@
+<?=$this->header?>
+<VOVOMSStatus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/vovomsstatus.xsd">
+<?
+foreach($this->vos as $vo_id=>$vo) {
+    echo "<VO>";
+    echo "<ID>$vo_id</ID>";
+    echo "<Name>".htmlsafe($vo->name)."</Name>";
+    echo "</VO>";
+}
+?>
+</VOVOMSStatus>

@@ -1,0 +1,37 @@
+<?
+
+foreach($this->voms_status as $voms_status) {
+    $info = $voms_status["info"];
+    $vomses = $voms_status["voms"];
+
+    $id = $info->id;
+    $name = $info->name;
+
+    echo "<div class=\"vo round\"><span class=\"h3\">$name</span>";
+    if(isset($_REQUEST["vomsstatus_attrs_showdesc"])) {
+        $description = $info->description;
+        echo "<p>".htmlsafe($description)."</p>";
+    }
+    echo "</div>";
+
+    echo outputStatus($info, $vomses);
+}
+
+function outputStatus($info, $vomses) {
+    $out = "";
+    if(count($vomses) == 0) {
+        $out .= "<p class=\"warning\">No VOMS server exists or reported for this VO.</p>";
+    } else {
+        foreach($vomses as $voms) {
+            $status = $voms->Status;
+            $note = $voms->Note;
+            $server_url = $voms->VOMSServerURL;
+            $out .= "<div class=\"bottom_border status_".$status."\">";
+            $out .= "<span class=\"h4\">".htmlsafe($server_url)."</span><br/>";
+            $out .= $note;
+            $out .= "</div>";//staus
+            
+        }
+    }
+    return $out;
+}

@@ -15,9 +15,9 @@ License.
 
 #################################################################################################*/
 
-class VosummaryController extends VoController
+class VovomsstatusController extends VoController
 {
-    public static function default_title() { return "Virtual Organization Summary"; }
+    public static function default_title() { return "VOMS Status"; }
     public static function default_url($query) { return ""; }
 
     public function load()
@@ -27,6 +27,23 @@ class VosummaryController extends VoController
         $model = new VirtualOrganization();
         $vos = $model->getindex();
 
+        $model = new VOMS();
+        $voms = $model->get();
+
+        $this->view->voms_status = array();
+        foreach($this->vo_ids as $vo_id) {
+            $info = $vos[$vo_id][0]; 
+
+            //capitaliza to increase chance of VO name match (until we use OIM based vomses)
+            $name = strtoupper($info->name);
+
+            $this->view->voms_status[$vo_id] = array(
+                "info"=>$info,
+                "voms"=>@$voms[$name]
+            );
+        }
+
+/*
         $scmodel = new SupportCenters();
         $scs = $scmodel->getindex();
 
@@ -124,32 +141,8 @@ class VosummaryController extends VoController
             $vo->sc = $scs[$vo->sc_id][0];
             $this->view->vos[$vo_id] = $vo;
         }
+*/
 
         $this->setpagetitle(self::default_title());
-    }
-
-    // View for http://www.opensciencegrid.org/VO_List
-    public function legacyosgwebsiteviewAction()
-    {
-      $vo_ids = $this->process_volist();
-      header("Content-type: text/html");
-      echo "<html>\n<head></head>\n<body>\n\n<h3>Virtual Organizations</h3>\n\n<table width=\'100%\'>\n <tr><th align=left>VO Name</th><th align=left>Primary URL</th></tr>\n";
-
-      $model = new VirtualOrganization();
-      $vos = $model->getindex();
-      
-      $scmodel = new SupportCenters();
-      $scs = $scmodel->getindex();
-      
-      foreach($vo_ids as $vo_id) {
-        $vo = $vos[$vo_id][0];
-        $long_name = $vo->long_name;
-        $name = $vo->name;
-        $primary_url = $vo->primary_url;
-        echo " <tr><td>$long_name ($name)</td><td><a href=\"$primary_url\">$primary_url</a></td></tr>\n";
-      }
-      echo "</table>\n\n</body>";
-
-      $this->render("none", null, true);
     }
 }

@@ -23,6 +23,7 @@
         <option value="">(Please Select)</option>
         <option value="summary">Virtual Organization Summary</option>
         <option value="activation">Activation Status</option>
+        <option value="vomsstatus">VOMS Status</option>
         </select>
 
         <div id="summary_attrs" class="attrs indent hidden">
@@ -33,6 +34,9 @@
         </div>
         <div id="_daterange_attrs" class="attrs indent hidden">
             <?=$this->render("rg/wizard__daterange.phtml")?>
+        </div>
+        <div id="vomsstatus_attrs" class="attrs indent hidden">
+            <?=$this->render("vo/wizard_vomsstatus.phtml")?>
         </div>
     </div>
 
@@ -151,6 +155,7 @@ $(document).ready(function() {
         switch($datasource) {
         case "summary":
         case "activation":
+        case "vomsstatus":
             echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
             echo "showhide_attrs();\n";
         }
