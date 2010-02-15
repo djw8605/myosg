@@ -255,7 +255,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             }
             echo "</WLCGInformation>";
         }
-
+/*
         if(isset($_REQUEST["summary_attrs_showenv"])) {
             echo "<ENV>";
             $xml = @$this->envs[$rid];
@@ -268,6 +268,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             }
             echo "</ENV>";
         }
+*/
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             $contact_types = @$this->contacts[$rid];
             echo "<ContactLists>";

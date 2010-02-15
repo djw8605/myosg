@@ -84,6 +84,7 @@ class RgsummaryController extends RgController
                 }
             }
         }
+/*
         if(isset($_REQUEST["summary_attrs_showenv"])) {
             $model = new ResourceEnv();
             $details = $model->getindex(array("metric_id"=>0));
@@ -108,6 +109,7 @@ class RgsummaryController extends RgController
                 }
             }
         }
+*/
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
 
             $model = new ResourceContact();

@@ -159,6 +159,7 @@ class RgstatushistoryController extends RgController
         static $metric_detail_model = null;
         if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
         $detail = $metric_detail_model->get(array("id"=>$id)); 
+        if($detail == null) return null;
         return $detail[0]->detail; 
     }
 

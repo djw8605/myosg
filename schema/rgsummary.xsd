@@ -122,7 +122,6 @@
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>
-                          <xsd:element name="ENV" type="xsd:string" />
                           <xsd:element name="ContactLists">
                             <xsd:complexType>
                               <xsd:sequence>

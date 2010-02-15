@@ -63,9 +63,15 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
     $metric_detail = $metric_details[$metric_id][0];
 
     $freshfor = $metric_detail->fresh_for;
-    $expired = !MetricData::isFresh((int)$metric["timestamp"], (int)$freshfor, $timestamp);
     $reported = isset($metric["detail_id"]);
-    $detail = $metric["detail"];
+    if(isset($metric["timestamp"])) {
+        $expired = !MetricData::isFresh((int)$metric["timestamp"], (int)$freshfor, $timestamp);
+        $detail = $metric["detail"];
+    } else {
+        //detail not available..
+        $expired = null;
+        $detail = "";
+    }
 
     $name = $metric_detail->common_name;
     $desc = $metric_detail->description;

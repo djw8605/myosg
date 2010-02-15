@@ -180,7 +180,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 $detail_url = htmlsafe(fullbase()."/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_$resource_group_id=on&end_type=now");
                 $history_url = htmlsafe(fullbase()."/rgstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=now&rg=on&rg_$resource_group_id=on");
                 $resource_status = $this->resource_status[$rid][0];
-                $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
+                $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Current Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
                 $status = Status::getStatus($resource_status->status_id);
             }
 
@@ -307,6 +307,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "</td></tr>";
         }
 
+/*
         if(isset($_REQUEST["summary_attrs_showenv"])) {
             echo "<tr><th>Environment Parameters</th><td>";
             $xml = @$this->envs[$rid];
@@ -321,6 +322,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             }
             echo "</td></tr>";
         }
+*/
 
         if(isset($_REQUEST["summary_attrs_showcontact"])) {
             echo "<tr><th>Contacts</th><td>";
