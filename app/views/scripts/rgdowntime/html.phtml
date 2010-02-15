@@ -1,9 +1,11 @@
-<?if(isset($_REQUEST["downtime_attrs_showpast"])) {?>
-    <div class="downtime_group round">
-    <span class="h3">Past Downtimes</span>
-    </div>
-    <?
-    showdowntimes($this->past_downtimes);
+<? if(isset($_REQUEST["downtime_attrs_showpast"])) {
+    if($_REQUEST["downtime_attrs_showpast"] != "") { ?>
+        <div class="downtime_group round">
+        <span class="h3">Past Downtimes</span>
+        </div>
+        <?
+        showdowntimes($this->past_downtimes);
+    }
 }
 ?>
 
