@@ -25,6 +25,7 @@ class RgController extends ControllerBase
         $this->setpagetitle($this->default_title());
         $this->selectmenu("rg");
 
+        $this->rgs = array();
         if(isset($_REQUEST["datasource"])) {
             $this->rgs = $this->process_rglist();
             if(count($this->rgs) == 0) {
