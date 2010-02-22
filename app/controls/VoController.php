@@ -25,6 +25,7 @@ class VoController extends ControllerBase
         $this->setpagetitle($this->default_title());
         $this->selectmenu("vo");
 
+        $this->vo_ids = array();
         if(isset($_REQUEST["datasource"])) {
             $this->vo_ids = $this->process_volist();
             if(count($this->vo_ids) == 0) {
