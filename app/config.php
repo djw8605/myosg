@@ -158,6 +158,9 @@ class common_config
         //VOMS stauts XML
         $this->voms_xml = "/tmp/voms-monitor.xml";
 
+        //BDII Dyanmic Information XML
+        $this->bdii_xml = "/tmp/rg_dynamic_information.xml";
+
         //locale
         $this->date_format_full = "M j, Y H:i:s e";
         $this->date_format = "M j, Y";

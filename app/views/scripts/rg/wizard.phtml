@@ -31,6 +31,7 @@
         <option value="account">Gratia Accounting</option>
         <option value="ce">Gratia Accounting (CE Specific)</option>
         <option value="se">Gratia Accounting (SE Specific)</option>
+        <option value="bdii">BDII Information</option>
         </select>
 
         <div id="summary_attrs" class="attrs indent hidden">
@@ -72,6 +73,12 @@
         <div id="se_attrs" class="attrs indent hidden">
             <?=$this->render("rg/wizard_se.phtml")?>
         </div>
+
+        <div id="bdii_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_bdii.phtml")?>
+        </div>
+
+        
 
         <div id="_daterange_attrs" class="attrs indent hidden">
             <?=$this->render("rg/wizard__daterange.phtml")?>
@@ -249,6 +256,7 @@ function showhide_attrs(show_speed)
         $("#resource_area_standby").hide();
         $("#filter_area_standby").hide();
 
+        //pages that uses date range contoller
         if(
             v == "statushistory" ||
             v == "arhistory" ||

@@ -69,7 +69,8 @@ SSL_CLIENT_CERT         XXXXXXXXXXXXXXXX
 function isbot()
 {
     foreach(config()->botlist as $bot) {
-        if(ereg($bot, $HTTP_USER_AGENT)) {
+        if(ereg($bot, $_SERVER['HTTP_USER_AGENT'])) {
+            slog("Detected Bot - ".$_SERVER['HTTP_USER_AGENT']);
             return true;
         }
     }
@@ -113,12 +114,11 @@ function cert_authenticate()
             $user = new User($dn);
             if($user->getPersonID()) {
                 Zend_Registry::set("user", $user);
-                slog("Authenticated User: ".$user->getPersonName());
             } else {
                 //unknown, non-active, or expired cert?
                 _setguest();
-                slog("Authenticated User as a Guest");
             }
+            slog($user->getPersonName()."($dn)". " from ".$_SERVER["REMOTE_ADDR"]);
         } else {
             //no client cert provided
             _setguest();

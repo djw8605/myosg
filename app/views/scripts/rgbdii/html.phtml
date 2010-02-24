@@ -1,0 +1,15 @@
+<?
+echo "<div style='min-height: 400px'>";
+
+if(!uwa()) {
+    echo "<div class='indent'>";
+    $title = "Resources that are used to generate this graph";
+    echo outputToggle("Show $title", "Hide $title", $this->resource_names);
+    echo "</div>";
+    echo "nothing to show yet";
+} else {
+    //UWA Graph
+    echo "nothing to show yet";
+}
+
+echo "</div>";
