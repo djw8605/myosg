@@ -19,6 +19,22 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     echo "<GroupID>".$resource_group->id."</GroupID>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
 
+    echo "<Active>";
+    if($resource_group->active == 1) { 
+        echo "True"; 
+    } else {
+        echo "False"; 
+    }
+    echo "</Active>";
+
+    echo "<Disable>";
+    if($resource_group->disable == 1) { 
+        echo "True"; 
+    } else {
+        echo "False"; 
+    }
+    echo "</Disable>";
+
     if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
         $hierarchy = $this->hierarchy[$resource_group_id];
         echo "<Facility><Name>".$hierarchy["facility"]."</Name></Facility>";
