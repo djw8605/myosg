@@ -46,8 +46,7 @@ class ErrorController extends Zend_Controller_Action
                 } else {
                     $this->view->content = "Encountered an application error.\n\n";
                     if(config()->elog_email) {
-                        $user = $_ENV["USER"];
-                        mail(config()->elog_email_address, "[myosg] Error has occurerd", $log, "From: $user");
+                        mail(config()->elog_email_address, "[myosg] Error: ".$exception->getMessage(), $log, "From: ".php_uname('n'));
                         $this->view->content .= "Detail of this error has been sent to the development team for further analysis.";
                     }
                 }
