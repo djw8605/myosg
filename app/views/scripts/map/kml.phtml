@@ -4,6 +4,14 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
 <name>OSG Facilities</name>
+<LookAt>
+    <longitude>-96.44</longitude>
+    <latitude>35.14</latitude>
+    <tilt>3</tilt>
+    <heading>-10</heading>
+    <altitude>3700000</altitude>
+    <altitudeMode>absolute</altitudeMode>
+</LookAt>
 <Style id="myosg">
 <IconStyle>
 <scale>0.5</scale>
@@ -17,36 +25,40 @@ $model = new Facilities();
 $smodel = new Site();
 $sites_grouped = $smodel->getgroupby("facility_id");
 foreach($model->get() as $facility) {
-    $sites = $sites_grouped[$facility->id];
+    if(isset($sites_grouped[$facility->id])) {
+        $sites = $sites_grouped[$facility->id];
 
-    //create acronym
-    $name = $facility->name;
-    $name2 = str_replace("_", " ", $name);
-    $tokens = split(" ", $name2);
-    $acro = "";
-    foreach($tokens as $token) {
-        if($token == "The") continue;
-        if($token == "of") continue;
-        if($token == "at") continue;
-        $acro .= $token[0];
+        //create acronym
+        $name = $facility->name;
+        $name2 = str_replace("_", " ", $name);
+        $tokens = split(" ", $name2);
+        $acro = "";
+        foreach($tokens as $token) {
+            if($token == "The") continue;
+            if($token == "of") continue;
+            if($token == "at") continue;
+            $acro .= $token[0];
+        }
+
+        //output Placemark
+        echo "<Placemark>";
+        echo "<name>".htmlsafe($acro)."</name>";
+        echo "<styleUrl>#myosg</styleUrl>";
+        echo "<description><![CDATA[";
+        echo "<h2>".$facility->name."</h2>";
+        //output list of sites
+        foreach($sites as $site) {
+            echo "<h3>".$site->name."</h3><p>".$site->description."</p>";
+        } 
+        echo "]]></description>";
+        echo "<Point>";
+        //use first site's location
+        echo "<coordinates>".$sites[0]->longitude.",".$sites[0]->latitude.",0</coordinates>";
+        echo "</Point>";
+        echo "</Placemark>";
+    } else {
+        elog("Facility ID " . $facility->id . "($facility->name)has no associated sites. should it be removed/deactivated?");
     }
-
-    //output Placemark
-    echo "<Placemark>";
-    echo "<name>".htmlsafe($acro)."</name>";
-    echo "<styleUrl>#myosg</styleUrl>";
-    echo "<description><![CDATA[";
-    echo "<h2>".$facility->name."</h2>";
-    //output list of sites
-    foreach($sites as $site) {
-        echo "<h3>".$site->name."</h3><p>".$site->description."</p>";
-    } 
-    echo "]]></description>";
-    echo "<Point>";
-    //use first site's location
-    echo "<coordinates>".$sites[0]->longitude.",".$sites[0]->latitude.",0</coordinates>";
-    echo "</Point>";
-    echo "</Placemark>";
 }
 ?>
 </Document>
