@@ -15,9 +15,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         $group_name = "<span class=\"hierarchy\">".$hierarchy["facility"]." (Facility) &gt; ".$hierarchy["site"]." (Site) &gt; </span>".$group_name;
     }
 
-    if($resource_group->active == 0) {
-        $group_name .= " (Inactive)";
-    }
     if($resource_group->disable == 1) {
         $group_name .= " (Removed)";
     }
