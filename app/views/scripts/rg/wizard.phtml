@@ -124,8 +124,8 @@
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
+                //grab non-disabled records
+                if($item->disable == 0) {
                     $kv[$item->id] = array($item->name, ""); //$item->grid_type_description
                 }
             }

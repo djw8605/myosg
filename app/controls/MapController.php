@@ -43,8 +43,8 @@ class MapController extends ControllerBase
                         continue;
                     }
                 }
-                //only pass active/non-disable resource group
-                if($rgroup->active == 0 || $rgroup->disable == 1) {
+                //only pass non-disable resource group
+                if($rgroup->disable == 1) {
                     continue;
                 }
                 if($rgroup->site_id == $site_id) {
