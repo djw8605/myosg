@@ -1,0 +1,79 @@
+#infovis div {
+position:absolute;
+overflow:hidden;
+font-size:10px;
+line-height: 100%;
+}
+
+#infovis {
+background-color: gray;
+-moz-border-radius-bottomleft:8px;
+-moz-border-radius-bottomright:8px;
+-moz-border-radius-topleft:8px;
+-moz-border-radius-topright:8px;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-top-right-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;
+}
+
+#infovis .head {
+    color:white;
+    padding: 1px;
+}
+
+#infovis .head.in-path {
+    background-color:#655;
+}
+
+#infovis .body {
+}
+
+#infovis .leaf {
+/*
+    background-color:#bcf;
+    background-color:#69f;
+background:#B2CCFF url(../images/treemap_back.gif) repeat-x scroll 0 0;
+*/
+    color:black;
+    background-color: white;
+    display:table-cell;
+    vertical-align:middle;
+    padding-top: 1px;
+    padding-left: 2px;
+    background-color: #eee;
+}
+
+
+#infovis .over-leaf {
+}
+
+#infovis .over-content {
+    background-color: orange;
+}
+
+#infovis .over-head { /* boy i'm funny! */
+    background-color: green;
+    color:black;
+}
+
+/*TOOLTIPS*/
+.tip {
+color: white;
+width: 300px;
+background-color: gray;
+padding:7px;
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-bottomright:4px;
+-moz-border-radius-topleft:4px;
+-moz-border-radius-topright:4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+}
+
+#infovis #root > .head {
+padding-left: 3px;
+display: none;
+}

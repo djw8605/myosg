@@ -1,0 +1,21 @@
+<p class="info">Show current BDII data in Treemap format.</p>
+
+Group By:
+<select name="bdiitree_type">
+<option value="total_jobs">Number of Jobs</option>
+<option value="free_cpus">Number of Free CPUs</option>
+<option value="estimated_response_time">Estimated Response Time</option>
+<option value="waiting_jobs">Number of Waiting Jobs</option>
+<option value="running_jobs">Number of Running Jobs</option>
+<option value="free_job_slots">Number of Free Job Slots</option>
+</select>
+<?if(isset($_REQUEST["bdiitree_type"])) {
+    $type = $_REQUEST["bdiitree_type"];
+    ?>
+    <script type="text/javascript">
+    $(document).ready(function() {
+            $("select[name=bdiitree_type] option[value=<?=$type?>]").attr('selected', 'selected');
+    });
+    </script>
+<?}?>
+

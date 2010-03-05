@@ -200,13 +200,13 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
             echo "<tr><th>FQDN</th><td>";
-            echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
+            echo htmlsafe($resource->fqdn);
             echo "</td></tr>";
 
             echo "<tr><th>FQDN Alias</th><td>";
             if(isset($this->aliases[$rid])) {
                 foreach($this->aliases[$rid] as $alias) {
-                    echo "<span class=\"fqdn\">".$alias->resource_alias."</span><br/>";
+                    echo htmlsafe($alias->resource_alias);
                 }
             } else {
                 echo "(No Alias)";

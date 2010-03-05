@@ -35,10 +35,10 @@ class BDII
             $name = $rg->name;
             $id = $rg->id;
             foreach($bdiis as $bdii) {
-                //var_dump((string)$bdii->GroupName);
                 $group_name = (string)$bdii->GroupName;
                 if($name == $group_name) {
-                    $rg->bdii = $bdii;
+                    $rg->bdii = $this->processXML($bdii);
+                    $rg->bdii->basic = $rg;
                 }
             }
             $ret[$id] = $rg;
@@ -46,4 +46,59 @@ class BDII
 
         return $ret;
     }
+
+    //process raw bdii XML information so that MyOSG can understand
+    public function processXML($bdii) {
+        $info = new BDII_structure();
+
+/*
+        echo "<pre>";
+        var_dump($bdii);
+        echo "</pre>";
+*/
+
+        foreach($bdii->Resources as $resource) {
+            $resource = $resource->Resource;
+            $fqdn = $resource->FQDN;
+
+            //aggregate data for each resource
+            $agg = new Aggregator();
+            foreach($resource->Services as $service) {
+                $service = $service->Service;
+                $servicename = $service->ServiceName;
+                foreach($service->JobManagers as $jobmanager) {
+                    $jobmanager = $jobmanager->JobManager;
+                    $serviceuri = $jobmanager->ServiceUri;
+                    $glueinfo = $jobmanager->GlueInfo;
+                    $agg->sum("TotalJobs", $glueinfo->GlueCEStateTotalJobs);
+                    $agg->sum("FreeCPUs", $glueinfo->GlueCEStateFreeCPUs);
+                    $agg->sum("EstimatedResponseTime", $glueinfo->GlueCEStateEstimatedResponseTime);
+                    $agg->sum("WaitingJobs", $glueinfo->GlueCEStateWaitingJobs);
+                    $agg->sum("RunningJobs", $glueinfo->GlueCEStateRunningJobs);
+                    $agg->sum("FreeJobSlots", $glueinfo->GlueCEStateFreeJobSlots);
+                }
+            }
+            $info->aggregates[(string)$resource->FQDN] = $agg;
+        }
+
+        return $info;
+    }
+}
+
+class BDII_structure {
+    var $aggregates = array();
+    var $basic = null;
+}
+
+class Aggregator {
+    var $info = array();
+    public function sum($key, $value) {
+        $value = (int)$value;
+        if(isset($this->info[$key])) {
+            $this->info[$key] = $this->info[$key] + $value;
+        } else {
+            $this->info[$key] = $value;
+        }
+    }
+    public function get($key) { return $this->info[$key]; }
 }
