@@ -1,0 +1,187 @@
+
+<link type="text/css" href="../css/jit-treemap.css" rel="stylesheet" />
+<style>
+#infovis {
+    position:relative;
+    width:100%;
+    height:650px;
+    margin:auto;
+    overflow:hidden;
+}
+</style>
+<script language="javascript" type="text/javascript" src="../lib/jit-yc.js"></script>
+<script language="javascript" type="text/javascript">
+
+   var json_works = {
+        children: [{
+            children: [{
+                children: [],
+                data: {
+                    $area: "80",
+                    $color: "30",
+                },
+                id: "056e4f3e-d505-4dad-8ec1-d04f521cbb56Human After All",
+                name: "Human After All"
+            }],
+            data: {
+                $area: 80
+            },
+            id: "056e4f3e-d505-4dad-8ec1-d04f521cbb56a",
+            name: "Daft Punk"
+        }, {
+            children: [{
+                children: [],
+                data: {
+                    $area: "94",
+                    $color: "23",
+                },
+                id: "f2fa5cf6-e0b0-4559-8641-e033f1a9e6fcClearing the Channel",
+                name: "Clearing the Channel"
+            }],
+            data: {
+                $area: 94
+            },
+            id: "f2fa5cf6-e0b0-4559-8641-e033f1a9e6fca",
+            name: "Sinch"
+        }, {
+            children: [{
+                children: [],
+                data: {
+                    $area: "211",
+                    $color: "2",
+                },
+                id: "4bd95eea-b9f6-4d70-a36c-cfea77431553Music Bank",
+                name: "Music Bank"
+            }],
+            data: {
+                $area: 211
+            },
+            id: "4bd95eea-b9f6-4d70-a36c-cfea77431553a",
+            name: "Alice in Chains"
+        }]
+        , data: {
+            $area: 4949
+        },
+        id: "topAlbums",
+        name: "top albums"
+    };
+
+var json= {
+    "id": "root",
+    "name": "Total <?=$this->sub_title?> (<?=$this->total_area?>)",
+    "data": {
+        "$area": <?=$this->total_area?>,
+        "$color": 5
+    },
+    "children": [
+<?
+    $first = true;
+    foreach($this->rgs as $rgid=>$bdii) {
+        $basic = $bdii->basic;
+        $aggregates = $bdii->aggregates;
+        $rgtotal = 0;
+        foreach($aggregates as $aggregate) {
+            $rgtotal += $aggregate->get($this->key);
+        }
+        if($rgtotal == 0) continue;
+        if(!$first) { echo ","; } 
+        $first = false;
+        ?>
+        {
+        children: [
+            <?
+            $rfirst = true;
+            foreach($aggregates as $fqdn=>$aggregate) {
+                $total = $aggregate->get($this->key);
+                if(!$rfirst) { echo ","; } 
+                $rfirst = false;
+            ?>
+            {
+                children: [],
+                data: {
+                    $area: <?=$total?>,
+                    $color: 2,
+                },
+                id: "<?=$fqdn?>",
+                name: "<?=$fqdn?>"
+            }
+            <?}?>
+        ],
+        "id": "resource_group_<?=$rgid?>",
+        "name": "<?=$basic->name?> (<?=$rgtotal?>)",
+        "data": {
+            "$area": <?=$rgtotal?>,
+            "$color": 8
+            }
+        }
+    <?}?>
+    ]
+};
+
+$(document).ready(function() {
+     var tm = new TM.Squarified({  
+         //The id of the treemap container  
+         titleHeight: 10,
+         rootId: 'infovis',  
+         //Set the max. depth to be shown for a subtree  
+         levelsToShow: 1,  
+       
+         //Add click handlers for  
+         //zooming the Treemap in and out  
+         //addLeftClickHandler: true,  
+         //addRightClickHandler: true,  
+           
+         //When hovering a node highlight the nodes  
+         //between the root node and the hovered node. This  
+         //is done by adding the 'in-path' CSS class to each node.  
+         //selectPathOnHover: true,  
+                   
+         //Allow tips  
+         Tips: {  
+           allow: true,  
+           //add positioning offsets  
+           offsetX: 20,  
+           offsetY: 20,  
+           //implement the onShow method to  
+           //add content to the tooltip when a node  
+           //is hovered  
+           onShow: function(tip, node, isLeaf, domElement) {  
+               tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>" +   
+                 "<div class=\"tip-text\">" + this.makeHTMLFromData(node.data) + "</div>";   
+           },    
+       
+           //Aux method: Build the tooltip inner html by using the data property  
+           makeHTMLFromData: function(data){  
+               var html = '';  
+               html += "<?=$this->sub_title?>" + ': ' + data.$area + '<br />';  
+               //if ("$color" in data)   html += "color" + ': ' + data.$color + '<br />';  
+               //if ("image" in data)  html += "<img class=\"album\" src=\"" + data.image + "\" />";  
+               return html;  
+           }  
+         },  
+       
+         //Implement this method for retrieving a requested  
+         //subtree that has as root a node with id = nodeId,  
+         //and level as depth. This method could also make a server-side  
+         //call for the requested subtree. When completed, the onComplete   
+         //callback method should be called.  
+         request: function(nodeId, level, onComplete){  
+             var tree = eval('(' + json + ')');  
+             var subtree = TreeUtil.getSubtree(tree, nodeId);  
+             TreeUtil.prune(subtree, 1);  
+             onComplete.onComplete(nodeId, subtree);  
+         },  
+           
+         //Remove all events for the element before destroying it.  
+         onDestroyElement: function(content, tree, isLeaf, leaf){  
+             if(leaf.clearAttributes) leaf.clearAttributes();  
+         }  
+     });  
+   
+    tm.loadJSON(json);
+
+});
+
+</script>
+<p>Total <?=$this->sub_title?>: <?=$this->total_area?></p>
+<div id="infovis"></div>
