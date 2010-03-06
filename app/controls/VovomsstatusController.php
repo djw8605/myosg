@@ -29,7 +29,7 @@ class VovomsstatusController extends VoController
 
         $model = new VOMS();
         $voms = $model->get();
-
+        $this->view->timestamp = $model->getTimestamp();
         $this->view->voms_status = array();
         foreach($this->vo_ids as $vo_id) {
             $info = $vos[$vo_id][0]; 

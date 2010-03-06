@@ -1,3 +1,4 @@
+<p>Status Gathered at <?=date(config()->date_format_full, $this->timestamp)?></p>
 <?
 
 foreach($this->voms_status as $voms_status) {
@@ -30,7 +31,6 @@ function outputStatus($info, $vomses) {
             $out .= "<span class=\"h4\">".htmlsafe($server_url)."</span><br/>";
             $out .= $note;
             $out .= "</div>";//staus
-            
         }
     }
     return $out;

@@ -17,20 +17,29 @@ License.
 
 class VOMS
 {
+    var $timestamp = null;
+
+    //returns array of VOs containing VOMSStatus
     public function get()
     {
         $voms_info = array();
 
         $cache_xml = file_get_contents(config()->voms_xml);
         $xml = new SimpleXMLElement($cache_xml);
-        foreach($xml as $vo) {
+        $vos = $xml->VOs[0];
+        $this->timestamp = (int)$xml->Timestamp;
+        foreach($vos as $vo) {
             $name = (string)$vo->Name[0];
-            
+
             //workaround until vomses files will use OIM based name
             $name = strtoupper($name);
-
-            $voms_info[$name] = $vo->VOMSStatus;
+            $stat = $vo->VOMSStatus;
+            $voms_info[$name] = $stat;
         }
         return $voms_info;
+    }
+
+    public function getTimestamp() {
+        return $this->timestamp;
     }
 }
