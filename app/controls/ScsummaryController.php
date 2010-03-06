@@ -72,6 +72,8 @@ class ScsummaryController extends ScController
             $long_name = $sc->long_name;
             $community = $sc->community;
 
+            echo "<tr><td rowspan=2>$long_name ($name) </td>";
+
             $contact = @$sccontacts[$sc_id];
             if(isset($contact[0])) {
                 $contact_name = $contact[0]->name . "<br>";
@@ -80,10 +82,13 @@ class ScsummaryController extends ScController
                 if ($contact[0]->primary_phone_ext != "") {
                   $contact_phone = $contact_phone . " (" . $contact[0]->primary_phone_ext . ")";
                 }
+                echo "<td>$contact_name </td><td>$contact_email </td><td>$contact_phone </td>";
+            } else {
+                echo "<td colspan=3>(No contact information available)</td>";
             }
 
-            echo " <tr><td rowspan=2>$long_name ($name) </td><td>$contact_name </td><td>$contact_email </td><td>$contact_phone </td></tr>".
-              "<tr><td colspan=3>$community </td></tr>\n";
+            echo "</tr>";
+            echo "<tr><td colspan=3>$community </td></tr>\n";
         }
 
         echo "</table>\n\n</body>";
