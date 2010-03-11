@@ -41,8 +41,11 @@ if(isset($_REQUEST["summary_attrs_showvoownership"])) { $checked = "checked=chec
 <input type="checkbox" name="summary_attrs_showvoownership" <?=$checked?>/> Show VO Ownership<br/>
 
 <?$checked = "";
+if(isset($_REQUEST["summary_attrs_showenv"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showenv" <?=$checked?>/> Show Environment Parameters<br/>
+
+<?$checked = "";
 if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
-
 
 

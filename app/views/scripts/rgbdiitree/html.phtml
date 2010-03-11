@@ -175,11 +175,14 @@ $(document).ready(function() {
          //Remove all events for the element before destroying it.  
          onDestroyElement: function(content, tree, isLeaf, leaf){  
              if(leaf.clearAttributes) leaf.clearAttributes();  
-         }  
+         }
      });  
    
     tm.loadJSON(json);
 
+    $(window).resize(function() {
+        
+    });
 });
 
 </script>

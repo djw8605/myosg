@@ -1,0 +1,34 @@
+<?=$this->header?>
+<BDIITreeMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgbdiitree.xsd">
+    <TotalArea><?=$this->total_area?></TotalArea>
+    <GroupBy><?=$this->sub_title?></GroupBy>
+    <ResourceGroups>
+<?
+    foreach($this->rgs as $rgid=>$bdii) {
+        $basic = $bdii->basic;
+        $aggregates = $bdii->aggregates;
+
+        $subinfo = "<Resources>";
+        $rgtotal = 0;
+        foreach($aggregates as $fqdn=>$aggregate) {
+            $area = $aggregate->get($this->key);
+            $rgtotal += $area;
+
+            $subinfo .= "<Resource>";
+            $subinfo .= "<FQDN>$fqdn</FQDN>";
+            $subinfo .= "<Area>$area</Area>";
+            $subinfo .= "</Resource>";
+        }
+        $subinfo .= "</Resources>";
+
+        echo "<ResourceGroup>";
+        echo "<GroupID>$rgid</GroupID>";
+        echo "<GroupName>".$basic->name."</GroupName>";
+        echo "<GroupArea>$rgtotal</GroupArea>";
+        echo $subinfo;
+        echo "</ResourceGroup>";
+
+    }
+?>
+    </ResourceGroups>
+</BDIITreeMap>

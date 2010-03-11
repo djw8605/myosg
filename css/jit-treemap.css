@@ -7,19 +7,18 @@ line-height: 100%;
 
 #infovis {
 background-color: gray;
--moz-border-radius-bottomleft:8px;
--moz-border-radius-bottomright:8px;
--moz-border-radius-topleft:8px;
--moz-border-radius-topright:8px;
--webkit-border-top-left-radius: 8px;
--webkit-border-top-right-radius: 8px;
--webkit-border-bottom-left-radius: 8px;
--webkit-border-bottom-right-radius: 8px;
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-bottomright:4px;
+-moz-border-radius-topleft:4px;
+-moz-border-radius-topright:4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
 }
 
 #infovis .head {
     color:white;
-    padding: 1px;
 }
 
 #infovis .head.in-path {
@@ -30,20 +29,15 @@ background-color: gray;
 }
 
 #infovis .leaf {
-/*
-    background-color:#bcf;
-    background-color:#69f;
-background:#B2CCFF url(../images/treemap_back.gif) repeat-x scroll 0 0;
-*/
     color:black;
-    background-color: white;
     display:table-cell;
     vertical-align:middle;
-    padding-top: 1px;
-    padding-left: 2px;
+    padding: 2px;
     background-color: #eee;
 }
 
+#infovis .content {
+}
 
 #infovis .over-leaf {
 }
@@ -74,6 +68,8 @@ padding:7px;
 }
 
 #infovis #root > .head {
-padding-left: 3px;
 display: none;
+}
+#infovis #root > .body {
+border: none;
 }

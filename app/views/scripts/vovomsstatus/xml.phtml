@@ -1,11 +1,38 @@
 <?=$this->header?>
 <VOVOMSStatus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/vovomsstatus.xsd">
+<VOs>
 <?
-foreach($this->vos as $vo_id=>$vo) {
+
+foreach($this->voms_status as $voms_status) {
+    $info = $voms_status["info"];
+    $vomses = $voms_status["voms"];
+
+    $id = $info->id;
+    $name = $info->name;
+
     echo "<VO>";
-    echo "<ID>$vo_id</ID>";
-    echo "<Name>".htmlsafe($vo->name)."</Name>";
+    echo "<ID>$id</ID>";
+    echo "<Name>".htmlsafe($name)."</Name>";
+    echo "<VOMSes>";
+    echo outputStatus($info, $vomses);
+    echo "</VOMSes>";
     echo "</VO>";
 }
+
+function outputStatus($info, $vomses) {
+    $out = "";
+    if(count($vomses) != 0) {
+        foreach($vomses as $voms) {
+            $status = $voms->Status;
+            $out .= "<Status>".$status."</Status>";
+            $server_url = $voms->VOMSServerURL;
+            $out .= "<URL>".htmlsafe($server_url)."</URL>";
+            $note = $voms->Note;
+            $out .= "<Description>".$note."</Description>";
+        }
+    }
+    return $out;
+}
 ?>
+</VOs>
 </VOVOMSStatus>

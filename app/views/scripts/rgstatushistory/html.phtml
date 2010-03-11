@@ -130,7 +130,20 @@ $(document).ready(function() {
         var tool = $("#time-tooltip");
         tool.hide();
     });
-    //$(window).resize(mark);
+    $(window).resize(function() {
+        currentAnchor = document.location.hash;
+        if(currentAnchor) {
+            var anchor = unescape(currentAnchor.substring(1));
+            var splits = anchor.split('&');
+
+            //store current mark info
+            rid = splits[0].split('=')[1];
+            sid = splits[1].split('=')[1];
+            time = splits[2].split('=')[1];
+
+            mark(rid,sid,time);
+        }
+    });
 
     $("img.graph").lazyload({placeholder:"<?=fullbase()?>/images/graph_holder.gif", effect: "fadeIn"});
 });
