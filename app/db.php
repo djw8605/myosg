@@ -31,10 +31,12 @@ function connect_db()
     $db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["oim"] = $db;
 
+/*
     // For MyOSG
     $db = Zend_Db::factory(config()->db_type, config()->myosg_dbparam);
     $db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["myosg"] = $db;
+*/
 
     // For Gratia MetricDetail
     $db = Zend_Db::factory(config()->db_type, config()->gratia_dbparam);
@@ -47,7 +49,6 @@ function connect_db()
         $profiler->setEnabled(true);
         $g_db["rsv"]->setProfiler($profiler);
         $g_db["oim"]->setProfiler($profiler);
-        $g_db["myosg"]->setProfiler($profiler);
         $g_db["gratia"]->setProfiler($profiler);
     }
 

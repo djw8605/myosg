@@ -101,6 +101,7 @@ class common_config
             'dbname'   => "oim"
         );
 
+/*
         $this->myosg_dbparam = array(
             'charset' => 'UTF8',
             'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
@@ -110,6 +111,7 @@ class common_config
             'password' => "somepass",
             'dbname'   => "myosg"
         );
+*/
 
         $this->gratia_dbparam = array(
             'charset' => 'UTF8',
