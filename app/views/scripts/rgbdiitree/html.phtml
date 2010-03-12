@@ -77,12 +77,12 @@ var json= {
     "children": [
 <?
     $first = true;
-    foreach($this->rgs as $rgid=>$bdii) {
-        $basic = $bdii->basic;
-        $aggregates = $bdii->aggregates;
+    foreach($this->rgs as $rgid=>$rg) {
+        $group_info = $rg["info"];
+        $resources = $rg["resources"];
         $rgtotal = 0;
-        foreach($aggregates as $aggregate) {
-            $rgtotal += $aggregate->get($this->key);
+        foreach($resources as $rid=>$resource) {
+            $rgtotal += $resource["agg"]->get($this->key);
         }
         if($rgtotal == 0) continue;
         if(!$first) { echo ","; } 
@@ -92,8 +92,9 @@ var json= {
         children: [
             <?
             $rfirst = true;
-            foreach($aggregates as $fqdn=>$aggregate) {
-                $total = $aggregate->get($this->key);
+            foreach($resources as $rid=>$resource) {
+                $total = $resource["agg"]->get($this->key);
+                $resource_info = $resource["info"];
                 if(!$rfirst) { echo ","; } 
                 $rfirst = false;
             ?>
@@ -103,13 +104,13 @@ var json= {
                     $area: <?=$total?>,
                     $color: 2,
                 },
-                id: "<?=$fqdn?>",
-                name: "<?=$fqdn?>"
+                id: "<?=$resource_info->id?>",
+                name: "<?=$resource_info->name?>"
             }
             <?}?>
         ],
         "id": "resource_group_<?=$rgid?>",
-        "name": "<?=$basic->name?> (<?=$rgtotal?>)",
+        "name": "<?=$group_info->name?> (<?=$rgtotal?>)",
         "data": {
             "$area": <?=$rgtotal?>,
             "$color": 8

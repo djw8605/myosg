@@ -4,26 +4,30 @@
     <GroupBy><?=$this->sub_title?></GroupBy>
     <ResourceGroups>
 <?
-    foreach($this->rgs as $rgid=>$bdii) {
-        $basic = $bdii->basic;
-        $aggregates = $bdii->aggregates;
+    foreach($this->rgs as $rgid=>$rg) {
+        $group_info = $rg["info"];
+        $resources = $rg["resources"];
+        if(count($resources) == 0) continue;
 
         $subinfo = "<Resources>";
         $rgtotal = 0;
-        foreach($aggregates as $fqdn=>$aggregate) {
-            $area = $aggregate->get($this->key);
+        foreach($resources as $rid=>$resource) {
+            $resource_info = $resource["info"];
+            $area = $resource["agg"]->get($this->key);
             $rgtotal += $area;
 
             $subinfo .= "<Resource>";
-            $subinfo .= "<FQDN>$fqdn</FQDN>";
+            $subinfo .= "<ID>".$resource_info->id."</ID>";
+            $subinfo .= "<Name>".$resource_info->name."</Name>";
+            $subinfo .= "<FQDN>".$resource_info->fqdn."</FQDN>";
             $subinfo .= "<Area>$area</Area>";
             $subinfo .= "</Resource>";
         }
         $subinfo .= "</Resources>";
 
         echo "<ResourceGroup>";
-        echo "<GroupID>$rgid</GroupID>";
-        echo "<GroupName>".$basic->name."</GroupName>";
+        echo "<GroupID>".$group_info->id."</GroupID>";
+        echo "<GroupName>".$group_info->name."</GroupName>";
         echo "<GroupArea>$rgtotal</GroupArea>";
         echo $subinfo;
         echo "</ResourceGroup>";

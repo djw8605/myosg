@@ -33,72 +33,39 @@ class BDII
         foreach($rgs as $rg) {
             $rg = $rg[0];
             $name = $rg->name;
-            $id = $rg->id;
+            $rgid = $rg->id;
             foreach($bdiis as $bdii) {
                 $group_name = (string)$bdii->GroupName;
                 if($name == $group_name) {
-                    $rg->bdii = $this->processXML($bdii);
-                    $rg->bdii->basic = $rg;
+                    $rg->resources = $this->processXML($bdii);
                 }
             }
-            $ret[$id] = $rg;
+            $ret[$rgid] = $rg;
         }
-
         return $ret;
     }
 
-    //process raw bdii XML information so that MyOSG can understand
+    //digest bdii's resource group XML informatio
     public function processXML($bdii) {
-        $info = new BDII_structure();
+        $resources = array();
 
-/*
-        echo "<pre>";
-        var_dump($bdii);
-        echo "</pre>";
-*/
+        $model = new Resource();
+        $oim_resources = $model->getgroupby("fqdn");
 
         foreach($bdii->Resources as $resource) {
             $resource = $resource->Resource;
-            $fqdn = $resource->FQDN;
+            $fqdn = (string)$resource->FQDN;
 
-            //aggregate data for each resource
-            $agg = new Aggregator();
-            foreach($resource->Services as $service) {
-                $service = $service->Service;
-                $servicename = $service->ServiceName;
-                foreach($service->JobManagers as $jobmanager) {
-                    $jobmanager = $jobmanager->JobManager;
-                    $serviceuri = $jobmanager->ServiceUri;
-                    $glueinfo = $jobmanager->GlueInfo;
-                    $agg->sum("TotalJobs", $glueinfo->GlueCEStateTotalJobs);
-                    $agg->sum("FreeCPUs", $glueinfo->GlueCEStateFreeCPUs);
-                    $agg->sum("EstimatedResponseTime", $glueinfo->GlueCEStateEstimatedResponseTime);
-                    $agg->sum("WaitingJobs", $glueinfo->GlueCEStateWaitingJobs);
-                    $agg->sum("RunningJobs", $glueinfo->GlueCEStateRunningJobs);
-                    $agg->sum("FreeJobSlots", $glueinfo->GlueCEStateFreeJobSlots);
-                }
+            if(isset($oim_resources[$fqdn])) {
+                $oim_resource_info = $oim_resources[$fqdn][0];
+                $resources[$oim_resource_info->id] = array("info"=>$oim_resource_info, "services"=>$resource->Services);
+            } else {
+                slog("BDII FQDN: [$fqdn] doesn't exist in OIM");
             }
-            $info->aggregates[(string)$resource->FQDN] = $agg;
         }
 
-        return $info;
+        return $resources;
     }
 }
 
-class BDII_structure {
-    var $aggregates = array();
-    var $basic = null;
-}
 
-class Aggregator {
-    var $info = array();
-    public function sum($key, $value) {
-        $value = (int)$value;
-        if(isset($this->info[$key])) {
-            $this->info[$key] = $this->info[$key] + $value;
-        } else {
-            $this->info[$key] = $value;
-        }
-    }
-    public function get($key) { return $this->info[$key]; }
-}

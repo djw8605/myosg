@@ -57,22 +57,56 @@ class RgbdiitreeController extends RgController
         $model = new BDII();
         $rgs = $model->get();
 
+        $model = new ResourceGroup();
+        $oim_rgs = $model->getindex();
+
         $this->view->total_area = 0;
         $this->view->key = $key;
         $this->view->sub_title = $sub_title;
         $this->view->rgs = array();
         foreach($this->rgs as $rgid=>$rg) {
+            //filter ones that passed mysql query for resource group
             if(isset($rgs[$rgid])) {
-                $rg = $rgs[$rgid];
-                if(isset($rg->bdii)) {
-                    $bdii = $rg->bdii;
-                    $this->view->rgs[$rgid] = $bdii;
-                    foreach($bdii->aggregates as $aggregate) {
-                        $this->view->total_area += $aggregate->get($key);
+                $bdii_rg = $rgs[$rgid];
+                $rg_view = array();
+
+                //has resources information?
+                if(isset($bdii_rg->resources)) {
+                    //for each resource..
+                    foreach($bdii_rg->resources as $rid=>$resource) {
+                        //filter ones that passed mysql query for resource
+                        if(isset($rg[$rid])) {
+                            //aggregate data for each services
+                            $agg = new Aggregator();
+                            foreach($resource["services"] as $service) {
+                                $service = $service->Service;
+                                $servicename = $service->ServiceName;
+                                //for each job manager entries...
+                                foreach($service->JobManagers as $jobmanager) {
+                                    $jobmanager = $jobmanager->JobManager;
+                                    $serviceuri = $jobmanager->ServiceUri;
+                                    $glueinfo = $jobmanager->GlueInfo;
+                                    $agg->sum("TotalJobs", $glueinfo->GlueCEStateTotalJobs);
+                                    $agg->sum("FreeCPUs", $glueinfo->GlueCEStateFreeCPUs);
+                                    $agg->sum("EstimatedResponseTime", $glueinfo->GlueCEStateEstimatedResponseTime);
+                                    $agg->sum("WaitingJobs", $glueinfo->GlueCEStateWaitingJobs);
+                                    $agg->sum("RunningJobs", $glueinfo->GlueCEStateRunningJobs);
+                                    $agg->sum("FreeJobSlots", $glueinfo->GlueCEStateFreeJobSlots);
+                                }
+                            }
+                            $rg_view[$rid] = array("info"=>$rg[$rid], "agg"=>$agg);
+                            $this->view->total_area += $agg->get($key);
+                        } 
                     }
-                } else {
-                    slog("resource group $rgid doesn't have bdii information");
                 }
+                $this->view->rgs[$rgid] = array("info"=>$oim_rgs[$rgid][0], "resources"=>$rg_view);
+
+/*
+                $bdii = $rg->bdii;
+                $this->view->rgs[$rgid] = $bdii;
+                foreach($bdii->aggregates as $aggregate) {
+                }
+*/
             } else {
                 elog("Can't find information for resource group $rgid");
             }
@@ -81,3 +115,19 @@ class RgbdiitreeController extends RgController
         $this->setpagetitle($this->default_title()." - ".$sub_title);
     }
 }
+
+class Aggregator {
+    var $info = array();
+    public function sum($key, $value) {
+        $value = (int)$value;
+        if(isset($this->info[$key])) {
+            $this->info[$key] = $this->info[$key] + $value;
+        } else {
+            $this->info[$key] = $value;
+        }
+    }
+    public function get($key) { return $this->info[$key]; }
+}
+
+
+
