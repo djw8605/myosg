@@ -158,10 +158,10 @@ class common_config
         $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB";
 
         //VOMS stauts XML
-        $this->voms_xml = "/tmp/voms-monitor.xml";
+        $this->voms_xml = "/usr/local/voms-monitor/var/xml/voms-monitor.xml";
 
         //BDII Dyanmic Information XML
-        $this->bdii_xml = "/tmp/rg_dynamic_information.xml";
+        $this->bdii_xml = "/usr/local/bdii-information-gatherer/var/xml/rg_dynamic_information.xml";
 
         //locale
         $this->date_format_full = "M j, Y H:i:s e";
