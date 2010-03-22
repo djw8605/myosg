@@ -81,17 +81,19 @@ class RgbdiitreeController extends RgController
                             foreach($resource["services"] as $service) {
                                 $service = $service->Service;
                                 $servicename = $service->ServiceName;
-                                //for each job manager entries...
-                                foreach($service->JobManagers as $jobmanager) {
-                                    $jobmanager = $jobmanager->JobManager;
-                                    $serviceuri = $jobmanager->ServiceUri;
-                                    $glueinfo = $jobmanager->GlueInfo;
-                                    $agg->sum("TotalJobs", $glueinfo->GlueCEStateTotalJobs);
-                                    $agg->sum("FreeCPUs", $glueinfo->GlueCEStateFreeCPUs);
-                                    $agg->sum("EstimatedResponseTime", $glueinfo->GlueCEStateEstimatedResponseTime);
-                                    $agg->sum("WaitingJobs", $glueinfo->GlueCEStateWaitingJobs);
-                                    $agg->sum("RunningJobs", $glueinfo->GlueCEStateRunningJobs);
-                                    $agg->sum("FreeJobSlots", $glueinfo->GlueCEStateFreeJobSlots);
+                                //$serviceuri = $service->ServiceUri;
+
+                                //for each queue
+                                if($service->Queues === null) continue;
+                                foreach($service->Queues as $queue) {
+                                    $queue = $queue->Queue;
+                                    $state = $queue->State;
+                                    $agg->sum("TotalJobs", $state->GlueCEStateTotalJobs);
+                                    $agg->sum("FreeCPUs", $state->GlueCEStateFreeCPUs);
+                                    $agg->sum("EstimatedResponseTime", $state->GlueCEStateEstimatedResponseTime);
+                                    $agg->sum("WaitingJobs", $state->GlueCEStateWaitingJobs);
+                                    $agg->sum("RunningJobs", $state->GlueCEStateRunningJobs);
+                                    $agg->sum("FreeJobSlots", $state->GlueCEStateFreeJobSlots);
                                 }
                             }
                             $rg_view[$rid] = array("info"=>$rg[$rid], "agg"=>$agg);
