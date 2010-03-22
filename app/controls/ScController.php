@@ -24,6 +24,7 @@ class ScController extends ControllerBase
     {
         $this->setpagetitle($this->default_title());
         $this->selectmenu("sc");
+        $this->sc_ids = array();
 
         if(isset($_REQUEST["datasource"])) {
             $this->sc_ids = $this->process_sclist();
