@@ -161,6 +161,8 @@ class common_config
         $this->voms_xml = "/usr/local/voms-monitor/var/xml/voms-monitor.xml";
 
         //BDII Dyanmic Information XML
+        //$this->bdii_xml = "/tmp/rg_dynamic_information.xml";
+        //$this->bdii_xml = "/home/hayashis/rg_dynamic_information.xml";
         $this->bdii_xml = "/usr/local/bdii-information-gatherer/var/xml/rg_dynamic_information.xml";
 
         //locale
