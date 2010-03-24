@@ -48,12 +48,10 @@ class BDII
     //digest bdii's resource group XML informatio
     public function processXML($bdii) {
         $resources = array();
-
         $model = new Resource();
         $oim_resources = $model->getgroupby("fqdn");
 
-        foreach($bdii->Resources as $resource) {
-            $resource = $resource->Resource;
+        foreach($bdii->Resources->Resource as $resource) {
             $fqdn = (string)$resource->FQDN;
 
             if(isset($oim_resources[$fqdn])) {
