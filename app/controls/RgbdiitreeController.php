@@ -78,6 +78,7 @@ class RgbdiitreeController extends RgController
                         if(isset($rg[$rid])) {
                             //aggregate data for each services
                             $agg = new Aggregator();
+                            $num = 0;
                             foreach($resource["services"] as $service) {
                                 $service = $service->Service;
                                 $servicename = $service->ServiceName;
@@ -94,10 +95,13 @@ class RgbdiitreeController extends RgController
                                     $agg->sum("WaitingJobs", $state->GlueCEStateWaitingJobs);
                                     $agg->sum("RunningJobs", $state->GlueCEStateRunningJobs);
                                     $agg->sum("FreeJobSlots", $state->GlueCEStateFreeJobSlots);
+                                    ++$num;
                                 }
                             }
-                            $rg_view[$rid] = array("info"=>$rg[$rid], "agg"=>$agg);
-                            $this->view->total_area += $agg->get($key);
+                            if($num > 0) {
+                                $rg_view[$rid] = array("info"=>$rg[$rid], "agg"=>$agg);
+                                $this->view->total_area += $agg->get($key);
+                            }
                         } 
                     }
                 }
