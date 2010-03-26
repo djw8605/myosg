@@ -31,7 +31,13 @@
         <option value="account">Gratia Accounting</option>
         <option value="ce">Gratia Accounting (CE Specific)</option>
         <option value="se">Gratia Accounting (SE Specific)</option>
-        <option value="bdiitree">BDII Treemap</option>
+
+
+        <?
+        //until bdiitree becomes production ready, hide it unless specifically chosen
+        if((isset($_REQUEST["datasource"]) and $_REQUEST["datasource"] == "bdiitree")) { ?>
+            <option value="bdiitree">BDII Treemap</option>
+        <?}?>
         </select>
 
         <div id="summary_attrs" class="attrs indent hidden">
