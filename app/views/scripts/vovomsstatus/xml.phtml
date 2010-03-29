@@ -23,12 +23,14 @@ function outputStatus($info, $vomses) {
     $out = "";
     if(count($vomses) != 0) {
         foreach($vomses as $voms) {
+            $out .= "<VOMS>";
             $status = $voms->Status;
             $out .= "<Status>".$status."</Status>";
             $server_url = $voms->VOMSServerURL;
             $out .= "<URL>".htmlsafe($server_url)."</URL>";
             $note = $voms->Note;
             $out .= "<Description>".$note."</Description>";
+            $out .= "</VOMS>";
         }
     }
     return $out;
