@@ -66,3 +66,9 @@ wget -O /tmp/voactivation.raw.xml $url 2> /dev/null
 xmllint --format /tmp/voactivation.raw.xml > /tmp/voactivation.xml
 xmllint --noout --schema $SCHEMA/voactivation.xsd /tmp/voactivation.xml
 
+echo "Testing VO VOMSES Status"
+url="$HOST/vovomsstatus/xml?datasource=vovomsstatus&start_type=7daysago&start_date=09%2F30%2F2009&end_type=now&end_date=09%2F30%2F2009&all_vos=on&active_value=1"
+wget -O /tmp/vovomsstatus.raw.xml $url 2> /dev/null
+xmllint --format /tmp/vovomsstatus.raw.xml > /tmp/vovomsstatus.xml
+xmllint --noout --schema $SCHEMA/vovomsstatus.xsd /tmp/vovomsstatus.xml
+

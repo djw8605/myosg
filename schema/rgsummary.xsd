@@ -15,7 +15,6 @@
               <xsd:element name="GridType" type="xsd:string" />
               <xsd:element name="GroupID" type="xsd:int" />
               <xsd:element name="GroupName" type="xsd:string" />
-              <xsd:element name="Active" type="boolean" />
               <xsd:element name="Disable" type="boolean" />
               <xsd:element name="Facility">
                 <xsd:complexType>
@@ -124,6 +123,7 @@
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>
+                          <xsd:element name="ENV" type="xsd:string" />
                           <xsd:element name="ContactLists">
                             <xsd:complexType>
                               <xsd:sequence>
