@@ -90,7 +90,7 @@ class RggipstatusController extends RgController
         $rid = (int)$_REQUEST["rid"];
         $model = new ResourceGroup();
         $resources = $model->getindex();
-        $resource_info = $resources[$rid][0];
+        $resource_info = @$resources[$rid][0];
 
         if($resource_info === null) {
             echo "no such resource";
