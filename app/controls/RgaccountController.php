@@ -66,7 +66,8 @@ class RgaccountController extends RgGratiaController
             $ylabel = "Efficiency";
             break;
         default:
-            elog("unknown account_type - maybe a bot accessing?");
+            wlog("unknown account_type - maybe a bot accessing?");
+            exit;
         }
         return array($urlbase, $sub_title, $ylabel);
     }
