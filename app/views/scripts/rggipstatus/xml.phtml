@@ -1,7 +1,7 @@
 <?=$this->header?>
 <GIPValidation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rggipstatus.xsd">
 <?
-foreach($this->resources as $rid=>$record) {
+foreach($this->resource_groups as $rgid=>$record) {
     $resource_name = $record["name"];
     $tests = $record["tests"];
     $overallstatus = $record["overallstatus"];
@@ -16,44 +16,53 @@ foreach($this->resources as $rid=>$record) {
             echo "<Resource>";
             echo "<Name>".$resource->name."</Name>";
             echo "<Fqdn>".$resource->fqdn."</Fqdn>";
+
+            //resource details
+            $details = $this->resource_details[$rid];
+
+            if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { 
+                if(isset($details["cemon_raw_data"])) {
+                    $data = $details["cemon_raw_data"];
+                    $raw = "";
+
+                    //show raw data link
+                    $link = $data->cemon_raw_data[0]->link;
+                    $age = $data->cemon_raw_data[0]->age;
+                    if($link != "") {
+                        $raw .= "<RawLDIF>";
+                        $raw .= "<URL>$link</URL><Age>$age</Age>";
+                        $raw .= "</RawLDIF>";
+                    }
+
+                    //show osg processed link
+                    $link = $data->processed_osg_data[0]->link;
+                    $age = $data->processed_osg_data[0]->age;
+                    if($link != "") {
+                        $raw .= "<ProcessedOsgLDIF>";
+                        $raw .= "<URL>$link</URL><Age>$age</Age>";
+                        $raw .= "</ProcessedOsgLDIF>";
+                    }
+
+                    //show wlcg processed link
+                    $link = $data->processed_wlcg_interop_data[0]->link;
+                    $age = $data->processed_wlcg_interop_data[0]->age;
+                    if($link != "") {
+                        $raw .= "<ProcessedWlcgInteropLDIF>";
+                        $raw .= "<URL>$link</URL><Age>$age</Age>";
+                        $raw .= "</ProcessedWlcgInteropLDIF>";
+                    }
+                }
+                echo "<LDIFUrls>$raw</LDIFUrls>";
+            }
+
             echo "</Resource>";
         }
         echo "</Resources>";
     }    
 
-    $rawdata = $record["rawdata"]; 
-    if(isset($rawdata["cemon_raw_data"])) {
-        $raw = "";
-
-        //show raw data link
-        $link = $rawdata["cemon_raw_data"][0]->link;
-        $age = $rawdata["cemon_raw_data"][0]->age;
-        if($link != "") {
-            $raw .= "<RawLDIF>";
-            $raw .= "<URL>$link</URL><Age>$age</Age>";
-            $raw .= "</RawLDIF>";
-        }
-        //show osg processed link
-        $link = $rawdata["processed_osg_data"][0]->link;
-        $age = $rawdata["processed_osg_data"][0]->age;
-        if($link != "") {
-            $raw .= "<ProcessedOsgLDIF>";
-            $raw .= "<URL>$link</URL><Age>$age</Age>";
-            $raw .= "</ProcessedOsgLDIF>";
-        }
-        //show wlcg processed link
-        $link = $rawdata["processed_wlcg_interop_data"][0]->link;
-        $age = $rawdata["processed_wlcg_interop_data"][0]->age;
-        if($link != "") {
-            $raw .= "<ProcessedWlcgInteropLDIF>";
-            $raw .= "<URL>$link</URL><Age>$age</Age>";
-            $raw .= "</ProcessedWlcgInteropLDIF>";
-        }
-        echo "<LDIFUrls>$raw</LDIFUrls>";
-    }
 
     echo "<OverallStatus>$overallstatus</OverallStatus>";
-    echo "<ID>$rid</ID>";
+    echo "<ID>$rgid</ID>";
 
     echo "<Tests>";
     foreach($tests as $name=>$test) {

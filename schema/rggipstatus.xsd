@@ -23,19 +23,20 @@
                           <xsd:sequence>
                               <xsd:element name="Name" type="xsd:string" />
                               <xsd:element name="Fqdn" type="xsd:string" />
+
+                              <xsd:element minOccurs="0" name="LDIFUrls">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element minOccurs="0" name="RawLDIF" type="ldif_information"/>
+                                    <xsd:element minOccurs="0" name="ProcessedOsgLDIF" type="ldif_information"/>
+                                    <xsd:element minOccurs="0" name="ProcessedWlcgInteropLDIF" type="ldif_information"/>
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+
                           </xsd:sequence>
                         </xsd:complexType>
                       </xsd:element>
-                  </xsd:sequence>
-                </xsd:complexType>
-              </xsd:element>
-
-              <xsd:element minOccurs="0" name="LDIFUrls">
-                <xsd:complexType>
-                  <xsd:sequence>
-                    <xsd:element minOccurs="0" name="RawLDIF" type="ldif_information"/>
-                    <xsd:element minOccurs="0" name="ProcessedOsgLDIF" type="ldif_information"/>
-                    <xsd:element minOccurs="0" name="ProcessedWlcgInteropLDIF" type="ldif_information"/>
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>

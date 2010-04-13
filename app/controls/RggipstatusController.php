@@ -32,8 +32,9 @@ class RggipstatusController extends RgController
         $resource_groups = $model->getindex();
         
         //merge those xmls
-        $this->view->resources = array();
-        foreach($this->rgs as $rgid=>$rg) {
+        $this->view->resource_groups = array();
+        $this->view->resource_details = array();
+        foreach($this->rgs as $rgid=>$resources) {
             $tests = array();
             $resource_group = $resource_groups[$rgid][0];
 
@@ -41,8 +42,8 @@ class RggipstatusController extends RgController
             $testtime = null;
             $overallstatus = "NA";
 
-            //search for this resource name
             $found = false;
+            //search for gip status for this resource name (by resource GROUP name!)
             foreach($gip->Resource as $resource) {
                 if($resource_group->name == $resource->Name) {
                     foreach($resource->TestCase as $test) {
@@ -55,33 +56,40 @@ class RggipstatusController extends RgController
                 }
             }
 
-            //search for cemon raw file links
-            $rawdata = array();
-            $cemon = null;
-            //search prod..
-            foreach($cemonbdii->resource as $resource) {
-                if($resource->name == $resource_group->name) {
-                    $cemon = $resource;
-                    break;
+            if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
+                //gather resource details
+                foreach($resources as $rid=>$resource) {
+                    $details = array();
+                    
+                    if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { 
+                        //search cemon bdii data
+                        $rawdata = array();
+                        foreach($cemonbdii->resource as $cemon_resource) {
+                            if($cemon_resource->name == $resource->name) {
+                                $details["cemon_raw_data"] = $cemon_resource;
+                                break;
+                            }
+                        }
+                    }
+
+                    //TODO - add code to gather more resource details here
+
+
+                    $this->view->resource_details[$rid] = $details;
                 }
             }
-            //if we have data, pull it out
-            if($cemon !== null) {
-                $rawdata["processed_osg_data"] = $cemon->processed_osg_data;
-                $rawdata["processed_wlcg_interop_data"] = $cemon->processed_wlcg_interop_data;
-                $rawdata["cemon_raw_data"] = $cemon->cemon_raw_data;
-            }
 
-            $this->view->resources[$rgid] = array(
+            //put everything together
+            $this->view->resource_groups[$rgid] = array(
                 "testtime"=>$testtime,
                 "name"=>$resource_group->name, 
                 "gridtype"=>$resource_group->grid_type_description,
-                "rawdata"=>$rawdata,
                 "overallstatus"=>$overallstatus,
-                "resources"=>$rg,
+                "resources"=>$resources,
                 "tests"=>$tests
             );
         }
+        //dlog($this->view->resource_details);
         $this->setpagetitle(self::default_title());
     }
 

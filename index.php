@@ -16,7 +16,8 @@ License.
 #################################################################################################*/
 
 //init zend framework
-set_include_path('lib/zf-1.9.2/library' . PATH_SEPARATOR . get_include_path());  
+//set_include_path('lib/zf-1.9.2/library' . PATH_SEPARATOR . get_include_path());  
+set_include_path('lib/ZendFramework-1.10.3/library' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/models' . PATH_SEPARATOR . get_include_path());  
 set_include_path('app/controls' . PATH_SEPARATOR . get_include_path());  
 require_once "Zend/Loader/Autoloader.php";

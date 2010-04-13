@@ -6,4 +6,18 @@ if(isset($_REQUEST["gip_status_attrs_showtestresults"])) { $checked = "checked=c
 
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showresource"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showresource" <?=$checked?>/> Show Resources<br/>
+<input type="checkbox" name="gip_status_attrs_showresource" <?=$checked?> onclick="$('#resource_details').toggle('fast');"/> Show Resources<br/>
+
+<div id="resource_details" class="hidden list">
+<h4>For Each Resource</h4>
+    <?$checked = "";
+    if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { $checked = "checked=checked"; }?>
+    <input type="checkbox" name="gip_status_attrs_showcemondata" <?=$checked?>/> Show LDIF URLs<br/>
+</div>
+<script type="text/javascript">
+if($("input[name='gip_status_attrs_showresource']").attr('checked')) {
+    $("#resource_details").show();
+} else {
+    $("#resource_details").hide();
+}
+</script>
