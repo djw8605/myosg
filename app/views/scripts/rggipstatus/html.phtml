@@ -70,8 +70,8 @@ foreach($this->resource_groups as $rgid=>$record) {
         //show resources
         foreach($resources as $rid=>$resource) {
             echo "<div class=\"resource h4 round\">";
+            echo "<div class=\"sidenote\"><span class=\"fqdn\">".$resource->fqdn."</span></div>";
             echo $resource->name."<br/>";
-            echo "<span class=\"fqdn\">".$resource->fqdn."</span>";
             echo "</div>";
 
             //resource details
@@ -81,34 +81,43 @@ foreach($this->resource_groups as $rgid=>$record) {
             if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { 
                 if(!uwa()) {
                     echo "<th>LDIF URLs</th>";
-                    echo "<td>";
+                    echo "<td style='padding: 0px;'>";
+                    
                     if(isset($details["cemon_raw_data"])) {
+                        echo "<table width='100%'><tr>";
+
                         //show raw data link
                         $data = $details["cemon_raw_data"];
+
+                        echo "<td width='33%' style='padding: 0; border: none;'>";
 
                         $link = $data->cemon_raw_data[0]->link;
                         $age = $data->cemon_raw_data[0]->age;
                         if($link == "") {
                             echo "(No Incoming Data)<br/>";
                         } else {
-                            echo "<a target='_blank' href='$link'>Incoming Data (Age $age)</a><br/>";
+                            echo "<a target='_blank' href='$link'>Incoming Data<br>(Age $age)</a>";
                         }
+                        echo "</td><td width='33%' style='padding: 0; border: none;'>";
                         //show osg processed link
                         $link = $data->processed_osg_data[0]->link;
                         $age = $data->processed_osg_data[0]->age;
                         if($link == "") {
                             echo "(No OSG Data)<br/>";
                         } else {
-                            echo "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII (Age $age)</a><br/>";
+                            echo "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII<br>(Age $age)</a>";
                         }
+                        echo "</td><td style='padding: 0; border: none;'>";
                         //show wlcg processed link
                         $link = $data->processed_wlcg_interop_data[0]->link;
                         $age = $data->processed_wlcg_interop_data[0]->age;
                         if($link == "") {
                             echo "(No WLCG Data)<br/>";
                         } else {
-                            echo "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII (Age $age)</a><br/>";
+                            echo "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII<br>(Age $age)</a>";
                         }
+                        echo "</td></tr></table>";
+
                     } else {
                         echo "Raw data not available";
                     }
