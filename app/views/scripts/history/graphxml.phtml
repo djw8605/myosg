@@ -1,0 +1,56 @@
+<!-- This is a sub-XML intended to be used as part of Resource Group / Status History XML -->
+<GraphXML>
+<StartTime><?=$this->start_time?></StartTime>
+<EndTime><?=$this->end_time?></EndTime>
+<StatusChanges>
+<?
+foreach($this->status_changes as $status_change) {
+    echo "<StatusChange>";
+    echo "<Status>".Status::getStatus($status_change->status_id)."</Status>";
+    echo "<Timestamp>".$status_change->timestamp."</Timestamp>";
+    echo "<Detail>".htmlsafe($status_change->detail)."</Detail>";
+    echo "</StatusChange>";
+}
+?>
+</StatusChanges>
+<Downtimes>
+<?
+foreach($this->downtimes as $id=>$downtime) {
+    echo "<Downtime>";
+    echo "<ID>".$id."</ID>";
+    echo "<StartTime>".$downtime->unix_start_time."</StartTime>";
+    echo "<EndTime>".$downtime->unix_end_time."</EndTime>";
+    echo "<Summary>".htmlsafe($downtime->downtime_summary)."</Summary>";
+/*
+object(stdClass)#56 (12) {
+  ["id"]=>
+  string(7) "1001208"
+  ["timestamp"]=>
+  string(19) "2010-04-13 00:41:30"
+  ["start_time"]=>
+  string(19) "2010-04-08 00:00:00"
+  ["end_time"]=>
+  string(19) "2010-04-14 00:00:00"
+  ["downtime_summary"]=>
+  string(40) "finish upgrade and replace expired certs"
+  ["downtime_class_id"]=>
+  string(1) "1"
+  ["downtime_severity_id"]=>
+  string(1) "1"
+  ["resource_id"]=>
+  string(2) "56"
+  ["dn_id"]=>
+  string(1) "6"
+  ["disable"]=>
+  string(1) "0"
+  ["unix_start_time"]=>
+  string(10) "1270684800"
+  ["unix_end_time"]=>
+  string(10) "1271203200"
+}
+*/
+    echo "</Downtime>";
+}
+?>
+</Downtimes>
+</GraphXML>

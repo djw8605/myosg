@@ -117,6 +117,7 @@ foreach($this->sites as $site) {
     if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
 
     $html = "";
+    $resource_count_total = 0;
     foreach($rgs as $rg) {
         $rgname = $rg->name;
 
@@ -144,8 +145,12 @@ foreach($this->sites as $site) {
                     $status = Status::getStatus($rstatus->status_id);
                     $note = $rstatus->detail;
                 } else {
+/*
                     $status = "UNKNOWN";
                     $note = "Resource status is not calculated for this resource.";
+*/
+                    //resource status is not calculated - skip this resource
+                    continue;
                 }
                 $html .= "<div class=\"status_$status\"><h4>$name</h4>$note</div>";
 
@@ -159,10 +164,14 @@ foreach($this->sites as $site) {
                 $resource_count++;
             }
         }
+        $resource_count_total += $resource_count;
         if($resource_count == 0) {
             $html .= "No active resource exists under this resource group.";
         }
     }
+
+    //if there are no resource to show, don't show it all
+    if($resource_count_total == 0) continue;
 
     //decide site status
     if($status_critical > 0) $status = "critical";

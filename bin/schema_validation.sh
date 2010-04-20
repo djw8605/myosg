@@ -72,3 +72,9 @@ wget -O /tmp/vovomsstatus.raw.xml $url 2> /dev/null
 xmllint --format /tmp/vovomsstatus.raw.xml > /tmp/vovomsstatus.xml
 xmllint --noout --schema $SCHEMA/vovomsstatus.xsd /tmp/vovomsstatus.xml
 
+echo "Testing MISC CPU Info"
+url="$HOST/misccpuinfo/xml?datasource=cpuinfo&count_sg_1=on&count_active=on&count_enabled=on"
+wget -O /tmp/misccpuinfo.raw.xml $url 2> /dev/null
+xmllint --format /tmp/misccpuinfo.raw.xml > /tmp/misccpuinfo.xml
+xmllint --noout --schema $SCHEMA/misccpuinfo.xsd /tmp/misccpuinfo.xml
+

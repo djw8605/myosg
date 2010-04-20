@@ -22,6 +22,10 @@ foreach($this->rgs as $rgid=>$rg) {
             echo "<Name>".htmlsafe($service->name)."</Name>";
             echo "<Description>".htmlsafe($service->description)."</Description>";
             echo "<ID>$service->service_id</ID>";
+            echo "<StatusChangeXML>";
+            $url = fullbase()."/history/graphxml?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time";
+            echo htmlsafe($url);
+            echo "</StatusChangeXML>";
             echo "<GraphURL>";
             $url = fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time";
             echo htmlsafe($url);

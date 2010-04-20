@@ -217,7 +217,7 @@ class HistoryController extends ControllerBase
             $id = $downtime->id;
             foreach($downtime_service as $service) {
                 if($service->resource_downtime_id == $id) {
-                    $downtime_forservice[] = $downtime;
+                    $downtime_forservice[$id] = $downtime;
                 }
             }
         }
@@ -256,6 +256,10 @@ class HistoryController extends ControllerBase
     {
         list($status_changes, $start_time, $end_time, $downtimes)  = $this->loadStatusChanges();
         $this->drawGraph($status_changes, $start_time, $end_time, $downtimes);
+    }
+    public function graphxmlAction() {
+        header("Content-type: text/xml");
+        list($this->view->status_changes, $this->view->start_time, $this->view->end_time, $this->view->downtimes)  = $this->loadStatusChanges();
     }
 
     public function loadStatusChanges()
