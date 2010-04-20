@@ -9,6 +9,7 @@
               <xsd:element name="ID" type="xsd:int" />
               <xsd:element name="Name" type="xsd:string" />
               <xsd:element name="NormalizationConstant" type="xsd:decimal" />
+              <xsd:element name="HEPSPEC" type="xsd:decimal" />
               <xsd:element name="Notes" type="xsd:string" />
             </xsd:sequence>
           </xsd:complexType>
