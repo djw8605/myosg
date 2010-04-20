@@ -20,7 +20,7 @@ class Site extends CachedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        $where = "where 1 = 1";
+        $where = "where disable = 0";
         if(isset($params["facility_id"])) {
             $where .= " and facility_id = ".$params["facility_id"];
         }
