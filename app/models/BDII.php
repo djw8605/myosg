@@ -56,7 +56,7 @@ class BDII
 
             if(isset($oim_resources[$fqdn])) {
                 $oim_resource_info = $oim_resources[$fqdn][0];
-                $resources[$oim_resource_info->id] = array("info"=>$oim_resource_info, "services"=>$resource->Services);
+                $resources[$oim_resource_info->id] = array("info"=>$oim_resource_info, "bdii"=>$resource);
             } else {
                 slog("BDII FQDN: [$fqdn] doesn't exist in OIM");
             }

@@ -1,0 +1,119 @@
+<p class="warning">This is an experimental feature. Please do not use for production purpose.</p>
+<?
+global $cols;
+
+foreach($this->rgs as $rgid=>$data) {
+    $rg_info = $data["info"];
+    $resources = $data["resources"];
+    
+    echo "<div class=\"resource_group_header round\">";
+    echo "<div class=\"sidenote\">$rg_info->grid_type_description Group</div>";
+    echo "<span class=\"h3\">$rg_info->name</span>";
+    echo "</div>";
+
+    if(count($resources) == 0) {
+        echo "<p class=\"warning\">No applicable resource</p>";
+    } else {
+        echo "<table class=\"summary_table\">";
+
+        if(isset($_REQUEST["bdii_attrs_showstat"])) {
+            echo "<tr>";
+            echo "<th>Total Jobs</th>";
+            echo "<th>Estimated Response Time</th>";
+            echo "<th>Waiting Jobs</th>";
+            echo "<th>Free CPUs</th>";
+            echo "<th>Running Jobs</th>";
+            echo "<th>Free Job Slots</th>";
+            echo "<th>Allowed VO FQANs</th>";
+            echo "</tr>";
+        }
+        $cols = 7;
+
+        foreach($resources as $rrid=>$resource_data) {
+            $r_info = $resource_data["info"];
+            $bdii_info = $resource_data["bdii"];
+            echo "<tr><td style=\"border: none;\" colspan=$cols>";
+                echo "<div class=\"resource round\">";
+                echo "<div class=\"fqdn sidenote\">$r_info->fqdn</div>";
+                echo "<span class=\"h4\">$r_info->name</span>";
+
+                if(isset($_REQUEST["bdii_attrs_showversion"])) {
+                    echo "<br/>";
+                    echo "<table width=\"100%\"><tr><td width=\"33%\" style=\"border: none;\">";
+                    outputVersion("OSG Version", $bdii_info->OSG_VERSION);
+                    echo "</td><td width=\"33%\" style=\"border: none;\">";
+                    outputVersion("VDT Version", $bdii_info->VDT_VERSION);
+                    echo "</td><td width=\"33%\" style=\"border: none;\">";
+                    outputVersion("GIP Version", $bdii_info->GIP_VERSION);
+                    echo "</td></tr></table>";
+                }
+
+                echo "</div>";
+            echo "</td></tr>";
+
+            if(isset($_REQUEST["bdii_attrs_showstat"])) {
+                $services = $bdii_info->Services;
+                $service = $services->Service; //this will become an array in the future?
+                outputService($service);
+            }
+        }
+
+        echo "</table>";
+    }
+}
+
+function outputVersion($name, $version) {
+    echo "<b>$name</b>: ";
+    if($version != null) {
+        echo $version;
+    } else {
+        echo "Unknown";
+    }
+}
+
+function outputService($service) {
+    global $cols;
+/* -- service information
+    echo "<tr><td colspan=$cols>";
+    echo "<div class=\"service_info\">";
+    echo "<div class=\"sidenote\">$service->ServiceUri</div>";
+    echo "<b>$service->ServiceName</b>";
+    echo "</div>";
+    echo "</td></tr>";
+*/
+    if(isset($service->Queues->Queue)) {
+        $queues = $service->Queues->Queue;
+        foreach($queues as $queue) {
+            outputQueue($queue);
+        }
+    } else {
+        echo "<tr><td colspan=$cols>";
+        echo "<p class=\"warning\">No Queue</p>";
+        echo "</td></tr>";
+    }
+}
+
+
+function outputQueue($queue) {
+    global $cols;
+
+    //queue name / fqans
+    echo "<tr><td colspan=$cols>";
+    echo "<span class=\"fqdn\" style=\"color: gray;\">$queue->QueueName</span>"; 
+    echo "</td></tr>";
+
+    //state
+    $state = $queue->State;
+    echo "<tr>";
+    echo "<td>$state->GlueCEStateTotalJobs</td>";
+    echo "<td>$state->GlueCEStateEstimatedResponseTime</td>";
+    echo "<td>$state->GlueCEStateWaitingJobs</td>";
+    echo "<td>$state->GlueCEStateFreeCPUs</td>";
+    echo "<td>$state->GlueCEStateRunningJobs</td>";
+    echo "<td>$state->GlueCEStateFreeJobSlots</td>";
+    $fqans = $queue->AllowedVOFQANs; //only 1 for now????
+    $fqan = $fqans->FQAN;
+    echo "<td>$fqan</td>";
+    echo "</tr>";
+
+}

@@ -1,0 +1,39 @@
+<?=$this->header?>
+<BDII xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgbdii.xsd">
+<ResourceGroups>
+<?
+foreach($this->rgs as $rgid=>$data) {
+    $rg_info = $data["info"];
+    $resources = $data["resources"];
+    
+    echo "<ResourceGroup>";
+    echo "<GridType>$rg_info->grid_type_description</GridType>";
+    echo "<GroupID>$rgid</GroupID>";
+    echo "<GroupName>$rg_info->name</GroupName>";
+
+    echo "<Resources>";
+    foreach($resources as $rid=>$resource_data) {
+        $r_info = $resource_data["info"];
+        $bdii_info = $resource_data["bdii"];
+
+        echo "<Resource>";
+        echo "<ID>$rid</ID>";
+        echo "<Name>$r_info->name</Name>";
+        echo "<FQDN>$r_info->fqdn</FQDN>";
+        
+        echo "<DynamicInformation>";
+        echo "<!-- following information comes directly from BDII consolidator - format is likely to change -->";
+        foreach($bdii_info->children() as $child) {
+            echo $child->asXML();
+        }
+        echo "</DynamicInformation>";
+        echo "</Resource>";
+    }
+    echo "</Resources>";
+    echo "</ResourceGroup>";
+}
+?>
+</ResourceGroups>
+</BDII>
+
+

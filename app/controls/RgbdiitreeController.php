@@ -79,7 +79,8 @@ class RgbdiitreeController extends RgController
                             //aggregate data for each services
                             $agg = new Aggregator();
                             $num = 0;
-                            foreach($resource["services"] as $service) {
+                            $services = $resource["bdii"]->Services;
+                            foreach($services as $service) {
                                 $service = $service->Service;
                                 $servicename = $service->ServiceName;
                                 //$serviceuri = $service->ServiceUri;
