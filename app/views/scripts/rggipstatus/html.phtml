@@ -6,15 +6,16 @@ foreach($this->resource_groups as $rgid=>$record) {
     $overallstatus = $record["overallstatus"];
     $gridtype = $record["gridtype"];
     $resources = $record["resources"];
+    $wlcgstatus = $record["wlcgstatus"];
 
     switch($overallstatus) {
     case "FAIL":
         $overall = "CRITICAL";
-        $overall_detail = "At least one test is failing.";
+        $overall_detail = "At least one GIP test is failing.";
         break;
     case "OK":
         $overall = "OK";
-        $overall_detail = "No issue found for this resource.";
+        $overall_detail = "No GIP issue found for this resource.";
         break;
     case "NA":
         $overall = "UNKNOWN";
@@ -23,7 +24,7 @@ foreach($this->resource_groups as $rgid=>$record) {
     default:
         //????
         $overall = "UNKNOWN";
-        $overall_detail = "Validation script is returning unknown overall status.";
+        $overall_detail = "GIP Validation script is returning unknown overall status.";
     }
 ?>
     <div class="resource_group_header round">
@@ -34,9 +35,29 @@ foreach($this->resource_groups as $rgid=>$record) {
         echo "</div>";
     }
     echo "<span class='h3'>".$group_name."</span>";
-    ?>
-    </div>
+    echo "</div>";
 
+    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { 
+        //display wlcg status
+        echo "<div style=\"float: right; font-size: 95%; min-width: 275px;\">";
+        echo "<div class=\"round subinfo indent\">";
+        echo "<h4>WLCG Status</h4>";
+        if($wlcgstatus !== null) {
+            foreach($wlcgstatus->WLCGBDII as $status) {
+                echo "<div style=\"border-top: 1px solid #ddd; padding-top: 0px;padding-bottom: 0px;\" class=\"status_".strtoupper($status->Status)."\">";
+                echo "<b>$status->LDAPURI</b><br/>";
+                echo $status->Notes;
+                echo "</div>";
+            }
+        } else {
+            echo "<p class=\"warning\">Information not available</p>";
+        }
+        echo "</div>";//subinfo
+        echo "</div>";//sidenote
+    }
+
+
+    ?>
     <div class="status_<?=$overall?>">
     <p><?=$overall_detail?></p>
     </div>
@@ -119,7 +140,7 @@ foreach($this->resource_groups as $rgid=>$record) {
                         echo "</td></tr></table>";
 
                     } else {
-                        echo "Raw data not available";
+                        echo "&nbsp;Raw data not available";
                     }
                     echo "</td>";
                 }

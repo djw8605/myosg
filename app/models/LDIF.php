@@ -36,6 +36,19 @@ class LDIF
         return $gip;
     }
 
+    public function getWLCGStatus()
+    {
+        $ret = array(); 
+
+        $xml_str = file_get_contents(config()->gip_wlcg_status);
+        $xml = new SimpleXMLElement($xml_str);
+        $rgs = $xml->ResourceGroups->ResourceGroup;
+        foreach($rgs as $rg) {
+            $ret[(int)$rg->GroupID] = $rg->WLCGBDIIs;
+        }
+        return $ret;
+    }
+
     public function getBdii()
     {
         //try only for 2 seconds to pull this data

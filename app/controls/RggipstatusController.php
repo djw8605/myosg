@@ -28,6 +28,12 @@ class RggipstatusController extends RgController
         $gip = $model->getValidationSummary();
         $cemonbdii = $model->getBdii();
 
+        $wlcgstatus = array();
+        if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
+            $wlcgstatus = $model->getWLCGStatus();
+        }
+
+
         $model = new ResourceGroup();
         $resource_groups = $model->getindex();
         
@@ -86,7 +92,8 @@ class RggipstatusController extends RgController
                 "gridtype"=>$resource_group->grid_type_description,
                 "overallstatus"=>$overallstatus,
                 "resources"=>$resources,
-                "tests"=>$tests
+                "tests"=>$tests,
+                "wlcgstatus"=>@$wlcgstatus[$rgid]
             );
         }
         //dlog($this->view->resource_details);

@@ -152,6 +152,7 @@ class common_config
         $this->gip_summary_itb = "/usr/local/gip-validator/var/results/xml_osg_itb/gipvalidate_summary.xml"; 
         $this->gip_detail = "/usr/local/gip-validator/var/results/xml_osg/gipvalidate_<resource_name>_detail.xml"; 
         $this->gip_detail_itb = "/usr/local/gip-validator/var/results/xml_osg_itb/gipvalidate_<resource_name>_detail.xml"; 
+        $this->gip_wlcg_status = "/tmp/rg_top_level_wlcgbdii_status.xml";
 
         //bdii raw files
         $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";

@@ -6,6 +6,7 @@ foreach($this->resource_groups as $rgid=>$record) {
     $tests = $record["tests"];
     $overallstatus = $record["overallstatus"];
     $resources = $record["resources"];
+    $wlcgstatus = $record["wlcgstatus"];
 
     echo "<ResourceGroup>";
     echo "<GroupName>$resource_name</GroupName>";
@@ -75,6 +76,18 @@ foreach($this->resource_groups as $rgid=>$record) {
         echo "</Test>";
     }
     echo "</Tests>";
+
+    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
+        if($wlcgstatus !== null) {
+            echo "<WLCGStatus>";
+            echo "<!-- Following XML data comes directly from WLCG consolidator. Format of the data could change without warning -->";
+            foreach($wlcgstatus->children() as $child) {
+                echo $child->asXML();
+            }
+            echo "</WLCGStatus>";
+        }
+    }
+
     echo "</ResourceGroup>";
 }
 ?>
