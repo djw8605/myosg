@@ -84,6 +84,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
         //show resource name & desc
         echo "<div class=\"round resource\">";
+        echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/resource?resource_type=".$resource_group->osg_grid_type_id."&resource_id=$rid\" class=\"sidenote\">";
+        echo "<img src=\"../images/tea.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
         echo "<span class=\"h4\">".$resource->name."</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
@@ -115,12 +117,11 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 $service_names = "";
                 foreach($services as $service) {
                     echo "<div class=\"service_info\">";
+                    echo "<div class=\"service round\">";
                     if(isset($this->servicetypes[$service->service_id])) {
 
                         $service_info = $this->servicetypes[$service->service_id][0];
-                        $service_name = $service_info->name;
 
-                        echo "<div class=\"service round\">";
 
                         if($service->central == 1) {
                             echo "<span class=\"round tag\" style=\"background-color: #99b\">Central Service</span>";
@@ -128,10 +129,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                         if($service->hidden == 1) {
                             echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
                         }
-                        
 
-                        echo "<b>".htmlsafe($service_name)."</b>";
-                        echo "<br/><span class=\"fqdn\">";
+                        echo "<span class=\"sidenote fqdn\">";
                         if ($service->endpoint_override != "") {
                             //bold this since it's not default
                             echo "<b>$service->endpoint_override</b>";
@@ -140,26 +139,13 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                         }
                         echo "</span>";
 
-                        echo "</div>";
 
-/*
-                        echo "<table class=\"summary_subtable\">";
-                        echo "<tr><th>Central</th><td>";
-                        if($service->central == 1) echo "True";
-                        else echo "False";
-                        echo "</td></tr>";
-
-                        echo "<tr><th>Hidden</th><td>";
-                        if($service->hidden == 1) echo "True";
-                        else echo "False";
-                        echo "</td></tr>";
-                        echo "</table>";
-*/
-
+                        echo "<b>".htmlsafe($service_info->name)."</b>";
 
                     } else {
-                        $service_name .= "unknown_service_id:".$service->service_id;
+                        echo "(Unknown Service ID:".$service->service_id.")";
                     }
+                    echo "</div>";
                     echo "</div>";
                 }
             }

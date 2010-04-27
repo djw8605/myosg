@@ -228,6 +228,8 @@ class common_config
         );
         //if specific metric_id is not found, use following
         $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
+
+        $this->gocticket_url = "https://ticket.grid.iu.edu/goc";
     }
     function getCacheDir() {
         return "/tmp";
