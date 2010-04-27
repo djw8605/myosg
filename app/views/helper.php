@@ -378,7 +378,11 @@ function radiolist($id, $title, $kv, $default)
 
 function helpbutton($type)
 {
-    return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\"><img src=\"".fullbase()."/images/help.png"."\"/></a>";
+    return "<a target=\"_help\" href=\"https://twiki.grid.iu.edu/bin/view/Operations/OIMTermDefinition#$type\">".tooltip("Click to show documentation")."</a>";
+}
+
+function tooltip($msg) {
+    return "<img style=\"cursor: pointer;\" align=\"top\" src=\"".fullbase()."/images/help.png\" alt=\"$msg\" title=\"$msg\"/>";
 }
 
 function externalurl($url)

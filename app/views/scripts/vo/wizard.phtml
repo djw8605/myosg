@@ -48,7 +48,6 @@
                 <p>Please select the information to display first.</p>
             </div>
             <div id="vo_area" class="hidden">
-                <p>Select VO that you want to show above information (conditions are or-ed).</p>
                 <?
                 $checked = "";
                 if(isset($_REQUEST["all_vos"])) { $checked = "checked=checked"; }
@@ -70,13 +69,12 @@
             </div>
         </div>
 
-        <h3>Filter</h3>
+        <h3>Filter By</h3>
         <div class="indent">
             <div id="filter_area_standby">
                 <p>Please select the information to display first.</p>
             </div>
             <div id="filter_area" class="hidden">
-                <p>Only show VO that matches following criteria (conditions are and-ed).</p>
                 <?
                 $kv = array();
                 $kv[0] = "Inactive";
@@ -96,6 +94,43 @@
                 ?>
             </div>
         </div>
+
+        <h3>Sort By</h3>
+        <div class="indent">
+            <div id="sort_area_standby">
+                <p>Please select the information to display sort options.</p>
+            </div>
+            <div id="sort_area" class="hidden">
+                <?
+
+                if(isset($_REQUEST["sort_key"])) {
+                    $key = $_REQUEST["sort_key"];
+                } else {
+                    $key = "name";
+                }
+
+                $checked = "";
+                if($key == "name") { $checked = "checked=checked"; }
+                echo "<input type=\"radio\" name=\"sort_key\" $checked value=\"name\" /> Name<br/>";
+
+                $checked = "";
+                if($key == "long_name") { $checked = "checked=checked"; }
+                echo "<input type=\"radio\" name=\"sort_key\" $checked value=\"long_name\" /> Long Name<br/>";
+
+                $checked = "";
+                if($key == "sc") { $checked = "checked=checked"; }
+                echo "<input type=\"radio\" name=\"sort_key\" $checked value=\"sc\" /> Support Center<br/>";
+
+                echo "<br/>";
+
+                $checked = "";
+                if(isset($_REQUEST["sort_reverse"])) { $checked = "checked=checked"; }
+                echo "<input type=\"checkbox\" name=\"sort_reverse\" $checked /> Sort in reverse order<br/>";
+                ?>
+            </div>
+        </div>
+
+ 
     </div>
 
     <br/>
@@ -114,16 +149,22 @@ function showhide_attrs(show_speed)
         $("#"+v+"_attrs").show(show_speed);
         $("#vo_area").show(show_speed);
         $("#filter_area").show(show_speed);
+        $("#sort_area").show(show_speed);
+
         $("#vo_area_standby").hide();
         $("#filter_area_standby").hide();
+        $("#sort_area_standby").hide();
         if(v == "activation") {
             $("#_daterange_attrs").show(show_speed);
         }
     } else {
         $("#vo_area").hide();
         $("#filter_area").hide();
+        $("#sort_area").hide();
+
         $("#vo_area_standby").show();
         $("#filter_area_standby").show();
+        $("#sort_area_standby").show();
     }
     if(v == "activation") {
         $('.list_filter').hide();

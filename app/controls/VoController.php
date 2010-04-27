@@ -32,6 +32,11 @@ class VoController extends ControllerBase
                 $this->view->info = "No Virtual Organization matches your current criteria. Please adjust your criteria in order to display any data.";
             }
         }
+    
+        //why am I not using SQL order by statement? because our filter logic is not written to respect the ordering from SQL
+        //also, I like to sort it so that we can extend the functionality of sorting more easily. it's also inline with NOSQL phylosophy
+        $this->apply_sort($this->vo_ids);
+
         $this->load_daterangequery();
     }
 
@@ -57,6 +62,21 @@ class VoController extends ControllerBase
 
         if(isset($_REQUEST["all_vos"])) {
             $model = new VirtualOrganization();
+/*
+            $orderby = "name";
+            if(isset($_REQUEST["sort_key"])) {
+                switch($_REQUEST["sort_key"]) {
+                case "name": $orderby = "name";
+                case "long_name": $orderby = "long_name";
+                default:
+                    elog("Unknown sort key given for process_volist(): ".$_REQUEST["sort_key"]);
+                }
+            }
+            if(isset($_REQUEST["sort_reverse"])) {
+                $orderby .= " DESC";
+            }
+            $vos = $model->get(array("orderby"=>$orderby));
+*/
             $vos = $model->get();
             foreach($vos as $vo) {
                 if(isset($_REQUEST["show_disabled"])) {
@@ -138,4 +158,61 @@ class VoController extends ControllerBase
         }
         return $vos_to_keep;
     }
+
+    private function apply_sort(&$ids) {
+        global $sort_info, $sort_reverse;
+
+        //pull user query
+        $sort_key = "name";
+        if(isset($_REQUEST["sort_key"])) {
+            $sort_key = $_REQUEST["sort_key"];
+        }
+        $sort_reverse = false;
+        if(isset($_REQUEST["sort_reverse"])) {
+            $sort_reverse = true;
+        }
+
+        $sort_info = array();
+        switch($sort_key) {
+        case "name": 
+            $model = new VirtualOrganization();
+            foreach($model->getindex() as $id=>$vo) {
+                $sort_info[$id] = strtoupper($vo[0]->name);
+            }
+            break;
+        case "long_name":
+            $model = new VirtualOrganization();
+            foreach($model->getindex() as $id=>$vo) {
+                $sort_info[$id] = strtoupper($vo[0]->long_name);
+            }
+            break;
+        case "sc":
+            $scmodel = new SupportCenters();
+            $scs = $scmodel->getindex();
+
+            $model = new VirtualOrganization();
+            foreach($model->getindex() as $id=>$vo) {
+                $sort_info[$id] = strtoupper($scs[$vo[0]->sc_id][0]->name);
+            }
+            break;
+        default: 
+            elog("Unknown sort_key given for mysort: VoController: ".$sort_key);
+        }
+
+        usort($ids, "mysort");
+    }
+
+}
+
+function mysort($a, $b) {
+    global $sort_info, $sort_reverse;
+
+    if($sort_reverse) {
+        $tmp = $a;
+        $a = $b;
+        $b = $tmp;
+    }
+    $a = $sort_info[$a];
+    $b = $sort_info[$b];
+    return $a > $b;
 }
