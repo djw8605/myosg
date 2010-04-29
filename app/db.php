@@ -16,6 +16,46 @@ License.
 #################################################################################################*/
 
 $g_db = null;
+
+function connect($name, $db_type, $params) {
+    global $g_db;
+
+    //try to connect one of connection parameter that works..
+    $exceptions = array();
+    foreach($params as $param) {
+        try {
+            $db = Zend_Db::factory($db_type, $param);
+            $db->setFetchMode(Zend_Db::FETCH_OBJ);
+            $db->getConnection();
+
+            //profile db via firebug
+            if(config()->debug) {
+                $profiler = new Zend_Db_Profiler_Firebug('All DB Queries');
+                $profiler->setEnabled(true);
+                $db->setProfiler($profiler);
+            }
+
+            //slog("success $name");
+            $g_db[$name] = $db;
+            return;
+        } catch (Zend_Db_Adapter_Exception $e) {
+            // perhaps a failed login credential, or perhaps the RDBMS is not running
+            wlog("Couldn't connect to $name (trying another connection - if available):: ".$e->getMessage());
+            $exceptions[] = $e;
+        } catch (Zend_Exception $e) {
+            // perhaps factory() failed to load the specified Adapter class
+            wlog("Couldn't connect to $name (trying another connection - if available):: ".$e->getMessage());
+            $exceptions[] = $e;
+        }
+    }
+    $msg = "";
+    foreach($exceptions as $e) {
+        $msg .= $e->getMessage()."\n";
+    }
+    throw new Exception("Failed to connect to $name");
+}
+
+/*
 function connect_db()
 {
     global $g_db;
@@ -30,13 +70,6 @@ function connect_db()
     $db = Zend_Db::factory(config()->db_type, config()->oim_dbparam);
     $db->setFetchMode(Zend_Db::FETCH_OBJ);
     $g_db["oim"] = $db;
-
-/*
-    // For MyOSG
-    $db = Zend_Db::factory(config()->db_type, config()->myosg_dbparam);
-    $db->setFetchMode(Zend_Db::FETCH_OBJ);
-    $g_db["myosg"] = $db;
-*/
 
     // For Gratia MetricDetail
     $db = Zend_Db::factory(config()->db_type, config()->gratia_dbparam);
@@ -53,11 +86,12 @@ function connect_db()
     }
 
 }
+*/
 
 function db($db) {
     global $g_db;
-    if($g_db == null) {
-        connect_db();
+    if(!isset($g_db[$db])) {
+        connect($db, config()->db_type, config()->db_params[$db]);
     }
     return $g_db[$db];
 }
