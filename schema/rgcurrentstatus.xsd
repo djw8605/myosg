@@ -13,6 +13,7 @@
                   <xsd:sequence>
                     <xsd:element name="Status" type="xsd:string" />
                     <xsd:element name="ResourceName" type="xsd:string" />
+                    <xsd:element name="ID" type="xsd:int" />
                     <xsd:element name="Fqdn" type="xsd:string" />
                     <xsd:element name="Note" type="xsd:string" />
                     <xsd:element minOccurs="0" maxOccurs="unbounded" name="Service">
