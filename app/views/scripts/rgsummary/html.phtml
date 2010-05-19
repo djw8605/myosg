@@ -211,7 +211,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     $vo_name = $vo;
                     $attrs = $vo->attributes();
                     $vo_id = $attrs["id"];
-                    $vonames .= "<a href=\"".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_".$vo_id."=on"."\">".$vo_name."</a> ";
+                    $vonames .= "<span class=\"round tag\" style=\"background-color: gray\" onclick=\"document.location='".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_$vo_id=on';\">$vo_name</span> ";
                 }                
                 echo $vonames;
             } else {

@@ -49,7 +49,7 @@ xmllint --format /tmp/rgdowntime.raw.xml > /tmp/rgdowntime.xml
 xmllint --noout --schema $SCHEMA/rgdowntime.xsd /tmp/rgdowntime.xml
 
 echo "Testing Support Center"
-url="$HOST/scsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&all_scs=on&active_value=1"
+url="$HOST/scsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&summary_attrs_showsites=on&all_scs=on&active=on&active_value=1"
 wget -O /tmp/scsummary.raw.xml $url 2> /dev/null
 xmllint --format /tmp/scsummary.raw.xml > /tmp/scsummary.xml
 xmllint --noout --schema $SCHEMA/scsummary.xsd /tmp/scsummary.xml

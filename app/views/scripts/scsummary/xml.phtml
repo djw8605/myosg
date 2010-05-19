@@ -64,6 +64,14 @@ foreach($this->scs as $sc_id=>$sc) {
         }
         echo "</ContactTypes>";
     }
+    if(isset($_REQUEST["summary_attrs_showsites"])) {
+        echo "<SupportedSites>";
+        $sites = $this->sites[$sc_id];
+        foreach($sites as $site) {
+            echo "<Site><ID>$site->id</ID><Name>$site->name</Name></Site>";
+        }
+        echo "</SupportedSites>";
+    }
 
     echo "</SupportCenter>";
 }

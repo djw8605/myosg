@@ -51,6 +51,19 @@ foreach($this->scs as $sc_id=>$sc) {
         echo "</td></tr>";
     }
 
+    if(isset($_REQUEST["summary_attrs_showsites"])) {
+        echo "<tr><th>Supported Sites</th><td>";
+        if(isset($this->sites[$sc_id])) {
+            $sites = $this->sites[$sc_id];
+            foreach($sites as $site) {
+                $name = str_replace(" ", "&nbsp;", $site->name);
+                echo "<span class=\"round tag\" style=\"background-color: gray;\">$name</span> ";
+            }
+        } else {
+            echo "(No sites are supported)";
+        }
+        echo "</td></tr>";
+    }
 
     echo "</td></tr>";
     echo "</table>";

@@ -50,6 +50,10 @@ class ScsummaryController extends ScController
             }
         }
 
+        if(isset($_REQUEST["summary_attrs_showsites"])) {
+            $model = new Site();
+            $this->view->sites = $model->getgroupby("sc_id");
+        }
 
         $this->setpagetitle(self::default_title());
     }

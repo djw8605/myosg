@@ -472,12 +472,15 @@ padding-right: 2px;
     color: #777;
 }
 
-span.tag
-{
+span.tag {
 margin: 1px;
 padding: 5px;
 margin-right: 5px;
 color: white;
+line-height: 230%;
+}
+span.tag[onclick] {
+cursor: pointer;
 }
 
 div.step_num {

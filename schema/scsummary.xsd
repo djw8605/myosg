@@ -44,6 +44,20 @@
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="SupportedSites">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" maxOccurs="unbounded" name="Site">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="ID" type="xsd:int" />
+                              <xsd:element name="Name" type="xsd:string" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+              </xsd:element>
             </xsd:sequence>
           </xsd:complexType>
         </xsd:element>

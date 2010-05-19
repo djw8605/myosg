@@ -53,7 +53,7 @@ foreach($this->vos as $vo_id=>$vo) {
         $resource_ownerships = $this->resource_ownerships[$vo_id];
         foreach($resource_ownerships as $resource_ownership) {
             $rid = $resource_ownership->id;
-            echo "<a href=\"".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">".htmlsafe($resource_ownership->name)."</a> ";
+            echo "<span class=\"round tag\" style=\"background-color: gray;\" onclick=\"document.location='".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on';\">".htmlsafe($resource_ownership->name)."</span> ";
         }
         echo "</td></tr>";
     }
