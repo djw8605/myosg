@@ -16,6 +16,7 @@ foreach($this->resource_groups as $rgid=>$record) {
         foreach($resources as $rid=>$resource) {
             echo "<Resource>";
             echo "<Name>".$resource->name."</Name>";
+            echo "<ID>".$resource->id."</ID>";
             echo "<Fqdn>".$resource->fqdn."</Fqdn>";
 
             //resource details

@@ -235,23 +235,26 @@ class common_config
         return "/tmp";
     }
     function default_url($page) {
-       $param = "";
         switch($page) {
         case 'wizard':
-            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
+            return "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";
         case 'rg':
-            $param = "?all_resources=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";break;
+            return "?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";
+        case 'sc':
+            return "?all_scs=on&active=on&active_value=1";
+        case 'vo':
+            return "?all_vos=on&active=on&active_value=1";
         case 'scsummary':
-            $param = "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";break;
+            return "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";
         case 'vosummary':
-            $param = "?datasource=summary&all_vos=on&active_value=1";break;
+            return "?datasource=summary&all_vos=on&active_value=1";
         case 'map':
-            $param = "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";break;
+            return "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";
         case 'misc':
-            $param = "?count_sg_1&count_active=on&count_enabled=on";break;
+            return "?count_sg_1&count_active=on&count_enabled=on";
         }
         
-        return htmlspecialchars(base()."/".$page.$param);
+        //return htmlspecialchars(base()."/".$page.$param);
     }
 }
 

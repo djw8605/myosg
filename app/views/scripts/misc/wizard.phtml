@@ -30,15 +30,17 @@ span.disabled_span
         <option value="count">Resource Service Counts</option>
         </select>
 
-        <div id="metric_attrs" class="attrs indent hidden">
-            <?=$this->render("misc/wizard_metric.phtml")?>
-        </div>
-        <div id="cpuinfo_attrs" class="attrs indent hidden">
-            <?=$this->render("misc/wizard_cpuinfo.phtml")?>
-        </div>
-        <div id="count_attrs" class="attrs indent hidden">
-            <?=$this->render("misc/wizard_count.phtml")?>
-        </div>
+        <p>
+            <div id="metric_attrs" class="attrs indent hidden">
+                <?=$this->render("misc/wizard_metric.phtml")?>
+            </div>
+            <div id="cpuinfo_attrs" class="attrs indent hidden">
+                <?=$this->render("misc/wizard_cpuinfo.phtml")?>
+            </div>
+            <div id="count_attrs" class="attrs indent hidden">
+                <?=$this->render("misc/wizard_count.phtml")?>
+            </div>
+        </p>
     </div>
 
     <?=$this->render("subscribe.phtml")?>

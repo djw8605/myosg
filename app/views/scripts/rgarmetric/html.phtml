@@ -28,31 +28,30 @@ margin-bottom: 0px;
         echo "</td></tr>";
 
         foreach($rg as $resource_id=>$resource_info) {
+            if(isset($this->data[$resource_id])) {
+                $resource = $this->data[$resource_id];
+                $resource_name = $resource_info->name;
 
-            $resource = $this->data[$resource_id];
-            $resource_name = $resource_info->name;
+                $first = true;
+                foreach($resource as $service_id=>$data) {
+                    if($data == null) continue;
+                    $service_info = $this->services[$service_id];
+                    $service_name = $service_info[0]->name;
+                    $a = round((double)$data["availability"]*100, 2);
+                    $r = round((double)$data["reliability"]*100, 2);
 
-            $first = true;
-            foreach($resource as $service_id=>$data) {
-                if($data == null) continue;
-                $service_info = $this->services[$service_id];
-                $service_name = $service_info[0]->name;
-                $a = round((double)$data["availability"]*100, 2);
-                $r = round((double)$data["reliability"]*100, 2);
-
-/*
-                if($first) {
-                    echo "<tr><td colspan=\"5\" style=\"border-top: 1px solid gray; height: 1px;\"></td></tr>";
+                    echo "<tr><td>";
+                    if($first) {
+                        echo "<div class=\"resource round\">$resource_name</div>";
+                    }
+                    echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
+                    echo "</td></tr>";
+                    $first = false;
                 }
-*/
-                echo "<tr>";
-                echo "<td>";
-                if($first) {
-                    echo "<div class=\"resource round\">$resource_name</div>";
-                }
-                echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
-                echo "</td></tr>";
-                $first = false;
+            } else {
+                echo "<tr><td colspan='5'>";
+                echo "<div class=\"resource round\">$resource_name</div>";
+                echo "<p class=\"warning\">No data available for this resource</p></td><tr>";
             }
         }
     }

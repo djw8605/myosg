@@ -21,6 +21,7 @@ function showdowntimes($downtimes) {
         echo "<ResourceID>".htmlsafe($downtime["resource_id"])."</ResourceID>";
         echo "<ResourceGroup>";
         echo "<GroupName>".htmlsafe($downtime["rg_name"])."</GroupName>";
+        echo "<GroupID>".htmlsafe($downtime["rg_id"])."</GroupID>";
         echo "</ResourceGroup>";
         echo "<ResourceName>".htmlsafe($downtime["name"])."</ResourceName>";
         echo "<ResourceFQDN>".htmlsafe($downtime["fqdn"])."</ResourceFQDN>";

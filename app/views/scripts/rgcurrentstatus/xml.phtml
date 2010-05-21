@@ -7,6 +7,7 @@ foreach($this->rgs as $rgid=>$rg) {
     $resource_group = $this->resource_groups[$rgid][0];
     echo "<ResourceGroup>";
     echo "<GroupType>".$resource_group->grid_type_description."</GroupType>";
+    echo "<GroupID>$rgid</GroupID>";
     echo "<GroupName>".$resource_group->name."</GroupName>";
 
     foreach($rg as $rid=>$resource) {

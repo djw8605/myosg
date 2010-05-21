@@ -511,3 +511,81 @@ background-color: #eee;
 padding: 5px;
 margin-bottom: 5px;
 }
+
+
+ul.topnav {
+    list-style: none;
+    padding: 3px 0px 3px 0px;
+    margin-left: 0;
+    float: left;
+    width: 100%;
+    /*background-color: black;*/
+    background-image:url('../images/topnav_bg.gif');
+    color:#888888;
+    font-size:12px;
+    font-weight:bold;
+}
+ul.topnav li {
+    float: left;
+    margin: 0;
+    padding: 5px;
+    margin-right: 5px;
+    position: relative; /*--Declare X and Y axis base for sub navigation--*/
+}
+li[onclick],span[onclick] {
+    cursor: pointer;
+}
+ul.topnav li.selected {
+    background-color: #333;
+    color: white;
+}
+ul.topnav li:hover {
+    background-color: #555;
+    color: white;
+}
+ul.subnav {
+    font-family: verdana;
+    font-size: 11px;
+    list-style: none;
+    position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/
+    left: 0; top: 25px;
+    background: white;
+    color: black;
+    margin: 0; padding: 0;
+    display: none;
+    float: left;
+    width: 250px;
+    border: 1px solid #666;
+    z-index:+1;
+}
+ul.subnav li {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+}
+ul.subnav p {
+    font-weight:normal;
+    margin: 10px;
+}
+ul.subnav li.a {
+}
+ul.subnav li:hover {
+    background-color: #eee;
+    color: black;
+}
+.subnav_desc {
+    position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/
+    left: 230px; top: -1px;
+    background: #ddd url(../images/desc_back.gif) repeat-x;
+    font-weight: normal;
+    color: black;
+    margin: 0px; padding: 10px;
+    display: none;
+    float: left;
+    width: 350px;
+    border: 1px solid #999;
+}
+div.subnav_desc p {
+    margin-top: 0px;
+    margin-left: 0px;
+}

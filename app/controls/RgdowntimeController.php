@@ -112,6 +112,7 @@ class RgdowntimeController extends RgController
                 $resource = $resources[$downtime->resource_id];
                 $resource_name = $resource[0]->name;
                 $resource_fqdn = $resource[0]->fqdn;
+                $rg_id = $resource[0]->resource_group_id;
                 $rg_name = $rg_info[$resource[0]->resource_group_id][0]->name;
 
                 if($resource_name !== null) {
@@ -140,6 +141,7 @@ class RgdowntimeController extends RgController
                         "name"=>$resource_name,
                         "fqdn"=>$resource_fqdn,
                         "rg_name"=>$rg_name,
+                        "rg_id"=>$rg_id,
                         "resource_id"=>$downtime->resource_id,
                         "desc"=>$desc,
                         "severity"=>$severity,
