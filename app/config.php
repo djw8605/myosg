@@ -230,6 +230,8 @@ class common_config
         $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
 
         $this->gocticket_url = "https://ticket.grid.iu.edu/goc";
+
+        $this->status_expires_days = 30;
     }
     function getCacheDir() {
         return "/tmp";
@@ -249,7 +251,7 @@ class common_config
         case 'vosummary':
             return "?datasource=summary&all_vos=on&active_value=1";
         case 'map':
-            return "?all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";
+            return "?map_attrs_shownr=on&all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";
         case 'misc':
             return "?count_sg_1&count_active=on&count_enabled=on";
         }

@@ -20,6 +20,10 @@ $(document).ready(function() {
     height: 160px;
     overflow: auto;
 }
+#map_canvas {
+width: 100%;
+height: 500px;
+}
 </style>
 <div id="primaryContentContainer">
     <div id="primaryContent">
@@ -36,7 +40,15 @@ $(document).ready(function() {
 
 <form method="get" id="wizard">
     <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
-    <h3>RSV Status Map</h3>
+    <h3>Information to display</h3>
+    <div class="indent">
+    <?$checked = "";
+    if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
+    <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
+    
+
+    </div>
+    <h3>Sites to display</h3>
     <div class="indent" id="site_area">
 <?
         $checked = "";
@@ -49,7 +61,7 @@ $(document).ready(function() {
         foreach($list as $item) { 
             //grab active, non-disabled records
             if($item->active == 1 and $item->disable == 0) {
-                $kv[$item->id] = array($item->name, $item->description);
+                $kv[$item->id] = array($item->name, null);//$item->description);
             }
         }
         echo fblist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
@@ -60,7 +72,7 @@ $(document).ready(function() {
         foreach($scs as $sc) { 
             //grab active, non-disabled records
             if($sc->active == 1 and $sc->disable == 0) {
-                $kv[$sc->id] = array($sc->name, $sc->long_name);
+                $kv[$sc->id] = array($sc->name, null);//$sc->long_name);
             }
         }
         echo fblist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);

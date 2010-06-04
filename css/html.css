@@ -150,6 +150,11 @@ color: white;
 margin-bottom: 0.3em;
 padding: 4px 8px 4px 8px;
 }
+div.resource_group_header a {
+color: white;
+padding-left:0px;
+background: none;
+}
 
 .contact_info
 {
@@ -589,3 +594,16 @@ div.subnav_desc p {
     margin-top: 0px;
     margin-left: 0px;
 }
+
+#map_control {
+float: right;
+right: 7px;
+top: 32px;
+position: absolute;
+z-index: 100;
+background-color: white;
+padding: 1px;
+padding-left: 2px;
+border: 1px solid black;
+}
+
