@@ -81,11 +81,13 @@ class MisccountController extends MiscController
                     $count_service = $this->view->counts[$grid_type_id];
                     
                     //for each services
-                    foreach($this->view->services_by_resource[$resource->id] as $service) {
-                        if(!isset($count_service[$service->id])) {
-                            $count_service[$service->id] = 0;
+                    if(isset($this->view->services_by_resource[$resource->id])) {
+                        foreach($this->view->services_by_resource[$resource->id] as $service) {
+                            if(!isset($count_service[$service->id])) {
+                                $count_service[$service->id] = 0;
+                            }
+                            $count_service[$service->id] = $count_service[$service->id] + 1;
                         }
-                        $count_service[$service->id] = $count_service[$service->id] + 1;
                     }
                     $this->view->counts[$grid_type_id] = $count_service;
                 }
