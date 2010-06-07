@@ -148,7 +148,7 @@ foreach($this->sites as $site) {
                     //treat status change that happened long time ago as non-reporting
                     $expire = time()-3600*24*config()->status_expires_days;
                     if($rstatus->timestamp < $expire) {
-                        $note = "Status reported is too old";
+                        $note = "Reported status is too old";
                         $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div><br><br>";
                         continue;//don't count this as a valid status
                     } else {
