@@ -74,7 +74,7 @@ class MisccountController extends MiscController
                     $resource_counts++;
 
                     //pull counter for current grid type
-                    $services = $this->services_by_resource[$resource->id];
+                    //$services = $this->services_by_resource[$resource->id];
                     if(!isset($this->view->counts[$grid_type_id])) {
                         $this->view->counts[$grid_type_id] = array();
                     }
