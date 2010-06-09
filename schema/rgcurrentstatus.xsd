@@ -7,6 +7,7 @@
           <xsd:complexType>
             <xsd:sequence>
               <xsd:element name="GroupType" type="xsd:string" />
+              <xsd:element name="GroupID" type="xsd:int" />
               <xsd:element name="GroupName" type="xsd:string" />
               <xsd:element minOccurs="0" maxOccurs="unbounded" name="Resource">
                 <xsd:complexType>

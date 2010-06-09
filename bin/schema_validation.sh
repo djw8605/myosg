@@ -6,6 +6,12 @@ HOST="http://dev.grid.iu.edu/~hayashis/myosg"
 
 SCHEMA="../schema"
 
+echo "Testing MISC Status"
+url="$HOST/miscstatus/xml?datasource=status"
+wget -O /tmp/miscstatus.raw.xml $url 2> /dev/null
+xmllint --format /tmp/miscstatus.raw.xml > /tmp/miscstatus.xml
+xmllint --noout --schema $SCHEMA/miscstatus.xsd /tmp/miscstatus.xml
+
 echo "Testing rgsummary"
 url="$HOST/rgsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F20%2F2009&end_type=now&end_date=08%2F20%2F2009&all_resources=on&gridtype=on&gridtype_1=on&gridtype_2=on&gipstatus=on&gipstatus_OK=on&gipstatus_FAIL=on&gipstatus_UNKNOWN=on&status=on&status_1=on&status_2=on&status_3=on&status_4=on&status_99=on&service=on&service_4=on&service_1=on&service_5=on&service_2=on&service_3=on&service_109=on&vosup=on&vosup_25=on&voown=on&voown_35=on&voown_1=on&has_status=on&active=on&active_value=1&disable=on&disable_value=0&has_wlcg=on"
 wget -O /tmp/rgsummary.raw.xml $url 2> /dev/null

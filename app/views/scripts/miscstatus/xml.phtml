@@ -1,4 +1,20 @@
 <?=$this->header?>
-<OperationsStatusOverview xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/misccount.xsd">
-<!-- TODO -->
+<OperationsStatusOverview xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/miscstatus.xsd">
+<?
+foreach($this->statuses as $priority=>$statuses) {
+    echo "<ServiceGroup><Priority>$priority</Priority>";
+    echo "<Services>";
+    foreach($statuses as $status) {
+        echo "<Service>";
+        echo "<Name>".$status["name"]."</Name>";
+        if(isset($status["resource_group_id"])) {
+            echo "<ResourceGroupID>".$status["resource_group_id"]."</ResourceGroupID>";
+        }
+        echo "<Status>".$status["status"]."</Status>";
+        echo "</Service>";
+    }
+    echo "</Services>";
+    echo "</ServiceGroup>";
+}
+?>
 </OperationsStatusOverview>
