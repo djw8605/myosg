@@ -144,13 +144,15 @@ class RgsummaryController extends RgController
             $facilities = $model->getgroupby("id");
             $model = new Site();
             $sites = $model->getgroupby("id");
+            $this->view->sites = $sites;
+            $model = new SupportCenters();
+            $scs = $model->getgroupby("id");
             foreach($this->rgs as $rgid=>$rg) {
                 $rginfo = $this->view->resourcegroups[$rgid][0];
                 $siteinfo = $sites[$rginfo->site_id][0];
-                $site = $siteinfo->name;
                 $facilityinfo = $facilities[$siteinfo->facility_id][0];
-                $facility = $facilityinfo->name;
-                $this->view->hierarchy[$rgid] = array("facility"=>$facility, "site"=>$site);
+                $scinfo = $scs[$siteinfo->sc_id][0];
+                $this->view->hierarchy[$rgid] = array("facility"=>$facilityinfo, "site"=>$siteinfo, "sc"=>$scinfo);
             }
         }
 

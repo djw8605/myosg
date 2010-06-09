@@ -46,4 +46,11 @@ width: 70%;
 -moz-border-radius-bottomright:4px;
 -webkit-border-bottom-right-radius: 4px;
 position: relative;
+right: 10px;
+}
+
+div.hierarchy_supports .arrowhead {
+position: absolute;
+left: -2px;
+top: 11px;
 }

@@ -81,25 +81,37 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<table width=\"100%\" class=\"plain\"><tr><td>";
 
             echo "<div class=\"hierarchy_facility round\">";
-            echo "<b>".$hierarchy["facility"]."</b>&nbsp;<span>Facility</span>";
+            echo "<b>".$hierarchy["facility"]->name."</b>&nbsp;<span>Facility</span>";
 
             echo "<div class=\"hierarchy_site round\">";
-            echo "<b>".$hierarchy["site"]."</b>&nbsp;<span>Site</span>";
+            echo "<b>".$hierarchy["site"]->name."</b>&nbsp;<span>Site</span>";
 
             echo "<div class=\"hierarchy_rg round\">";
             echo "<b>".$group_name."</b>&nbsp;<span>Resource Group</span>";
 
             echo "</div>"; //rg
             echo "</div>"; //site
+
+            //show sigling sites
+            foreach($this->sites as $site_id=>$site) {
+                if($site_id == $hierarchy["site"]->id) continue;
+                if($site[0]->facility_id == $hierarchy["facility"]->id) {
+                    echo "<div style=\"width: 60%\" class=\"hierarchy_site round\">";
+                    echo "<b>".$site[0]->name."</b>&nbsp;<span>Site</span>";
+                    echo "</div>";
+                }
+            }
+
             echo "</div>"; //facility
 
         echo "</td><td>";
         
         echo "<div class=\"hierarchy_sc round\">";
-        echo "<b>USATLAS</b> Support Center";
+        echo "<b>".$hierarchy["sc"]->name."</b> Support Center";
         echo "</div>";
-        echo "<div class=\"hierarchy_supports\" style=\"right: 12px;\">";
+        echo "<div class=\"hierarchy_supports\">";
         echo "Supports";
+        echo "<img class=\"arrowhead\" src=\"".fullbase()."/images/arrow_head.png\"/>";
         echo "</div>";
         
         echo "</td></tr></table>";
