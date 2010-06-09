@@ -147,6 +147,7 @@ color: inherit;
 float: left;
 margin-right: -510px;
 width: 100%;
+margin-top: 8px;
 }
 #primaryContent
 {
@@ -176,6 +177,7 @@ margin-bottom: 10px;
 float: right;
 width: 300px;
 padding-right: 0px;
+margin-top: 8px;
 }
 /* Footer */
 #footer
