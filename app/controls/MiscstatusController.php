@@ -43,8 +43,8 @@ class MiscstatusController extends MiscController
                 array("name"=>"Integration BDII", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"),
                 array("name"=>"GOC Footprints Ticketing", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"),
                 $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki
-                array("name"=>"Document Repository", "status"=>"UNKNOWN", "description"=>"https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"),
-                array("name"=>"OSG Web Pages", "status"=>"UNKNOWN", "description"=>"https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"),
+                array("name"=>"Document Repository", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"),
+                array("name"=>"OSG Web Pages", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"),
             )
         );
         $this->setpagetitle(self::default_title());
@@ -70,11 +70,15 @@ class MiscstatusController extends MiscController
         $unknown = 0;
         $resources = $this->resources_by_resource_group[$gid];
         foreach($resources as $resource) {
-            $status = $this->latest_resource_status[$resource->id][0];
-            switch((int)$status->status_id) {
-            case 2: $warning++; break;
-            case 3: $critical++; break;
-            case 4: $unknown++; break;
+            if(isset($this->latest_resource_status[$resource->id])) {
+                $status = $this->latest_resource_status[$resource->id][0];
+                switch((int)$status->status_id) {
+                case 2: $warning++; break;
+                case 3: $critical++; break;
+                case 4: $unknown++; break;
+                }
+            } else {
+                $unknown++;
             }
         }
         $rgstatus = "OK";

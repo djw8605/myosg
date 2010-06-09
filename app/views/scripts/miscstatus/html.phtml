@@ -19,7 +19,7 @@ foreach($this->statuses as $priority=>$statuses) {
             }
         } else {
             //no link..
-            echo "<td width=\"120px;\">".showStatus($status["status"])."</td>";
+            echo "<td width=\"120px;\">".showStatus($status["status"], null)."</td>";
             echo "<td></td>";
         }
         echo "</tr>";
@@ -35,5 +35,9 @@ function showStatus($status, $url) {
     if($status == "CRITICAL") $img = "status_cancel.png";
     if($status == "DOWNTIME") $img = "status_downtime.png";
 
-    return "<a href=\"$url\"><img src=\"".fullbase()."/images/$img\" align=\"top\"></a> <b>$status</b>";
+    if($url === null) {
+        return "<img src=\"".fullbase()."/images/$img\" align=\"top\"> <b>$status</b>";
+    } else {
+        return "<a href=\"$url\"><img src=\"".fullbase()."/images/$img\" align=\"top\"></a> <b>$status</b>";
+    }
 }
