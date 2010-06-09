@@ -1,0 +1,38 @@
+<?
+foreach($this->statuses as $priority=>$statuses) {
+    echo "<div class=\"header round\">$priority Priority Services</div>";
+    echo "<table class=\"summary_table\">";
+    foreach($statuses as $status) {
+        echo "<tr>";
+        echo "<th style=\"width:200px\"><a class=\"hidden_link\" href=\"".$status["url"]."\">".$status["name"]."</a></th>";
+
+        if(isset($status["resource_group_id"])) {
+            $resource_group_id = $status["resource_group_id"];
+            $detail_url = htmlsafe(fullbase()."/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_$resource_group_id=on&end_type=now");
+            $history_url = htmlsafe(fullbase()."/rgstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=now&rg=on&rg_$resource_group_id=on");
+            echo "<td width=\"120px;\">".showStatus($status["status"], $detail_url)."</td>";
+            if(!uwa()) {
+                echo "<td><a href=\"$history_url\">Status History</a></td>";
+            } else {
+                echo "<td></td>";
+            }
+        } else {
+            //no link..
+            echo "<td width=\"120px;\">".showStatus($status["status"])."</td>";
+            echo "<td></td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+
+function showStatus($status, $url) {
+    $img = "status_unknown.png";
+    if($status == "OK") $img = "status_ok.png";
+    if($status == "WARNING") $img = "status_warning.png";
+    if($status == "CRITICAL") $img = "status_cancel.png";
+    if($status == "DOWNTIME") $img = "status_downtime.png";
+
+    return "<a href=\"$url\"><img src=\"".fullbase()."/images/$img\" align=\"top\"></a> <b>$status</b>";
+}

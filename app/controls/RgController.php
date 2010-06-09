@@ -201,10 +201,6 @@ class RgController extends ControllerBase
             $keep = $this->process_resource_filter_service_hidden();
             $resources = array_intersect($resources, $keep);
         }
-        if(isset($_REQUEST["service_hidden"])) {
-            $keep = $this->process_resource_filter_service_hidden();
-            $resources = array_intersect($resources, $keep);
-        }
         if(isset($_REQUEST["vosup"])) {
             $keep = $this->process_resource_filter_vosup();
             $resources = array_intersect($resources, $keep);
@@ -246,21 +242,11 @@ class RgController extends ControllerBase
                 $model = new ResourceServices();
                 $rs = $model->get(array("service_id"=>$item->id));
                 foreach($rs as $r) {
-                    /*
-                    if($_REQUEST["service_central"]) {
-                        if(!isset($_REQUEST["service_central_".$r->central])) {
-                            continue;
-                        } 
-                    }
-                    if($_REQUEST["service_hidden"]) {
-                        if(!isset($_REQUEST["service_hidden".$r->hidden])) {
-                            continue;
-                        } 
-                    }
-                    */
+/*
                     if(isset($_REQUEST["service_hidden"])) {
                         if($r->hidden != 1) continue;
                     }
+*/
                     if(!in_array($r->resource_id, $resources_to_keep)) {
                         $resources_to_keep[] = $r->resource_id;
                     }

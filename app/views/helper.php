@@ -382,7 +382,8 @@ function helpbutton($type)
 }
 
 function tooltip($msg) {
-    return "<img style=\"cursor: pointer;\" align=\"top\" src=\"".fullbase()."/images/help.png\" alt=\"$msg\" title=\"$msg\"/>";
+    //return "<img style=\"cursor: pointer;\" align=\"top\" src=\"".fullbase()."/images/help.png\" alt=\"$msg\" title=\"$msg\"/>";
+    return "<img align=\"top\" src=\"".fullbase()."/images/help.png\" alt=\"$msg\" title=\"$msg\"/>";
 }
 
 function externalurl($url)

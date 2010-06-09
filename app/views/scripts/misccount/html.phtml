@@ -2,7 +2,7 @@
 foreach($this->resource_groups_by_gridtype as $grid_type_id => $resource_groups) {
     $counts = $this->counts[$grid_type_id];
     $gridtype_info = $this->grid_types[$grid_type_id][0];
-    echo "<div class=\"gridtype_header round\"><span class=\"h3\">$gridtype_info->description</span></div>";
+    echo "<div class=\"header round\">$gridtype_info->description</div>";
 
     echo "<table class=\"summary_table\">";
 

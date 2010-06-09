@@ -165,7 +165,7 @@ parseQuery();
                 <li onclick="document.location='<?=htmlspecialchars(base()."/scsummary/index".config()->default_url("sc"))?>&datasource=summary';">   
                     <p>Support Center Summary</p>
                     <div class="subnav_desc">
-                        <p>Show basic information about Support Centers.</p>
+                        <p>Shows basic information about Support Centers.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/scsummary.png">
                     </div>
                 </li>
@@ -179,7 +179,7 @@ parseQuery();
                 <li onclick="document.location='<?=htmlspecialchars(base()."/vosummary".config()->default_url("vo"))?>&datasource=summary';">   
                     <p>Virtual Organization Summary</p>
                     <div class="subnav_desc">
-                        <p>Show basic information about Virtual Organization.</p>
+                        <p>Shows basic information about Virtual Organization.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/vosummary.png">
                     </div>
                 </li>
@@ -193,7 +193,7 @@ parseQuery();
                 <li onclick="document.location='<?=htmlspecialchars(base()."/vovomsstatus".config()->default_url("vo"))?>&datasource=vomsstatus';">   
                     <p>VOMS Status</p>
                     <div class="subnav_desc">
-                        <p>Show VOMS status.</p>
+                        <p>Shows VOMS status.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/vovomsstatus.png">
                     </div>
                 </li>
@@ -210,22 +210,29 @@ parseQuery();
                 <li onclick="document.location='<?=htmlspecialchars(base()."/miscmetric".config()->default_url("misc"))?>&datasource=metric';">   
                     <p>RSV Metrics</p>
                     <div class="subnav_desc">
-                        <p>Show list of RSV metrics that are registered in OIM.</p>
+                        <p>Shows list of RSV metrics that are registered in OIM.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/miscmetric.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/misccpuinfo".config()->default_url("misc"))?>&datasource=cpuinfo';">   
                     <p>CPU Information</p>
                     <div class="subnav_desc">
-                        <p>Show CPU Information stored in OIM.</p>
+                        <p>Shows CPU Information stored in OIM.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/misccpuinfo.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/misccount".config()->default_url("misc"))?>&datasource=count&count_sg_1=on&count_active=on&count_enabled=on';">   
                     <p>Resource Service Counts</p>
                     <div class="subnav_desc">
-                        <p>Show number of services per grid type.</p>
+                        <p>Shows number of services per grid type.</p>
                         <img width="100%" src="<?=fullbase()?>/images/screenshots/misccount.png">
+                    </div>
+                </li>
+                <li onclick="document.location='<?=htmlspecialchars(base()."/miscstatus".config()->default_url("misc"))?>&datasource=status';">   
+                    <p>Operations Status Overview</p>
+                    <div class="subnav_desc">
+                        <p>Shows current status of OSG operations services</p>
+                        <img width="100%" src="<?=fullbase()?>/images/screenshots/miscstatus.png">
                     </div>
                 </li>
             </ul>

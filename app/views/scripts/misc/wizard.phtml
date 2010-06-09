@@ -28,6 +28,7 @@ span.disabled_span
         <option value="metric">RSV Metrics</option>
         <option value="cpuinfo">CPU Information</option>
         <option value="count">Resource Service Counts</option>
+        <option value="status">Operations Status Overview</option>
         </select>
 
         <p>
@@ -39,6 +40,9 @@ span.disabled_span
             </div>
             <div id="count_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_count.phtml")?>
+            </div>
+            <div id="status_attrs" class="attrs indent hidden">
+                <?=$this->render("misc/wizard_status.phtml")?>
             </div>
         </p>
     </div>

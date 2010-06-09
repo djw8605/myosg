@@ -125,22 +125,16 @@ padding:2px;
 padding-left:22px;
 background:#ccc url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 3px 3px;
 min-height: 16px;
+margin-bottom: 3px;
 }
 
-div.cpuinfo_header
+div.header
 {
 padding:2px;
-padding-left:22px;
-background:#ccc url(<?=$imagebase?>/images/process.png) no-repeat 3px 3px;
+padding-left:5px;
+background-color:#ccc;
 min-height: 16px;
-}
-
-div.gridtype_header
-{
-padding:2px;
-padding-left:22px;
-background:#ccc url(<?=$imagebase?>/images/process.png) no-repeat 3px 3px;
-min-height: 16px;
+margin-bottom: 3px;
 }
 div.grid_type
 {
@@ -175,8 +169,8 @@ padding: 4px 6px 4px 6px;
 .service_info
 {
     background-color: #eee;
-    padding: 10px;
-    margin: 3px;
+    padding: 2px;
+    margin: 2px;
 }
 
 .round, .vo_report h4, .vo_report_fqan, .contact_info, .service_info
@@ -191,7 +185,7 @@ padding: 4px 6px 4px 6px;
 -webkit-border-bottom-right-radius: 4px;
 }
 
-div.sidenote
+.sidenote
 {
 float: right;
 text-align: right;
@@ -348,7 +342,7 @@ table.summary_table
     width: 100%;
     margin: 0px;
     border-collapse: collapse; 
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 table.summary_table th
@@ -360,7 +354,8 @@ table.summary_table th
 }
 table.summary_table td
 {
-    padding: 3px;
+    padding-left: 3px;
+    padding: 1px;
     align: top;
     border-top: 1px solid #ddd;
 }
@@ -421,7 +416,7 @@ border-bottom: solid 1px #bbb;
 }
 table.summary_table th
 {
-width: 70px;
+width: 90px;
 }
 .status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {
@@ -467,8 +462,18 @@ color: #ccc;
 }
 span.tag
 {
-margin: 1px;
-padding: 2px;
-color: white;
-float: right;
+color:white;
+line-height:230%;
+margin:1px 3px 1px 1px;
+padding:3px;
 }
+
+a.hidden_link {
+color: inherit;
+text-decoration: none;
+}
+a:hover.hidden_link {
+color: #961;
+text-decoration: underline;
+}
+
