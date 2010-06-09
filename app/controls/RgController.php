@@ -370,13 +370,17 @@ class RgController extends ControllerBase
         $resources_to_keep = array();
         $model = new Resource();
         $resources = $model->getindex();
-        $active_value = $_REQUEST["active_value"];
-        foreach($resources as $rid=>$r) {
-            if($r[0]->active == $active_value) {
-                if(!in_array($rid, $resources_to_keep)) {
-                    $resources_to_keep[] = (string)$rid;
+        if(isset($_REQUEST["active_value"])) {
+            $active_value = $_REQUEST["active_value"];
+            foreach($resources as $rid=>$r) {
+                if($r[0]->active == $active_value) {
+                    if(!in_array($rid, $resources_to_keep)) {
+                        $resources_to_keep[] = (string)$rid;
+                    }
                 }
             }
+        } else {
+            addMessage("Active Flag filter is enabled but no value is specified.");
         }
         return $resources_to_keep;
     }

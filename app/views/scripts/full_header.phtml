@@ -251,11 +251,17 @@ parseQuery();
     </script>
     <div id="content">
 <?
-    if(config()->banner) {
-        echo "<div id=\"banner\">".config()->banner."</div>";
-    }
-    if(config()->debug) {
-        echo "<p class=\"warning\">Running in debug mode</p>";
-    }
+if(config()->banner) {
+    echo "<div id=\"banner\">".config()->banner."</div>";
+}
+if(config()->debug) {
+    echo "<p class=\"warning\">Running in debug mode</p>";
+}
+
+$message = flushMessage();
+if($message != "") {
+    echo "<div class=\"message\">$message</div>";
+}
+
 ?>
 

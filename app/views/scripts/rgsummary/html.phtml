@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="<?=fullbase()?>/css/hierarchy.css"/>
 <?
 foreach($this->rgs as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
@@ -10,10 +11,12 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     }
     //echo "<div class=\"resource_group\">";
     $group_name = $resource_group->name;
+/*
     if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
         $hierarchy = $this->hierarchy[$resource_group_id];
         $group_name = "<span class=\"hierarchy\">".$hierarchy["facility"]." (Facility) &gt; ".$hierarchy["site"]." (Site) &gt; </span>".$group_name;
     }
+*/
 
     if($resource_group->disable == 1) {
         $group_name .= " (Removed)";
@@ -31,8 +34,9 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     //echo "</div>"; //resource_group
     echo "</div>"; //resourcee_group_header
 
+    echo "<table class=\"summary_table\">";
     if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
-        echo "<table class=\"summary_table\"><tr>";
+        echo "<tr>";
         echo "<th>GIP&nbsp;Validation</th>";
         echo "<td>";
         //search for the resultt
@@ -66,8 +70,42 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<div class=\"status_$status\">";
         echo $note;
         echo "</div>";
-        echo "</td></tr></table>";
+        echo "</td></tr>";
     }
+
+    if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
+        $hierarchy = $this->hierarchy[$resource_group_id];
+
+        echo "<tr><th>OIM&nbsp;Hierarchy</th><td>";
+    
+        echo "<table width=\"100%\" class=\"plain\"><tr><td>";
+
+            echo "<div class=\"hierarchy_facility round\">";
+            echo "<b>".$hierarchy["facility"]."</b>&nbsp;<span>Facility</span>";
+
+            echo "<div class=\"hierarchy_site round\">";
+            echo "<b>".$hierarchy["site"]."</b>&nbsp;<span>Site</span>";
+
+            echo "<div class=\"hierarchy_rg round\">";
+            echo "<b>".$group_name."</b>&nbsp;<span>Resource Group</span>";
+
+            echo "</div>"; //rg
+            echo "</div>"; //site
+            echo "</div>"; //facility
+
+        echo "</td><td>";
+        
+        echo "<div class=\"hierarchy_sc round\">";
+        echo "<b>USATLAS</b> Support Center";
+        echo "</div>";
+        echo "<div class=\"hierarchy_supports\" style=\"right: 12px;\">";
+        echo "Supports";
+        echo "</div>";
+        
+        echo "</td></tr></table>";
+        echo "</td></tr>";
+    }
+    echo "</table>";
 
     //show resources 
     echo "<table width=\"100%\">";
