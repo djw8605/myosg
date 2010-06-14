@@ -51,7 +51,8 @@ class RgceController extends RgGratiaController
             $ylabel = "Probe Names";
             break;
         default:
-            elog("unknown account_type - maybe bot?");
+            wlog("unknown account_type - maybe bot?");
+            exit;
         }
         return array($urlbase, $sub_title, $ylabel);
     }

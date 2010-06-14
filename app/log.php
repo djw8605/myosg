@@ -62,6 +62,16 @@ function dlog($obj)
     }
 }
 
+function remoteinfo() {
+    if(isset($_SERVER["REMOTE_ADDR"])) {
+        $ip = $_SERVER["REMOTE_ADDR"];
+        $name = gethostbyaddr($ip);
+        return $ip."($name) ";
+    } else {
+        return "(unknown client) ";
+    }
+}
+
 //error log
 function elog($obj)
 {
@@ -69,6 +79,8 @@ function elog($obj)
         $obj = log_format($obj);
     } 
     Zend_Registry::get("logger")->log($obj, Zend_Log::ERR);
+
+    $obj = remoteinfo().$obj;
 
     //send to error_log as well
     // 0) message is sent to PHP's system logger, using the Operating System's 
@@ -84,6 +96,8 @@ function wlog($obj)
         $obj = log_format($obj);
     }-
     Zend_Registry::get("logger")->log($obj, Zend_Log::WARN);
+
+    $obj = remoteinfo().$obj;
 
     //send to error_log as well
     // 0) message is sent to PHP's system logger, using the Operating System's

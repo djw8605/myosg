@@ -149,7 +149,7 @@ foreach($this->sites as $site) {
                     $expire = time()-3600*24*config()->status_expires_days;
                     if($rstatus->timestamp < $expire) {
                         $note = "Reported status is too old";
-                        $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div><br><br>";
+                        $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div>";
                         continue;//don't count this as a valid status
                     } else {
                         $note = $rstatus->detail;

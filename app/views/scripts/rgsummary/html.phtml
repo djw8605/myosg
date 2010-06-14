@@ -135,7 +135,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         //show resource name & desc
         echo "<div class=\"round resource\">";
         echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/resource?resource_type=".$resource_group->osg_grid_type_id."&resource_id=$rid\" class=\"sidenote\">";
-        echo "<img src=\"".fullbase()."/images/tea.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+        echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
         echo "<span class=\"h4\">".$resource->name."</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
