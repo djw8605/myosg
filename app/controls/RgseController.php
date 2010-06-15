@@ -51,7 +51,8 @@ class RgseController extends RgGratiaController
             $ylabel = "GB";
             break;
         default:
-            elog("unknown account_type - maybe a bot");
+            slog("unknown account_type (rgse) - maybe a bot");
+            exit;
         }
         return array($urlbase, $sub_title, $ylabel);
     }
