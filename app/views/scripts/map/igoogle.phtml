@@ -1,0 +1,15 @@
+<?echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";?>
+<Module>
+  <ModulePrefs title="<?=$this->page_title?>" height="400"> 
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
+  <Content type="html">
+<![CDATA[ 
+<style type="text/css"> <?include("css/mobile.css.php");?> </style>
+<?=$this->render(pagename()."/iframe.phtml");?>
+<script type="text/javascript">
+    gadgets.window.adjustHeight();
+</script>
+]]>
+    </Content>
+</Module>

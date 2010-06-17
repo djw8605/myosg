@@ -1,0 +1,24 @@
+<?echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";?>
+<Module>
+  <ModulePrefs title="<?
+if(isset($this->page_title)) {
+    echo $this->page_title." - ";
+}
+echo config()->app_name;
+?>" height="100"> 
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
+  <Content type="html">
+<![CDATA[ 
+<style type="text/css">
+<?include("css/mobile.css.php");?>
+</style>
+<?
+echo file_get_contents(fullbase()."/".pagename()."/html?uwa=true&".$_SERVER["QUERY_STRING"]);
+?>
+    <script type="text/javascript">
+        gadgets.window.adjustHeight();
+    </script>
+ ]]>
+    </Content>
+</Module>

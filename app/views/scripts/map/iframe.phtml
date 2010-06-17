@@ -36,8 +36,8 @@ require_once("config.php");
 ?>
 </style>
 
-<link href="<?=base()?>/css/html.css" rel="stylesheet" type="text/css" />
-<script type='text/javascript' src='<?=base()?>/lib/jquery-ui-1.8.1/js/jquery-1.4.2.min.js'></script>
+<link href="<?=fullbase()?>/css/html.css" rel="stylesheet" type="text/css" />
+<script type='text/javascript' src='<?=fullbase()?>/lib/jquery-ui-1.8.1/js/jquery-1.4.2.min.js'></script>
 <script src="http://maps.google.com/maps?file=api&v=2&key=<?=config()->gmap_key?>" type="text/javascript"></script>
 <script type="text/javascript">
 <?=$this->render(pagename()."/js.phtml");?>

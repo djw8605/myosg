@@ -56,6 +56,11 @@ abstract class ControllerBase extends Zend_Controller_Action
         $this->load();
         $this->render("uwa", null, true);
     }
+    public function igoogleAction()
+    {
+        $this->load();
+        $this->render("igoogle", null, true);
+    }
     public function mobileAction()
     {
         $this->load();
@@ -65,16 +70,18 @@ abstract class ControllerBase extends Zend_Controller_Action
     public function adduwaAction()
     {
         $url = fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"];
-        $target = "http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=".urlencode($url);
-        header("Location: $target");
+        header("Location: http://www.netvibes.com/subscribe.php?module=UWA&moduleUrl=".urlencode($url));
         exit;
     }
 
     public function addigoogleAction()
     {
+/*
         $url = urlencode(fullbase()."/".pagename()."/uwa?".$_SERVER["QUERY_STRING"]);
         $url = urlencode("www.netvibes.com/api/uwa/compile/google.php?moduleUrl=".$url);
-        header("Location: http://www.google.com/ig/add?moduleurl=$url");
+*/
+        $url = fullbase()."/".pagename()."/igoogle?".$_SERVER["QUERY_STRING"];
+        header("Location: http://www.google.com/ig/add?moduleurl=".urlencode($url));
         exit;
     }
 

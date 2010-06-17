@@ -72,7 +72,11 @@ class MapController extends ControllerBase
     {
         $this->load();
     }
-    public function mobileAction()
+    public function igoogleAction()
+    {
+        $this->load();
+    }
+     public function mobileAction()
     {
         $this->load();
     }
