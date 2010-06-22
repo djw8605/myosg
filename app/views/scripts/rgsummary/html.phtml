@@ -172,14 +172,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
                         $service_info = $this->servicetypes[$service->service_id][0];
 
-
-                        if($service->central == 1) {
-                            echo "<span class=\"round tag\" style=\"background-color: #99b\">Central Service</span>";
-                        }
-                        if($service->hidden == 1) {
-                            echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
-                        }
-
                         echo "<span class=\"sidenote fqdn\">";
                         if ($service->endpoint_override != "") {
                             //bold this since it's not default
@@ -188,6 +180,13 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                             echo $resource->fqdn.":".$service_info->port;
                         }
                         echo "</span>";
+
+                        if($service->central == 1) {
+                            echo "<span class=\"round tag\" style=\"background-color: #99b\">Central Service</span>";
+                        }
+                        if($service->hidden == 1) {
+                            echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
+                        }
 
 
                         echo "<b>".htmlsafe($service_info->name)."</b>";

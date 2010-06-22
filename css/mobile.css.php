@@ -62,9 +62,10 @@ div.resource
 {
 padding: 2px;
 padding-left:20px;
-background:#ccc url(<?=$imagebase?>/images/server.png) no-repeat 2px 3px;
-min-height: 16px;
-margin-bottom: 5px;
+background:#ccc url(<?=$imagebase?>/images/server.png) no-repeat 2px 2px;
+height: 16px;
+padding-top: 3px;
+margin-bottom: 2px;
 }
 div.h4
 {
@@ -82,7 +83,7 @@ div.site
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/house.png) no-repeat 0 0px;
-min-height: 16px;
+height: 16px;
 }
 
 div.support_center
@@ -98,13 +99,13 @@ div.facility
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/database.png) no-repeat 0 0px;
-min-height: 16px;
+height: 16px;
 }
 div.contact
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/user.png) no-repeat 0 0px;
-min-height: 16px;
+height: 16px;
 }
 div.vo
 {
@@ -117,14 +118,14 @@ div.metric
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 0 0px;
-min-height: 16px;
+height: 16px;
 }
 div.metricinfo_header
 {
 padding:2px;
 padding-left:22px;
 background:#ccc url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 3px 3px;
-min-height: 16px;
+height: 16px;
 margin-bottom: 3px;
 }
 
@@ -133,14 +134,14 @@ div.header
 padding:2px;
 padding-left:5px;
 background-color:#ccc;
-min-height: 16px;
+height: 16px;
 margin-bottom: 3px;
 }
 div.grid_type
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/list-items.gif) no-repeat 0 0px;
-min-height: 16px;
+height: 16px;
 }
 
 div.border
@@ -169,7 +170,7 @@ padding: 4px 6px 4px 6px;
 .service_info
 {
     background-color: #eee;
-    padding: 2px;
+    padding: 4px;
     margin: 2px;
 }
 
@@ -463,9 +464,8 @@ color: #ccc;
 span.tag
 {
 color:white;
-line-height:230%;
-margin:1px 3px 1px 1px;
-padding:3px;
+margin:2px 5px 2px 2px;
+padding:2px;
 }
 
 a.hidden_link {
