@@ -207,6 +207,7 @@ white-space: -o-pre-wrap;    /* Opera 7 */
 word-wrap: break-word;       /* Internet Explorer 5.5+ */
 background-color: #ddd;
 color: black;
+padding-left: 3px;
 }
 
 span.note
