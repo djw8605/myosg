@@ -286,8 +286,13 @@ font-weight: normal;
 
 #banner
 {
-    color: gray;
-    padding-bottom: 5px;
+background-image: url('../images/error_back.png');
+background-position: top left;
+color: white;
+margin-top: 30px;
+margin-bottom: 5px;
+padding: 5px;
+
 }
 
 p.note
