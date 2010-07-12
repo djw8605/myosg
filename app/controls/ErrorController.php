@@ -45,10 +45,14 @@ class ErrorController extends Zend_Controller_Action
                     $this->view->content = "<pre>".$log."</pre>";
                 } else {
                     $this->view->content = "Encountered an application error.\n\n";
+                    $this->view->content .= "<div style=\"padding: 10px;\"><pre>".$exception->getMessage()."</pre></div>";
+                    $this->view->content .= "Detail of this error will be sent to GOC for further analysis.";
+/*
                     if(config()->elog_email) {
                         mail(config()->elog_email_address, "[myosg] Error: ".$exception->getMessage(), $log, "From: ".php_uname('n'));
                         $this->view->content .= "Detail of this error has been sent to the development team for further analysis.";
                     }
+*/
                 }
 
                 elog($log);

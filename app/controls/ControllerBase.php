@@ -174,8 +174,12 @@ abstract class ControllerBase extends Zend_Controller_Action
             $this->view->start_time = $today_begin - 3600*24*30;
             break;
         case "specific":
-            $str = $_REQUEST["start_date"];
-            $this->view->start_time = strtotime($str);
+            if(isset($_REQUEST["start_date"])) {
+                $str = $_REQUEST["start_date"];
+                $this->view->start_time = strtotime($str);
+            } else {
+                throw new exception("User didn't specify start_date");
+            }
             break;
         }
 
@@ -187,8 +191,12 @@ abstract class ControllerBase extends Zend_Controller_Action
             $this->view->end_time = time();
             break;
         case "specific":
-            $str = $_REQUEST["end_date"];
-            $this->view->end_time = strtotime($str);
+            if(isset($_REQUEST["end_date"])) {
+                $str = $_REQUEST["end_date"];
+                $this->view->end_time = strtotime($str);
+            } else {
+                throw new exception("User didn't specify end_date");
+            }
             break;
         }
     }

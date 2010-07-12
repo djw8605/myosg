@@ -30,7 +30,10 @@ class MiscstatusController extends MiscController
                 $this->getStatus(246, "https://twiki.grid.iu.edu/bin/view/Operations/MyOSGServiceLevelAgreement")  //MyOSG
             ),
             "High"=>array(
-                array("name"=>"CA Distribution", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement"),
+
+                $this->getStatus(270, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement"), //GOC_Software Cache
+                //array("name"=>"CA Distribution", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"),
+
                 $this->getStatus(250, "https://twiki.grid.iu.edu/bin/view/Operations/RSVServiceLevelAgreement"), //RSV collector
                 array("name"=>"Resource Selection Service", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements")
             ),
