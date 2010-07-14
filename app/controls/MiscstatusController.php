@@ -76,8 +76,11 @@ class MiscstatusController extends MiscController
         $unknown = 0;
         $downtime = 0;
         $resources = $this->resources_by_resource_group[$gid];
+
+        $count = 0;
         foreach($resources as $resource) {
             if($resource->active == 0) continue; //filter by deactivated resource
+            $count++;
 
             //is this resource under downtime?
             if(isset($this->downtimes[$resource->id])) {
@@ -96,15 +99,20 @@ class MiscstatusController extends MiscController
                 $unknown++;
             }
         }
-        $rgstatus = "OK";
-        if($critical > 1) {
-            $rgstatus = "CRITICAL";
-        } else if($warning > 1) {
-            $rgstatus = "WARNING";
-        } else if($unknown > 1) {
-            $rgstatus = "UNKNOWN";
-        } else if($downtime > 1) {
-            $rgstatus = "DOWNTIME";
+
+        $rgstatus = "UNKNOWN";
+        if($count > 0) {
+            if($critical > 0) {
+                $rgstatus = "CRITICAL";
+            } else if($warning > 0) {
+                $rgstatus = "WARNING";
+            } else if($unknown > 0) {
+                $rgstatus = "UNKNOWN";
+            } else if($downtime > 0) {
+                $rgstatus = "DOWNTIME";
+            } else {
+                $rgstatus = "OK";
+            }
         }
 
         return array(
