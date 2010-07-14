@@ -1,6 +1,11 @@
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showtestresults"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showtestresults" <?=$checked?>/> Show Test Results<br/>
+<input type="checkbox" name="gip_status_attrs_showtestresults" <?=$checked?>/> Show GIP Validation Results<br/>
+
+<?$checked = "";
+if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="gip_status_attrs_showwlcgstatus" <?=$checked?>/> Show WLCG Status<br/>
+
 
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showresource"])) { $checked = "checked=checked"; }?>
@@ -20,6 +25,4 @@ if($("input[name='gip_status_attrs_showresource']").attr('checked')) {
 }
 </script>
 
-<?$checked = "";
-if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showwlcgstatus" <?=$checked?>/> Show WLCG Status<br/>
+

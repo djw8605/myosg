@@ -1,31 +1,20 @@
 <?
 foreach($this->resource_groups as $rgid=>$record) {
-    $testtime = agoCalculation($record["testtime"]);
+    $gipstatus = $record["gipstatus"];
+    if($gipstatus != null) {
+        $testtime = agoCalculation($gipstatus->UnixTimestamp);
+        $messages = $gipstatus->Messages;
+        $overallstatus = $gipstatus->Result;
+    } else {
+        $testtime = null;
+        $messages = null;
+        $overallstatus = null;
+    }
     $group_name = $record["name"];
-    $tests = $record["tests"];
-    $overallstatus = $record["overallstatus"];
     $gridtype = $record["gridtype"];
     $resources = $record["resources"];
     $wlcgstatus = $record["wlcgstatus"];
 
-    switch($overallstatus) {
-    case "FAIL":
-        $overall = "CRITICAL";
-        $overall_detail = "At least one GIP test is failing.";
-        break;
-    case "OK":
-        $overall = "OK";
-        $overall_detail = "No GIP issue found for this resource.";
-        break;
-    case "NA":
-        $overall = "UNKNOWN";
-        $overall_detail = "GIP validation result is not available for this resource.";
-        break;
-    default:
-        //????
-        $overall = "UNKNOWN";
-        $overall_detail = "GIP Validation script is returning unknown overall status.";
-    }
 ?>
     <div class="resource_group_header round">
     <?
@@ -37,55 +26,83 @@ foreach($this->resource_groups as $rgid=>$record) {
     echo "<span class='h3'>".$group_name."</span>";
     echo "</div>";
 
-    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { 
-        //display wlcg status
-        echo "<div style=\"float: right; font-size: 95%; min-width: 275px;\">";
-        echo "<div class=\"round subinfo indent\">";
-        echo "<h4>WLCG Status</h4>";
-        if($wlcgstatus !== null) {
-            foreach($wlcgstatus->WLCGBDII as $status) {
-                echo "<div style=\"border-top: 1px solid #ddd; padding-top: 0px;padding-bottom: 0px;\" class=\"status_".strtoupper($status->Status)."\">";
-                echo "<b>$status->LDAPURI</b><br/>";
-                echo $status->Notes;
-                echo "</div>";
-            }
+    if (isset($_REQUEST["gip_status_attrs_showtestresults"])) {
+        switch($overallstatus) {
+        case "CRIT":
+            $overall = "CRITICAL";
+            $overall_detail = "At leat one GIP test is failing";
+            break;
+        case "INFO":
+            $overall = "WARNING";
+            $overall_detail = "At least one GIP test is reporting information";
+            break;
+        case "PASS":
+            $overall = "OK";
+            $overall_detail = "No issues found";
+            break;
+        case "UNKNOWN":
+            $overall = "UNKNOWN";
+            $overall_detail = "GIP Validation script is returning unknown overall status";
+            break;
+        default:
+            $overall = "UNKNOWN";
+            $overall_detail = "GIP validation result is not available for this resource";
+        }
+
+        if($testtime !== null) {
+            echo "<div class=\"sidenote\">Tests performed $testtime ago</div>";
+        }
+        echo "<h3>GIP Validation Status</h3>";
+        echo "<div class=\"status_$overall\">";
+        if($messages == null || count($messages->Message) == 0) {
+            echo "<p>$overall_detail</p>";
         } else {
-            echo "<p class=\"warning\">Information not available</p>";
-        }
-        echo "</div>";//subinfo
-        echo "</div>";//sidenote
-    }
-
-
-    ?>
-    <div class="status_<?=$overall?>">
-    <p><?=$overall_detail?></p>
-    </div>
-    
-    <div class="indent">
-    <?
-    if($testtime !== null) {
-        echo "<div>Tests performed $testtime ago</div>";
-    }
-    if ((count($tests) != 0) and isset($_REQUEST["gip_status_attrs_showtestresults"])) {
-        foreach($tests as $name=>$test) {
-            $gip_status = $test["status"];
-            $reason = $test["reason"];
-
-            $status = "UNKNOWN";
-            switch($gip_status) {
-            case "FAIL":
-              $status = "CRITICAL";
-              break;
-            case "OK":
-              $status = "OK";
-              break;
+            $count = 0;
+            $errors = "";
+            foreach($messages->Message as $message) {
+                if($count < 3) { 
+                    echo "<p><pre>$message</pre>";
+                } else {
+                    //we have too many errors... hide the rest
+                    if(trim($message) == "") continue;
+                    $errors .= "<p><pre>$message</pre></p>";
+                }
+                $count++;
             }
-            echo outputTestInfo($name, $status, $reason, $rgid);
+            if($errors != "") {
+                echo outputtoggle("Show All Error Messages", "Hide Some Error Messages", $errors);
+            }
+        }
+        echo "</div>";//indent
+    }
+
+    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { 
+        echo "<h3>WLCG Status</h3>";
+        if($wlcgstatus != null) {
+            echo "<table width=\"100%\"><tr>";
+            foreach($wlcgstatus as $hostname => $status_package) { 
+                echo "<td width=\"50%\">"; //TODO - adjust width based on number of hosts
+                $groupstatus = $status_package[0];
+                $statuses = $status_package[1];
+                echo "<div class=\"status_$groupstatus\" style=\"min-height: 25px;\">";
+                echo "<span><b>$hostname</b></p>";
+                foreach($statuses as $status) {
+                    if($status->Status != "OK") {
+                        echo "<p class=\"bottom_border\">";
+                        //echo "<span class=\"sidenote\">Tested at ".$status->Notes."</span>";
+                        echo "<span>Test failed on ".$status->LDAPURI. "</span></p>";
+                    }
+                }
+                echo "</div>"; //status indent
+                echo "</td>";
+            }
+            echo "</tr></table>";
+        } else {
+            echo "<div class=\"status_UNKNOWN\" style=\"min-height: 25px;\">";
+            echo "<p>WLCG Status information not reported</p>";
+            echo "</div>";
         }
     }
-    echo "</div>";//indent
-    echo "<div style='clear: both'></div>";
 
     if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
         //show resources

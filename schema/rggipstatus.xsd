@@ -14,6 +14,53 @@
           <xsd:complexType>
             <xsd:sequence>
               <xsd:element name="GroupName" type="xsd:string" />
+              <xsd:element name="ID" type="xsd:int" />
+
+              <xsd:element minOccurs="0" name="GIPStatus">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Status" type="xsd:string" />
+                    <xsd:element name="Note" type="xsd:string" />
+                    <xsd:element name="Messages">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Message" type="xsd:string" />
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+
+              <xsd:element minOccurs="0" name="WLCGStatus">
+                <xsd:complexType>
+                  <xsd:sequence>
+                      <xsd:element name="HostGroups">
+                        <xsd:complexType>
+                          <xsd:sequence>
+                              <xsd:element minOccurs="0" maxOccurs="unbounded" name="HostGroup">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element name="Name" type="xsd:string" />
+                                    <xsd:element name="Status" type="xsd:string" />
+                                      <xsd:element name="Errors">
+                                        <xsd:complexType>
+                                          <xsd:sequence>
+                                            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Error" type="xsd:string" />
+                                          </xsd:sequence>
+                                        </xsd:complexType>
+                                      </xsd:element>
+
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+
+                          </xsd:sequence>
+                        </xsd:complexType>
+                      </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
 
               <xsd:element minOccurs="0" maxOccurs="1" name="Resources">
                 <xsd:complexType>
@@ -22,6 +69,7 @@
                         <xsd:complexType>
                           <xsd:sequence>
                               <xsd:element name="Name" type="xsd:string" />
+                              <xsd:element name="ID" type="xsd:int" />
                               <xsd:element name="Fqdn" type="xsd:string" />
 
                               <xsd:element minOccurs="0" name="LDIFUrls">
@@ -41,23 +89,6 @@
                 </xsd:complexType>
               </xsd:element>
 
-              <xsd:element name="OverallStatus" type="xsd:string" />
-              <xsd:element name="ID" type="xsd:int" />
-              <xsd:element name="Tests">
-                <xsd:complexType>
-                  <xsd:sequence>
-                    <xsd:element minOccurs="0" maxOccurs="unbounded" name="Test">
-                      <xsd:complexType>
-                        <xsd:sequence>
-                          <xsd:element name="Name" type="xsd:string" />
-                          <xsd:element name="Status" type="xsd:string" />
-                          <xsd:element name="Reason" type="xsd:string" />
-                        </xsd:sequence>
-                      </xsd:complexType>
-                    </xsd:element>
-                  </xsd:sequence>
-                </xsd:complexType>
-              </xsd:element>
             </xsd:sequence>
           </xsd:complexType>
         </xsd:element>

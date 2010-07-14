@@ -16,9 +16,18 @@
               <xsd:element name="GroupID" type="xsd:int" />
               <xsd:element name="GroupName" type="xsd:string" />
               <xsd:element name="Disable" type="boolean" />
+              <xsd:element name="GIPStatus">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Status" type="xsd:string" />
+                    <xsd:element name="Note" type="xsd:string" />
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
               <xsd:element name="Facility">
                 <xsd:complexType>
                   <xsd:sequence>
+                    <xsd:element name="ID" type="xsd:int" />
                     <xsd:element name="Name" type="xsd:string" />
                   </xsd:sequence>
                 </xsd:complexType>
@@ -26,6 +35,15 @@
               <xsd:element name="Site">
                 <xsd:complexType>
                   <xsd:sequence>
+                    <xsd:element name="ID" type="xsd:int" />
+                    <xsd:element name="Name" type="xsd:string" />
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="SupportCenter">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="ID" type="xsd:int" />
                     <xsd:element name="Name" type="xsd:string" />
                   </xsd:sequence>
                 </xsd:complexType>
@@ -64,13 +82,6 @@
                               <xsd:sequence>
                                 <xsd:element name="Status" type="xsd:string" />
                                 <xsd:element name="Note" type="xsd:string" />
-                              </xsd:sequence>
-                            </xsd:complexType>
-                          </xsd:element>
-                          <xsd:element name="GIPStatus">
-                            <xsd:complexType>
-                              <xsd:sequence>
-                                <xsd:element name="Status" type="xsd:string" />
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>

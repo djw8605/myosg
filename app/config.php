@@ -148,10 +148,12 @@ class common_config
         $this->current_resource_status_xml_cache = $this->getCacheDir()."/cache.current_resource_<ResourceID>.xml";
         
         //gip validation
-        $this->gip_summary = "/usr/local/gip-validator/var/xml/gip_validator_osg/gipvalidate_summary.xml"; 
-        $this->gip_summary_itb = "/usr/local/gip-validator/var/xml/gip_validator_osg_itb/gipvalidate_summary.xml"; 
-        $this->gip_detail = "/usr/local/gip-validator/var/xml/gip_validator_osg/gipvalidate_<resource_name>_detail.xml"; 
-        $this->gip_detail_itb = "/usr/local/gip-validator/var/xml/gip_validator_osg_itb/gipvalidate_<resource_name>_detail.xml"; 
+        $this->gip_summary = "/usr/local/gip-validator/var/xml/result.xml"; 
+        $this->gip_summary_itb = "/usr/local/gip-validator/var/xml/result-itb.xml"; 
+        //$this->gip_summary = "/usr/local/gip-validator/var/xml/gip_validator_osg/gipvalidate_summary.xml"; 
+        //$this->gip_summary_itb = "/usr/local/gip-validator/var/xml/gip_validator_osg_itb/gipvalidate_summary.xml"; 
+        //$this->gip_detail = "/usr/local/gip-validator/var/xml/gip_validator_osg/gipvalidate_<resource_name>_detail.xml"; 
+        //$this->gip_detail_itb = "/usr/local/gip-validator/var/xml/gip_validator_osg_itb/gipvalidate_<resource_name>_detail.xml"; 
         $this->gip_wlcg_status = "/usr/local/gip-validator/var/xml/top_level_wlcg_bdii_monitor.xml";
 
         //bdii raw files

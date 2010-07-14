@@ -39,6 +39,12 @@ Other Operational Services:
  <img src="<?=fullbase();?>/images/myosg_favi.png" align="left"/><p>&nbsp;<?=config()->copyright?></p>
  </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".delay_load").each(function(index) { $(this).attr('src', $(this).attr('name') ); });
+});
+</script>
+
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

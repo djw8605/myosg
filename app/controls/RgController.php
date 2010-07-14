@@ -454,13 +454,17 @@ class RgController extends ControllerBase
         $model = new ResourceGroup();
         $rgs = $model->getindex();
         foreach($rgs as $rg_id=>$rg) {
+            $rg_name = $rg[0]->name;
             //search for the gip status for this resource group
             $found = false;
             $overallstatus = "UNKNOWN"; //if not found, treat it as unknown
-            foreach($summary->Resource as $gip) {
-                if($rg[0]->name == (string)$gip->Name) {
-                    $overallstatus = (string)$gip->OverAllStatus;
-                    break;
+            if(isset($summary[$rg_name])) {
+                $overallstatus = (string)$summary[$rg_name]->Result;
+                //rename it to the old naming (for backward compatibility)
+                switch($overallstatus) {
+                case "PASS": $overallstatus = "OK";break;
+                case "CRIT": $overallstatus = "FAIL";break;
+                default: $overallstatus = "UNKNOWN";
                 }
             }
             //has user selected this resource status?

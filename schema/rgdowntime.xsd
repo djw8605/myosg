@@ -11,6 +11,7 @@
               <xsd:complexType>
                 <xsd:sequence>
                   <xsd:element name="GroupName" type="xsd:string" />
+                  <xsd:element name="GroupID" type="xsd:int" />
                 </xsd:sequence>
               </xsd:complexType>
             </xsd:element>

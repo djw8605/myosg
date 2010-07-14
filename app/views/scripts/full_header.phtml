@@ -79,7 +79,7 @@ parseQuery();
                     <p>Resource Group Summary</p>
                     <div class="subnav_desc">
                         <p>Show basic information about resources</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgsummary.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgsummary.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgcurrentstatus/index".config()->default_url("rg"))?>&datasource=currentstatus';">   
@@ -88,70 +88,70 @@ parseQuery();
                         <p>
                         At each OSG site, a RSV monitoring client software runs a set of common tests on OSG resources to check their status, and discover potential issues. This page shows the current set of results that have been received from such clients. 
                         </p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgcurrentstatus.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgcurrentstatus.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rggipstatus/index".config()->default_url("rg"))?>&datasource=gipstatus';">   
                     <p>Current GIP Validation Status</p>
                     <div class="subnav_desc">
                         <p>GIP(Generic Information provider) on each OSG resource publishes detailed information about various services available in that resource group, enabling OSG users to evaluate usability via the OSG BDII. This page provides validation results for the GIP  information enabling administrators to spot inaccuracies and/or inconsistencies.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rggipstatus.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rggipstatus.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgstatushistory/index".config()->default_url("rg"))?>&datasource=statushistory';">   
                     <p>RSV Status History</p>
                     <div class="subnav_desc">
                         <p>This page shows the graph of past RSV status. Click inside a graph to show the status detail of that particular point in time.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgstatushistory.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgstatushistory.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgarhistory/index".config()->default_url("rg"))?>&datasource=arhistory';">   
                     <p>Availability History</p>
                     <div class="subnav_desc">
                         <p>GOC calculates resource availability and reliability from the RSV result. This page shows the graph of past availability and reliability information.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgarhistory.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgarhistory.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgarmetric/index".config()->default_url("rg"))?>&datasource=armetric';">   
                     <p>Availability Metrics</p>
                     <div class="subnav_desc">
                         <p>GOC calculates resource availability and reliability from the RSV result. This page calculates the availability and reliability during the period that you specify.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgarmetric.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgarmetric.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgdowntime/index".config()->default_url("rg"))?>&datasource=downtime';">   
                     <p>Downtime Schedule</p>
                     <div class="subnav_desc">
                         <p>Resource admin enters resource downtime information on OIM. This page shows all current and future downtime information. Downtime information allows accurate calculation of resource reliability.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgdowntime.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgdowntime.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgaccount/index".config()->default_url("rg"))?>&datasource=account&account_type=cumulative_hours';">   
                     <p>Gratia Accounting Graphs</p>
                     <div class="subnav_desc">
                         <p>Gratia data shows hardware and globus runtime metrics. This page shows common gratia data that is aggregated acrross all selected resources.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgaccount.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgaccount.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgce/index".config()->default_url("rg"))?>&datasource=ce&ce_account_type=gip_vo';">   
                     <p>Gratia Accounting Graphs (for CE)</p>
                     <div class="subnav_desc">
                         <p>Gratia data shows hardware and globus runtime metrics. This page shows compute element specific gratia data that is aggregated across all selected resources.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgce.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgce.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgse/index".config()->default_url("rg"))?>&datasource=se&se_account_type=vo_transfer_volume';">   
                     <p>Gratia Accounting Graphs (for SE)</p>
                     <div class="subnav_desc">
                         <p>Gratia data shows hardware and globus runtime metrics. This page shows storage element specific gratia data that is aggregated across all selected resources.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgse.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgse.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/rgbdii/index".config()->default_url("rg"))?>&datasource=bdii&bdii_attrs_showstat=on';">   
                     <p>BDII Information</p>
                     <div class="subnav_desc">
                         <p>Information collected from BDII consolidator. This page only shows BDII resource groups / resources that matches OIM registration information.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/rgbdii.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/rgbdii.png">
                     </div>
                 </li>
                     
@@ -166,7 +166,7 @@ parseQuery();
                     <p>Support Center Summary</p>
                     <div class="subnav_desc">
                         <p>Shows basic information about Support Centers.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/scsummary.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/scsummary.png">
                     </div>
                 </li>
             </ul>
@@ -180,21 +180,21 @@ parseQuery();
                     <p>Virtual Organization Summary</p>
                     <div class="subnav_desc">
                         <p>Shows basic information about Virtual Organization.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/vosummary.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/vosummary.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/voactivation".config()->default_url("vo"))?>&datasource=activation';">   
                     <p>Virtual Organization Activation Status</p>
                     <div class="subnav_desc">
                         <p>Shows VOs that were active during the given time period. This page shows all registered VO including disabled VO. You can not specify a VO or set filter to this page.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/voactivation.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/voactivation.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/vovomsstatus".config()->default_url("vo"))?>&datasource=vomsstatus';">   
                     <p>VOMS Status</p>
                     <div class="subnav_desc">
                         <p>Shows VOMS status.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/vovomsstatus.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/vovomsstatus.png">
                     </div>
                 </li>
             </ul>
@@ -211,28 +211,28 @@ parseQuery();
                     <p>RSV Metrics</p>
                     <div class="subnav_desc">
                         <p>Shows list of RSV metrics that are registered in OIM.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/miscmetric.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscmetric.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/misccpuinfo".config()->default_url("misc"))?>&datasource=cpuinfo';">   
                     <p>CPU Information</p>
                     <div class="subnav_desc">
                         <p>Shows CPU Information stored in OIM.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/misccpuinfo.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/misccpuinfo.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/misccount".config()->default_url("misc"))?>&datasource=count&count_sg_1=on&count_active=on&count_enabled=on';">   
                     <p>Resource Service Counts</p>
                     <div class="subnav_desc">
                         <p>Shows number of services per grid type.</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/misccount.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/misccount.png">
                     </div>
                 </li>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/miscstatus".config()->default_url("misc"))?>&datasource=status';">   
                     <p>Operations Status Overview</p>
                     <div class="subnav_desc">
                         <p>Shows current status of OSG operations services</p>
-                        <img width="100%" src="<?=fullbase()?>/images/screenshots/miscstatus.png">
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscstatus.png">
                     </div>
                 </li>
             </ul>

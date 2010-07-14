@@ -30,9 +30,25 @@ class RggipstatusController extends RgController
 
         $wlcgstatus = array();
         if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
-            $wlcgstatus = $model->getWLCGStatus();
-        }
+            $wlcgstatus_raw = $model->getWLCGStatus();
+            $wlcgstatus = array();
+            foreach($wlcgstatus_raw as $rgid=>$status_lists) {
+                //don't process if it's not requested
+                if(!isset($this->rgs[$rgid])) continue;
 
+                $group = array();
+                foreach($status_lists as $hostname=>$statuses) {
+                    $group_status = "OK";
+                    foreach($statuses as $status) {
+                        if($status->Status != "OK") {
+                            $group_status = "CRITICAL";
+                        }
+                    }
+                    $group[$hostname] = array($group_status, $statuses);
+                }
+                $wlcgstatus[$rgid] = $group;
+            }
+        }
 
         $model = new ResourceGroup();
         $resource_groups = $model->getindex();
@@ -43,23 +59,9 @@ class RggipstatusController extends RgController
         foreach($this->rgs as $rgid=>$resources) {
             $tests = array();
             $resource_group = $resource_groups[$rgid][0];
-
-            //if not found use following defaults
-            $testtime = null;
-            $overallstatus = "NA";
-
-            $found = false;
-            //search for gip status for this resource name (by resource GROUP name!)
-            foreach($gip->Resource as $resource) {
-                if($resource_group->name == $resource->Name) {
-                    foreach($resource->TestCase as $test) {
-                        $tests[(string)$test->Name] = array("status"=>(string)$test->Status, "reason"=>(string)$test->Reason);
-                    }
-                    $found = true;
-                    $testtime = strtotime((string)$gip->TestRunTime);
-                    $overallstatus = $resource->OverAllStatus;
-                    break;
-                }
+            $gipstatus = null;
+            if(isset($gip[$resource_group->name])) {
+                $gipstatus = $gip[$resource_group->name];
             }
 
             if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
@@ -80,26 +82,23 @@ class RggipstatusController extends RgController
 
                     //TODO - add code to gather more resource details here
 
-
                     $this->view->resource_details[$rid] = $details;
                 }
             }
 
             //put everything together
             $this->view->resource_groups[$rgid] = array(
-                "testtime"=>$testtime,
                 "name"=>$resource_group->name, 
                 "gridtype"=>$resource_group->grid_type_description,
-                "overallstatus"=>$overallstatus,
                 "resources"=>$resources,
-                "tests"=>$tests,
+                "gipstatus"=>$gipstatus,
                 "wlcgstatus"=>@$wlcgstatus[$rgid]
             );
         }
-        //dlog($this->view->resource_details);
         $this->setpagetitle(self::default_title());
     }
 
+/*
     public function detailAction()
     {
         $rid = (int)$_REQUEST["rid"];
@@ -112,29 +111,8 @@ class RggipstatusController extends RgController
             $this->render("none", null, true);
         } else {
             $resource_name = $resource_info->name;
-        
-            //try to find the detail in prod directory first
-            $xmlname = config()->gip_detail;
-            $xmlname = str_replace("<resource_name>", $resource_name, $xmlname);
-            if(!file_exists($xmlname)) {
-                //try the itb directory
-                $xmlname = config()->gip_detail_itb;
-                $xmlname = str_replace("<resource_name>", $resource_name, $xmlname);
-            }
-            $cache_xml = file_get_contents($xmlname);
-            $cache = new SimpleXMLElement($cache_xml);
-
-            $dirty_name = $_REQUEST["name"];
-            //validate dirty_name
-            switch($dirty_name) {
-            case "Validate_GIP_BDII":
-            case "Missing_Sites":
-            case "Interop_Reporting_Check":
-            case "Validate_GIP_URL":
-                $name = $dirty_name;
-            }
-            $case = $cache->xpath("//TestCase/Name[.='$name']/parent::*");
-            $this->view->detail = $case[0];
+            $this->view->detail = "none";
         }
     }
+*/
 }

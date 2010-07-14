@@ -2,14 +2,93 @@
 <GIPValidation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rggipstatus.xsd">
 <?
 foreach($this->resource_groups as $rgid=>$record) {
-    $resource_name = $record["name"];
-    $tests = $record["tests"];
-    $overallstatus = $record["overallstatus"];
+    $gipstatus = $record["gipstatus"];
+    if($gipstatus != null) {
+        $testtime = agoCalculation($gipstatus->UnixTimestamp);
+        $messages = $gipstatus->Messages;
+        $overallstatus = $gipstatus->Result;
+    } else {
+        $testtime = null;
+        $messages = null;
+        $overallstatus = null;
+    }
+    $group_name = $record["name"];
+    $gridtype = $record["gridtype"];
     $resources = $record["resources"];
     $wlcgstatus = $record["wlcgstatus"];
 
     echo "<ResourceGroup>";
-    echo "<GroupName>$resource_name</GroupName>";
+    echo "<GroupName>$group_name</GroupName>";
+    echo "<ID>$rgid</ID>";
+
+    if (isset($_REQUEST["gip_status_attrs_showtestresults"])) {
+        //GIP Status
+        switch($overallstatus) {
+        case "CRIT":
+            $overall = "CRITICAL";
+            $overall_detail = "At leat one GIP test is failing";
+            break;
+        case "INFO":
+            $overall = "WARNING";
+            $overall_detail = "At least one GIP test is reporting information";
+            break;
+        case "PASS":
+            $overall = "OK";
+            $overall_detail = "No issues found";
+            break;
+        case "UNKNOWN":
+            $overall = "UNKNOWN";
+            $overall_detail = "GIP Validation script is returning unknown overall status";
+            break;
+        default:
+            $overall = "UNKNOWN";
+            $overall_detail = "GIP validation result is not available for this resource";
+        }
+        echo "<GIPStatus>";
+        echo "<Status>$overall</Status>";
+        echo "<Note>$overall_detail</Note>";
+        echo "<Messages>";
+        if($messages !== null) {
+            foreach($messages->Message as $message) {
+                echo "<Message>".htmlsafe($message)."</Message>";
+            }
+        }
+        echo "</Messages>";
+        echo "</GIPStatus>";
+    }
+
+    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
+/*
+        if($wlcgstatus !== null) {
+            echo "<WLCGStatus>";
+            echo "<!-- Following XML data comes directly from WLCG consolidator. Format of the data could change without warning -->";
+            foreach($wlcgstatus->children() as $child) {
+                echo $child->asXML();
+            }
+            echo "</WLCGStatus>";
+        }
+*/
+        if($wlcgstatus != null) {
+            echo "<WLCGStatus>";
+            echo "<HostGroups>";
+            foreach($wlcgstatus as $hostname => $status_package) { 
+                $groupstatus = $status_package[0];
+                $statuses = $status_package[1];
+                echo "<HostGroup><Name>$hostname</Name>";
+                echo "<Status>$groupstatus</Status>";
+                echo "<Errors>";
+                foreach($statuses as $status) {
+                    if($status->Status != "OK") {
+                        echo "<Error>Test failed on ".$status->LDAPURI. "</Error>";
+                    }
+                }
+                echo "</Errors>";
+                echo "</HostGroup>";
+            }
+            echo "</HostGroups>";
+            echo "</WLCGStatus>";
+        }
+   }
 
     if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
         echo "<Resources>";
@@ -62,32 +141,6 @@ foreach($this->resource_groups as $rgid=>$record) {
         echo "</Resources>";
     }    
 
-
-    echo "<OverallStatus>$overallstatus</OverallStatus>";
-    echo "<ID>$rgid</ID>";
-
-    echo "<Tests>";
-    foreach($tests as $name=>$test) {
-        $gip_status = $test["status"];
-        $reason = $test["reason"];
-        echo "<Test>";
-        echo "<Name>$name</Name>";
-        echo "<Status>$gip_status</Status>";
-        echo "<Reason>$reason</Reason>";
-        echo "</Test>";
-    }
-    echo "</Tests>";
-
-    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
-        if($wlcgstatus !== null) {
-            echo "<WLCGStatus>";
-            echo "<!-- Following XML data comes directly from WLCG consolidator. Format of the data could change without warning -->";
-            foreach($wlcgstatus->children() as $child) {
-                echo $child->asXML();
-            }
-            echo "</WLCGStatus>";
-        }
-    }
 
     echo "</ResourceGroup>";
 }

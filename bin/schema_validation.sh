@@ -25,7 +25,7 @@ xmllint --format /tmp/rgcurrentstatus.raw.xml > /tmp/rgcurrentstatus.xml
 xmllint --noout --schema $SCHEMA/rgcurrentstatus.xsd /tmp/rgcurrentstatus.xml
 
 echo "Testing GIP validation Status"
-url="$HOST/rggipstatus/xml?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F23%2F2009&end_type=now&end_date=08%2F23%2F2009&all_resources=on&gridtype=on&gridtype_1=on&active_value=1&disable_value=1"
+url="$HOST/rggipstatus/xml?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showwlcgstatus=on&gip_status_attrs_showresource=on&gip_status_attrs_showcemondata=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=07%2F14%2F2010&end_type=now&end_date=07%2F14%2F2010&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1"
 wget -O /tmp/rggipstatus.raw.xml $url 2> /dev/null
 xmllint --format /tmp/rggipstatus.raw.xml > /tmp/rggipstatus.xml
 xmllint --noout --schema $SCHEMA/rggipstatus.xsd /tmp/rggipstatus.xml

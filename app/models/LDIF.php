@@ -33,7 +33,20 @@ class LDIF
         } else {
             elog("Can't find the gip summary xml (ignoring): ".config()->gip_summary_itb);
         }
-        return $gip;
+
+        $ret = array();
+        
+        //parse it out
+        foreach($gip->ResourceGroup as $rg) {
+            $name = (string)$rg->Name;
+            $attrs = $rg->attributes();
+
+            $grid_type = $attrs["type"];
+            //TODO - what should I do with grid type?
+
+            $ret[$name] = $rg;
+        }
+        return $ret;
     }
 
     public function getWLCGStatus()
@@ -44,7 +57,17 @@ class LDIF
         $xml = new SimpleXMLElement($xml_str);
         $rgs = $xml->ResourceGroups->ResourceGroup;
         foreach($rgs as $rg) {
-            $ret[(int)$rg->GroupID] = $rg->WLCGBDIIs;
+            $rgid = (int)$rg->GroupID;
+            if(!isset($ret[$rgid])) {
+                $ret[$rgid] = array();
+            }
+            foreach($rg->WLCGBDIIs[0]->WLCGBDII as $status) {
+                $hostname = (string)$status->HostName;
+                if(!isset($ret[$rgid][$hostname])) {
+                    $ret[$rgid][$hostname] = array();
+                }
+                $ret[$rgid][$hostname][] = $status;
+            }
         }
         return $ret;
     }
