@@ -20,9 +20,14 @@ class MiscstatusController extends MiscController
     public static function default_title() { return "Operations Status Overview"; }
     public static function default_url($query) { return ""; }
 
+    private $downtimes;
+
     public function load()
     {
         parent::load();
+
+        $downtime_model = new Downtime();
+        $this->downtimes = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
 
         $this->view->statuses = array(
             "Critical"=>array(
@@ -71,8 +76,17 @@ class MiscstatusController extends MiscController
         $warning = 0;
         $critical = 0;
         $unknown = 0;
+        $downtime = 0;
         $resources = $this->resources_by_resource_group[$gid];
         foreach($resources as $resource) {
+            if($resource->active == 0) continue; //filter by deactivated resource
+
+            //is this resource under downtime?
+            if(isset($this->downtimes[$resource->id])) {
+                $downtime++;
+                continue;
+            }
+
             if(isset($this->latest_resource_status[$resource->id])) {
                 $status = $this->latest_resource_status[$resource->id][0];
                 switch((int)$status->status_id) {
@@ -91,6 +105,8 @@ class MiscstatusController extends MiscController
             $rgstatus = "WARNING";
         } else if($unknown > 1) {
             $rgstatus = "UNKNOWN";
+        } else if($downtime > 1) {
+            $rgstatus = "DOWNTIME";
         }
 
         return array(
