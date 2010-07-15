@@ -93,6 +93,7 @@ function init() {
     }
     //this function determine what status is shown above what other status
     function zfunction(marker, something) {
+/*
         var title = marker.getTitle();
         if(title == "nr") {
             return 0; //hide behind everything
@@ -103,7 +104,18 @@ function init() {
         } else if(title == "unknown") { 
             return 3;
         }
-        return 3;
+*/
+        var i = marker.getIcon();
+        if(i == icon["nr"]) {
+            return 0; //hide behind everything
+        } else if(i == icon["warning"]) {
+            return 1;
+        } else if(i == icon["ok"]) { 
+            return 2;
+        } else if(i == icon["unknown"]) { 
+            return 3;
+        }
+        return 4;
     }
 <?
 foreach($this->sites as $site) {
@@ -151,7 +163,7 @@ foreach($this->sites as $site) {
                     $expire = time()-3600*24*config()->status_expires_days;
                     $note = $rstatus->detail;
                     if($rstatus->timestamp < $expire) {
-                        $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Expired Status</span> $note</div>";
+                        $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Status Expired</span> $note</div>";
                         continue;//don't count this as a valid status
                     }
                 } else {
@@ -180,7 +192,7 @@ foreach($this->sites as $site) {
         if(isset($_REQUEST["map_attrs_shownr"])) {
             //show as "non reporting"
             $status = "nr";
-            echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$status\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
+            echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
             echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
         }
     } else {
@@ -195,7 +207,7 @@ foreach($this->sites as $site) {
         //show marker
         if($site->latitude == null) $site->latitude = 0;
         if($site->longitude == null) $site->longitude = 0;
-        echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$status\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
+        echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
         echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
     }
 }
