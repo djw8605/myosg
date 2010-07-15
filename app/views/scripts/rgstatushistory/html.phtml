@@ -148,7 +148,29 @@ $(document).ready(function() {
     });
 
     //$("img.graph").lazyload({placeholder:"<?=fullbase()?>/images/graph_holder.gif", effect: "fadeIn"});
+    $(window).scroll(function() {
+        $("img.graph").each(function() {
+            if($(this).attr("name") != "") {
+                if(isScrolledIntoView(this)) {
+                    $(this).attr("src", $(this).attr("name"));
+                    $(this).attr("name", "");
+                }
+            }
+        });
+    });
 });
+
+function isScrolledIntoView(elem)
+{
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(elem).offset().top;
+    var elemBottom = elemTop + $(elem).height();
+
+    return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom));
+}
+
 </script>
 
 <div id="mark" class="hidden mark">&nbsp;</div>
@@ -181,7 +203,7 @@ foreach($this->rgs as $rgid=>$rg) {
         foreach($this->services[$rid] as $service) {
             echo "<h4>$service->name Service</h4>";
             echo "<div class=\"history_graph\">";
-            echo "<img sid=\"$service->service_id\" rid=\"$rid\" class=\"graph\" src=\"".fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
+            echo "<img sid=\"$service->service_id\" rid=\"$rid\" class=\"graph\" name=\"".fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
             echo $this->ruler;
             echo "</div>";
             echo "<div class=\"history_detail\" id=\"history_detail_".$rid."_".$service->service_id."\"></div>";
