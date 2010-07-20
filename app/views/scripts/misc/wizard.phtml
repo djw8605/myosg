@@ -29,6 +29,7 @@ span.disabled_span
         <option value="cpuinfo">CPU Information</option>
         <option value="count">Resource Service Counts</option>
         <option value="status">Operations Status Overview</option>
+        <option value="user">OSG Users</option>
         </select>
 
         <p>
@@ -43,6 +44,9 @@ span.disabled_span
             </div>
             <div id="status_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_status.phtml")?>
+            </div>
+            <div id="user_attrs" class="attrs indent hidden">
+                <?=$this->render("misc/wizard_user.phtml")?>
             </div>
         </p>
     </div>

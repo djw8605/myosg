@@ -20,7 +20,11 @@ class Contact extends CachedIndexedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        return "select * from contact";
+        $where = "where 1 = 1";
+        if(isset($params["person"])) {
+            $where .= " and person = ".$params["person"];
+        }
+        return "select * from contact $where ORDER BY name";
     }
     public function key() { return "id"; }
 }

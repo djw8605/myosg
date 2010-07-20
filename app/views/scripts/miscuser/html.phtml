@@ -1,0 +1,105 @@
+<style>
+.contact_preference {
+padding: 5px;
+margin-bottom: 3px;
+}
+
+.address {
+padding: 5px;
+margin-bottom: 3px;
+background-color: #eee;
+}
+.avatar {
+margin: 2px;
+max-height: 80px;
+max-width: 80px;
+}
+</style>
+
+<?
+
+foreach($this->contacts as $cid => $contact) {
+    $contact = $contact[0];
+    if($contact->disable == 1) continue;
+
+    echo "<h3>$contact->name</h3>";
+
+    echo "<table width=\"100%\">";
+    echo "<tr><td width=\"90px\">";
+    if(trim($contact->photo_url) != "") {
+        echo "<img class=\"avatar\" src=\"$contact->photo_url\"/>";
+    } else {
+        //show gravatar
+        $url = "http://www.gravatar.com/avatar/".md5($contact->primary_email);
+        echo "<img class=\"avatar\" src=\"$url\"/>";
+    }
+    echo "</td>";
+
+    echo "<td>";
+    if(trim($contact->profile) != "") {
+        echo "<p><b>Proofile</b><br/>".htmlsafe($contact->profile)."</p>";
+    } else {
+        echo "(No profile information provided)";
+    }
+    echo "</td>";
+
+    //echo $contact->timezone;
+    if(!user()->isGuest()) {
+        echo "<td width=\"30%\">";
+        echo formatEmail($contact->primary_email);
+        echo formatEmail($contact->secondary_email);
+        echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);
+        //echo formatPhone($contact->secondary_phone, $contact->secondary_phone_ext);
+        if(trim($contact->im) != "") {
+            echo "<b>IM</b> ".htmlsafe($contact->im);
+        }
+
+        /*
+        //address
+        $add = "";
+        if(trim($contact->address_line_1) != "") {
+            $add .= htmlsafe($contact->address_line_1)."<br/>";
+        }
+        if(trim($contact->address_line_2) != "") {
+            $add .= htmlsafe($contact->address_line_2)."<br/>";
+        }
+        if(trim($contact->city) != "") {
+            $add .= $contact->city." ";
+        }
+        if(trim($contact->state) != "") {
+            $add .= $contact->state." ";
+        }
+        if(trim($contact->zipcode) != "") {
+            $add .= $contact->zipcode."<br/>";
+        }
+        if(trim($contact->country) != "") {
+            $add .= $contact->country."<br/>";
+        }
+        if(trim($add) != "") {
+            echo "<p class=\"address\">$add</p>";
+        }
+        */
+
+        if(trim($contact->contact_preference) != "") {
+            echo "<p class=\"contact_preference\">".htmlsafe($contact->contact_preference)."</p>";
+        }
+        echo "</td>";
+    }
+    echo "</tr></table>";
+}
+
+function formatEmail($email) {
+    if(trim($email) == "") return "";
+    $out = "<img align=\"top\" src=\"".fullbase()."/images/email.png\"/> <a href=\"mailto: $email\">".htmlsafe($email)."</a><br>";
+    return $out;
+}
+
+function formatPhone($phone, $ext) {
+    if(trim($phone) == "") return "";
+    $out = "<img align=\"top\" src=\"".fullbase()."/images/telephone.png\"/> ".htmlsafe($phone)." ";
+    if(trim($ext) != "") {
+        $out .= "(ext. ".htmlsafe($ext).")";
+    }
+    $out .= "<br>";
+    return $out;
+}

@@ -1,0 +1,15 @@
+<p class="info">You can edit your profile at <a target="_blank" href="https://oim.grid.iu.edu/oim/profileedit">OIM</a></p>
+<p class="info">Contact information is only available for user accessing via https:// with an OIM registered X509 certificate</p>
+<?
+$model = new Contact();
+$contacts = $model->getindex(array("person"=>1));
+$kv = array();
+foreach($contacts as $contact) {-
+    $contact = $contact[0];
+    if($contact->disable == 1) continue;
+    $kv[$contact->id] = array($contact->name, ""); 
+}
+echo fblist("contacts", "Show Following Users", $kv);
+
+
+

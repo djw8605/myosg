@@ -53,18 +53,6 @@ parseQuery();
         <h1><a href="<?=base()?>"><?=config()->app_name?></a></h1>
         <h2><?=config()->app_subname?></h2>
     </div>
-
-<!--
-    <div class="submenu">
-        <div id="menu_about"><a href="<?=config()->default_url("about")?>">Home</a></div>
-        <div id="menu_rg"><a href="<?=config()->default_url("rg")?>">Resource Group</a></div>
-        <div id="menu_sc"><a href="<?=config()->default_url("scsummary")?>">Support Center</a></div>
-        <div id="menu_vo"><a href="<?=config()->default_url("vosummary")?>">Virtual Organization</a></div>
-        <div id="menu_map"><a href="<?=config()->default_url("map")?>">Status Map</a></div>
-        <div id="menu_misc"><a href="<?=config()->default_url("misc")?>">Miscellaneous</a></div>
-    </div>
--->
-
     <ul class="topnav">
         <li></li>
         <li class="round" id="menu_about" onclick="document.location='<?=htmlspecialchars(base()."/about".config()->default_url("about"))?>';">
@@ -235,6 +223,15 @@ parseQuery();
                         <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscstatus.png">
                     </div>
                 </li>
+<!--
+                <li onclick="document.location='<?=htmlspecialchars(base()."/miscuser".config()->default_url("misc"))?>&datasource=user';">   
+                    <p>OSG Users</p>
+                    <div class="subnav_desc">
+                        <p>Show list of OSG Users and their profile information</p>
+                        <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscuser.png">
+                    </div>
+                </li>
+-->
             </ul>
         </li>
     </ul>
