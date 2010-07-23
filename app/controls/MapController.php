@@ -17,7 +17,7 @@ License.
 
 class MapController extends ControllerBase
 {
-    public static function default_title() { return "RSV Status Map"; }
+    public static function default_title() { return "Status Map"; }
     public static function default_url($query) { return ""; }
 
     public function load()
@@ -262,7 +262,13 @@ class MapController extends ControllerBase
 
         $this->render("none", null, true);
     }
-    
+
+    public function ruthAction()
+    {
+        $this->load();
+        $this->setpagetitle("Status Map (Ruth's View)");
+    }
+ 
     private function ll2xy($long, $lat) 
     {
         $width = 1024.0;

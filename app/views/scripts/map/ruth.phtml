@@ -1,7 +1,7 @@
 <?=$this->render("full_header.phtml", true)?>
 <script src="http://maps.google.com/maps?file=api&v=2&sensor=true&key=<?=config()->gmap_key?>" type="text/javascript"></script>
 <script type="text/javascript">
-<?=$this->render(pagename()."/js.phtml");?>
+<?=$this->render(pagename()."/js_ruth.phtml");?>
 $(document).ready(function() {
     init();
 });
@@ -33,7 +33,7 @@ height: 500px;
     </div>
 </div>
 <div id="sideContent">
-    <?=$this->render("legend_rsvstatusmap.phtml")?>
+    <?=$this->render("legend_rsvstatusmap_ruth.phtml")?>
     <div class="indent">
         <p>URL of this page is updated everytime you change position / zoom of the map. You can bookmark, or copy & paste the URL of this page in order to go back to where you are right now.</p>
     </div>
@@ -106,6 +106,7 @@ height: 500px;
     <br/>
     <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     <?=$this->render("subscribe.phtml")?>
+
     <div class="indent">
 <!--
     <a href="<?=fullbase()?>/map/promo">OSG Sites in US</a>
