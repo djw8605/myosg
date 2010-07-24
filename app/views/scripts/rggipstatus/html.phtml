@@ -88,9 +88,10 @@ foreach($this->resource_groups as $rgid=>$record) {
                 echo "<span><b>$hostname</b></p>";
                 foreach($statuses as $status) {
                     if($status->Status != "OK") {
-                        echo "<p class=\"bottom_border\">";
-                        //echo "<span class=\"sidenote\">Tested at ".$status->Notes."</span>";
-                        echo "<span>Test failed on ".$status->LDAPURI. "</span></p>";
+                        echo "<div class=\"bottom_border\">";
+                        echo "<p>Test failed on ".$status->LDAPURI. "</p>";
+                        echo "<pre>".$status->Notes."</pre>";
+                        echo "</div>";
                     }
                 }
                 echo "</div>"; //status indent

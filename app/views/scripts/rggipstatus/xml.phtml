@@ -79,7 +79,7 @@ foreach($this->resource_groups as $rgid=>$record) {
                 echo "<Errors>";
                 foreach($statuses as $status) {
                     if($status->Status != "OK") {
-                        echo "<Error>Test failed on ".$status->LDAPURI. "</Error>";
+                        echo "<Error>Test failed on ".$status->LDAPURI. " :: ".$status->Notes."</Error>";
                     }
                 }
                 echo "</Errors>";
