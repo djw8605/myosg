@@ -84,7 +84,11 @@ class MapController extends ControllerBase
     public function kmlAction()
     {
         $this->load();
-        header("Content-type: application/vnd.google-earth.kml+xml");
+
+        $filename = "osg_site_map.kml";
+
+        header("Content-type: application/vnd.google-earth.kml+xml; charset=utf8");
+        header("Content-Disposition: attachment; filename=$filename");
         //recreate the original non-xml url
 ?><!-- This KML was generated with a query in following MyOSG page
 <?=fullbase()."/".pagename()."/?".$_SERVER["QUERY_STRING"]?>
