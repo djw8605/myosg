@@ -60,9 +60,9 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
     if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
         $hierarchy = $this->hierarchy[$resource_group_id];
-        echo "<Facility><ID>".$hierarchy["facility"]->id."</ID><Name>".$hierarchy["facility"]->name."</Name></Facility>";
-        echo "<Site><ID>".$hierarchy["site"]->id."</ID><Name>".$hierarchy["site"]->name."</Name></Site>";
-        echo "<SupportCenter><ID>".$hierarchy["sc"]->id."</ID><Name>".$hierarchy["sc"]->name."</Name></SupportCenter>";
+        echo "<Facility><ID>".$hierarchy["facility"]->id."</ID><Name>".htmlsafe($hierarchy["facility"]->name)."</Name></Facility>";
+        echo "<Site><ID>".$hierarchy["site"]->id."</ID><Name>".htmlsafe($hierarchy["site"]->name)."</Name></Site>";
+        echo "<SupportCenter><ID>".$hierarchy["sc"]->id."</ID><Name>".htmlsafe($hierarchy["sc"]->name)."</Name></SupportCenter>";
     } 
 
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
