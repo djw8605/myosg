@@ -22,7 +22,7 @@ foreach($this->contacts as $cid => $contact) {
     $contact = $contact[0];
     if($contact->disable == 1) continue;
 
-    echo "<h3>$contact->name</h3>";
+    echo "<h3>".htmlsafe($contact->name)."</h3>";
 
     echo "<table width=\"100%\">";
     echo "<tr><td width=\"90px\">";
@@ -37,7 +37,7 @@ foreach($this->contacts as $cid => $contact) {
 
     echo "<td>";
     if(trim($contact->profile) != "") {
-        echo "<p><b>Proofile</b><br/>".htmlsafe($contact->profile)."</p>";
+        echo "<p>".htmlsafe($contact->profile)."</p>";
     } else {
         echo "(No profile information provided)";
     }
@@ -45,7 +45,7 @@ foreach($this->contacts as $cid => $contact) {
 
     //echo $contact->timezone;
     if(!user()->isGuest()) {
-        echo "<td width=\"30%\">";
+        echo "<td width=\"40%\">";
         echo formatEmail($contact->primary_email);
         echo formatEmail($contact->secondary_email);
         echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);

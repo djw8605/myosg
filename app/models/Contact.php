@@ -21,8 +21,27 @@ class Contact extends CachedIndexedModel
     public function sql($params)
     {
         $where = "where 1 = 1";
+
+        //filter by personal contact
         if(isset($params["person"])) {
             $where .= " and person = ".$params["person"];
+        }
+        if(isset($params["ids"])) {
+            if(count($params["ids"]) > 0) {
+                $where .= " and id in (";
+                $first = true;
+                foreach($params["ids"] as $id) {
+                    if($first) {
+                        $first = false;
+                    } else {
+                        $where .= ", ";
+                    }
+                    $where .= $id;
+                }
+                $where .= ")";
+            } else {
+                $where .= " and 1 = 0"; //hide everything..
+            }
         }
         return "select * from contact $where ORDER BY name";
     }

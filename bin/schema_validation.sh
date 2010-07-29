@@ -6,6 +6,12 @@ HOST="http://dev.grid.iu.edu/~hayashis/myosg"
 
 SCHEMA="../schema"
 
+echo "Testing MISC User"
+url="$HOST/miscuser/xml?datasource=user"
+wget -O /tmp/miscuser.raw.xml $url 2> /dev/null
+xmllint --format /tmp/miscuser.raw.xml > /tmp/miscuser.xml
+xmllint --noout --schema $SCHEMA/miscuser.xsd /tmp/miscuser.xml
+
 echo "Testing MISC Status"
 url="$HOST/miscstatus/xml?datasource=status"
 wget -O /tmp/miscstatus.raw.xml $url 2> /dev/null

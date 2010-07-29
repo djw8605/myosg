@@ -1,3 +1,25 @@
 <?=$this->header?>
-<Users xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/miscstatus.xsd">
+<Users xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/miscuser.xsd">
+<?
+foreach($this->contacts as $cid => $contact) {
+    $contact = $contact[0];
+    echo "<User>";
+    echo "<FullName>".htmlsafe($contact->name)."</FullName>";
+    echo "<PhotoURL>".htmlsafe($contact->photo_url)."</PhotoURL>";
+    $gravatar_url = "http://www.gravatar.com/avatar/".md5($contact->primary_email);
+    echo "<GravatarURL>".htmlsafe($gravatar_url)."</GravatarURL>";
+    echo "<Profile>".htmlsafe($contact->profile)."</Profile>";
+    if(!user()->isGuest()) {
+        echo "<ContactInformation>";
+        echo "<PrimaryEmail>".htmlsafe($contact->primary_email)."</PrimaryEmail>";
+        echo "<SecondaryEmail>".htmlsafe($contact->secondary_email)."</SecondaryEmail>";
+        echo "<PrimaryPhone>".htmlsafe($contact->primary_phone)."</PrimaryPhone>";
+        echo "<SecondaryPhone>".htmlsafe($contact->secondary_phone)."</SecondaryPhone>";
+        echo "<IM>".htmlsafe($contact->im)."</IM>";
+        echo "<ContactPreference>".htmlsafe($contact->contact_preference)."</ContactPreference>";
+        echo "</ContactInformation>";
+    }
+    echo "</User>";
+}
+?>
 </Users>

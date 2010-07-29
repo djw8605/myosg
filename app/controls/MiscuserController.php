@@ -25,7 +25,17 @@ class MiscuserController extends MiscController
         parent::load();
 
         $model = new Contact();
-        $this->view->contacts = $model->getindex(array("person"=>1));
+        $param = array("person"=>1);
+        if(isset($_REQUEST["contacts"])) {
+            $ids = array();
+            foreach($_REQUEST as $key=>$value) {
+                if(substr($key, 0, 9) == "contacts_") {
+                    $ids[] = substr($key, 9);
+                }
+            }
+            $param["ids"] = $ids;
+        }
+        $this->view->contacts = $model->getindex($param);
         //TODO - sort
 
         $this->setpagetitle(self::default_title());
