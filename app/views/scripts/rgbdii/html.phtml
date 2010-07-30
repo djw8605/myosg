@@ -73,14 +73,6 @@ function outputVersion($name, $version) {
 
 function outputService($service) {
     global $cols;
-/* -- service information
-    echo "<tr><td colspan=$cols>";
-    echo "<div class=\"service_info\">";
-    echo "<div class=\"sidenote\">$service->ServiceUri</div>";
-    echo "<b>$service->ServiceName</b>";
-    echo "</div>";
-    echo "</td></tr>";
-*/
     if(isset($service->Queues->Queue)) {
         $queues = $service->Queues->Queue;
         foreach($queues as $queue) {

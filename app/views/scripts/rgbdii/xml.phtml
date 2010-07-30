@@ -21,12 +21,14 @@ foreach($this->rgs as $rgid=>$data) {
         echo "<Name>$r_info->name</Name>";
         echo "<FQDN>$r_info->fqdn</FQDN>";
         
-        echo "<DynamicInformation>";
-        echo "<!-- following information comes directly from BDII consolidator - format is likely to change -->";
-        foreach($bdii_info->children() as $child) {
-            echo $child->asXML();
+        if(isset($_REQUEST["bdii_attrs_showstat"])) {
+            echo "<DynamicInformation>";
+            echo "<!-- following information comes directly from BDII consolidator - format is likely to change -->";
+            foreach($bdii_info->children() as $child) {
+                echo $child->asXML();
+            }
+            echo "</DynamicInformation>";
         }
-        echo "</DynamicInformation>";
         echo "</Resource>";
     }
     echo "</Resources>";

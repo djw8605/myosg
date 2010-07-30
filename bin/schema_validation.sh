@@ -6,6 +6,12 @@ HOST="http://dev.grid.iu.edu/~hayashis/myosg"
 
 SCHEMA="../schema"
 
+echo "RG BDII"
+url="$HOST/rgbdii/xml?datasource=bdii&summary_attrs_showgipstatus=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&bdii_attrs_showversion=on&bdii_attrs_showstat=on&start_type=7daysago&start_date=07/30/2010&end_type=now&end_date=07/30/2010&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1"
+wget -O /tmp/rgbdii.raw.xml $url 2> /dev/null
+xmllint --format /tmp/rgbdii.raw.xml > /tmp/rgbdii.xml
+xmllint --noout --schema $SCHEMA/rgbdii.xsd /tmp/rgbdii.xml
+
 echo "Testing MISC User"
 url="$HOST/miscuser/xml?datasource=user"
 wget -O /tmp/miscuser.raw.xml $url 2> /dev/null
