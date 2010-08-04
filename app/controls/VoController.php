@@ -177,12 +177,14 @@ class VoController extends ControllerBase
         case "name": 
             $model = new VirtualOrganization();
             foreach($model->getindex() as $id=>$vo) {
+                $vo[0]->header = $vo[0]->name;
                 $sort_info[$id] = strtoupper($vo[0]->name);
             }
             break;
         case "long_name":
             $model = new VirtualOrganization();
             foreach($model->getindex() as $id=>$vo) {
+                $vo[0]->header = $vo[0]->long_name;
                 $sort_info[$id] = strtoupper($vo[0]->long_name);
             }
             break;
@@ -192,6 +194,7 @@ class VoController extends ControllerBase
 
             $model = new VirtualOrganization();
             foreach($model->getindex() as $id=>$vo) {
+                $vo[0]->header = $scs[$vo[0]->sc_id][0]->name;
                 $sort_info[$id] = strtoupper($scs[$vo[0]->sc_id][0]->name);
             }
             break;

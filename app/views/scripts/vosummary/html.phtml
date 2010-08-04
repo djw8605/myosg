@@ -1,7 +1,8 @@
 <?
 
 foreach($this->vos as $vo_id=>$vo) {
-    $name = htmlsafe($vo->name);
+    $name = htmlsafe($vo->header);
+
     $ex_class = "";
     if($vo->disable == 1) {
         $name .= " (Removed)";
@@ -21,6 +22,7 @@ foreach($this->vos as $vo_id=>$vo) {
     echo "<div class=\"$ex_class\">";
 
     echo "<table class='summary_table'>";
+    echo "<tr><th>Name</th><td>".htmlsafe($vo->name)."</td></tr>";
     echo "<tr><th>Long Name</th><td>".htmlsafe($vo->long_name)."</td></tr>";
     echo "<tr><th>Primary URL</th><td>".externalurl($vo->primary_url)."</td></tr>";
     echo "<tr><th>Membership Services URL</th><td>".externalurl($vo->membership_services_url)."</td></tr>";
