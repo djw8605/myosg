@@ -145,12 +145,12 @@ foreach($this->sites as $site) {
         $target = "target=\"_blank\"";
         $gid = $rg->id;
         $html .= "<div class=\"resource_group_header round\"><span class=\"h3\">Resource Group: <a $target href=\"".fullbase()."/rgsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></span></div>";
-        $rg_has_resource = false;
+
+        $rhtml = "";
         if(isset($this->resources_bygid[$rg->id])) {
             $rs = $this->resources_bygid[$rg->id];
             foreach($rs as $r) {
                 if($r->active == 0 || $r->disable == 1) continue;
-                $rg_has_resource = true;
                 $name = $r->name;
                 if(isset($this->downtime[$r->id])) {
                     $status = "DOWNTIME";
@@ -162,15 +162,16 @@ foreach($this->sites as $site) {
                     //treat status change that happened long time ago as non-reporting
                     $expire = time()-3600*24*config()->status_expires_days;
                     $note = $rstatus->detail;
-                    if($rstatus->timestamp < $expire) {
-                        $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Status Expired</span> $note</div>";
+                    if($rstatus->timestamp < $expire && $status != "OK") {
+                        $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Status Expired</span> $note</div>";
                         continue;//don't count this as a valid status
                     }
                 } else {
                     //resource status is not calculated - skip this resource
+                    $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_UNKNOWN\">Status not calculated</div>";
                     continue;
                 }
-                $html .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div>";
+                $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div>";
 
                 //determine site status
                 if($status == "OK") $status_ok++;
@@ -181,8 +182,10 @@ foreach($this->sites as $site) {
                 $site_has_status = true;
             }
         }
-        if(!$rg_has_resource) {
-            $html .= "<p class=\"warning\">No active resource exists under this resource group.</p>";
+        if($rhtml == "") {
+            $html .= "<p class=\"warning\">No active resource</p>";
+        } else {
+            $html .= $rhtml;
         }
     }
 
