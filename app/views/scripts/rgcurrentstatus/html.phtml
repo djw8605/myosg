@@ -18,6 +18,7 @@ foreach($this->rgs as $rgid=>$rg) {
 
         ?>
         <div class="resource h4 round">
+        <span class="fqdn sidenote"><?=$resource_fqdn?></span>
         <?
         if(uwa()) {
             echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
@@ -26,7 +27,6 @@ foreach($this->rgs as $rgid=>$rg) {
             echo "<br/>";
         }
         ?>
-        <span class="fqdn"><?=$resource_fqdn?></span>
         </div>
 
         <?
