@@ -147,11 +147,13 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         }
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
+            echo "<p style=\"font-weight: normal; font-size: 11px;\">";
             if($resource->description != "") {
                 echo $resource->description;
             } else {
                 echo "(No resource description)";
             }
+            echo "</p>";
         }
         echo "</div>";
 
