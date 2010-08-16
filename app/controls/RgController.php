@@ -98,7 +98,7 @@ class RgController extends ControllerBase
 
         if(count($rg_ids) == 0) {
             $this->view->info = "<p class=\"warning\">Please select at least one resource group.</p>";
-            return;
+            return array();
         }
 
         //apply filter for resource group
@@ -125,9 +125,7 @@ class RgController extends ControllerBase
 
         if(count($rgs) == 0) {
             $this->view->info = "<p class=\"warning\">All resources selected has been filtered out. Please adjust your filter.</p>";
-            return;
         }
-
         return $rgs;
     }
 

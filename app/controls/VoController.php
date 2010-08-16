@@ -28,9 +28,6 @@ class VoController extends ControllerBase
         $this->vo_ids = array();
         if(isset($_REQUEST["datasource"])) {
             $this->vo_ids = $this->process_volist();
-            if(count($this->vo_ids) == 0) {
-                $this->view->info = "No Virtual Organization matches your current criteria. Please adjust your criteria in order to display any data.";
-            }
         }
     
         //why am I not using SQL order by statement? because our filter logic is not written to respect the ordering from SQL
@@ -97,9 +94,19 @@ class VoController extends ControllerBase
                 }
             }
         }
+
+        if(count($vo_ids) == 0) {
+            $this->view->info = "<p class=\"warning\">Please select at least one VO.</p>";
+            return array();
+        }
+
+
         //filter the vo list based on user query
         $vo_ids = $this->process_vo_filter($vo_ids);
 
+        if(count($vo_ids) == 0) {
+            $this->view->info = "<p class=\"warning\">All VOs selected has been filtered out. Please adjust your filter.</p>";
+        }
         return $vo_ids;
     }
 

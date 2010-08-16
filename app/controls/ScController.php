@@ -28,9 +28,6 @@ class ScController extends ControllerBase
 
         if(isset($_REQUEST["datasource"])) {
             $this->sc_ids = $this->process_sclist();
-            if(count($this->sc_ids) == 0) {
-                $this->view->info = "No Support Center matches your current criteria. Please adjust your criteria in order to display any data.";
-            }
         }
         $this->load_daterangequery();
     }
@@ -77,9 +74,17 @@ class ScController extends ControllerBase
                 }
             }
         }
+        if(count($sc_ids) == 0) {
+            $this->view->info = "<p class=\"warning\">Please select at least one support center.</p>";
+            return array();
+        }
+
         //filter the sc list based on user query
         $sc_ids = $this->process_sc_filter($sc_ids);
 
+        if(count($sc_ids) == 0) {
+            $this->view->info = "<p class=\"warning\">All support centers selected has been filtered out. Please adjust your filter.</p>";
+        }
         return $sc_ids;
     }
 
