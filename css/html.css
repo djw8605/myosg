@@ -520,9 +520,8 @@ ul.topnav {
     list-style: none;
     padding: 3px 0px 3px 0px;
     margin-left: 0;
-    float: left;
+    height: 28px;
     width: 100%;
-    /*background-color: black;*/
     background-image:url('../images/topnav_bg.gif');
     color:#888888;
     font-size:12px;

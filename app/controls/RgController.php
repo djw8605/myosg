@@ -28,9 +28,6 @@ class RgController extends ControllerBase
         $this->rgs = array();
         if(isset($_REQUEST["datasource"])) {
             $this->rgs = $this->process_rglist();
-            if(count($this->rgs) == 0) {
-                $this->view->info = "No resource group or resource matches your current criteria. Please adjust your criteria in order to display any data.";
-            }
         }
         $this->load_daterangequery();
     }
@@ -99,6 +96,11 @@ class RgController extends ControllerBase
             }
         }
 
+        if(count($rg_ids) == 0) {
+            $this->view->info = "<p class=\"warning\">Please select at least one resource group.</p>";
+            return;
+        }
+
         //apply filter for resource group
         $rg_ids = $this->process_rg_filter($rg_ids);
 
@@ -119,6 +121,11 @@ class RgController extends ControllerBase
                     $rgs[$rg_id][$resource_id] = $resource;
                 }
             }
+        }
+
+        if(count($rgs) == 0) {
+            $this->view->info = "<p class=\"warning\">All resources selected has been filtered out. Please adjust your filter.</p>";
+            return;
         }
 
         return $rgs;

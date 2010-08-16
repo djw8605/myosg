@@ -223,12 +223,14 @@ parseQuery();
                         <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscstatus.png">
                     </div>
                 </li>
+<?  if(!user()->isGuest()) { ?>
                 <li onclick="document.location='<?=htmlspecialchars(base()."/miscuser".config()->default_url("misc"))?>&datasource=user';">   
                     <p>OSG Users</p>
                     <div class="subnav_desc">
                         <p>Show list of OSG Users and their profile information</p>
                         <img width="100%" class="delay_load" name="<?=fullbase()?>/images/screenshots/miscuser.png">
                     </div>
+<? } ?>
                 </li>
             </ul>
         </li>
