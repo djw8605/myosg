@@ -36,19 +36,72 @@ foreach($this->rgs as $rgid=>$rg) {
                 $mid_date = date(config()->date_format, $this->start_time + ($this->end_time-$this->start_time)/2);
                 $end_date = date(config()->date_format, $this->end_time);
                 $period = $this->end_time - $this->start_time;
+            
+                $previous_x = -1;
+                $previous_a = -1;
+                $previous_r = -1;
+                $skipped_x = -1;
                 foreach($recs as $rec) {
+                    $x = round(($rec->timestamp - $this->start_time) / $period * 100);
+                    $a = $rec->availability*100;
+                    $r = $rec->reliability*100;
+
+                    //skip if at the same x - position
+                    if($previous_x == $x) continue; 
+
+                    //skip if both a&r are the same as previous
+                    if($previous_a == $a && $previous_r == $r) {
+                        $skipped_x = $x;
+                        continue; 
+                    }
+
+                    //add last skipped value
+                    if($previous_x != $skipped_x) {
+                        if($ax != "") {
+                            $ax .= ",";
+                            $ay .= ",";
+                            $rx .= ",";
+                            $ry .= ",";
+                        }
+                        $ax .= $skipped_x;
+                        $ay .= $previous_a;
+                        $rx .= $skipped_x;
+                        $ry .= $previous_r;
+                    }
+
+                    //enter current value
                     if($ax != "") {
                         $ax .= ",";
                         $ay .= ",";
                         $rx .= ",";
                         $ry .= ",";
                     }
-                    $x = round(($rec->timestamp - $this->start_time) / $period * 100);
                     $ax .= $x;
-                    $ay .= $rec->availability*100;
+                    $ay .= $a;
                     $rx .= $x;
-                    $ry .= $rec->reliability*100;
+                    $ry .= $r;
+
+                    //record previous value
+                    $previous_x = $x;
+                    $skipped_x = $x;
+                    $previous_a = $a;
+                    $previous_r = $r;
                 }
+
+                //add last skipped value
+                if($previous_x != $skipped_x) {
+                    if($ax != "") {
+                        $ax .= ",";
+                        $ay .= ",";
+                        $rx .= ",";
+                        $ry .= ",";
+                    }
+                    $ax .= $skipped_x;
+                    $ay .= $previous_a;
+                    $rx .= $skipped_x;
+                    $ry .= $previous_r;
+                }
+
                 if(uwa()) {
                     $size = "270x100";
                 } else {
@@ -68,6 +121,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 $url .= "&chls=2,1,0|2,1,0";
                 echo "<img src='$url'/><br/>";
             }
+
         }
     }
 }
