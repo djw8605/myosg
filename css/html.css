@@ -626,3 +626,9 @@ a:hover.hidden_link {
 color: #961;
 text-decoration: underline;
 }
+
+input[type=button] {
+height: 27px;
+padding: 0px 5px 0px 5px;
+}
+
