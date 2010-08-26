@@ -159,8 +159,8 @@ background: none;
 .service_info
 {
     background-color: #eee;
-    padding: 10px;
-    margin: 3px;
+    padding: 5px;
+    margin-bottom: 3px;
 }
 
 .round, .vo_report h4, .vo_report_fqan, .contact_info, .service_info
@@ -476,10 +476,10 @@ padding-right: 2px;
 
 span.tag {
 margin: 1px;
-padding: 5px;
-margin-right: 5px;
+padding: 3px;
+margin-right: 3px;
 color: white;
-line-height: 230%;
+line-height: 200%;
 }
 span.tag[onclick] {
 cursor: pointer;

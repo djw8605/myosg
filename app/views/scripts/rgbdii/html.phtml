@@ -18,12 +18,12 @@ foreach($this->rgs as $rgid=>$data) {
 
         if(isset($_REQUEST["bdii_attrs_showstat"])) {
             echo "<tr>";
+            echo "<th>Running Jobs</th>";
+            echo "<th>Waiting Jobs</th>";
             echo "<th>Total Jobs</th>";
             echo "<th>Estimated Response Time</th>";
-            echo "<th>Waiting Jobs</th>";
-            echo "<th>Free CPUs</th>";
-            echo "<th>Running Jobs</th>";
-            echo "<th>Free Job Slots</th>";
+            echo "<th>Estimated Free Job Slots</th>";
+            //echo "<th>Free CPUs</th>";
             echo "<th>Allowed VO FQANs</th>";
             echo "</tr>";
         }
@@ -97,15 +97,18 @@ function outputQueue($queue) {
     //state
     $state = $queue->State;
     echo "<tr>";
+    echo "<td>$state->GlueCEStateRunningJobs</td>";
+    echo "<td>$state->GlueCEStateWaitingJobs</td>";
     echo "<td>$state->GlueCEStateTotalJobs</td>";
     echo "<td>$state->GlueCEStateEstimatedResponseTime</td>";
-    echo "<td>$state->GlueCEStateWaitingJobs</td>";
-    echo "<td>$state->GlueCEStateFreeCPUs</td>";
-    echo "<td>$state->GlueCEStateRunningJobs</td>";
     echo "<td>$state->GlueCEStateFreeJobSlots</td>";
-    $fqans = $queue->AllowedVOFQANs; //only 1 for now????
-    $fqan = $fqans->FQAN;
-    echo "<td>$fqan</td>";
+    //echo "<td>$state->GlueCEStateFreeCPUs</td>";
+    $fqans = $queue->AllowedVOFQANs[0];
+    echo "<td width='40%'>";
+    foreach($fqans as $fqan) {
+        echo "<span class=\"tag round\" style=\"background-color: gray;\">$fqan</span> ";
+    }
+    echo "</td>";
     echo "</tr>";
 
 }
