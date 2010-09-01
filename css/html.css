@@ -521,7 +521,7 @@ ul.topnav {
     margin-left: 0;
     height: 27px;
     width: 100%;
-    background-image:url('../images/topnav_bg.gif');
+    background: #000 url('../images/topnav_bg.gif');
     color:#888888;
     font-size:12px;
     font-weight:bold;
