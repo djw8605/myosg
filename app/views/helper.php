@@ -386,6 +386,11 @@ function tooltip($msg) {
     return "<img align=\"top\" src=\"".fullbase()."/images/help.png\" alt=\"$msg\" title=\"$msg\"/>";
 }
 
+
+function nullImage() {
+    return "<img alt=\"null\" src=\"".fullbase()."/images/null.png\"/>";
+}
+
 function externalurl($url)
 {
     if($url == "") {

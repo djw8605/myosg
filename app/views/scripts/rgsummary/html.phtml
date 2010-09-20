@@ -334,9 +334,14 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 echo "<tr><th>Accounting Name</th><td>$info->accounting_name</td></tr>";
                 echo "<tr><th>KSI2K Min</th><td>$info->ksi2k_minimum</td></tr>";
                 echo "<tr><th>KSI2K Max</th><td>$info->ksi2k_maximum</td></tr>";
+                echo "<tr><th>HEPSPEC Value</th><td>$info->hepspec</td></tr>";
                 echo "<tr><th>Storage Capacity Min</th><td>$info->storage_capacity_minimum TB</td></tr>";
                 echo "<tr><th>Storage Capacity Max</th><td>$info->storage_capacity_maximum TB</td></tr>";
-                echo "<tr><th>HEPSPEC Value</th><td>$info->hepspec</td></tr>";
+                if($info->tape_capacity === null) {
+                    echo "<tr><th>Tape Capacity</th><td>".nullImage()."</td></tr>";
+                } else {
+                    echo "<tr><th>Tape Capacity</th><td>$info->tape_capacity TB</td></tr>";
+                } 
 
                 echo "</table>";
             }

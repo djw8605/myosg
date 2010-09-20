@@ -27,7 +27,7 @@ class RgseController extends RgGratiaController
         switch($dirty_type) 
         {
         case "vo_transfer_volume":
-            $urlbase = "http://t2.unl.edu/gratia/gip_graphs/gip_vo";
+            $urlbase = "http://t2.unl.edu/gratia/status_graphs/status_vo";
             //$urlbase = fullbase()."/gratia/gip_graphs/gip_vo";
             $sub_title = "Transfer volume (Grouped by VO)";
             $ylabel = "Transfer Volume (GB)";
@@ -39,13 +39,13 @@ class RgseController extends RgGratiaController
             $ylabel = "Transfer Volume (GB)";
             break;
         case "se_space":
-            $urlbase = "http://t2.unl.edu/gratia/gip_graphs/se_space";
+            $urlbase = "http://t2.unl.edu/gratia/status_graphs/status_se_bar";
             //$urlbase = fullbase()."/gratia/gip_graphs/se_space";
             $sub_title = "Total Space";
             $ylabel = "GB";
             break;
         case "se_space_free":
-            $urlbase = "http://t2.unl.edu/gratia/gip_graphs/se_space_free";
+            $urlbase = "http://t2.unl.edu/gratia/status_graphs/status_se_free_bar";
             //$urlbase = fullbase()."/gratia/gip_graphs/se_space_free";
             $sub_title = "Total Free Space";
             $ylabel = "GB";

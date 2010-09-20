@@ -27,23 +27,25 @@ class RgceController extends RgGratiaController
         switch($dirty_type) 
         {
         case "gip_vo":
-            $urlbase = "http://t2.unl.edu/gratia/gip_graphs/gip_vo";
+            $urlbase = "http://t2.unl.edu/gratia/status_graphs/status_vo";
             //$urlbase = fullbase()."/gratia/gip_graphs/gip_vo";
             $sub_title = "Running Jobs by VO";
             $ylabel = "Jobs";
             break;
         case "gip_vo_waiting":
-            $urlbase = "http://t2.unl.edu/gratia/gip_graphs/gip_vo_waiting";
+            $urlbase = "http://t2.unl.edu/gratia/status_graphs/status_vo_waiting";
             //$urlbase = fullbase()."/gratia/gip_graphs/gip_vo_waiting";
             $sub_title = "Queued Jobs by VO";
             $ylabel = "Jobs";
             break;
+/* -- obsoleted
         case "gip_site_size":
             $urlbase = "http://t2.unl.edu/gratia/gip_graphs/gip_site_size";
             //$urlbase = fullbase()."/gratia/gip_graphs/gip_site_size";
             $sub_title = "Size of Site Over Time";
             $ylabel = "Total CPUs";
             break;
+*/
         case "rsv_metric_quality":
             $urlbase = "http://t2.unl.edu/gratia/rsv_graphs/rsv_metric_quality";
             //$urlbase = fullbase()."/gratia/rsv_graphs/rsv_metric_quality";

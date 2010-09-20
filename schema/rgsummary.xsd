@@ -128,9 +128,10 @@
                                 <xsd:element name="AccountingName" type="xsd:string" />
                                 <xsd:element name="KSI2KMin" type="xsd:int" />
                                 <xsd:element name="KSI2KMax" type="xsd:int" />
-                                <xsd:element name="StorageCapacityMin" type="xsd:string" />
-                                <xsd:element name="StorageCapacityMax" type="xsd:string" />
+                                <xsd:element name="StorageCapacityMin" type="xsd:string"> </xsd:element>
+                                <xsd:element name="StorageCapacityMax" type="xsd:string"> </xsd:element>
                                 <xsd:element name="HEPSPEC" type="xsd:string" />
+                                <xsd:element name="TapeCapacity" type="xsd:string"> </xsd:element>
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>

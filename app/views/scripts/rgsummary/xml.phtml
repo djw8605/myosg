@@ -279,9 +279,17 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 echo "<AccountingName>$info->accounting_name</AccountingName>";
                 echo "<KSI2KMin>$info->ksi2k_minimum</KSI2KMin>";
                 echo "<KSI2KMax>$info->ksi2k_maximum</KSI2KMax>";
-                echo "<StorageCapacityMin>$info->storage_capacity_minimum TB</StorageCapacityMin>";
-                echo "<StorageCapacityMax>$info->storage_capacity_maximum TB</StorageCapacityMax>";
+                echo "<!-- in TB -->";
+                echo "<StorageCapacityMin>$info->storage_capacity_minimum</StorageCapacityMin>";
+                echo "<!-- in TB -->";
+                echo "<StorageCapacityMax>$info->storage_capacity_maximum</StorageCapacityMax>";
                 echo "<HEPSPEC>$info->hepspec</HEPSPEC>";
+                echo "<!-- in TB -->";
+                if($info->tape_capacity === null) {
+                    echo "<TapeCapacity/>";
+                } else {
+                    echo "<TapeCapacity>$info->tape_capacity</TapeCapacity>";
+                }
             }
             echo "</WLCGInformation>";
         }
