@@ -57,7 +57,8 @@ foreach($model->get() as $facility) {
         echo "</Point>";
         echo "</Placemark>";
     } else {
-        elog("Facility ID " . $facility->id . "($facility->name)has no associated sites. should it be removed/deactivated?");
+        //since support team already receive oim data issue report, let's not generate this.
+        //elog("Facility ID " . $facility->id . "($facility->name)has no associated sites. should it be removed/deactivated?");
     }
 }
 ?>
