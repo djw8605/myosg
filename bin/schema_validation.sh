@@ -1,6 +1,6 @@
 #these script only checks the schema against HTTP version of the XML.. not HTTPS
 
-HOST="http://dev.grid.iu.edu/~hayashis/myosg"
+HOST="http://soichi.grid.iu.edu/myosg"
 #HOST="http://myosg-itb.grid.iu.edu"
 #HOST="http://myosg.grid.iu.edu"
 
