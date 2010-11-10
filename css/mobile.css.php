@@ -465,6 +465,7 @@ span.tag
 {
 color:white;
 margin:2px 5px 2px 2px;
+line-height: 180%;
 padding:2px;
 }
 

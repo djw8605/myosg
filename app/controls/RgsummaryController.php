@@ -56,10 +56,12 @@ class RgsummaryController extends RgController
             $resourcegrouped = $vocache->ResourceGrouped[0];
 
             $this->view->vos_supported = array();
+            $this->view->vos_errors = array();
             foreach($resourcegrouped as $resource) {
                 $attr = $resource->attributes();
                 $resource_id = (int)$attr->id;
                 $this->view->vos_supported[$resource_id] = $resource->Members[0];
+                $this->view->vos_errors[$resource_id] = $resource->ErrorMessage[0];
             }
         }
         if(isset($_REQUEST["summary_attrs_showvoownership"])) {

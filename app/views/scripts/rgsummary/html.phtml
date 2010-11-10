@@ -267,8 +267,22 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     $vonames .= "<span class=\"round tag\" style=\"background-color: gray\" onclick=\"document.location='".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_$vo_id=on';\">$vo_name</span> ";
                 }                
                 echo $vonames;
+                if(isset($this->vos_errors[$rid])) {
+                    $error = $this->vos_errors[$rid];
+                    if($error != "") {
+                        if($vonames == "" || uwa()) {
+                            echo "<pre>$error</pre>";
+                        } else {
+                            echo outputToggle("Show Errors", "Hide Errors", "<pre>$error</pre>"); 
+                        }
+                    } else {
+                        if($vonames == "") {
+                            echo "No VOs supported";
+                        }
+                    }
+                }
             } else {
-                echo "(Information not reported)";
+                echo "Information not reported";
             }
             echo "</td></tr>";
         }
