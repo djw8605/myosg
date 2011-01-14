@@ -163,6 +163,21 @@
                               </xsd:sequence>
                             </xsd:complexType>
                           </xsd:element>
+                          <xsd:element name="OpenGOCTickets">
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element minOccurs="0" maxOccurs="unbounded" name="Ticket">
+                                  <xsd:complexType>
+                                    <xsd:sequence>
+                                      <xsd:element name="ID" type="xsd:int" />
+                                      <xsd:element name="URL" type="xsd:string" />
+                                      <xsd:element name="Title" type="xsd:string" />
+                                    </xsd:sequence>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
                         </xsd:sequence>
                       </xsd:complexType>
                     </xsd:element>

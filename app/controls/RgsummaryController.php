@@ -158,6 +158,11 @@ class RgsummaryController extends RgController
             }
         }
 
+        if(isset($_REQUEST["summary_attrs_showticket"])) {
+            $ticketmodel = new OpenTickets();
+            $this->view->tickets = $ticketmodel->getGroupByRID();
+        }
+
         $this->setpagetitle(self::default_title());
     }
 /*

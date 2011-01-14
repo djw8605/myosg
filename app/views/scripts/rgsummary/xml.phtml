@@ -329,6 +329,20 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "</ContactLists>";
         }
 
+        if(isset($_REQUEST["summary_attrs_showticket"])) {
+            echo "<OpenGOCTickets>";
+            if(isset($this->tickets[$rid])) {
+                foreach($this->tickets[$rid] as $ticket) {
+                    echo "<Ticket>";
+                    echo "<ID>".$ticket->ID."</ID>";
+                    echo "<URL>".$ticket->URL."</URL>";
+                    echo "<Title>".$ticket->Title."</Title>";
+                    echo "</Ticket>";
+                }
+            }
+            echo "</OpenGOCTickets>";
+        }
+
         echo "</Resource>";
     }
     echo "</Resources>";

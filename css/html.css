@@ -137,8 +137,8 @@ padding: 3px;
 
 div.resource_group_header, div.downtime_group, div.group_header
 {
-/*background-color: gray;*/
-background-image:url('../images/h3_back.png');
+background-color: #333;
+background: -moz-linear-gradient(center top , #777, #444) repeat scroll 0 0 #333;
 color: white;
 margin-bottom: 0.3em;
 padding: 4px 8px 4px 8px;
@@ -377,6 +377,8 @@ div.downtime
 {
     margin-top: 5px;
     background-color: #cce;
+    background: -moz-linear-gradient(center top , #cce, #fff) repeat scroll 0 0 #cce;
+
     padding: 10px;
     border-right: 1px #aac;
     border-bottom: 1px #aac;
@@ -652,3 +654,9 @@ height: 27px;
 padding: 0px 5px 0px 5px;
 }
 
+a.suppress_deco {
+text-decoration: none;
+}
+a:hover.suppress_deco {
+text-decoration: underline;
+}

@@ -404,6 +404,19 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "</td></tr>";
         }
 
+        if(isset($_REQUEST["summary_attrs_showticket"])) {
+            echo "<tr><th>Open GOC Tickets</th><td>";
+            if(isset($this->tickets[$rid])) {
+                foreach($this->tickets[$rid] as $ticket) {
+                    //$ticket->Title is already escaped.. for some reason
+                    echo "<a class=\"suppress_deco\" href=\"".$ticket->URL."\" target=\"_blank\">(".$ticket->ID.") ".$ticket->Title."</a><br>";
+                }
+            } else {
+                echo "No Tickets";
+            }
+            echo "</td></tr>";
+        }
+
         echo "</table>";
         echo "</td>";
     }

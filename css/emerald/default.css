@@ -10,11 +10,15 @@ color: #333;
 font-size: 11pt;
 min-width: 950px;
 }
+
 a, span.external_link
 {
-text-decoration: underline;
 cursor: pointer;
-color: #996611;
+color: #663311;
+}
+
+a, span:hover.external_link {
+text-decoration: underline;
 }
 
 table tr

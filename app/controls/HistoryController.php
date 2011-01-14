@@ -266,6 +266,10 @@ class HistoryController extends ControllerBase
     {
         /////////////////////////////////////////////////////////////////////////////////
         //get paramters
+        if(!isset($_REQUEST["resource_id"])) {
+            echo "resource_id missing";
+            exit;
+        }
         $dirty_resource_id = $_REQUEST["resource_id"];
         if(Zend_Validate::is($dirty_resource_id, 'Int')) {
             $resource_id = $dirty_resource_id;
