@@ -137,8 +137,8 @@ padding: 3px;
 
 div.resource_group_header, div.downtime_group, div.group_header
 {
-background-color: #333;
-background: -moz-linear-gradient(center top , #777, #444) repeat scroll 0 0 #333;
+background-color: #555;
+background: -moz-linear-gradient(center top , #777, #444) repeat scroll 0 0 #555;
 color: white;
 margin-bottom: 0.3em;
 padding: 4px 8px 4px 8px;
