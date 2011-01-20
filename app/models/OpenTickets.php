@@ -23,14 +23,23 @@ class OpenTickets
 
         //load OpenTickets XML
         $c = new Cache(config()->gocticket_open_cache);
-        if($c->isFresh(60)) { 
-            $xml = $c->get();
-        } else {
-            slog("loading ".config()->gocticket_open_url);
-            $xml = file_get_contents(config()->gocticket_open_url, 0, $ctx);
-            $c->set($xml);
+        if(!$c->isFresh(60)) { 
+            try {
+                slog("loading ".config()->gocticket_open_url);
+                $xml = file_get_contents(config()->gocticket_open_url, 0, $ctx);
+                //try parsing it..
+                $obj = new SimpleXMLElement($xml);
+
+                //store good xml
+                $c->set($xml);
+                return $obj;
+            } catch(exception $e) {
+                elog($e->getMessage()." -- using cache.");
+            }
         }
-        return new SimpleXMLElement($xml);
+
+        slog("Using cache");
+        return new SimpleXMLElement($c->get());
     }
     
     public function getGroupByRID() {
