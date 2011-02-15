@@ -542,7 +542,7 @@ ul.topnav li.selected {
     background-color: #333;
     color: white;
 }
-ul.topnav li:hover {
+ul.topnav li[onclick]:hover {
     background-color: #555;
     color: white;
 }
@@ -660,3 +660,5 @@ text-decoration: none;
 a:hover.suppress_deco {
 text-decoration: underline;
 }
+
+
