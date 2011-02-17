@@ -132,10 +132,10 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         if($resource->disable == 1) {
             $disabled = "disabled";
         }
-        echo "<td class=\"$disabled\">";
+        echo "<td>";
 
         //show resource name & desc
-        echo "<div class=\"round h4 resource\">";
+        echo "<div class=\"round h4 resource $disabled\">";
         echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/resource?resource_type=".$resource_group->osg_grid_type_id."&resource_id=$rid\" class=\"sidenote\">";
         echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
         echo "<span class=\"h4\">".$resource->name."</span>";
@@ -159,7 +159,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Optional Information
-        echo "<table class='summary_table'>";
+        echo "<table class='summary_table $disabled'>";
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<tr>";
             echo "<th>Services</th>";
