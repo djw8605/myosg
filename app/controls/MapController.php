@@ -197,7 +197,7 @@ class MapController extends ControllerBase
     {
         header("Content-type: image/png");
 
-        $im = imagecreatefrompng('images/continental.png');
+        $im = imagecreatefrompng('images/continental.jpg');
         imagealphablending($im, true);
         imagesavealpha($im, true);
 
