@@ -1,0 +1,46 @@
+<link href="<?=fullbase()?>/css/search.css" rel="stylesheet" type="text/css">
+<div class="search_box">
+    <p class="slogan">MyOSG is an <b>one-stop</b> location for various OSG information</p>
+    <form method="GET" action="<?=fullbase()?>/search">
+    <span><font color="orange">OIM</font> Search</span>&nbsp;&nbsp;&nbsp;<input type="text" id="searchbox" name="q" value="<?=$this->query?>"/>&nbsp;<input type="submit" value="Search"/>
+    </form>
+</div>
+<script>
+function parseValue(value) {
+    var obj = new Object();
+    var tokens = value.split("\t");
+    obj.name = tokens[0];
+    obj.sub = tokens[1];
+    obj.type = tokens[2];
+    obj.type_name = tokens[2].replace("_", " ");
+    return obj; 
+}
+//I want to load this the first things..
+$(function() {
+    //http://docs.jquery.com/Plugins/Autocomplete/autocomplete#url_or_dataoptions
+    $("#searchbox").autocomplete("<?=fullbase()?>/search/autocomplete", {
+        width: 320,
+        minChars: 3,
+        scrollHeight: 400,
+        delay: 100,
+        selectFirst: false,
+        //autoFill: true,
+        max: 300,
+        formatItem: function(data, i, n, value) {
+            var obj = parseValue(value);
+            return obj.name + "<span class=\"tag "+obj.type+"\">"+obj.type_name+"</span><br>"+obj.sub;
+        },
+        formatResult: function(data, value) {
+            var obj = parseValue(value);
+            //return type+ ": " + name;
+            return obj.name;
+        },
+    }).result(function(input, value) {
+        value = value[0];
+        var obj = parseValue(value);
+        document.location = "<?=fullbase()?>/search?q="+escape(obj.name)+"&type="+obj.type;
+        //console.log("<?=fullbase()?>/search?q="+name+"&type="+type);
+    }).focus();
+});
+</script><br clear="all">
+

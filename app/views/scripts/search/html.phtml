@@ -1,0 +1,264 @@
+<?=$this->render("search_box.phtml", true)?>
+<div id="result">
+<?
+echo "<table>";
+foreach($this->recs as $rec) {
+    switch($rec->type) {
+    case "resource": show_resource($rec);break;
+    case "resource_group": show_resourcegroup($rec);break;
+    case "sc": show_sc($rec);break;
+    case "vo": show_vo($rec);break;
+    case "facility": show_facility($rec);break;
+    case "site": show_site($rec);break;
+    case "contact": show_contact($rec);break;
+    default:
+        elog("unknown search record type ".$rec->type);
+    }
+}
+echo "</table>";
+
+if(count($this->recs) == 0) {
+    echo "<center>";
+    echo "<h2>No matching result</h2>";
+    echo "<br><p><a style=\"font-weight: bold;font-size: 150%;\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\" target=\"_blank\">Search Entire OSG</a></p>";
+    echo "</center>";
+}
+
+function show_resource($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag resource\">Resource</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    echo "<p class=\"desc\">".$rec->description."</p>";
+    echo "<p class=\"fqdn\"><span class=\"header\">FQDN</span>".$rec->fqdn."</p>";
+    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Resource Group Summary</a>";
+    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
+    echo "<a href=\"https://oim.grid.iu.edu/oim/resourceedit?id=".$rec->id."\">Edit OIM Detail</a>"; 
+    echo "<a href=\"https://ticket.grid.iu.edu/goc/resource?resource_type=1&resource_id=".$rec->id."\">Submit Ticket</a>"; 
+    echo "<a href=\"".$rec->url."\">".$rec->url."</a>"; 
+    foreach($rec->contacts as $type_name=>$contacts) {
+        echo "<h4>$type_name</h4>";
+        foreach($contacts as $contact) {
+            if(user()->isGuest()) {
+                echo htmlsafe($contact->name)."<br/>";
+            } else {
+                echo "<div class=\"contact_info\">";
+                echo "<h3>".htmlsafe($contact->name)."</h3>";
+                echo "<table class=\"summary_subtable\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
+                echo "</div>";
+            }
+        }
+    }
+    echo "</td></tr>";
+}
+
+function show_resourcegroup($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag resource_group\">Resource&nbsp;Group</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    echo "<p class=\"desc\">".$rec->description."</p>";
+    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Resource Group Summary</a>";
+    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
+    echo "<a href=\"https://oim.grid.iu.edu/oim/resourcegroupedit?id=".$rec->id."\">Edit Detail</a>"; 
+    echo "</td></tr>";
+}
+function show_sc($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag sc\">Support&nbsp;Center</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    echo "<p class=\"desc\">".$rec->description."</p>";
+    echo "<p><span class=\"header\">Long Name</span>".$rec->long_name."</p>";
+    echo "<p><span class=\"header\">Community</span>".$rec->community."</p>";
+    echo "<a href=\"".fullbase()."/scsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&summary_attrs_showsites=on&sc=on&sc_".$rec->id."=on&active_value=1\">Show Detail</a>";
+    if(user()->hasRole("admin")) {
+        echo "<a href=\"https://oim.grid.iu.edu/oim/scedit?id=".$rec->id."\">Edit Detail (Admin)</a>"; 
+    }
+    foreach($rec->contacts as $type_name=>$contacts) {
+        echo "<h4>$type_name</h4>";
+        foreach($contacts as $contact) {
+            if(user()->isGuest()) {
+                echo htmlsafe($contact->name)."<br/>";
+            } else {
+                echo "<div class=\"contact_info\">";
+                echo "<h3>".htmlsafe($contact->name)."</h3>";
+                echo "<table class=\"summary_subtable\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
+                echo "</div>";
+            }
+        }
+    }
+    echo "</td></tr>";
+}
+function show_vo($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag vo\">VO</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    echo "<p class=\"desc\">".$rec->description."</p>";
+    echo "<p><span class=\"header\">Long Name</span>".$rec->long_name."</p>";
+    echo "<a href=\"https://soichi.grid.iu.edu/myosg/vosummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showmember_resource=on&summary_attrs_showfield_of_science=on&summary_attrs_showreporting_group=on&summary_attrs_showparent_vo=on&summary_attrs_showcontact=on&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&vo=on&vo_".$rec->id."=on&active=on&active_value=1&sort_key=name\">Show Summary</a>";
+    echo "<a href=\"".$rec->primary_url."\">".$rec->primary_url."</a>";
+    if(user()->hasRole("admin")) {
+        echo "<a href=\"https://oim.grid.iu.edu/oim/voedit?id=".$rec->id."\">Edit Detail (Admin)</a>"; 
+    }
+    foreach($rec->contacts as $type_name=>$contacts) {
+        echo "<h4>$type_name</h4>";
+        foreach($contacts as $contact) {
+            if(user()->isGuest()) {
+                echo htmlsafe($contact->name)."<br/>";
+            } else {
+                echo "<div class=\"contact_info\">";
+                echo "<h3>".htmlsafe($contact->name)."</h3>";
+                echo "<table class=\"summary_subtable\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
+                echo "</div>";
+            }
+        }
+    }
+    echo "</td></tr>";
+}
+function show_facility($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag facility\">Facility</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    if(isset($rec->description)) {
+        echo "<p class=\"desc\">".$rec->description."</p>";
+    }
+    echo "<a href=\"https://oim.grid.iu.edu/oim/facilityedit?facility_id=".$rec->id."\">Edit Detail</a>";
+    echo "</td></tr>";
+}
+function show_site($rec) {
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag site\">Site</span></td>";
+    echo "<td>";
+    echo "<h1>".$rec->v1."</h1>";
+    if(isset($rec->description)) {
+        echo "<p class=\"desc\">".$rec->description."</p>";
+    }
+    echo "<p><span class=\"header\">Location</span>".$rec->city.", ".$rec->state." ".$rec->country."</p>";
+    echo "<a href=\"https://oim.grid.iu.edu/oim/siteedit?site_id=".$rec->id."\">Edit Detail</a>";
+    echo "</td></tr>";
+}
+function show_contact($rec) {
+    $contact = $rec;
+
+    echo "<tr class=\"entry\">";
+    echo "<td><span class=\"tag contact\">Contact</span></td>";
+    echo "<td>";
+
+    echo "<h1>".$rec->v1."</h1>";
+
+    if(trim($contact->photo_url) != "") {
+        echo "<img class=\"avatar\" src=\"$contact->photo_url\"/>";
+    } else {
+/*
+        //show gravatar
+        $url = "http://www.gravatar.com/avatar/".md5($contact->primary_email);
+        echo "<img class=\"avatar\" src=\"$url\"/>";
+*/
+    }
+
+
+    //show public profile info
+    echo "<div>";
+    if(trim($contact->profile) != "") {
+        echo "<h3>Profile</h3>";
+        echo "<p>".htmlsafe($contact->profile)."</p>";
+    }
+    if(trim($contact->contact_preference) != "") {
+        echo "<h3>Contact Preference</h3>";
+        echo "<p class=\"contact_preference\">".htmlsafe($contact->contact_preference)."</p>";
+    }
+    echo "</div>";
+
+    //show personal profile info
+    if(!user()->isGuest()) {
+        echo "<div>";
+        echo formatEmail($contact->primary_email);
+        echo formatEmail($contact->secondary_email);
+        echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);
+        //echo formatPhone($contact->secondary_phone, $contact->secondary_phone_ext);
+        if(trim($contact->im) != "") {
+            echo "<b>IM</b> ".htmlsafe($contact->im);
+        }
+
+        /*
+        //address
+        $add = "";
+        if(trim($contact->address_line_1) != "") {
+            $add .= htmlsafe($contact->address_line_1)."<br/>";
+        }
+        if(trim($contact->address_line_2) != "") {
+            $add .= htmlsafe($contact->address_line_2)."<br/>";
+        }
+        if(trim($contact->city) != "") {
+            $add .= $contact->city." ";
+        }
+        if(trim($contact->state) != "") {
+            $add .= $contact->state." ";
+        }
+        if(trim($contact->zipcode) != "") {
+            $add .= $contact->zipcode."<br/>";
+        }
+        if(trim($contact->country) != "") {
+            $add .= $contact->country."<br/>";
+        }
+        if(trim($add) != "") {
+            echo "<p class=\"address\">$add</p>";
+        }
+        */
+        echo "</div>";
+    }
+
+    if(user()->getPersonID() == $rec->id) {
+        echo "<p><a href=\"https://oim.grid.iu.edu/oim/profileedit\">Edit My Profile</a></p>";
+    } else {
+        if(user()->hasRole("admin") || user()->hasRole("admin_contacts")) {
+            echo "<a href=\"https://oim.grid.iu.edu/oim/contactedit?id=".$rec->id."\">Edit Detail (Admin)</a>"; 
+        }
+    }
+    echo "</td></tr>";
+}
+function formatEmail($email) {
+    if(trim($email) == "") return "";
+    $out = "<img align=\"top\" src=\"".fullbase()."/images/email.png\"/> <a href=\"mailto: $email\">".htmlsafe($email)."</a><br>";
+    return $out;
+}
+
+function formatPhone($phone, $ext) {
+    if(trim($phone) == "") return "";
+    $out = "<img align=\"top\" src=\"".fullbase()."/images/telephone.png\"/> ".htmlsafe($phone)." ";
+    if(trim($ext) != "") {
+        $out .= "(ext. ".htmlsafe($ext).")";
+    }
+    $out .= "<br>";
+    return $out;
+}
+
+
+?>
+<pre>
+<?//var_dump($this->recs)?>
+</pre>
+</div>
+
+

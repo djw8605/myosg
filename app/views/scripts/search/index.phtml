@@ -1,0 +1,21 @@
+<?=$this->render("full_header.phtml", true)?>
+<div id="primaryContentContainer">
+    <div id="primaryContent">
+        <?=$this->render("breadcrumb.phtml", true)?>
+        <?=$this->render(pagename()."/html.phtml")?>
+    </div>
+</div>
+<div id="sideContent">
+<!--
+    <div class="indent">
+        <p><a target="_blank" href="https://spreadsheets.google.com/viewform?hl=en&formkey=dEd1bnlINzJVYmc4VGNjSVZkdXNVU3c6MQ#gid=0">
+        <b>Feedback Form</b><br/>
+        <img class="screenshot" src="<?=fullbase()?>/images/screenshots/feedback.jpg" align="right"/>
+        </a>
+        We'd like to hear from you about how we can improve MyOSG. Please submit your feedback.
+        <br clear="all"/> 
+        </p>
+    </div>
+-->
+</div>
+<?=$this->render("full_footer.phtml", true)?>
