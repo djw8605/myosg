@@ -39,7 +39,7 @@ margin-right: 10px;
 padding-top: 8px;
 }
 .entry img.avatar {
-width: 90px;
+width: 150px;
 }
 .search_box input[type=submit] {
 padding: 8px;
@@ -84,4 +84,9 @@ display: inline-block;
 }
 #result td {
 padding-bottom: 10px;
+}
+.fqdn {
+font-family: "Courier New";
+font-size: 11pt;
+color: #666;
 }
