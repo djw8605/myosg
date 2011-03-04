@@ -38,8 +38,10 @@ class SearchController extends ControllerBase
         } else {
             $type = "all";
         }
-        $recs = $this->dosearch($type, 999, $q, false);
-        $this->view->recs = $recs;
+        if(isset($_REQUEST["q"])) {
+            $recs = $this->dosearch($type, 999, $q, false);
+            $this->view->recs = $recs;
+        }
     }
 
     //set basic to true to load only basic info.
@@ -131,6 +133,24 @@ class SearchController extends ControllerBase
                 $recs[] = $rec;
             }
         }
+
+        //search goc ticket
+        if(!$basic) {
+            if($type == "all" || $type == "gocticket") {
+                $xml = new SimpleXMLElement(file_get_contents(config()->gocticket_url."/rest/search?q=".urlencode($q)));
+                $sorted = array();
+                foreach($xml->Tickets->Ticket as $ticket) {
+                    $ticket->type = "gocticket";
+                    $ticket_id = (int)$ticket->ID;
+                    $sorted[$ticket_id] = $ticket;
+                }
+                krsort($sorted);
+                foreach($sorted as $ticket) {
+                    $recs[] = $ticket;
+                }
+            }
+        }
+
         return $recs;
    }
 

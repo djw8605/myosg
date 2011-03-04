@@ -30,6 +30,7 @@ float: right;
 border-top-left: 2px;
 text-transform:capitalize;
 color: #333;
+white-space: nowrap;
 }
 .entry span.tag {
 float: right;
@@ -68,6 +69,9 @@ span.sc {
 span.contact {
     background-color: #ccc;
 }
+span.gocticket {
+    background-color: #69c;
+}
 #result {
 min-height: 200px;
 }
@@ -83,10 +87,21 @@ font-weight: bold;
 display: inline-block;
 }
 #result td {
-padding-bottom: 10px;
+padding-bottom: 3px;
 }
 .fqdn {
 font-family: "Courier New";
-font-size: 11pt;
+font-size: 10pt;
 color: #666;
+}
+.contact_info
+{
+    background-color: inherit;
+    padding: 0px;
+    margin: 0px;
+}
+h4 {
+color: #666;
+border-bottom: 2px solid #f3f3f3;
+padding: 3px;
 }
