@@ -9,28 +9,30 @@ margin-right: 200px;
 </style>
 <div id="result">
 <?
-echo "<table>";
-foreach($this->recs as $rec) {
-    switch($rec->type) {
-    case "resource": show_resource($rec);break;
-    case "resource_group": show_resourcegroup($rec);break;
-    case "sc": show_sc($rec);break;
-    case "vo": show_vo($rec);break;
-    case "facility": show_facility($rec);break;
-    case "site": show_site($rec);break;
-    case "contact": show_contact($rec);break;
-    default:
-        elog("unknown search record type ".$rec->type);
-    }
-}
-echo "</table>";
-
 if(count($this->recs) == 0) {
     echo "<center>";
     echo "<h2>No matching result</h2>";
-    echo "<br><p><a style=\"font-weight: bold;font-size: 150%;\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\" target=\"_blank\">Search Entire OSG</a></p>";
     echo "</center>";
+} else {
+    echo "<table>";
+    foreach($this->recs as $rec) {
+        switch($rec->type) {
+        case "resource": show_resource($rec);break;
+        case "resource_group": show_resourcegroup($rec);break;
+        case "sc": show_sc($rec);break;
+        case "vo": show_vo($rec);break;
+        case "facility": show_facility($rec);break;
+        case "site": show_site($rec);break;
+        case "contact": show_contact($rec);break;
+        default:
+            elog("unknown search record type ".$rec->type);
+        }
+    }
+    echo "</table>";
 }
+
+//search OSG link
+echo "<br><p><a style=\"font-weight: bold;font-size: 150%;\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\" target=\"_blank\">Search Entire OSG</a></p>";
 
 function show_resource($rec) {
     echo "<tr class=\"entry\">";
