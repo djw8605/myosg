@@ -45,7 +45,7 @@ class OIMSearch
         return $recs; 
     }
     public function search_contact($query) {
-        $recs = db("oim")->fetchAll("select *, name as v1, primary_email as v2 from contact where name like \"%$query%\" and disable = 0");
+        $recs = db("oim")->fetchAll("select *, name as v1, primary_email as v2 from contact where name like \"%$query%\" or primary_email like \"%$query%\" and disable = 0");
         return $recs; 
     }
 }

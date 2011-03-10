@@ -127,10 +127,14 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
-        if($type == "all" || $type == "contact") {
-            foreach($model->search_contact($q) as $rec) {
-                $rec->type = "contact";
-                $recs[] = $rec;
+
+        //contact information is only for non-guest
+        if(!user()->isGuest()) {
+            if($type == "all" || $type == "contact") {
+                foreach($model->search_contact($q) as $rec) {
+                    $rec->type = "contact";
+                    $recs[] = $rec;
+                }
             }
         }
 
