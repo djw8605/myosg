@@ -31,14 +31,13 @@ class SearchController extends ControllerBase
         $q = $this->clean($_REQUEST["q"]);
         $this->view->query = $q; 
 
-        $model = new OIMSearch();
         $recs = array();
         if(isset($_REQUEST["type"])) {
             $type = $_REQUEST["type"];
         } else {
             $type = "all";
         }
-        if(isset($_REQUEST["q"])) {
+        if(isset($_REQUEST["q"]) && $q != "") {
             $recs = $this->dosearch($type, 999, $q, false);
             $this->view->recs = $recs;
         }
