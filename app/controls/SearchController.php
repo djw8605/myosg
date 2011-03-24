@@ -24,21 +24,20 @@ class SearchController extends ControllerBase
         $this->setpagetitle(self::default_title());
     }
     public function clean($dirty) {
-        return preg_replace('/[^a-zA-Z0-9_ +-\.]/', '', $dirty);
+        return trim(preg_replace('/[^a-zA-Z0-9_ +-\.]/', '', $dirty));
     } 
 
     public function indexAction() { 
         $q = $this->clean($_REQUEST["q"]);
         $this->view->query = $q; 
 
-        $model = new OIMSearch();
         $recs = array();
         if(isset($_REQUEST["type"])) {
             $type = $_REQUEST["type"];
         } else {
             $type = "all";
         }
-        if(isset($_REQUEST["q"])) {
+	if(isset($_REQUEST["q"]) && $q != "") {
             $recs = $this->dosearch($type, 999, $q, false);
             $this->view->recs = $recs;
         }
