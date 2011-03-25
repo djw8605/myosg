@@ -135,7 +135,7 @@ class RgController extends ControllerBase
 
         //load all site id under the requested sc
         $model = new Site();
-        $sites = $model->get(array("facility_id"=>$facility_id));
+        $sites = $model->get(array("facility_id"=>$facility_id, "filter_disabled"=>false));
         foreach($sites as $site) {
             if(!in_array($site->id, $site_ids)) {
                 $site_ids[] = $site->id;
@@ -153,7 +153,7 @@ class RgController extends ControllerBase
 
         //load all site id under the requested sc
         $model = new Site();
-        $sites = $model->get(array("sc_id"=>$sc_id));
+        $sites = $model->get(array("sc_id"=>$sc_id, "filter_disabled"=>false));
         foreach($sites as $site) {
             if(!in_array($site->id, $site_ids)) {
                 $site_ids[] = $site->id;

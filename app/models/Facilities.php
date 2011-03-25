@@ -18,8 +18,17 @@ License.
 class Facilities extends CachedModel
 {
     public function ds() { return "oim"; }
-    public function sql($param)
+    public function sql($params)
     {
-        return "select * from facility where active = 1 and disable = 0 order by name";
+        $filter_disabled = true;
+        if(isset($params["filter_disabled"])) {
+            $filter_disabled = $params["filter_disabled"];
+        }
+        if($filter_disabled) {
+            $where = "where active = 1 and disable = 0";
+        } else {
+            $where = "where 1 = 1";
+        }
+        return "select * from facility $where order by name";
     }
 }

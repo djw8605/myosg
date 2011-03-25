@@ -143,9 +143,9 @@ class RgsummaryController extends RgController
         if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
             $this->view->hierarchy = array();
             $model = new Facilities();
-            $facilities = $model->getgroupby("id");
+            $facilities = $model->getgroupby("id", array("filter_disabled"=>false));
             $model = new Site();
-            $sites = $model->getgroupby("id");
+            $sites = $model->getgroupby("id", array("filter_disabled"=>false));
             $this->view->sites = $sites;
             $model = new SupportCenters();
             $scs = $model->getgroupby("id");

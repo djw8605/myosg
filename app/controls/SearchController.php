@@ -24,7 +24,7 @@ class SearchController extends ControllerBase
         $this->setpagetitle(self::default_title());
     }
     public function clean($dirty) {
-        return preg_replace('/[^a-zA-Z0-9_ +-\.]/', '', $dirty);
+        return trim(preg_replace('/[^a-zA-Z0-9_ +-\.]/', '', $dirty));
     } 
 
     public function indexAction() { 
