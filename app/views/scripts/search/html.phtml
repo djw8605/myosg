@@ -147,7 +147,7 @@ function show_vo($rec) {
             }
         }
     }
-    echo "<a href=\"https://soichi.grid.iu.edu/myosg/vosummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showmember_resource=on&summary_attrs_showfield_of_science=on&summary_attrs_showreporting_group=on&summary_attrs_showparent_vo=on&summary_attrs_showcontact=on&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&vo=on&vo_".$rec->id."=on&active=on&active_value=1&sort_key=name\">Show Summary</a>";
+    echo "<a href=\"".fullbase()."/vosummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showmember_resource=on&summary_attrs_showfield_of_science=on&summary_attrs_showreporting_group=on&summary_attrs_showparent_vo=on&summary_attrs_showcontact=on&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&vo=on&vo_".$rec->id."=on&active=on&active_value=1&sort_key=name\">Show Summary</a>";
     echo "<a href=\"".$rec->primary_url."\">".$rec->primary_url."</a>";
     if(user()->hasRole("admin")) {
         echo "<a href=\"https://oim.grid.iu.edu/oim/voedit?id=".$rec->id."\">Edit Detail (Admin)</a>"; 
