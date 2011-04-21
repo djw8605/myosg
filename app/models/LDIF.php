@@ -69,6 +69,10 @@ class LDIF
                 $ret[$rgid][$hostname][] = $status;
             }
         }
+    
+        $updatetime = filemtime(config()->gip_wlcg_status);
+        $ret["updatetime"] = $updatetime;
+        
         return $ret;
     }
 

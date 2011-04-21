@@ -77,6 +77,10 @@ foreach($this->resource_groups as $rgid=>$record) {
     }
 
     if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { 
+        if(isset($this->wlcgstatus_updatetime)) {
+            $testtime = agoCalculation($this->wlcgstatus_updatetime);
+            echo "<div class=\"sidenote\">Tests performed $testtime ago</div>";
+        }
         echo "<h3>WLCG Status</h3>";
         if($wlcgstatus != null) {
             echo "<table width=\"100%\"><tr>";

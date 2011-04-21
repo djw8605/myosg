@@ -31,6 +31,7 @@ class RggipstatusController extends RgController
         $wlcgstatus = array();
         if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
             $wlcgstatus_raw = $model->getWLCGStatus();
+            $this->view->wlcgstatus_updatetime = $wlcgstatus_raw["updatetime"];
             $wlcgstatus = array();
             foreach($wlcgstatus_raw as $rgid=>$status_lists) {
                 //don't process if it's not requested
@@ -97,22 +98,4 @@ class RggipstatusController extends RgController
         }
         $this->setpagetitle(self::default_title());
     }
-
-/*
-    public function detailAction()
-    {
-        $rid = (int)$_REQUEST["rid"];
-        $model = new ResourceGroup();
-        $resources = $model->getindex();
-        $resource_info = @$resources[$rid][0];
-
-        if($resource_info === null) {
-            echo "no such resource";
-            $this->render("none", null, true);
-        } else {
-            $resource_name = $resource_info->name;
-            $this->view->detail = "none";
-        }
-    }
-*/
 }
