@@ -134,33 +134,14 @@ class RgstatushistoryController extends RgController
         }
         return $downtime_forservice;
     }
-/*
-    private function metric_overwrite($metric, $latest)
-    {
-        //find the update from $latest and apply change to $metric
-        foreach($latest as $latest_metric) {
-            if($latest_metric->metric_id == $metric->MetricID[0]) {
-                $metric->MetricDataID = $latest_metric->id;
-                $metric->Timestamp = $latest_metric->timestamp;
-                $metric->Detail = $this->fetchMetricDetail($latest_metric->id);
-                $metric->Status = Status::getStatus($latest_metric->metric_status_id);
-                return;
-            }
-        }
-        //didn't find the match - clear it
-        unset($metric->MetricDataID);
-        unset($metric->Timestamp);
-        unset($metric->Detail);
-        unset($metric->Status);
-    }
-*/
+
     private function fetchMetricDetail($id)
     {
         static $metric_detail_model = null;
         if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
         $detail = $metric_detail_model->get(array("id"=>$id)); 
         if($detail == null) return null;
-        return $detail[0]->detail; 
+        return $detail[0];
     }
 
     private function generateRuler($start_time, $end_time)

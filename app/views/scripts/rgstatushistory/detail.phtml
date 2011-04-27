@@ -66,11 +66,15 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
     $reported = isset($metric["detail_id"]);
     if(isset($metric["timestamp"])) {
         $expired = !MetricData::isFresh((int)$metric["timestamp"], (int)$freshfor, $timestamp);
-        $detail = $metric["detail"];
+        $detail = $metric["detail"]->detail;
+        $gathered_at = $metric["detail"]->gathered_at;
+        $service_uri = $metric["detail"]->service_uri;
     } else {
         //detail not available..
         $expired = null;
         $detail = "";
+        $gathered_at = "N/A";
+        $service_uri = "N/A";
     }
 
     $name = $metric_detail->common_name;
@@ -97,8 +101,19 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         $out .= "<br/><span class=\"note\">$desc</span>";
         if(trim($detail) != "") {
             $detail = "<pre>$detail</pre>";
-            $id = $metric["detail_id"];
             $detail .= "Fresh for: ".humanDuration($freshfor);
+            $detail .= "&nbsp;&nbsp;&nbsp;Service URI: ".$service_uri;
+
+            $detail .= "&nbsp;&nbsp;&nbsp;Gathered At: $gathered_at";
+            //check if service_uri and gathered_at are on the same domain
+            preg_match("/[^\.\/]+\.[^\.\/]+$/", $service_uri, $matches);
+            $service_uri_domain = $matches[0];
+            preg_match("/[^\.\/]+\.[^\.\/]+$/", $gathered_at, $matches);
+            $gathered_at_domain = $matches[0];
+            if($service_uri_domain != $gathered_at_domain) {
+                $detail .= " <span class=\"warning\">Not on the same domain</span>";
+            }
+
             $detail .= "<br/>";
             $out .= outputToggle("Show Detail", "Hide Detail", $detail);
         }
