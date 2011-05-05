@@ -120,6 +120,8 @@ function outputMetricInfo($metric, $timestamp)
     $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
     $reported = (int)($metric->MetricDataID[0]) != 0;
     $detail = $metric->Detail;
+    $service_uri = $metric->ServiceURI;
+    $gathered_at = $metric->GatheredAt;
 
     $name = $metric->MetricCommonName;
     $desc = $metric->MetricDescription;
@@ -148,6 +150,18 @@ function outputMetricInfo($metric, $timestamp)
             $id = $metric->MetricDataID;
             $fresh_for = $metric->MetricFreshFor;
             $detail .= "Fresh for: ".humanDuration($fresh_for);
+            $detail .= "&nbsp;&nbsp;&nbsp;Service URI: ".$service_uri;
+
+            $detail .= "&nbsp;&nbsp;&nbsp;Gathered At: $gathered_at";
+            //check if service_uri and gathered_at are on the same domain
+            preg_match("/[^\.\/]+\.[^\.\/]+$/", $service_uri, $matches);
+            $service_uri_domain = $matches[0];
+            preg_match("/[^\.\/]+\.[^\.\/]+$/", $gathered_at, $matches);
+            $gathered_at_domain = $matches[0];
+            if($service_uri_domain != $gathered_at_domain) {
+                $detail .= " <span class=\"warning\">Not on the same domain</span>";
+            }
+
             $detail .= "<br/>";
             $out .= outputToggle("Show Detail", "Hide Detail", $detail);
         }

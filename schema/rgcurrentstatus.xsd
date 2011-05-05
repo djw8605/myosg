@@ -39,6 +39,8 @@
                                       <xsd:element minOccurs="0" name="Detail" type="xsd:string" />
                                       <xsd:element minOccurs="0" name="MetricDataID" type="xsd:int" />
                                       <xsd:element minOccurs="0" name="FreshFor" type="xsd:int" />
+                                      <xsd:element name="ServiceUri" type="xsd:string" />
+                                      <xsd:element name="GatheredAt" type="xsd:string" />
                                     </xsd:sequence>
                                   </xsd:complexType>
                                 </xsd:element>
@@ -60,6 +62,8 @@
                                       <xsd:element minOccurs="0" name="Detail" type="xsd:string" />
                                       <xsd:element minOccurs="0" name="MetricDataID" type="xsd:int" />
                                       <xsd:element minOccurs="0" name="FreshFor" type="xsd:int" />
+                                      <xsd:element name="ServiceUri" type="xsd:string" />
+                                      <xsd:element name="GatheredAt" type="xsd:string" />
                                     </xsd:sequence>
                                   </xsd:complexType>
                                 </xsd:element>
