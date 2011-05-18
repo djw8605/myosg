@@ -20,6 +20,16 @@
     <span class="external_link" onclick="alert('CSV data should not be used programmatically. \nThe number of column and order depends on data it contains.'); window.open('<?=fullbase()."/".pagename()?>/csv'+(document.location.search));">CSV</span><br/>
     <br/>
 
+    <!--
     <span class="external_link" onclick="window.open('http://tinyurl.com/create.php?url='+escape(document.location));">Create TinyURL</span><br/>
+    -->
+    <div class="tinyurl" id="tinyurl_area" onclick="create_tinyurl();"><span class="button">Create TinuURL</span></div>
 </div>
 
+<script type="text/javascript">
+function create_tinyurl() {
+    $("#tinyurl_area").load("<?=fullbase()."/proxy/tinyurl?url=";?>"+escape(document.location), function() {
+        $("#tinyurl_area input").select();
+    });
+}
+</script>
