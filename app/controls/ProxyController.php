@@ -19,7 +19,6 @@ class ProxyController extends Zend_Controller_Action
 { 
     public function tinyurlAction() 
     { 
-        echo "<b>Tiny URL</b><br>";
         echo "<input type=\"text\" value=\"";
         echo file_get_contents("http://tinyurl.com/api-create.php?url=".$_REQUEST["url"]);
         echo "\">";
