@@ -525,7 +525,7 @@ ul.topnav {
     list-style: none;
     padding: 3px 0px 3px 0px;
     margin-left: 0;
-    height: 27px;
+    height: 23px;
     width: 100%;
     background: #000 url('../images/topnav_bg.gif');
     color:#888888;
@@ -535,6 +535,7 @@ ul.topnav {
 ul.topnav li {
     float: left;
     margin: 0;
+    line-height: 15px;
     padding: 5px;
     margin-right: 5px;
     position: relative; /*--Declare X and Y axis base for sub navigation--*/
@@ -680,4 +681,8 @@ text-decoration: underline;
 }
 div.tinyurl input {
 width: 100%;
+}
+div.dot {
+background:transparent url(../images/dot.png) no-repeat 0px 6px;
+padding-left: 9px;
 }
