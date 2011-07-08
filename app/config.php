@@ -221,6 +221,9 @@ class common_config
         $this->gocticket_url = "https://ticket.grid.iu.edu/goc";
 
         $this->status_expires_days = 30;
+
+        $this->gratiaweb = "http://gratiaweb.grid.iu.edu/gratia";
+        //$this->gratiaweb = "http://t2.unl.edu/gratia";
     }
     function getCacheDir() {
         return "/tmp";

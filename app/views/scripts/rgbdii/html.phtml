@@ -1,114 +1,52 @@
-<p class="warning">This is an experimental feature. Please do not use for production purpose.</p>
+<!--- TODO - don't load script inline...causes browser init issue --->
+<link href="<?=base()?>/lib/osgtable/osgtable.css" rel="stylesheet" type="text/css" />
+<script src="<?=base()?>/lib/osgtable/osgtable.js" type="text/javascript"></script>
 <?
-global $cols;
-
-foreach($this->rgs as $rgid=>$data) {
-    $rg_info = $data["info"];
-    $resources = $data["resources"];
-    
-    echo "<div class=\"resource_group_header round\">";
-    echo "<div class=\"sidenote\">$rg_info->grid_type_description Group</div>";
-    echo "<span class=\"h3\">$rg_info->name</span>";
-    echo "</div>";
-
-    if(count($resources) == 0) {
-        echo "<p class=\"warning\">No applicable resource</p>";
-    } else {
-        echo "<table class=\"summary_table\">";
-
-        if(isset($_REQUEST["bdii_attrs_showstat"])) {
-            echo "<tr>";
-            echo "<th>Running Jobs</th>";
-            echo "<th>Waiting Jobs</th>";
-            echo "<th>Total Jobs</th>";
-            echo "<th>Estimated Response Time</th>";
-            echo "<th>Estimated Free Job Slots</th>";
-            //echo "<th>Free CPUs</th>";
-            echo "<th>Allowed VO FQANs</th>";
-            echo "</tr>";
-        }
-        $cols = 7;
-
-        foreach($resources as $rrid=>$resource_data) {
-            $r_info = $resource_data["info"];
-            $bdii_info = $resource_data["bdii"];
-            echo "<tr><td style=\"border: none;\" colspan=$cols>";
-                echo "<div class=\"resource round\">";
-                echo "<div class=\"fqdn sidenote\">$r_info->fqdn</div>";
-                echo "<span class=\"h4\">$r_info->name</span>";
-
-                if(isset($_REQUEST["bdii_attrs_showversion"])) {
-                    echo "<br/>";
-                    echo "<table width=\"100%\"><tr><td width=\"33%\" style=\"border: none;\">";
-                    outputVersion("OSG Version", $bdii_info->OSG_VERSION);
-                    echo "</td><td width=\"33%\" style=\"border: none;\">";
-                    outputVersion("VDT Version", $bdii_info->VDT_VERSION);
-                    echo "</td><td width=\"33%\" style=\"border: none;\">";
-                    outputVersion("GIP Version", $bdii_info->GIP_VERSION);
-                    echo "</td></tr></table>";
+if($this->error !== null) {
+    echo "<p class=\"warning\">$this->error</p>";
+} else {
+    require_once("app/json.php");
+    $json = new Services_JSON();
+    ?> 
+    <div id="osgtable"></div>
+    <script> 
+    var headers =
+    <?
+        echo $json->encode($this->headers);
+    ?>
+    ;
+    var recs = [ 
+    <?
+        $first = true;
+        foreach($this->rgs as $rgid=>$rg) {
+            $rginfo = $this->resource_groups[$rgid][0];
+            if(isset($this->detail_groups[$rgid])) {
+                $aggregator = $this->detail_groups[$rgid];
+                $recs = $aggregator->records();
+                foreach($recs as $id=>$rec) {
+                    if($first) {
+                        $first = false;
+                    } else {
+                        echo ",\n";
+                    }
+                    echo $json->encode($rec);
                 }
-
-                echo "</div>";
-            echo "</td></tr>";
-
-            if(isset($_REQUEST["bdii_attrs_showstat"])) {
-                $services = $bdii_info->Services;
-                $service = $services->Service; //this will become an array in the future?
-                outputService($service);
+            } else {
+                //output dummy record
+                if($first) { $first = false; } else { echo ",\n"; }
+                echo "[\"".$rginfo->name."\", \"(no data)\"]";
             }
         }
-
-        echo "</table>";
-    }
-}
-
-function outputVersion($name, $version) {
-    echo "<b>$name</b>: ";
-    if($version != null) {
-        echo $version;
-    } else {
-        echo "Unknown";
-    }
-}
-
-function outputService($service) {
-    global $cols;
-    if(isset($service->Queues->Queue)) {
-        $queues = $service->Queues->Queue;
-        foreach($queues as $queue) {
-            outputQueue($queue);
+    ?> 
+    ];
+    $("#osgtable").osgtable({
+        headers: headers,
+        recs: recs,
+        fetch_detail : function(rec_id, callback) {
+            "<?echo fullbase()."/rgbdii/detail";?>"
+            $.getJSON("<?echo fullbase()?>/rgbdii/detail?bdii_server=<?echo $_REQUEST["bdii_server"]?>&bdii_object=<?echo $_REQUEST["bdii_object"]?>&rec_id="+encodeURI(rec_id), callback);
         }
-    } else {
-        echo "<tr><td colspan=$cols>";
-        echo "<p class=\"warning\">No Queue</p>";
-        echo "</td></tr>";
-    }
-}
-
-
-function outputQueue($queue) {
-    global $cols;
-
-    //queue name / fqans
-    echo "<tr><td colspan=$cols>";
-    echo "<span class=\"fqdn\" style=\"color: gray;\">$queue->QueueName</span>"; 
-    echo "</td></tr>";
-
-    //state
-    $state = $queue->State;
-    echo "<tr>";
-    echo "<td>$state->GlueCEStateRunningJobs</td>";
-    echo "<td>$state->GlueCEStateWaitingJobs</td>";
-    echo "<td>$state->GlueCEStateTotalJobs</td>";
-    echo "<td>$state->GlueCEStateEstimatedResponseTime</td>";
-    echo "<td>$state->GlueCEStateFreeJobSlots</td>";
-    //echo "<td>$state->GlueCEStateFreeCPUs</td>";
-    $fqans = $queue->AllowedVOFQANs[0];
-    echo "<td width='40%'>";
-    foreach($fqans as $fqan) {
-        echo "<span class=\"tag round\" style=\"background-color: gray;\">$fqan</span> ";
-    }
-    echo "</td>";
-    echo "</tr>";
-
+    });
+    </script> 
+    <?
 }

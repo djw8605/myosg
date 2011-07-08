@@ -63,7 +63,6 @@ div.resource
 padding: 2px;
 padding-left:20px;
 background:#ccc url(<?=$imagebase?>/images/server.png) no-repeat 2px 2px;
-height: 16px;
 padding-top: 3px;
 margin-bottom: 2px;
 }
@@ -83,7 +82,6 @@ div.site
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/house.png) no-repeat 0 0px;
-height: 16px;
 }
 
 div.support_center
@@ -99,13 +97,11 @@ div.facility
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/database.png) no-repeat 0 0px;
-height: 16px;
 }
 div.contact
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/user.png) no-repeat 0 0px;
-height: 16px;
 }
 div.vo
 {
@@ -118,14 +114,12 @@ div.metric
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 0 0px;
-height: 16px;
 }
 div.metricinfo_header
 {
 padding:2px;
 padding-left:22px;
 background:#ccc url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 3px 3px;
-height: 16px;
 margin-bottom: 3px;
 }
 
@@ -141,7 +135,6 @@ div.grid_type
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/list-items.gif) no-repeat 0 0px;
-height: 16px;
 }
 
 div.border
@@ -374,7 +367,6 @@ table.summary_subtable td, table.summary_subtable th
 }
 table.summary_subtable th
 {
-    width: 70px;
 }
 .disabled
 {
@@ -417,7 +409,6 @@ border-bottom: solid 1px #bbb;
 }
 table.summary_table th
 {
-width: 90px;
 }
 .status_CRITICAL, .status_OK, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME, .status_
 {

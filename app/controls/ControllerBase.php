@@ -30,6 +30,12 @@ abstract class ControllerBase extends Zend_Controller_Action
         setpagename($this->pagename());
         $this->selectmenu($this->pagename());
         $this->setpagetitle("Untitled Page");
+
+        $this->view->has_subscribe_igoogle = true;
+        $this->view->has_subscribe_uwa = true;
+        $this->view->has_subscribe_mobile = true;
+        $this->view->has_subscribe_xml = true;
+        $this->view->has_subscribe_csv = true;
     }
 
     public function setpagetitle($title)

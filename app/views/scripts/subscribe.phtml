@@ -10,19 +10,29 @@
 <h3>Subscribe</h3>
 <div class="indent">
     <p>Subscribe to the content of this page.</p>
+
+<?if($this->has_subscribe_igoogle) {?>
     <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/addigoogle'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">iGoogle</span><br/>
+<?}?>
+
+<?if($this->has_subscribe_uwa) {?>
     <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/adduwa'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">Netvibes</span><br/>
+<?}?>
+
+<?if($this->has_subscribe_mobile) {?>
     <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/mobile'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">Mobile Content</span><br/>
+<?}?>
+
+<?if($this->has_subscribe_xml) {?>
     <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/xml'+(document.location.search));">XML</span><br/>
-<!--
-    <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/wave'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">Google Wave Widget</span><br/>
--->
+<?}?>
+
+<?if($this->has_subscribe_csv) {?>
     <span class="external_link" onclick="alert('CSV data should not be used programmatically. \nThe number of column and order depends on data it contains.'); window.open('<?=fullbase()."/".pagename()?>/csv'+(document.location.search));">CSV</span><br/>
+<?}?>
+
     <br/>
 
-    <!--
-    <span class="external_link" onclick="window.open('http://tinyurl.com/create.php?url='+escape(document.location));">Create TinyURL</span><br/>
-    -->
     <div class="tinyurl" id="tinyurl_area" onclick="create_tinyurl();"><span class="button">Create TinuURL</span></div>
 </div>
 

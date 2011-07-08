@@ -1,8 +1,33 @@
-<?$checked = "";
-if(isset($_REQUEST["bdii_attrs_showversion"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="bdii_attrs_showversion" <?=$checked?>/> Show Version Numbers<br/>
 
-<?$checked = "";
-if(isset($_REQUEST["bdii_attrs_showstat"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="bdii_attrs_showstat" <?=$checked?> onclick="$('#resource_details').toggle('fast');"/> Show BDII Statistics<br/>
+<p>
+Type
+<select name="bdii_object">
+<!--
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "site") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="site">Site</option>
+-->
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "service") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="service">Service</option>
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "ce") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="ce">Compute Element</option>
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "se") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="se">Storage Element</option>
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "sa") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="sa">Storage Element/Areas</option>
+<? $selected = ""; if(@$_REQUEST["bdii_object"] == "cluster") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="cluster">Cluster</option>
+</select>
+</p>
+
+<p>
+BDII Server
+<select name="bdii_server">
+<? $selected = ""; if(@$_REQUEST["bdii_server"] == "is-osg") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="is-osg">is.grid.iu.edu (osg)</option>
+<? $selected = ""; if(@$_REQUEST["bdii_server"] == "is-wlcg") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="is-wlcg">is.grid.iu.edu (wlcg)</option>
+<? $selected = ""; if(@$_REQUEST["bdii_server"] == "lcg") $selected = "selected=\"selected\"";?>
+<option <?=$selected?> value="lcg">lcg.bdii.cern.ch</option>
+</select>
+</p>
 
