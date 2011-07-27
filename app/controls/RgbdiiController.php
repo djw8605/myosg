@@ -521,7 +521,7 @@ class sa_aggregator {
     function headers() {
         return array(
             array("name"=>"Resource Group Name", "type"=>"string", "width"=>120),
-            array("name"=>"SE Name", "type"=>"string", "width"=>160),
+            array("name"=>"SE Name", "type"=>"string", "width"=>170),
             array("name"=>"SA Name", "type"=>"string", "width"=>160),
             array("name"=>"Access Latency", "type"=>"string"),
             array("name"=>"Expiration Mode", "type"=>"string"),
@@ -642,7 +642,7 @@ class se_aggregator {
     function headers() {
         return array(
             array("name"=>"Resource Group Name", "type"=>"string", "width"=>150),
-            array("name"=>"SE Name", "type"=>"string", "width"=>150),
+            array("name"=>"SE Name", "type"=>"string", "width"=>170),
             array("name"=>"Arch.", "type"=>"string", "width"=>70),
             array("name"=>"Impl. Name", "type"=>"string", "width"=>60),
             array("name"=>"Impl. Version", "type"=>"string"),
