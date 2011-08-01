@@ -27,9 +27,9 @@
 </tr>
 <tr>
     <td>
-        <?$url = "rggipstatus/index?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1";?>
-        <p><a href="<?=$url?>"><b>GIP Validation Results</b></a><br/>
-        <a href="<?=$url?>"><img class="screenshot" src="<?=fullbase()?>/images/screenshots/gipvalidate.jpg" align="top"/></a><br/>
+        <?$url = "rgbdii/index?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&datasource=bdii&bdii_server=is-osg&bdii_object=cluster";?>
+        <p><a href="<?=$url?>"><b>BDII Information Browser</b></a><br/>
+        <a href="<?=$url?>"><img class="screenshot" src="<?=fullbase()?>/images/screenshots/rgbdii_small.jpg" align="top"/></a><br/>
         <br clear="all"/> 
         </p>
     </td>
@@ -48,6 +48,19 @@
         </p> 
     </td>
 </tr>
+<!--
+<tr>
+    <td>
+        <?$url = "rggipstatus/index?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1";?>
+        <p><a href="<?=$url?>"><b>GIP Validation Results</b></a><br/>
+        <a href="<?=$url?>"><img class="screenshot" src="<?=fullbase()?>/images/screenshots/gipvalidate.jpg" align="top"/></a><br/>
+        <br clear="all"/> 
+        </p>
+    </td>
+    <td>
+    </td>
+</tr>
+-->
 </table> 
 </div>
 

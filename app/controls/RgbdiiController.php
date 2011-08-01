@@ -18,7 +18,7 @@ License.
 
 class RgbdiiController extends RgController
 {
-    public static function default_title() { return "BDII Information"; }
+    public static function default_title() { return "BDII Information Browser"; }
     public static function default_url($query) { return ""; }
 
     public function processQuery() {
