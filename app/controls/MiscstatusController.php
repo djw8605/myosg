@@ -50,8 +50,7 @@ class MiscstatusController extends MiscController
                 $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki
                 $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //DOCDB
                 $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage
-
-                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideinServiceLevelAgreement") //GOC Glidein
+                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement") //GOC Glidein
             )
         );
         $this->setpagetitle(self::default_title());
