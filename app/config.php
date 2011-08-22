@@ -260,7 +260,12 @@ function fullbase($p = "http") {
     if($p == "http") {
         if(isset($_SERVER["HTTPS"])) $p = "https";
     }
-    return $p."://".$_SERVER["HTTP_HOST"].base();
+    if(isset($_SERVER["HOST_NAME"])) {
+        $hostname=$_SERVER["HOST_NAME"];
+    } else {
+        $hostname=$_SERVER["SERVER_NAME"];
+    }
+    return $p."://$hostname".base();
 }
 function fullurl() {
     $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s; $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];

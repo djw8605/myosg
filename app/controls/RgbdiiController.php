@@ -686,7 +686,7 @@ class se_aggregator {
         //control protocols
         $results = ldap_search($conn, "GlueSEUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueSEControlProtocol)");
         $entries = ldap_get_entries($conn, $results);
-        if($entries[0] > 0) {
+        if(isset($entries[0]) && $entries[0] > 0) {
             $control_protocols = "<table><tr>";
             $control_protocols .= "<td><b>Endpoint</b></td>";
             $control_protocols .= "<td><b>Version</b></td>";
@@ -772,6 +772,10 @@ class cluster_aggregator {
     function detail($rec_id, $host, $port, $base) {
         $conn = ldap_connect($host, $port);
         $rec_id = explode(",", $rec_id);
+
+        if(!isset($rec_id[1])) {       
+            elog("rec_id looks strange:".print_r($rec_id, true). " for $host $port $base");
+        }
 
         //access protocols
         $results = ldap_search($conn, "GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueSubCluster)");

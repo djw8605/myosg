@@ -233,7 +233,7 @@ class WizardsummaryController extends WizardController
           $resource = $resources[$resource_id][0];
 
           foreach($service_map as $service_id => $service_value) {
-            $uri = $service_value->URI;
+            $uri = @$service_value->URI;
             if ($uri == "") {
               $uri = $resource->fqdn . ":" . $servicetype_port[$service_id];
             }
@@ -244,8 +244,8 @@ class WizardsummaryController extends WizardController
               $uri . ",". 
               $servicetype_name[$service_id] . ",".
               $resourcegroup_gridtype[$resource->resource_group_id] . ",".
-              $resourcestatus_map[$resource_id].",".
-              date('Y-m-d H:i:s', $resourcestatusdate_map[$resource_id]).
+              @$resourcestatus_map[$resource_id].",".
+              date('Y-m-d H:i:s', @$resourcestatusdate_map[$resource_id]).
               "\n";
           }
         }

@@ -39,6 +39,9 @@ class SearchController extends ControllerBase
         }
         if(isset($_REQUEST["q"]) && $q != "") {
             $recs = $this->dosearch($type, 999, $q, false);
+            if(count($recs) == 0) {
+                wlog("No search results for query: $q");
+            }
             $this->view->recs = $recs;
         }
     }
