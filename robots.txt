@@ -1,3 +1,11 @@
 User-agent: *
 Disallow: /wizard
+Disallow: /wizardarhistory
+Disallow: /wizardmetric
+Disallow: /wizardcurrentstatus
+Disallow: /wizarddowntime
+Disallow: /wizardgipstatus
+Disallow: /wizardgratia
+Disallow: /wizardstatushistory
+Disallow: /wizardsummary
 
