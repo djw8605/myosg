@@ -8,4 +8,4 @@ Disallow: /wizardgipstatus
 Disallow: /wizardgratia
 Disallow: /wizardstatushistory
 Disallow: /wizardsummary
-
+Disallow: /wizard*

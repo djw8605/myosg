@@ -155,9 +155,19 @@ function outputMetricInfo($metric, $timestamp)
             $detail .= "&nbsp;&nbsp;&nbsp;Gathered At: $gathered_at";
             //check if service_uri and gathered_at are on the same domain
             preg_match("/[^\.\/]+\.[^\.\/]+$/", $service_uri, $matches);
-            $service_uri_domain = $matches[0];
+            if(isset($matches[0])) {
+                $service_uri_domain = $matches[0];
+            } else {
+                wlog("strange service_uri given".$service_uri);
+                $service_uri_domain = "unknown";
+            }
             preg_match("/[^\.\/]+\.[^\.\/]+$/", $gathered_at, $matches);
-            $gathered_at_domain = $matches[0];
+            if(isset($matches[0])) {
+                $gathered_at_domain = $matches[0];
+            } else {
+                wlog("strange gathered_at given".$gathered_At);
+                $gathered_at_domain = "unknown";
+            }
             if($service_uri_domain != $gathered_at_domain) {
                 $detail .= " <span class=\"warning\">Not on the same domain</span>";
             }
