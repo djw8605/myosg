@@ -1,5 +1,5 @@
 <?=$this->header?>
-<RSVStatusMap>
+<RSVStatusMap xsi:schemaLocation="http://myosg.grid.iu.edu/schema/map.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <?
 echo "<Sites>";
 foreach($this->sites as $site) {
@@ -28,7 +28,8 @@ foreach($this->sites as $site) {
 
         $target = "target=\"_blank\"";
         $gid = $rg->id;
-        $html .= "<ResourceGroup><ID>$rg->id</ID>";
+        $html .= "<ResourceGroup>";
+        $html .= "<ID>$rg->id</ID>";
         $html .= "<SummaryURL>".fullbase()."/rgsummary?datasource=summary&amp;rg=on&amp;rg_$gid&amp;summary_attrs_showdesc=on&amp;summary_attrs_showservice=on&amp;summary_attrs_showrsvstatus=on</SummaryURL><Name>$rgname</Name>";
 
         $rhtml = "";
@@ -68,7 +69,7 @@ foreach($this->sites as $site) {
             }
         }
         if($rhtml == "") {
-            $html .= "<!---No active resource-->";
+            $html .= "<Resources><!---No active resource--></Resources>";
         } else {
             $html .= "<Resources>".$rhtml."</Resources>";
         }
@@ -79,7 +80,6 @@ foreach($this->sites as $site) {
     if(!$site_has_status) {
         if(isset($_REQUEST["map_attrs_shownr"])) {
             $status = "nr";
-            //echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$html'));\n";
         }
     } else {
         //decide site status
@@ -94,8 +94,8 @@ foreach($this->sites as $site) {
         if($site->latitude == null) $site->latitude = 0;
         if($site->longitude == null) $site->longitude = 0;
     }
-    echo "<Site><ID>$site_id</ID><Name>$site->name</Name><Status>$status</Status><Latitude>$site->latitude</Latitude><Longitude>$site->longitude</Longitude><Detail>$html</Detail></Site>";
+    echo "<Site><ID>$site_id</ID><Name>$site->name</Name><Status>$status</Status><Latitude>$site->latitude</Latitude><Longitude>$site->longitude</Longitude><ResourceGroups>$html</ResourceGroups></Site>";
 }
 ?>
-echo "</Sites>";
+</Sites>
 </RSVStatusMap>
