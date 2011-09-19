@@ -1,4 +1,101 @@
 <?=$this->header?>
 <RSVStatusMap>
-<!-- nobody has requested this XML yet. Please be first by opening feature request at GOC -->
+<?
+echo "<Sites>";
+foreach($this->sites as $site) {
+
+    //status counter    
+    $status_ok = 0;
+    $status_warning = 0;
+    $status_critical = 0;
+    $status_unknown = 0;
+    $status_downtime = 0;
+
+    $site_id = $site->id;
+
+    if(!isset($this->rgs[$site_id])) continue;
+    $rgs = $this->rgs[$site_id];
+    if(count($rgs) == 0) continue; //don't show site with no resource group
+    if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
+
+    $html = "";
+    $site_has_status = false;
+    foreach($rgs as $rg) {
+        $rgname = $rg->name;
+
+        //this is now done by the controller
+        //if($rg->active == 0 || $rg->disable == 1) continue;
+
+        $target = "target=\"_blank\"";
+        $gid = $rg->id;
+        $html .= "<ResourceGroup><ID>$rg->id</ID>";
+        $html .= "<SummaryURL>".fullbase()."/rgsummary?datasource=summary&amp;rg=on&amp;rg_$gid&amp;summary_attrs_showdesc=on&amp;summary_attrs_showservice=on&amp;summary_attrs_showrsvstatus=on</SummaryURL><Name>$rgname</Name>";
+
+        $rhtml = "";
+        if(isset($this->resources_bygid[$rg->id])) {
+            $rs = $this->resources_bygid[$rg->id];
+            foreach($rs as $r) {
+                if($r->active == 0 || $r->disable == 1) continue;
+                $name = $r->name;
+                if(isset($this->downtime[$r->id])) {
+                    $status = "DOWNTIME";
+                    $note = "This resource is currently under maintenance.";
+                } else if(isset($this->resource_status[$r->id][0])) {
+                    $rstatus = $this->resource_status[$r->id][0];
+                    $status = Status::getStatus($rstatus->status_id);
+
+                    //treat status change that happened long time ago as non-reporting
+                    $expire = time()-3600*24*config()->status_expires_days;
+                    $note = $rstatus->detail;
+                    if($rstatus->timestamp < $expire && $status != "OK") {
+                        $rhtml .= "<Resource><ID>$r->id</ID><Name>$name</Name><Status>Expired</Status><Note>$note</Note></Resource>";
+                        continue;//don't count this as a valid status
+                    }
+                } else {
+                    //resource status is not calculated - skip this resource
+                    $rhtml .= "<Resource><ID>$r->id</ID><Name>$name</Name><Status>UNKNOWN</Status><Note>Status not calculated</Note></Resource>";
+                    continue;
+                }
+                $rhtml .= "<Resource><ID>$r->id</ID><Name>$name</Name><Status>$status</Status><Note>$note</Note></Resource>";
+
+                //determine site status
+                if($status == "OK") $status_ok++;
+                if($status == "WARNING") $status_warning++;
+                if($status == "CRITICAL") $status_critical++;
+                if($status == "UNKNOWN") $status_unknown++;
+                if($status == "DOWNTIME") $status_downtime++;
+                $site_has_status = true;
+            }
+        }
+        if($rhtml == "") {
+            $html .= "<!---No active resource-->";
+        } else {
+            $html .= "<Resources>".$rhtml."</Resources>";
+        }
+        $html .= "</ResourceGroup>";
+    }
+
+    //if there are no resource to show..
+    if(!$site_has_status) {
+        if(isset($_REQUEST["map_attrs_shownr"])) {
+            $status = "nr";
+            //echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$html'));\n";
+        }
+    } else {
+        //decide site status
+        if($status_critical > 0) $status = "critical";
+        else if($status_downtime > 0) $status = "downtime";
+        else if($status_warning > 0) $status = "warning";
+        else if($status_unknown > 0) $status = "unknown";
+        else if($status_ok > 0) $status = "ok";
+        else $status = "unknown"; //no info!?
+
+        //show marker
+        if($site->latitude == null) $site->latitude = 0;
+        if($site->longitude == null) $site->longitude = 0;
+    }
+    echo "<Site><ID>$site_id</ID><Name>$site->name</Name><Status>$status</Status><Latitude>$site->latitude</Latitude><Longitude>$site->longitude</Longitude><Detail>$html</Detail></Site>";
+}
+?>
+echo "</Sites>";
 </RSVStatusMap>

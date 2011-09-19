@@ -165,7 +165,7 @@ function outputMetricInfo($metric, $timestamp)
             if(isset($matches[0])) {
                 $gathered_at_domain = $matches[0];
             } else {
-                wlog("strange gathered_at given".$gathered_At);
+                wlog("strange gathered_at given: ".$gathered_at);
                 $gathered_at_domain = "unknown";
             }
             if($service_uri_domain != $gathered_at_domain) {
