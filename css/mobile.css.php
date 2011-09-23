@@ -64,22 +64,25 @@ padding: 2px;
 padding-left:20px;
 background:#ccc url(<?=$imagebase?>/images/server.png) no-repeat 2px 2px;
 padding-top: 3px;
-margin-bottom: 2px;
+margin: 1px;
 }
 div.h4
 {
 background-color: #ddd;
 font-weight: bold;
 font-size: 12px;
+margin: 1px;
 }
 
 div.resource_group
 {
 padding-left:5px;
 padding-right:5px;
+margin: 1px;
 }
 div.site
 {
+margin: 1px;
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/house.png) no-repeat 0 0px;
 }
@@ -87,25 +90,28 @@ background:transparent url(<?=$imagebase?>/images/house.png) no-repeat 0 0px;
 div.support_center
 {
 padding: 2px;
+margin: 1px;
 padding-left:5px;
 padding-right:5px;
 background-color: #ccc;
-margin-bottom: 5px;
 }
 
 div.facility
 {
+margin: 1px;
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/database.png) no-repeat 0 0px;
 }
 div.contact
 {
+margin: 1px;
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/user.png) no-repeat 0 0px;
 }
 div.vo
 {
 padding: 2px;
+margin: 1px;
 padding-left:3px;
 padding-right:7px;
 background-color:#ccc;
@@ -114,13 +120,14 @@ div.metric
 {
 padding-left:20px;
 background:transparent url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 0 0px;
+margin: 1px;
 }
 div.metricinfo_header
 {
 padding:2px;
 padding-left:22px;
 background:#ccc url(<?=$imagebase?>/images/drive_magnify.png) no-repeat 3px 3px;
-margin-bottom: 3px;
+margin: 1px;
 }
 
 div.header
@@ -129,7 +136,7 @@ padding:2px;
 padding-left:5px;
 background-color:#ccc;
 height: 16px;
-margin-bottom: 3px;
+margin: 1px;
 }
 div.grid_type
 {
@@ -149,7 +156,7 @@ div.resource_group_header, div.downtime_group
 {
 background-image:url('<?=$imagebase?>/images/h3_back.png');
 color: white;
-margin-bottom: 0.3em;
+margin: 1px;
 padding: 4px 6px 4px 6px;
 }
 
@@ -235,14 +242,14 @@ font-size: 13px;
 }
 span.h4
 {
-margin-bottom: 3px;
+margin: 1px;
 font-weight: bold;
 font-size: 12px;
 }
 
 div.history_graph
 {
-    width: 100%;
+    width: 99%;
     line-height: 100%;
 }
 div.history_graph img.graph
@@ -336,7 +343,6 @@ table.summary_table
     width: 100%;
     margin: 0px;
     border-collapse: collapse; 
-    margin-bottom: 2px;
 }
 
 table.summary_table th
@@ -381,7 +387,6 @@ div.downtime
 }
 div.downtime_detail
 {
-    padding: 3px;
 }
 
 h1, span.h1
@@ -401,6 +406,7 @@ h4, span.h4
 {
 font-weight: bold;
 font-size: 11px;
+margin: 1px;
 }
 h2,h3
 {
@@ -450,7 +456,7 @@ height: 12px;
 {
 font-weight: normal;
 font-size: 10px;
-color: #ccc;
+color: #777;
 }
 span.tag
 {
