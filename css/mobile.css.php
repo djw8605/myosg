@@ -152,7 +152,7 @@ padding: 3px;
 }
 
 
-div.resource_group_header, div.downtime_group
+div.resource_group_header, div.downtime_group, div.group_header
 {
 background-image:url('<?=$imagebase?>/images/h3_back.png');
 color: white;
