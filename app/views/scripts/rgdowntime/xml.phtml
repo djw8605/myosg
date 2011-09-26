@@ -29,7 +29,9 @@ function showdowntimes($downtimes) {
         echo "<EndTime>".$downtime["end_time"]."</EndTime>";
         echo "<Class>".htmlsafe($downtime["class"])."</Class>";
         echo "<Severity>".htmlsafe($downtime["severity"])."</Severity>";
-        echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
+        if(!user()->isGuest()) {
+            echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
+        }
 
         echo "<Services>";
         foreach($downtime["services"] as $service) {

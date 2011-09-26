@@ -392,6 +392,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                             echo "<table class=\"summary_subtable\">"; 
                             echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                             echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                            echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
                             if($contact->sms_address != null) {
                                 echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
                             }

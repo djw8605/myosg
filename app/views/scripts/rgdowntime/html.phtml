@@ -41,7 +41,9 @@ function showdowntimes($downtimes) {
 
         echo "<tr><th>Class</th><td>".htmlsafe($downtime["class"])."</td></tr>";
         echo "<tr><th>Severity</th><td>".htmlsafe($downtime["severity"])."</td></tr>";
-        echo "<tr><th>DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
+        if(!user()->isGuest()) {
+            echo "<tr><th>DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
+        }
 
         echo "<tr><th>Affected&nbsp;Services</th><td>";
         foreach($downtime["services"] as $service) {

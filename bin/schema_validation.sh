@@ -1,10 +1,26 @@
 #these script only checks the schema against HTTP version of the XML.. not HTTPS
 
 HOST="http://soichi.grid.iu.edu/myosg"
+HOSTS="https://soichi.grid.iu.edu/myosg"
 #HOST="http://myosg-itb.grid.iu.edu"
 #HOST="http://myosg.grid.iu.edu"
 
 SCHEMA="../schema"
+
+echo "Testing MISC User"
+url="$HOSTS/miscuser/xml?datasource=user"
+#curl $url --cacert /home/hayashis/.globus/DOEGridsCA1.crt --cert /home/hayashis/.globus/certkey.pem -o /tmp/miscuser.raw.xml
+curl $url  --cert /home/hayashis/.globus/certkey.pem -o /tmp/miscuser.raw.xml
+xmllint --format /tmp/miscuser.raw.xml > /tmp/miscuser.xml
+xmllint --noout --schema $SCHEMA/miscuser.xsd /tmp/miscuser.xml
+
+exit
+
+echo "Testing VO VOMSES Status"
+url="$HOST/vovomsstatus/xml?datasource=vovomsstatus&start_type=7daysago&start_date=09%2F30%2F2009&end_type=now&end_date=09%2F30%2F2009&all_vos=on&active_value=1"
+wget -O /tmp/vovomsstatus.raw.xml $url
+xmllint --format /tmp/vovomsstatus.raw.xml > /tmp/vovomsstatus.xml
+xmllint --noout --schema $SCHEMA/vovomsstatus.xsd /tmp/vovomsstatus.xml
 
 echo "Testing map"
 url="$HOST/map/xml?map_attrs_shownr=on&all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on"
@@ -12,16 +28,11 @@ wget -O /tmp/map.raw.xml $url 2> /dev/null
 xmllint --format /tmp/map.raw.xml > /tmp/map.xml
 xmllint --noout --schema $SCHEMA/map.xsd /tmp/map.xml
 
-exit
-
-
 echo "Testing rgcurrentstatus"
 url="$HOST/rgcurrentstatus/xml?datasource=currentstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&current_status_attrs_shownc=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F21%2F2009&end_type=now&end_date=08%2F21%2F2009&all_resources=on&gridtype=on&gridtype_1=on&active_value=1&disable_value=1"
 wget -O /tmp/rgcurrentstatus.raw.xml $url 2> /dev/null
 xmllint --format /tmp/rgcurrentstatus.raw.xml > /tmp/rgcurrentstatus.xml
 xmllint --noout --schema $SCHEMA/rgcurrentstatus.xsd /tmp/rgcurrentstatus.xml
-
-
 
 echo "Testing rgsummary"
 url="$HOST/rgsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F20%2F2009&end_type=now&end_date=08%2F20%2F2009&all_resources=on&gridtype=on&gridtype_1=on&gridtype_2=on&gipstatus=on&gipstatus_OK=on&gipstatus_FAIL=on&gipstatus_UNKNOWN=on&status=on&status_1=on&status_2=on&status_3=on&status_4=on&status_99=on&service=on&service_4=on&service_1=on&service_5=on&service_2=on&service_3=on&service_109=on&vosup=on&vosup_25=on&voown=on&voown_35=on&voown_1=on&has_status=on&active=on&active_value=1&disable=on&disable_value=0&has_wlcg=on&summary_attrs_showticket=on"
@@ -34,12 +45,6 @@ url="$HOST/rgbdii/xml?datasource=bdii&summary_attrs_showgipstatus=on&summary_att
 wget -O /tmp/rgbdii.raw.xml $url 2> /dev/null
 xmllint --format /tmp/rgbdii.raw.xml > /tmp/rgbdii.xml
 xmllint --noout --schema $SCHEMA/rgbdii.xsd /tmp/rgbdii.xml
-
-echo "Testing MISC User"
-url="$HOST/miscuser/xml?datasource=user"
-wget -O /tmp/miscuser.raw.xml $url 2> /dev/null
-xmllint --format /tmp/miscuser.raw.xml > /tmp/miscuser.xml
-xmllint --noout --schema $SCHEMA/miscuser.xsd /tmp/miscuser.xml
 
 echo "Testing MISC Status"
 url="$HOST/miscstatus/xml?datasource=status"
@@ -94,12 +99,6 @@ url="$HOST/voactivation/xml?datasource=activation&start_type=7daysago&start_date
 wget -O /tmp/voactivation.raw.xml $url 2> /dev/null
 xmllint --format /tmp/voactivation.raw.xml > /tmp/voactivation.xml
 xmllint --noout --schema $SCHEMA/voactivation.xsd /tmp/voactivation.xml
-
-echo "Testing VO VOMSES Status"
-url="$HOST/vovomsstatus/xml?datasource=vovomsstatus&start_type=7daysago&start_date=09%2F30%2F2009&end_type=now&end_date=09%2F30%2F2009&all_vos=on&active_value=1"
-wget -O /tmp/vovomsstatus.raw.xml $url 2> /dev/null
-xmllint --format /tmp/vovomsstatus.raw.xml > /tmp/vovomsstatus.xml
-xmllint --noout --schema $SCHEMA/vovomsstatus.xsd /tmp/vovomsstatus.xml
 
 echo "Testing MISC CPU Info"
 url="$HOST/misccpuinfo/xml?datasource=cpuinfo&count_sg_1=on&count_active=on&count_enabled=on"

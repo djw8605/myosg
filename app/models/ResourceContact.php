@@ -25,10 +25,15 @@ class ResourceContact extends CachedIndexedModel
             $where = "WHERE resource_id = ".$params["resource_id"];
         }
         
-        $sql = "SELECT rc.*, c.*, t.name as contact_type, r.name as rank_type from resource_contact rc ".
-                "join contact c on rc.contact_id = c.id ".
-                "join contact_type t on rc.contact_type_id = t.id ".
-                "join contact_rank r on rc.contact_rank_id = r.id $where";
+        //WARNING - if there are multiple DNs for a contact_id, it will list duplicate records for each DN
+        $sql = "SELECT dn.dn_string as dn,  rc.*, c.*, t.name as contact_type, r.name as rank_type ".
+                "FROM resource_contact rc ".
+                "JOIN contact c ON rc.contact_id = c.id ".
+                "JOIN contact_type t ON rc.contact_type_id = t.id ".
+                "JOIN contact_rank r ON rc.contact_rank_id = r.id ".
+                "JOIN dn ON c.id = dn.contact_id ".
+                $where;
+        slog($sql);
         return $sql;
     }
     public function key() { return "resource_id"; }

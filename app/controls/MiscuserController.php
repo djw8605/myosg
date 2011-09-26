@@ -22,11 +22,11 @@ class MiscuserController extends MiscController
 
     public function load()
     {
-	if(user()->isGuest()) {
-		$this->view->detail = "This page is only for registered OIM user";
-		$this->render("error/404", null, true);
-		return;
-	}
+        if(user()->isGuest()) {
+                $this->view->detail = "This page is only for registered OIM user";
+                $this->render("error/404", null, true);
+                return;
+        }
         parent::load();
 
         $model = new Contact();

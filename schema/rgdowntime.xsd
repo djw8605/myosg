@@ -21,7 +21,6 @@
             <xsd:element name="EndTime" type="xsd:string" />
             <xsd:element name="Class" type="xsd:string" />
             <xsd:element name="Severity" type="xsd:string" />
-            <xsd:element name="DN" type="xsd:string" />
             <xsd:element name="Services">
               <xsd:complexType>
                 <xsd:sequence>

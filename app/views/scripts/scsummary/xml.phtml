@@ -17,19 +17,6 @@ foreach($this->scs as $sc_id=>$sc) {
     echo "<LongName>".htmlsafe($sc->long_name)."</LongName>";
     echo "<Community>".htmlsafe($sc->community)."</Community>";
 
-/*
-    if(count($sc->contact) > 0) {
-        echo "<PrimaryOperationsContact>";
-        $contact = $sc->contact[0];
-        echo "<Name>".htmlsafe($contact->name)."</Name>";
-        if(!user()->isGuest()) {
-            echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
-            echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
-            echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
-        }
-        echo "</PrimaryOperationsContact>";
-    }
-*/
     if($sc->active == 1) {
         echo "<Active>True</Active>";
     } else {
@@ -55,6 +42,7 @@ foreach($this->scs as $sc_id=>$sc) {
                         echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
                         echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
                         echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
+                        echo "<DN>".htmlsafe($contact->dn)."</DN>";
                     }
                     echo "</Contact>";
                 }

@@ -28,8 +28,7 @@ function outputStatus($info, $vomses) {
             $out .= "<Status>".$status."</Status>";
             $server_url = $voms->VOMSServerURL;
             $out .= "<URL>".htmlsafe($server_url)."</URL>";
-            $note = $voms->Note;
-            $out .= "<Description>".$note."</Description>";
+            $out .= "<Description>".htmlsafe($voms->Note)."</Description>";
             $out .= "</VOMS>";
         }
     }

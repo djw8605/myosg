@@ -78,6 +78,7 @@ foreach($this->vos as $vo_id=>$vo) {
                         echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
                         echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
                         echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
+                        echo "<DN>".htmlsafe($contact->dn)."</DN>";
                     }
                     echo "</Contact>";
                 }
@@ -113,6 +114,7 @@ foreach($this->vos as $vo_id=>$vo) {
                         echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
                         echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
                         echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
+                        echo "<DN>".htmlsafe($contact->dn)."</DN>";
                     }
                     echo "</Contact>";
                 }

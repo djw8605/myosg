@@ -45,7 +45,7 @@ foreach($this->contacts as $cid => $contact) {
 
     //echo $contact->timezone;
     if(!user()->isGuest()) {
-        echo "<td width=\"40%\">";
+        echo "<td width=\"60%\">";
         echo formatEmail($contact->primary_email);
         echo formatEmail($contact->secondary_email);
         echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);
@@ -53,33 +53,7 @@ foreach($this->contacts as $cid => $contact) {
         if(trim($contact->im) != "") {
             echo "<b>IM</b> ".htmlsafe($contact->im);
         }
-
-        /*
-        //address
-        $add = "";
-        if(trim($contact->address_line_1) != "") {
-            $add .= htmlsafe($contact->address_line_1)."<br/>";
-        }
-        if(trim($contact->address_line_2) != "") {
-            $add .= htmlsafe($contact->address_line_2)."<br/>";
-        }
-        if(trim($contact->city) != "") {
-            $add .= $contact->city." ";
-        }
-        if(trim($contact->state) != "") {
-            $add .= $contact->state." ";
-        }
-        if(trim($contact->zipcode) != "") {
-            $add .= $contact->zipcode."<br/>";
-        }
-        if(trim($contact->country) != "") {
-            $add .= $contact->country."<br/>";
-        }
-        if(trim($add) != "") {
-            echo "<p class=\"address\">$add</p>";
-        }
-        */
-
+        echo "<p>".htmlsafe($contact->dn)."</p>";
         if(trim($contact->contact_preference) != "") {
             echo "<p class=\"contact_preference\">".htmlsafe($contact->contact_preference)."</p>";
         }

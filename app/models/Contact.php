@@ -28,7 +28,7 @@ class Contact extends CachedIndexedModel
         }
         if(isset($params["ids"])) {
             if(count($params["ids"]) > 0) {
-                $where .= " and id in (";
+                $where .= " and contact.id in (";
                 $first = true;
                 foreach($params["ids"] as $id) {
                     if($first) {
@@ -43,7 +43,7 @@ class Contact extends CachedIndexedModel
                 $where .= " and 1 = 0"; //hide everything..
             }
         }
-        return "select * from contact $where ORDER BY name";
+        return "select contact.*,dn.dn_string as dn from contact join dn on dn.contact_id = contact.id $where ORDER BY name";
     }
     public function key() { return "id"; }
 }
