@@ -18,6 +18,7 @@
                     <xsd:element name="PrimaryPhone" type="xsd:string" />
                     <xsd:element name="SecondaryPhone" type="xsd:string" />
                     <xsd:element name="IM" type="xsd:string" />
+                    <xsd:element name="DN" type="xsd:string" />
                     <xsd:element name="ContactPreference" type="xsd:string" />
                   </xsd:sequence>
                 </xsd:complexType>

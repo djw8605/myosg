@@ -16,6 +16,7 @@ foreach($this->contacts as $cid => $contact) {
         echo "<PrimaryPhone>".htmlsafe($contact->primary_phone)."</PrimaryPhone>";
         echo "<SecondaryPhone>".htmlsafe($contact->secondary_phone)."</SecondaryPhone>";
         echo "<IM>".htmlsafe($contact->im)."</IM>";
+        echo "<DN>".htmlsafe($contact->dn)."</DN>";
         echo "<ContactPreference>".htmlsafe($contact->contact_preference)."</ContactPreference>";
         echo "</ContactInformation>";
     }
