@@ -141,7 +141,21 @@ class RgstatushistoryController extends RgController
         if($metric_detail_model === null) $metric_detail_model = new MetricDetail();
         $detail = $metric_detail_model->get(array("id"=>$id)); 
         if($detail == null) return null;
-        return $detail[0];
+
+        //gratia truncation issue work around - until we upgrade our gratia collector
+        //pull from XMLDetail table if the detail is not available
+        $a_detail = $detail[0];
+        if(strlen($a_detail->detail) == 255) {
+            $full_detail = $metric_detail_model->getXmlDetail($id);
+            if($full_detail != null) {
+                //unwrap <DetailsData> tags
+                $a_detail->detail = substr($full_detail, 13, strlen($full_detail) - 13 - 14);
+            } else {
+                //xml detail not available... just use the original (truncated) detail
+            }
+        }
+
+        return $a_detail;
     }
 
     private function generateRuler($start_time, $end_time)
