@@ -44,7 +44,7 @@ class User
         $sql = "select p.* from dn c left join contact p on
                         (c.contact_id = p.id)
                     where
-                        p.disable = 0 and dn_string = '$dn'";
+                        p.disable = 0 and dn_string = \"$dn\"";
         $row = db("oim")->fetchRow($sql);
         if($row) {
             $this->person_id = $row->id;
