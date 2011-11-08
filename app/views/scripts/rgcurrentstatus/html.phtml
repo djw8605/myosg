@@ -158,14 +158,14 @@ function outputMetricInfo($metric, $timestamp)
             if(isset($matches[0])) {
                 $service_uri_domain = $matches[0];
             } else {
-                wlog("strange service_uri given".$service_uri);
+                //wlog("strange service_uri given".$service_uri);
                 $service_uri_domain = "unknown";
             }
             preg_match("/[^\.\/]+\.[^\.\/]+$/", $gathered_at, $matches);
             if(isset($matches[0])) {
                 $gathered_at_domain = $matches[0];
             } else {
-                wlog("strange gathered_at given: ".$gathered_at);
+                //wlog("strange gathered_at given: ".$gathered_at);
                 $gathered_at_domain = "unknown";
             }
             if($service_uri_domain != $gathered_at_domain) {
