@@ -111,6 +111,16 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                           "<Name>".$this->servicetypes[$service->service_id][0]->name."</Name>".
                           "<Description>".htmlsafe($this->servicetypes[$service->service_id][0]->description)."</Description>";
 
+                        //I really don't want user to use this (why do we even have this?)
+                        //echo "<DefaultPort>".$service->port."</DefaultPort>";
+
+                        echo "<Details>";
+                        foreach($service->details as $key=>$value) {
+                            echo "<".htmlsafe($key).">".htmlsafe($value)."</".htmlsafe($key).">";
+                        }
+                        echo "</Details>";
+
+/*
                         echo "<ServiceUri>";
                         if ($service->endpoint_override != "") {
                           echo $service->endpoint_override;
@@ -135,6 +145,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                             echo "False";
                         }
                         echo "</CentralService>";
+*/
                  
                         echo "</Service>";
                     } else {

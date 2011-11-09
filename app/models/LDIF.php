@@ -23,9 +23,14 @@ class LDIF
         if(!file_exists(config()->gip_summary)) {
             throw new exception("Can't find the gip summary xml: ".config()->gip_summary);
         }
-        $cache_xml = file_get_contents(config()->gip_summary);
-        $gip = new SimpleXMLElement($cache_xml);
+        if(file_exists(config()->gip_summary) && filesize(config()->gip_summary) > 0) {
+            $cache_xml = file_get_contents(config()->gip_summary);
+            $gip = new SimpleXMLElement($cache_xml);
+        } else {
+            elog("Can't find the valid gip summary xml: ".config()->gip_summary);
+        }
 
+/*
         //load ITB gip summary (and merge!)
         if(file_exists(config()->gip_summary_itb)) {
             $cache_xml_itb = file_get_contents(config()->gip_summary_itb);
@@ -33,7 +38,7 @@ class LDIF
         } else {
             elog("Can't find the gip summary xml (ignoring): ".config()->gip_summary_itb);
         }
-
+*/
         $ret = array();
         
         //parse it out

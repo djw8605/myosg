@@ -7,14 +7,18 @@ HOSTS="https://soichi.grid.iu.edu/myosg"
 
 SCHEMA="../schema"
 
+echo "Testing rgsummary"
+url="$HOST/rgsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F20%2F2009&end_type=now&end_date=08%2F20%2F2009&all_resources=on&gridtype=on&gridtype_1=on&gridtype_2=on&gipstatus=on&gipstatus_OK=on&gipstatus_FAIL=on&gipstatus_UNKNOWN=on&status=on&status_1=on&status_2=on&status_3=on&status_4=on&status_99=on&service=on&service_4=on&service_1=on&service_5=on&service_2=on&service_3=on&service_109=on&vosup=on&vosup_25=on&voown=on&voown_35=on&voown_1=on&has_status=on&active=on&active_value=1&disable=on&disable_value=0&has_wlcg=on&summary_attrs_showticket=on"
+wget -O /tmp/rgsummary.raw.xml $url 2> /dev/null
+xmllint --format /tmp/rgsummary.raw.xml > /tmp/rgsummary.xml
+xmllint --noout --schema $SCHEMA/rgsummary.xsd /tmp/rgsummary.xml
+
 echo "Testing MISC User"
 url="$HOSTS/miscuser/xml?datasource=user"
 #curl $url --cacert /home/hayashis/.globus/DOEGridsCA1.crt --cert /home/hayashis/.globus/certkey.pem -o /tmp/miscuser.raw.xml
 curl $url  --cert /home/hayashis/.globus/certkey.pem -o /tmp/miscuser.raw.xml
 xmllint --format /tmp/miscuser.raw.xml > /tmp/miscuser.xml
 xmllint --noout --schema $SCHEMA/miscuser.xsd /tmp/miscuser.xml
-
-exit
 
 echo "Testing VO VOMSES Status"
 url="$HOST/vovomsstatus/xml?datasource=vovomsstatus&start_type=7daysago&start_date=09%2F30%2F2009&end_type=now&end_date=09%2F30%2F2009&all_vos=on&active_value=1"
@@ -33,18 +37,6 @@ url="$HOST/rgcurrentstatus/xml?datasource=currentstatus&summary_attrs_showservic
 wget -O /tmp/rgcurrentstatus.raw.xml $url 2> /dev/null
 xmllint --format /tmp/rgcurrentstatus.raw.xml > /tmp/rgcurrentstatus.xml
 xmllint --noout --schema $SCHEMA/rgcurrentstatus.xsd /tmp/rgcurrentstatus.xml
-
-echo "Testing rgsummary"
-url="$HOST/rgsummary/xml?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&gip_status_attrs_showfqdn=on&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&start_date=08%2F20%2F2009&end_type=now&end_date=08%2F20%2F2009&all_resources=on&gridtype=on&gridtype_1=on&gridtype_2=on&gipstatus=on&gipstatus_OK=on&gipstatus_FAIL=on&gipstatus_UNKNOWN=on&status=on&status_1=on&status_2=on&status_3=on&status_4=on&status_99=on&service=on&service_4=on&service_1=on&service_5=on&service_2=on&service_3=on&service_109=on&vosup=on&vosup_25=on&voown=on&voown_35=on&voown_1=on&has_status=on&active=on&active_value=1&disable=on&disable_value=0&has_wlcg=on&summary_attrs_showticket=on"
-wget -O /tmp/rgsummary.raw.xml $url 2> /dev/null
-xmllint --format /tmp/rgsummary.raw.xml > /tmp/rgsummary.xml
-xmllint --noout --schema $SCHEMA/rgsummary.xsd /tmp/rgsummary.xml
-
-echo "RG BDII"
-url="$HOST/rgbdii/xml?datasource=bdii&summary_attrs_showgipstatus=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&bdii_attrs_showversion=on&bdii_attrs_showstat=on&start_type=7daysago&start_date=07/30/2010&end_type=now&end_date=07/30/2010&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1"
-wget -O /tmp/rgbdii.raw.xml $url 2> /dev/null
-xmllint --format /tmp/rgbdii.raw.xml > /tmp/rgbdii.xml
-xmllint --noout --schema $SCHEMA/rgbdii.xsd /tmp/rgbdii.xml
 
 echo "Testing MISC Status"
 url="$HOST/miscstatus/xml?datasource=status"

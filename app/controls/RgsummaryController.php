@@ -38,6 +38,22 @@ class RgsummaryController extends RgController
             $this->view->servicetypes = $servicetype_model->getindex();
             $resourceservice_model = new ServiceByResourceID();
             $this->view->resource_services = $resourceservice_model->getindex();
+
+
+            //load details (all of them for now..) and attach it to resource_services
+            $detail_model = new ResourceServiceDetail();
+            $resource_service_details = $detail_model->get();
+            foreach($this->view->resource_services as $rid=>$services) {
+                foreach($services as $service) {
+                    $service->details = array();
+                    //search for details for this service
+                    foreach($resource_service_details as $detail) {
+                        if($detail->resource_id == $rid && $detail->service_id == $service->service_id) {
+                            $service->details[$detail->key] = $detail->value;
+                        }
+                    }
+                }
+            }
         }
         if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
             $model = new LatestResourceStatus();

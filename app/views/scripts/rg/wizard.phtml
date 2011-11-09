@@ -195,6 +195,7 @@
             }
             echo fblist("service", "Provides following Services", $kv);
 
+/*
             $kv = array();
             $kv[0] = "Non-Central Service";
             $kv[1] = "Central Service";
@@ -203,7 +204,8 @@
             $kv[0] = "Non-Hidden Service";
             $kv[1] = "Hidden Service";
             echo radiolist("service_hidden", "Provides Service with hidden flag of", $kv, 0);
- 
+*/ 
+
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();

@@ -175,7 +175,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     if(isset($this->servicetypes[$service->service_id])) {
 
                         $service_info = $this->servicetypes[$service->service_id][0];
-
+/*
                         echo "<span class=\"sidenote fqdn\">";
                         if ($service->endpoint_override != "") {
                             //bold this since it's not default
@@ -191,9 +191,17 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                         if($service->hidden == 1) {
                             echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
                         }
-
-
-                        echo "<b>".htmlsafe($service_info->name)."</b>";
+*/
+                        echo "<span style=\"float: left; width: 25%\"><b>".htmlsafe($service_info->name)."</b></span>";
+                        if(count($service->details) > 0) {
+                            echo "<table style=\"width: 75%;\" class=\"summary_subtable\">";
+                            foreach($service->details as $key=>$value) {
+                                echo "<tr><th>".htmlsafe($key)."</th><td>".htmlsafe($value)."</td></tr>";
+                            }
+                            echo "</table>";
+                        } else {
+                            echo "<br>";
+                        }
 
                     } else {
                         echo "(Unknown Service ID:".$service->service_id.")";

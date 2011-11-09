@@ -138,7 +138,7 @@ class common_config
         
         //gip validation
         $this->gip_summary = "/usr/local/gip-validator/var/xml/result.xml"; 
-        $this->gip_summary_itb = "/usr/local/gip-validator/var/xml/result-itb.xml"; 
+        //$this->gip_summary_itb = "/usr/local/gip-validator/var/xml/result-itb.xml"; 
         $this->gip_wlcg_status = "/usr/local/gip-validator/var/xml/top_level_wlcg_bdii_monitor.xml";
 
         //bdii raw files
