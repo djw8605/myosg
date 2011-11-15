@@ -142,8 +142,9 @@ class common_config
         $this->gip_wlcg_status = "/usr/local/gip-validator/var/xml/top_level_wlcg_bdii_monitor.xml";
 
         //bdii raw files
-        $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml";
-        $this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB";
+        $this->cemonbdii_url = "http://is.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB"; //somereason, I need OSG-ITB to pull both prod&itb data
+
+        //$this->cemonbdii_itb_url = "http://is-itb.grid.iu.edu/cgi-bin/status.cgi?format=xml&grid_type=OSG-ITB";
 
         //VOMS stauts XML
         $this->voms_xml = "/usr/local/voms-monitor/var/xml/voms-monitor.xml";

@@ -100,6 +100,7 @@ class LDIF
         }
         $cemonbdii = new SimpleXMLElement($cemonbdii_content);
 
+/*
         $c = new Cache("/tmp/myosg.bdii-itb");
         if($c->isFresh($seconds)) { 
             $cemonbdii_itb_content = $c->get();
@@ -117,6 +118,7 @@ class LDIF
         } catch(exception $e) {
             elog("failed to parse for some reason... maybe itb is not available?");
         }
+*/
         return $cemonbdii;
     }
 
