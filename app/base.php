@@ -100,3 +100,9 @@ function signedmail($to, $subject, $body, $header = "")
     return mail($to, $subject, "", $header);
 }
 
+function fix_eol()
+{
+    foreach ($_POST as $key => $input_arr) {
+        $_POST[$key] = str_replace(array("\r\n", "\r"), "\n", $input_arr);
+    }
+}

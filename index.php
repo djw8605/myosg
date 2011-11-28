@@ -37,6 +37,7 @@ require_once("config.php");
 require_once("app/views/helper.php");
 require_once("app/base.php");
 
+
 try {
     Zend_Session::start();
 
@@ -48,6 +49,7 @@ try {
     ini_set('default_socket_timeout', 120);
 
     remove_quotes();
+    fix_eol();
     setup_logs();
     greet();
 
