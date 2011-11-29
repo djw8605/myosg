@@ -1,4 +1,4 @@
-<?
+<?php
 foreach($this->resources as $rid=>$record) {
     $testtime = agoCalculation($record["testtime"]);
     $resource_name = $record["name"];
@@ -27,15 +27,15 @@ foreach($this->resources as $rid=>$record) {
     }
 ?>
     <div class="resource h4 round">
-    <?=$resource_name?>
+    <?php echo $resource_name?>
 
-<?  if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
+<?php  if (isset($_REQUEST["gip_status_attrs_showfqdn"])) {
 	 echo "<br/><span class=\"fqdn\">$resource_fqdn</span>";
 } ?>
 
     </div>
 
-<?
+<?php
     if(!uwa()) {
         echo "<div style='float: right; background-color: #eee; padding: 5px; width: 220px; margin-bottom: 5px;'>";
         if(isset($rawdata["cemon_raw_data"])) {
@@ -72,12 +72,12 @@ foreach($this->resources as $rid=>$record) {
         echo "</div>";
     }
 ?>
-    <div class="status_<?=$overall?>">
-    <p><?=$overall_detail?></p>
+    <div class="status_<?php echo $overall?>">
+    <p><?php echo $overall_detail?></p>
     </div>
     
     <div class="indent">
-    <?
+    <?php
     if($testtime !== null) {
         echo "<div>Tests performed $testtime ago</div>";
     }

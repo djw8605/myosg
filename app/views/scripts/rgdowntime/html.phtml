@@ -1,4 +1,4 @@
-<? if(isset($_REQUEST["downtime_attrs_showpast"])) {
+<?php if(isset($_REQUEST["downtime_attrs_showpast"])) {
     if($_REQUEST["downtime_attrs_showpast"] != "") { ?>
         <div class="downtime_group round">
         <span class="h3">Past Downtimes</span>
@@ -12,14 +12,14 @@
 <div class="downtime_group round">
 <span class="h3">Current Downtimes</span>
 </div>
-<?
+<?php
 showdowntimes($this->current_downtimes);
 ?>
 
 <div class="downtime_group round">
 <span class="h3">Future Downtimes</span>
 </div>
-<?
+<?php
 showdowntimes($this->future_downtimes);
 
 function showdowntimes($downtimes) {

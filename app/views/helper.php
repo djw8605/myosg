@@ -78,22 +78,22 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
             $detail_style .= " hidden";
         }
         ?>
-        <div id='show_<?=$divid?>' class='<?=$showbutton_style?>'><img src='<?=fullbase()?>/images/plusbutton.gif'/> <?=$show?></div>
-        <div id='hide_<?=$divid?>' class='<?=$hidebutton_style?>'><img src='<?=fullbase()?>/images/minusbutton.gif'/> <?=$hide?></div>
-        <div class='<?=$detail_style?>' id='detail_<?=$divid?>'><?=$content?></div>
+        <div id='show_<?php echo $divid?>' class='<?php echo $showbutton_style?>'><img src='<?php echo fullbase()?>/images/plusbutton.gif'/> <?php echo $show?></div>
+        <div id='hide_<?php echo $divid?>' class='<?php echo $hidebutton_style?>'><img src='<?php echo fullbase()?>/images/minusbutton.gif'/> <?php echo $hide?></div>
+        <div class='<?php echo $detail_style?>' id='detail_<?php echo $divid?>'><?php echo $content?></div>
         <script type='text/javascript'>
-        $('#show_<?=$divid?>').click(function() {
-            $('#detail_<?=$divid?>').slideDown("normal");
-            $('#show_<?=$divid?>').hide();
-            $('#hide_<?=$divid?>').show();
+        $('#show_<?php echo $divid?>').click(function() {
+            $('#detail_<?php echo $divid?>').slideDown("normal");
+            $('#show_<?php echo $divid?>').hide();
+            $('#hide_<?php echo $divid?>').show();
         });
-        $('#hide_<?=$divid?>').click(function() {
-            $('#detail_<?=$divid?>').slideUp();
-            $('#hide_<?=$divid?>').hide();
-            $('#show_<?=$divid?>').show();
+        $('#hide_<?php echo $divid?>').click(function() {
+            $('#detail_<?php echo $divid?>').slideUp();
+            $('#hide_<?php echo $divid?>').hide();
+            $('#show_<?php echo $divid?>').show();
         });
         </script>
-        <?
+        <?php
     }
 
     $content = ob_get_contents();
@@ -122,8 +122,8 @@ function outputSelectBox2($field_id, $kv)
 
     $g_filters[] = $field_id;
 ?>
-    <select name="<?=$field_id?>">
-<?
+    <select name="<?php echo $field_id?>">
+<?php
     $current_value = @$_REQUEST[$field_id];
     foreach($kv as $value=>$name) {
         $selected = "";
@@ -134,7 +134,7 @@ function outputSelectBox2($field_id, $kv)
     }
 ?>
     </select>
-<?
+<?php
 }
 
 function outputSelectBox($field_id, $field_name, $model, $value_field, $name_field)
@@ -145,11 +145,11 @@ function outputSelectBox($field_id, $field_name, $model, $value_field, $name_fie
     $g_filters[] = $field_id;
 
 ?>
-    <?=$field_name?>:
+    <?php echo $field_name?>:
     <p>
-    <select id="filter_<?=$field_id?>" onchange="query.<?=$field_id?>=$(this).val(); document.location='<?=fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
+    <select id="filter_<?php echo $field_id?>" onchange="query.<?php echo $field_id?>=$(this).val(); document.location='<?php echo fullbase()."/$g_pagename?";?>'+jQuery.param(query);">
     <option value="">(All)</option>
-    <?
+    <?php
     $rows = $model->get();
     $current_value = @$_REQUEST[$field_id];
     foreach($rows as $row) {
@@ -168,7 +168,7 @@ function outputSelectBox($field_id, $field_name, $model, $value_field, $name_fie
     ?>
     </select>
     </p>
-<?
+<?php
 }
 
 function outputCheckboxList($prefix, $items)
@@ -215,8 +215,8 @@ function outputClearFilterButton()
     }
 
     ?>
-    <p><a href="#" onclick="document.location='<?=fullbase()."/$g_pagename$cleared_q";?>';">Clear All Filters</a></p>
-    <?
+    <p><a href="#" onclick="document.location='<?php echo fullbase()."/$g_pagename$cleared_q";?>';">Clear All Filters</a></p>
+    <?php
 }
 
 function checklist($id, $title, $kv)
@@ -228,10 +228,10 @@ function checklist($id, $title, $kv)
         ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            $("#<?=$id?>__list").show();
+            $("#<?php $id?>__list").show();
         });
         </script>
-        <?
+        <?php
     }
     $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 
@@ -268,10 +268,10 @@ function fblist($id, $title, $kv)
         ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            $("#<?=$id?>__list").show();
+            $("#<?php echo $id?>__list").show();
         });
         </script>
-        <?
+        <?php
     }
     $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 
@@ -340,10 +340,10 @@ function radiolist($id, $title, $kv, $default)
         ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            $("#<?=$id?>__list").show();
+            $("#<?php $id?>__list").show();
         });
         </script>
-        <?
+        <?php
     }
     $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 

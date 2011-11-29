@@ -46,7 +46,7 @@ class MiscstatusController extends MiscController
                 $this->getStatus(255, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Gratia collector
                 $this->getStatus(265, "https://twiki.grid.iu.edu/bin/view/Operations/GOCTicketServiceLevelAgreement"), //GOC Ticket
                 //array("name"=>"WLCG Comparison Reports", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/RSVReportsServiceLevelAgreement"),
-                $this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
+                //$this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
                 $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki
                 $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //DOCDB
                 $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage

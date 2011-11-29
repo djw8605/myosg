@@ -802,6 +802,7 @@ if (false) { //cass_exists('PEAR_Error')) {
     }
 
 }
+/*
     function json_decode($content, $assoc=false){
                 if ( $assoc ){
                     $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
@@ -810,6 +811,7 @@ if (false) { //cass_exists('PEAR_Error')) {
                 }
         return $json->decode($content);
     }
+*/
     
 ?>
 

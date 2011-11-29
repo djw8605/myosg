@@ -119,15 +119,15 @@ abstract class ControllerBase extends Zend_Controller_Action
   <Content type="html">
 <![CDATA[     
 <style type="text/css">
-    <?include("css/mobile.css.php");?>
+    <?php include("css/mobile.css.php");?>
 </style>
 <div style="height: 200px; overflow-y: scroll">
-    <?echo file_get_contents(fullbase()."/".pagename()."/html?uwa=true&".$_SERVER["QUERY_STRING"]);?>
+    <?php echo file_get_contents(fullbase()."/".pagename()."/html?uwa=true&".$_SERVER["QUERY_STRING"]);?>
 </div>
 ]]>
   </Content>
 </Module> 
-<?
+<?php
         $this->render("none", null, true);
     }
 
