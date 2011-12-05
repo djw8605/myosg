@@ -80,36 +80,6 @@ class common_config
         $this->metric_considered_old = 3600*24;
 
         $this->db_type = "Pdo_Mysql";
-/*
-        $this->rsvextra_dbparam = array(
-            'charset' => 'UTF8',
-            'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
-            'port'     => 49152,
-            'host'     => "localhost",
-            'username' => "myosg",
-            'password' => "somepass",
-            'dbname'   => "rsvprocess"
-        );
-
-        $this->oim_dbparam = array(
-            'charset' => 'UTF8',
-            'unix_socket'     => '/usr/local/rsv-gratia-collector-1.0/vdt-app-data/mysql5/var/mysql.sock',
-            'port'     => 49152,
-            'host'     => "localhost",
-            'username' => "myosg",
-            'password' => "somepass",
-            'dbname'   => "oim"
-        );
-
-        $this->gratia_dbparam = array(
-            'charset' => 'UTF8',
-            'port'     => 49152,
-            'host'     => "dahmer.uits.indiana.edu",
-            'username' => "myosg",
-            'password' => "somepass",
-            'dbname'   => "gratia"
-        );
-*/
 
         //first page to load when user first visit the page
         //$this->initial_page = "home_start"; //needs to be a menu ID
