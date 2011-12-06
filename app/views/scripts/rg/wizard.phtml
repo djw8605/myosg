@@ -94,6 +94,11 @@
             <?=$this->render("rg/wizard__daterange.phtml")?>
         </div>
 
+        <div id="gratia_notes" class="attrs indent hidden">
+            <p class="info">This page uses GratiaWeb service (<a target="_blank" href="http://gratiaweb.grid.iu.edu">http://gratiaweb.grid.iu.edu</a>) to render graphs. You can also use
+            <a target="_blank" href="http://gratia-osg-prod-reports.opensciencegrid.org/gratia-reporting/">Gratia Reporting</a> service at Fermilab for more detailed graphs.</p>
+        </div>
+
         </p>
 
     </div>
@@ -277,6 +282,11 @@ function showhide_attrs(show_speed)
             v == "se" ||
             v == "ce") {
             $("#_daterange_attrs").show(show_speed);
+        }
+        if( v == "account" ||
+            v == "se" ||
+            v == "ce" ) {
+            $("#gratia_notes").show(show_speed);
         }
     } else {
         $("#resource_area").hide();
