@@ -53,7 +53,6 @@ foreach($this->rgs as $rgid=>$rg) {
             $downtime_note = $service->DowntimeNote;
 
             echo "<h3>".$service->ServiceName." Service Status</h3>"; 
-            //echo "<span class=\"note\">".$service->ServiceDescription." Service Status</span>"; 
             echo "<div class=\"status_$service_status\">";
             if(isset($service->DowntimeNote)) {
                 //downtime info is bit complicated
@@ -74,50 +73,59 @@ foreach($this->rgs as $rgid=>$rg) {
                 echo "</div>";
             } else {
                 //normal status
-                echo $note;
+                echo "<p>$note</p>";
             }
 
             //critical metrics
-            $out = "";
+            $critical_outs = array();
             foreach($service->CriticalMetrics[0] as $metric) {
-                $out .= outputMetricInfo($metric, $timestamp);
+                $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $timestamp);
             }
-            if(!isset($_REQUEST["uwa"])) {
-                if($out != "") {
-                    $title = "<span class=\"h3\">Critical Metrics</span>";
-                    echo outputToggle($title, $title, $out, true);
-                }
-            } else {
-                echo $out;
+            
+            echo "<div>";
+            if(count($critical_outs) != 0) {
+                ksort($critical_outs);
+                echo "<p><span class=\"h3\">Critical Metrics</span></p>";
+                foreach($critical_outs as $out) {
+                    echo $out;
+                } 
             }
+            echo "</div><br>";
 
             //non-critical metrics
             if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
                 $non_critical_metrics = $service->NonCriticalMetrics[0];
-                $out = "";
+                $non_critical_outs = array();
                 foreach($non_critical_metrics as $metric) {
                     if($metric->Detail != "") {
-                        $out .= outputMetricInfo($metric, $timestamp);
+                        $non_critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $timestamp, true);
                     }
                 }
-                if($out != "") {
-                    $title = "<span class=\"h3\">Non-Critical Metrics</span>";
-                    echo outputToggle($title, $title, $out);
+                echo "<div>";
+                if(count($non_critical_outs) != 0) {
+                    ksort($non_critical_outs);
+                    echo "<p><span class=\"h3\">Non-Critical Metrics</span></p>";
+                    foreach($non_critical_outs as $out) {
+                        echo $out;
+                    }
                 }
+                echo "</div>";
             }
-            echo "</div>";
+
+            echo "</div>"; //status_
         }
         echo "</div>";//indent
     }
 }
 
 
-function outputMetricInfo($metric, $timestamp)
+function outputMetricInfo($metric, $timestamp, $ignore_expired = false)
 {
     $out = "";
 
     $freshfor = $metric->MetricFreshFor;
     $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+    if($expired && $ignore_expired) return "";
     $reported = (int)($metric->MetricDataID[0]) != 0;
     $detail = $metric->Detail;
     $service_uri = $metric->ServiceURI;

@@ -37,6 +37,7 @@ require_once("config.php");
 require_once("app/views/helper.php");
 require_once("app/base.php");
 
+date_default_timezone_set("UTC"); #overridden later if user specify his
 
 try {
     Zend_Session::start();
@@ -55,7 +56,6 @@ try {
 
     cert_authenticate();
     if(!date_default_timezone_set(user()->getTimeZone())) {
-        date_default_timezone_set("UTC");
         addMessage("Your timezone '".user()->getTimeZone()."' is not valid. Please try using location based timezone such as 'America/Chicago'. Reverting to UTC.");
     }
 
