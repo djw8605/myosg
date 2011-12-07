@@ -79,7 +79,9 @@ foreach($this->rgs as $rgid=>$rg) {
             //critical metrics
             $critical_outs = array();
             foreach($service->CriticalMetrics[0] as $metric) {
-                $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $timestamp);
+                $freshfor = $metric->MetricFreshFor;
+                $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+                $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
             }
             
             echo "<div>";
@@ -96,9 +98,16 @@ foreach($this->rgs as $rgid=>$rg) {
             if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
                 $non_critical_metrics = $service->NonCriticalMetrics[0];
                 $non_critical_outs = array();
+                $non_critical_expired_outs = array();
                 foreach($non_critical_metrics as $metric) {
                     if($metric->Detail != "") {
-                        $non_critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $timestamp, true);
+                        $freshfor = $metric->MetricFreshFor;
+                        $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+                        if($expired) {
+                            $non_critical_expired_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                        } else {
+                            $non_critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                        }
                     }
                 }
                 echo "<div>";
@@ -108,6 +117,16 @@ foreach($this->rgs as $rgid=>$rg) {
                     foreach($non_critical_outs as $out) {
                         echo $out;
                     }
+                }
+                if(count($non_critical_expired_outs) != 0) {
+                    ksort($non_critical_expired_outs);
+                    $detail = "";
+                    foreach($non_critical_expired_outs as $out) {
+                        $detail .= $out;
+                    }
+                    echo outputToggle(
+                        "<span class=\"h3\">Expired Non-Critical Metrics</span>", 
+                        "<span class=\"h3\">Expired Non-Critical Metrics</span>", $detail);
                 }
                 echo "</div>";
             }
@@ -119,13 +138,10 @@ foreach($this->rgs as $rgid=>$rg) {
 }
 
 
-function outputMetricInfo($metric, $timestamp, $ignore_expired = false)
+function outputMetricInfo($metric, $expired)
 {
     $out = "";
 
-    $freshfor = $metric->MetricFreshFor;
-    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
-    if($expired && $ignore_expired) return "";
     $reported = (int)($metric->MetricDataID[0]) != 0;
     $detail = $metric->Detail;
     $service_uri = $metric->ServiceURI;
