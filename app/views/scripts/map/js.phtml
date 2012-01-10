@@ -195,7 +195,7 @@ foreach($this->sites as $site) {
         if(isset($_REQUEST["map_attrs_shownr"])) {
             //show as "non reporting"
             $status = "nr";
-            echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
+            echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"".addslashes($site->name)."\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '".addslashes($wrap_html)."'));\n";
             echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
         }
     } else {
@@ -210,7 +210,7 @@ foreach($this->sites as $site) {
         //show marker
         if($site->latitude == null) $site->latitude = 0;
         if($site->longitude == null) $site->longitude = 0;
-        echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"$site->name\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '$wrap_html'));\n";
+        echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"".addslashes($site->name)."\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '".addslashes($wrap_html)."'));\n";
         echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
     }
 }
