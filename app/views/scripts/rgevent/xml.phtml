@@ -1,0 +1,117 @@
+<?=$this->header?>
+<CurrentStatus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgcurrentstatus.xsd">
+<?
+foreach($this->rgs as $rgid=>$rg) {
+
+    //show resource group header
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<ResourceGroup>";
+    echo "<GroupType>".$resource_group->grid_type_description."</GroupType>";
+    echo "<GroupID>$rgid</GroupID>";
+    echo "<GroupName>".$resource_group->name."</GroupName>";
+
+    foreach($rg as $rid=>$resource) {
+        $resource_name = $resource->name;
+        $resource_fqdn = $resource->fqdn;
+
+        if(isset($this->cache[$rid])) {
+            echo "<Resource>";
+            $cache = $this->cache[$rid];
+            $status = $cache->Status[0];
+            $note = $cache->Note[0];
+
+            ?>
+            <Status><?=$status?></Status>
+            <ResourceName><?=$resource_name?></ResourceName>
+            <ID><?=$rid?></ID>
+            <Fqdn><?=$resource_fqdn?></Fqdn>
+            <Note><?=htmlsafe($note)?></Note>
+            <?
+
+            if(isset($cache->Services[0])) {
+                $services = $cache->Services[0];
+                $timestamp = (int)$cache->Timestamp[0];
+                foreach($services as $service) {
+                    echo "<Service>";
+                    $service_status = $service->Status;
+                    $note = $service->Note;
+
+                    echo "<Name>".$service->ServiceName."</Name>";
+                    echo "<Description>".$service->ServiceDescription." Service Status</Description>";
+                    echo "<Status>$service_status</Status>";
+                    echo "<Note>".htmlsafe($note)."</Note>";
+
+                    //critical metrics
+                    $out = "";
+                    foreach($service->CriticalMetrics[0] as $metric) {
+                        $out .= outputMetricInfo($metric, $timestamp);
+                    }
+                    echo "<CriticalMetrics>";
+                    echo $out;
+                    echo "</CriticalMetrics>";
+
+                    //non-critical metrics
+                    if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                        $non_critical_metrics = $service->NonCriticalMetrics[0];
+                        $out = "";
+                        foreach($non_critical_metrics as $metric) {
+                            if($metric->Detail != "") {
+                                $out .= outputMetricInfo($metric, $timestamp);
+                            }
+                        }
+                        echo "<NonCriticalMetrics>$out</NonCriticalMetrics>";
+                    }
+                    echo "</Service>";
+                }
+            }
+            echo "</Resource>";
+        }
+    }
+    echo "</ResourceGroup>";
+}
+
+function outputMetricInfo($metric, $timestamp)
+{
+    //check expiration
+    $freshfor = $metric->MetricFreshFor;
+    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+
+    $detail = $metric->Detail;
+    $service_uri = $metric->ServiceURI;
+    $gathered_at = $metric->GatheredAt;
+    $out = "<Metric>";
+    $expired_css = "false";
+    if($expired) $expired_css = "true";
+    $out .= "<Status>".$metric->Status."</Status><Expired>$expired_css</Expired>";
+    if($metric->Timestamp != "") {
+        $out .= "<ReportedAt>".$metric->Timestamp."</ReportedAt>";
+    }
+    $name = $metric->MetricCommonName;
+    $desc = $metric->MetricDescription;
+    $help_url = config()->default_rsvforum;
+    if(isset(config()->rsvforum[(int)$metric->MetricID])) {
+        $help_url = config()->rsvforum[(int)$metric->MetricID];
+    }
+    if($expired) $name .= " (Expired)";
+    $out .= "<Description>".htmlsafe($desc)."</Description><HelpURL>".htmlsafe($help_url)."</HelpURL><Name>$name</Name>";
+    if(!isset($_REQUEST["uwa"])) {
+        if(trim($detail) == "") {
+            $detail = "<Detail>(No detail provided)</Detail>";
+        } else {
+            $detail = "<Detail>".htmlsafe($detail)."</Detail>";
+            $id = $metric->MetricDataID;
+            $detail .= "<MetricDataID>$id</MetricDataID>";
+            $fresh_for = $metric->MetricFreshFor;
+            $detail .= "<FreshFor>".$fresh_for."</FreshFor>";
+        }
+        $out .= $detail;
+        $out .= "<ServiceUri>$service_uri</ServiceUri>";
+        $out .= "<GatheredAt>$gathered_at</GatheredAt>";
+    }
+    $out .= "</Metric>";
+
+    return $out;
+}
+
+?>
+</CurrentStatus>

@@ -32,6 +32,9 @@
         <option value="ce">Gratia Accounting (CE Specific)</option>
         <option value="se">Gratia Accounting (SE Specific)</option>
         <option value="bdii">BDII Information</option>
+    <!--
+        <option value="event">Realtime Resource Events</option>
+    -->
 
         <?
         //until bdiitree becomes production ready, hide it unless specifically chosen
@@ -88,6 +91,10 @@
 
         <div id="bdii_attrs" class="attrs indent hidden">
             <?=$this->render("rg/wizard_bdii.phtml")?>
+        </div>
+
+        <div id="event_attrs" class="attrs indent hidden">
+            <?=$this->render("rg/wizard_event.phtml")?>
         </div>
 
         <div id="_daterange_attrs" class="attrs indent hidden">

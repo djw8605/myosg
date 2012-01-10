@@ -1,0 +1,178 @@
+<style>
+.events .new {
+display: none;
+}
+.events {
+max-height: 300px;
+overflow-y: auto;
+margin-bottom: 5px;
+}
+span.show_detail_button,
+span.hide_detail_button {
+text-decoration: underline;
+cursor: pointer;
+color: #999;
+}
+.event {
+border-bottom: 1px solid #ddd;
+padding: 3px;
+}
+</style>
+<script>
+//stores resource details
+var resource_group_info = [];
+
+function krEncodeEntities(s){
+        return $("<div/>").text(s).html();
+}
+function krDencodeEntities(s){
+        return $("<div/>").html(s).text();
+}
+function ISODateString(d){
+     function pad(n){return n<10 ? '0'+n : n}
+     return d.getUTCFullYear()+'-'
+          + pad(d.getUTCMonth()+1)+'-'
+          + pad(d.getUTCDate())+'T'
+          + pad(d.getUTCHours())+':'
+          + pad(d.getUTCMinutes())+':'
+          + pad(d.getUTCSeconds())+'Z'
+}
+function renderEvent(event, rinfo, cls) {
+    var html = "";
+    html += "<div class=\"event "+cls+"\">";
+    if(event.time != null) {
+        var t = parseInt(event.time); //just to be sure.. anti-CSS..
+        var dt = new Date(t);
+        var strt = ISODateString(dt);
+        html += "<time class=\"sidenote\" datetime=\""+strt+"\">"+dt.toLocaleString()+"</time>"; 
+    }
+    if(event.resource_name != "null") {
+        html += "<span class=\"h4\">"+krEncodeEntities(event.resource_name)+"</span>"; 
+        html += "&nbsp;<span class=\"fqdn\">"+rinfo.fqdn+"</span>";
+    }
+    
+    for(var i = 0; i < event.tags.length; i++) {
+        var tag = event.tags[i];
+        switch(tag) {
+        case "EXECUTE": color = "#3c0";break;
+        case "SUBMIT": color = "#03c";break;
+        case "EVICTED": color = "#c00";break;
+        //case "TERMINATED": color = "#c30";break;
+        default: color = "#666";
+        }
+        html += "&nbsp;<span class=\"round tag\" style=\"background-color: "+color+"\">"+tag+"</span>";
+    }
+    
+
+    var detail_count = 0;
+    var detail = "<div class=\"hidden detail\">";
+    detail+= "<table class=\"summary_table\">";
+    for(var i in event.detail) {
+        var value = event.detail[i];
+        detail+= "<tr><th>"+krEncodeEntities(i)+"</th><td>"+krEncodeEntities(value)+"</td><tr>";
+        detail_count++;
+    }
+    detail+= "</table>"; //detail
+    detail+= "</div>";
+
+    if(detail_count > 0) {
+        html += "<br><span class=\"sidenote show_detail_button\">Show Detail</span><span class=\"sidenote hide_detail_button hidden\">Hide Detail</span>";
+    }
+    html += "<p>"+krEncodeEntities(event.summary)+"</p>";
+    html += detail;
+
+    html += "</div>";//event
+    return html;
+}
+
+$(function() {
+    $.cometd.init('http://comet-itb.grid.iu.edu:8080/cometd');
+    $(".events").each(function() {
+        var $this = $(this);
+        var rgid = $this.attr("data-rgid");
+        var rginfo = resource_group_info[rgid];
+        var resource_group_name = $this.attr("data-rgname");
+        $.cometd.subscribe("/event/resource/"+resource_group_name, function(message) { 
+            for(var i=0;i<message.data.length; i++) {
+                var event = message.data[i]; 
+
+                var html = "";
+                if(event.resource_name == "null") {
+                    //non resource event
+                    html = renderEvent(event, null);
+                } else {
+                    //resource event .. check to make sure if user is interested in this resource by looking up resource_info..
+                    //..we won't have resource info if user hasn't selected it
+                    for(var rid in rginfo) {
+                        var rinfo = rginfo[rid];
+                        if(rinfo.name == event.resource_name) {
+                            //found... go ahead and display
+                            html = renderEvent(event, rinfo);
+                            break;
+                        }
+                    }
+                }
+
+                //make sure we don't have too many events to display (comet server currently holds upto 10 events per each resource group)
+                //$this.prepend("<pre class='event new'>"+JSON.stringify(event)+"</pre>");
+                var item = $this.find(".event:nth-child(30)");
+                item.slideUp(function() {
+                    $(this).remove(); 
+                });
+                $this.prepend(html);
+                $(".new time").timeago();
+                $this.find(".show_detail_button").click(function() {
+                    $(this).hide().siblings('.detail').show('fast');
+                    $(this).siblings(".hide_detail_button").show();
+                });
+                $this.find(".hide_detail_button").click(function() {
+                    $(this).hide().siblings('.detail').hide('fast');
+                    $(this).siblings(".show_detail_button").show();
+                });
+
+                //now ready to show
+                $(".new").slideDown().removeClass("new");
+            }
+        });
+
+        //call /service/event/resource - all recent events will be published to /event/resource just for myself
+        $.cometd.publish('/service/event/resource', { 'resource_group_name': resource_group_name});
+    });
+
+
+    //update timeago markers periodically
+    function updateTimeago() {
+        $("time").timeago();
+        setTimeout(updateTimeago, 30*1000);
+    }
+    updateTimeago();
+});
+</script>
+
+<p>This is an experimental feature. Please do not use for production purpose.</p>
+
+<?php
+foreach($this->rgs as $rgid=>$rg) {
+    //show resource group header
+    $resource_group = $this->resource_groups[$rgid][0];
+    echo "<div class=\"resource_group_header round\">";
+    if(!uwa()) {
+        echo "<div class=\"sidenote\">";
+        echo $resource_group->grid_type_description." Group";
+        echo "</div>";
+    }
+    echo "<span class='h3'>".$resource_group->name."</span>";
+    echo "</div>";
+
+    echo "<div class=\"events\" data-rgid=$rgid data-rgname=\"".$resource_group->name."\">";
+    echo "</div>";
+
+    //output resource info in json format
+    ?>
+    <script>
+    resource_group_info[<?php echo $rgid;?>] = <?php echo json_encode($rg); ?>;
+    </script>
+    <?php
+}
+
+

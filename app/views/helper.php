@@ -228,7 +228,7 @@ function checklist($id, $title, $kv)
         ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            $("#<?php $id?>__list").show();
+            $("#<?php echo $id?>__list").show();
         });
         </script>
         <?php
@@ -340,7 +340,7 @@ function radiolist($id, $title, $kv, $default)
         ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            $("#<?php $id?>__list").show();
+            $("#<?php echo $id?>__list").show();
         });
         </script>
         <?php
