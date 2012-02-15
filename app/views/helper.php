@@ -319,11 +319,11 @@ function fblist($id, $title, $kv)
 BLOCK;
 
     $out .= $pre_selected;
-    $out .= "<input type='text' class='autocomplete' onfocus='$(\"#${id}__acnote\").fadeIn(\"slow\");' onblur='$(\"#${id}__acnote\").fadeOut(\"slow\");'/>";
+    $out .= "<input type='text' class='autocomplete' style='background-color: transparent;' onfocus='$(\"#${id}__acnote\").fadeIn(\"slow\");' onblur='$(\"#${id}__acnote\").fadeOut(\"slow\");'/>";
     $out .= $script;
 
     //display note
-    $out .= "<p id=\"${id}__acnote\" class=\"hidden\" style=\"position: absolute; color: #999; font-size: 9px; right: 3px; bottom: 0px; text-align: right; font-size: 10px;line-height: 100%;\">Double click to show all</p>";
+    $out .= "<p id=\"${id}__acnote\" class=\"hidden\" style=\"z-index: -1; position: absolute; color: #999; font-size: 9px; right: 3px; bottom: 0px; text-align: right; font-size: 10px;line-height: 100%;\">Double click to show all</p>";
 
     $out .= "</div>";
     $out .= "</div>";
