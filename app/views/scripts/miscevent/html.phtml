@@ -1,0 +1,212 @@
+<style>
+#events .eventnew {
+display: none;
+}
+span.show_detail_button,
+span.hide_detail_button {
+text-decoration: underline;
+cursor: pointer;
+color: #999;
+}
+.event {
+padding: 3px;
+}
+.rsv .tag {
+display: inline-block;
+margin-top: 5px;
+}
+.help-block {
+color: #999;
+}
+.event_ticket .resource {
+    background: url("../images/tag_orange.png") no-repeat scroll 2px 3px #CCCCCC;
+}
+.event_ticket pre {
+    background-color: inherit;
+}
+.event_oim table.fields {
+width: 95%;
+text-align: left;
+border-collapse: collapse;
+}
+.event_oim .resource {
+    background: url("../images/potato.png") no-repeat scroll 2px 3px #CCCCCC;
+    padding: 2px 2px 2px 25px;
+}
+.event_oim table.fields td {
+border-top: 1px solid #ddd;
+width: 33%;
+padding: 5px;
+}
+</style>
+<script>
+
+function ISODateString(d){
+     function pad(n){return n<10 ? '0'+n : n}
+     return d.getUTCFullYear()+'-'
+          + pad(d.getUTCMonth()+1)+'-'
+          + pad(d.getUTCDate())+'T'
+          + pad(d.getUTCHours())+':'
+          + pad(d.getUTCMinutes())+':'
+          + pad(d.getUTCSeconds())+'Z'
+}    
+
+function renderEvent(event, c) {
+    var html = "";
+    html += "<div class=\""+c+" event_"+event.exchange+"\">";
+    var t = parseInt(event.time); //just to be sure.. anti-CSS..
+    var dt = new Date(t);
+    var strt = ISODateString(dt);
+    html += "<time class=\"sidenote\" datetime=\""+strt+"\">"+dt.toLocaleString()+"</time>"; 
+
+    switch(event.exchange) {
+    case "oim": html += renderOIMEvent(event);break;
+    case "rsv": html += renderRSVEvent(event);break;
+    case "ticket": html += renderTicketEvent(event);break;
+    }
+    html += "</div>";//event
+    return html;
+}
+
+function renderOIMEvent(event) {
+    var key = event.key.split(".");
+    var model = key[0];
+    var action = key[1];
+
+    if(event.content.OIMEvent != undefined) {
+        var dnid = event.content.OIMEvent.DNID;
+        var comment = event.content.OIMEvent.Comment;
+        var fields = event.content.OIMEvent.Log.Fields.Field;
+        var record_keys = event.content.OIMEvent.Log.Keys;
+    } else {
+        var dnid = "n/a";
+        var comment = null;
+        var fields = event.content.Log.Fields.Field;
+        var record_keys = event.content.Log.Keys;
+    }
+
+    //TODO lookup dn from dnid
+    var dn = dnid;
+
+    //I have to normalize fields since it could be array, or single item
+    var fields_n = fields;
+    if(!fields_n.length) {
+        fields_n = [fields];
+    }
+
+    var html = "";
+    if(action == "update") {
+        html += "<div class=\"round resource\"><span class=\"h4\">"+dn+"</span> updated "+model+"</div>";
+
+        //output old/new values
+        html += "<table class=\"fields\">";
+        html += "<tr><th>Parameter Name</th><th>Old Value</th><th>New Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            console.dir(field);
+            key = field.Name;
+            oldval = field.OldValue;
+            newval = field.NewValue;
+            html += "<tr><td>"+key+"</td><td>"+oldval+"</td><td>"+newval+"</td></tr>";
+        }
+        html += "</table>";
+
+    } else if(action == "insert") {
+        html += "<div class=\"round resource\"><span class=\"h4\">"+dn+"</span> inserted "+model+"</div>";
+    }
+
+    if(comment) {
+        html += "<p class=\"comment\">"+comment+"</p>";
+    }
+    return html;
+}
+function renderRSVEvent(event) {
+    var html = "";
+    var resource_name = event.key;
+    var resource_group_id = event.content.ResourceStatusChange.ResourceGroupID;
+    var resource_id = event.content.ResourceStatusChange.ResourceID;
+    var old_status = event.content.ResourceStatusChange.OldStatus;
+    var new_status = event.content.ResourceStatusChange.NewStatus;
+    var note = event.content.ResourceStatusChange.Note;
+
+    html += "<div class=\"round resource\">Resource <a href=\"<?php echo fullbase()?>/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_"+resource_group_id+"=on\">"+resource_name+"</a> status changed</div>";
+
+    html += "<table class=\"layout\"><tr>";
+    html += "<td width=\"150px\"><div class=\"status_"+old_status+"\">"+old_status+"</div></td>";
+    html += "<td width=\"50px\" style=\"padding-top: 5px;\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></td>";
+    html += "<td><div class=\"status_"+new_status+"\"><p>"+new_status+"<br><span class=\"help-block\">"+note+"</span></div></td>";
+    html += "</tr></table>";
+
+    return html;
+}
+function renderTicketEvent(event) {
+    var html = "";
+    var key = event.key.split(".");
+    var submitter_id = event.content.ticket.submitter;
+    var desc = event.content.ticket.description;
+    //var status = event.content.ticket.status;
+    var ticket_id = key[0];
+    var action = key[1];
+    if(action == "update") {    
+        html += "<div class=\"round resource\">"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">Ticket "+ticket_id+"</a></div>";
+        html += "<pre>"+desc+"</pre>";
+    } else if(action == "insert") {
+        html += "<p>"+submitter_id+" inserted ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></p>";
+    }
+    return html;
+}
+
+$(function() {
+    var _connected = false;
+    $.cometd.init('http://comet-itb.grid.iu.edu:8080/cometd');
+    $.cometd.addListener("/meta/connect", function(message) {
+        if ($.cometd.isDisconnected()) {
+            return;
+        }
+        var wasConnected = _connected;
+        _connected = message.successful;
+        if (!wasConnected && _connected)
+        {
+            // reconnected 
+            console.log("requesting all recent event");
+            $.cometd.publish('/service/event/allrecent', {});
+        }
+
+    });
+
+    //request all recent events
+    $.cometd.subscribe("/event/allrecent", function(events) { 
+        var html = "";
+        for(var i = 0;i < events.data.length; ++i) {
+            var event = events.data[i];
+            html = renderEvent(event, "event") + html;
+        }
+        $("#events").html(html);
+        updateTimeago();
+    });
+    $.cometd.addListener('/meta/disconnect', function(message) {
+        if (message.successful)
+        {
+            _connected = false;
+        }
+    });
+    $.cometd.subscribe("/event/latest", function(event) { 
+        html = renderEvent(event.data, "event eventnew");
+        $("#events").prepend(html);
+        $(".eventnew").slideDown();
+        updateTimeago();
+    });
+   
+    //update timeago markers periodically
+    function updateTimeago() {
+        $("time").timeago();
+        setTimeout(updateTimeago, 30*1000);
+    }
+    updateTimeago();
+});
+</script>
+
+<p>This is an experimental feature</p>
+<div id="events">Loading ...</div>
+
+
