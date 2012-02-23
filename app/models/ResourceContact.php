@@ -31,7 +31,7 @@ class ResourceContact extends CachedIndexedModel
                 "JOIN contact c ON rc.contact_id = c.id ".
                 "JOIN contact_type t ON rc.contact_type_id = t.id ".
                 "JOIN contact_rank r ON rc.contact_rank_id = r.id ".
-                "JOIN dn ON c.id = dn.contact_id ".
+                "LEFT JOIN dn ON dn.contact_id = c.id ".
                 $where;
         slog($sql);
         return $sql;

@@ -27,7 +27,7 @@ class VOReportContact extends CachedIndexedModel
         return 
         "SELECT dn.dn_string as dn, v.*, c.* FROM vo_report_contact v ".
         " join contact c on v.contact_id = c.id ".
-        " join dn on dn.contact_id = c.id $where";
+        " left join dn on dn.contact_id = c.id $where";
     }
     public function key() { return "vo_report_name_id"; }
 }
