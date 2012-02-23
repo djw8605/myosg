@@ -32,7 +32,7 @@ class SupportCenterContact extends CachedIndexedModel
         }
         return "SELECT dn.dn_string as dn, sc.sc_id, sc.contact_id, p.*, t.name as contact_type, r.name as contact_rank from sc_contact sc ".
                 "join contact p on sc.contact_id = p.id ".
-                "join dn on dn.contact_id = p.id ".
+                "LEFT join dn on dn.contact_id = p.id ".
                 "join contact_type t on sc.contact_type_id = t.id ".
                 "join contact_rank r on sc.contact_rank_id = r.id ".
                 "$where order by sc.contact_type_id";
