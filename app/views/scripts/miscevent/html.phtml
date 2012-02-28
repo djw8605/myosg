@@ -158,7 +158,7 @@ function renderTicketEvent(event) {
 
 $(function() {
     var _connected = false;
-    $.cometd.init('http://comet-itb.grid.iu.edu:8080/cometd');
+    $.cometd.init('http://comet1.grid.iu.edu:8080/cometd');
     $.cometd.addListener("/meta/connect", function(message) {
         if ($.cometd.isDisconnected()) {
             return;
