@@ -43,7 +43,7 @@ class Contact extends CachedIndexedModel
                 $where .= " and 1 = 0"; //hide everything..
             }
         }
-        return "select contact.*,dn.dn_string as dn from contact join dn on dn.contact_id = contact.id $where ORDER BY name";
+        return "select contact.*,dn.dn_string as dn from contact left join dn on dn.contact_id = contact.id $where ORDER BY name";
     }
     public function key() { return "id"; }
 }
