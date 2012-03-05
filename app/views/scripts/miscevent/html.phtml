@@ -73,37 +73,30 @@ function renderOIMEvent(event) {
     var model = key[0];
     var action = key[1];
 
-    if(event.content.OIMEvent != undefined) {
-        var dnid = event.content.OIMEvent.DNID;
-        var comment = event.content.OIMEvent.Comment;
-        var fields = event.content.OIMEvent.Log.Fields.Field;
-        var record_keys = event.content.OIMEvent.Log.Keys;
-    } else {
-        var dnid = "n/a";
-        var comment = null;
-        var fields = event.content.Log.Fields.Field;
-        var record_keys = event.content.Log.Keys;
-    }
+    var dnid = event.content.OIMEvent.DNID;
+    var comment = event.content.OIMEvent.Comment;
+    var fields = event.content.OIMEvent.Log.Fields.Field;
+    var record_keys = event.content.OIMEvent.Log.Keys;
 
-    //TODO lookup dn from dnid
-    var dn = dnid;
+    var contact = getContactFromDNID(dnid);
 
     //I have to normalize fields since it could be array, or single item
     var fields_n = fields;
-    if(!fields_n.length) {
+    if(fields_n && !fields_n.length) {
         fields_n = [fields];
+    } else {
+        console.dir(event.content);
     }
 
     var html = "";
     if(action == "update") {
-        html += "<div class=\"round resource\"><span class=\"h4\">"+dn+"</span> updated "+model+"</div>";
+        html += "<div class=\"round resource\"><span class=\"h4\">"+contact.name+"</span> updated "+model+"</div>";
 
         //output old/new values
         html += "<table class=\"fields\">";
         html += "<tr><th>Parameter Name</th><th>Old Value</th><th>New Value</th></tr>";
         for(var id in fields_n) {
             var field = fields_n[id];
-            console.dir(field);
             key = field.Name;
             oldval = field.OldValue;
             newval = field.NewValue;
@@ -144,7 +137,6 @@ function renderTicketEvent(event) {
     var key = event.key.split(".");
     var submitter_id = event.content.ticket.submitter;
     var desc = event.content.ticket.description;
-    //var status = event.content.ticket.status;
     var ticket_id = key[0];
     var action = key[1];
     if(action == "update") {    
@@ -156,9 +148,27 @@ function renderTicketEvent(event) {
     return html;
 }
 
+var contacts = [
+<?php 
+$first = true;
+slog(print_r($this->dns, true));
+foreach($this->dns as $dn) {
+if($first) $first = false; else echo ",\n";
+    echo "{\"dn_id\": ".$dn->id.", \"contact_id\": ".$dn->contact_id.", \"name\": \"".$dn->name."\"}";
+}
+?>
+];
+function getContactFromDNID(dnid) {
+    for(var i = 0;i < contacts.length; i++) {
+        var contact = contacts[i];
+        if(contact.dn_id == dnid) return contact;
+    }
+    return null;
+}
+
 $(function() {
     var _connected = false;
-    $.cometd.init('http://comet-itb.grid.iu.edu:8080/cometd');
+    $.cometd.init('<?php echo config()->cometd_url?>');
     $.cometd.addListener("/meta/connect", function(message) {
         if ($.cometd.isDisconnected()) {
             return;

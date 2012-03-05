@@ -194,6 +194,8 @@ class common_config
 
         $this->gratiaweb = "http://gratiaweb.grid.iu.edu/gratia";
         //$this->gratiaweb = "http://t2.unl.edu/gratia";
+
+        $this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
     }
     function getCacheDir() {
         return "/tmp";

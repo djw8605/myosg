@@ -24,5 +24,8 @@ class MisceventController extends MiscController
     {
         parent::load();
         $this->setpagetitle(self::default_title());
+
+        $model = new DN();
+        $this->view->dns = $model->get();
     }
 }
