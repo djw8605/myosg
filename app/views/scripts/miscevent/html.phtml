@@ -77,6 +77,7 @@ function renderOIMEvent(event) {
     var comment = event.content.OIMEvent.Comment;
     var fields = event.content.OIMEvent.Log.Fields.Field;
     var record_keys = event.content.OIMEvent.Log.Keys;
+    var logid = event.content.OIMEvent.LogID;
 
     var contact = getContactFromDNID(dnid);
 
@@ -84,13 +85,12 @@ function renderOIMEvent(event) {
     var fields_n = fields;
     if(fields_n && !fields_n.length) {
         fields_n = [fields];
-    } else {
-        console.dir(event.content);
     }
 
     var html = "";
+    var logurl = "<a href=\"https://oim.grid.iu.edu/oim/log?type=3&id="+logid+"\">Log "+logid+"</a>";
     if(action == "update") {
-        html += "<div class=\"round resource\"><span class=\"h4\">"+contact.name+"</span> updated "+model+"</div>";
+        html += "<div class=\"round resource\">"+logurl+" "+contact.name+" updated "+model+"</div>";
 
         //output old/new values
         html += "<table class=\"fields\">";
@@ -105,7 +105,11 @@ function renderOIMEvent(event) {
         html += "</table>";
 
     } else if(action == "insert") {
-        html += "<div class=\"round resource\"><span class=\"h4\">"+dn+"</span> inserted "+model+"</div>";
+        html += "<div class=\"round resource\">"+logurl +" "+contact.name+" inserted "+model+"</div>";
+    } else if(action == "remove") {
+        html += "<div class=\"round resource\">"+logurl +" "+contact.name+" removed "+model+"</div>";
+    } else {
+        console.log("unknown action:"+action);
     }
 
     if(comment) {
@@ -139,11 +143,12 @@ function renderTicketEvent(event) {
     var desc = event.content.ticket.description;
     var ticket_id = key[0];
     var action = key[1];
-    if(action == "update") {    
+    if(action == "update") {
         html += "<div class=\"round resource\">"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">Ticket "+ticket_id+"</a></div>";
         html += "<pre>"+desc+"</pre>";
-    } else if(action == "insert") {
-        html += "<p>"+submitter_id+" inserted ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></p>";
+    } else if(action == "create") {
+        html += "<div class=\"round resource\">"+submitter_id+" opened ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></div>";
+        html += "<pre>"+desc+"</pre>";
     }
     return html;
 }
