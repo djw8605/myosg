@@ -38,11 +38,11 @@ require_once("config.php");
 
 <link href="<?=fullbase()?>/css/html.css" rel="stylesheet" type="text/css" />
 <script type='text/javascript' src='<?=fullbase()?>/lib/jquery-ui-1.8.1/js/jquery-1.4.2.min.js'></script>
-<script src="http://maps.google.com/maps?file=api&v=2&key=<?=config()->gmap_key?>" type="text/javascript"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
 <?=$this->render(pagename()."/js.phtml");?>
 $(document).ready(function() {
-    init();
+    init(false);//scroll wheel -- off
 });
 </script>
 <?=$this->render(pagename()."/html.phtml");?>

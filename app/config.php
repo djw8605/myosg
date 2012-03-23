@@ -73,8 +73,9 @@ class common_config
         //banner to show on all pages
         $this->banner = null;
 
+        //google map v3 doesn't need api key
         //http://code.google.com/apis/maps/signup.html
-        $this->gmap_key = "get your own key";
+        //$this->gmap_key = "get your own key";
 
         //if metric age is longer than this value, it is considred stale
         $this->metric_considered_old = 3600*24;

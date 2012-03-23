@@ -1,228 +1,183 @@
-
-function init_icon(type, img)
-{
-    var icon = new GIcon();
-    icon.image = "<?=fullbase();?>/images/" + img;
-    icon.iconAnchor = new GPoint(10, 10);
-    icon.infoWindowAnchor = new GPoint(10, 10);
-    icon.iconSize = new GSize(20, 20);
-    icon.shadow = "<?=fullbase();?>/images/shadow.png";
-    icon.shadowSize = new GSize(25, 25);
-
-    return icon;
-}
-
-var marker_id = {}
-var map = null;
+var map;
+var anchor;
+var marker_id = {};
+var infowindow = new google.maps.InfoWindow();
 
 function update_anchor() {
     var pos = map.getCenter();
-    document.location="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getCurrentMapType().getName();
+    var new_anchor ="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getMapTypeId();
+    if(anchor != new_anchor) {
+        document.location="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getMapTypeId();
+        anchor = new_anchor;
+    }
+    setTimeout("update_anchor()", 1000);
 }
 
-//http://code.google.com/apis/maps/documentation/reference.html#GMapTypeOptions
-function init() {
-  if (GBrowserIsCompatible()) {
-    map = new GMap2(document.getElementById("map_canvas"), {mapTypes:[G_PHYSICAL_MAP, G_HYBRID_MAP, G_NORMAL_MAP]});
-    map.setMapType(G_PHYSICAL_MAP); 
-<?if(uwa()) {?>
-    map.addControl(new GSmallMapControl());
-<?} else { ?>
-    map.addControl(new GLargeMapControl3D());
-<?}?>
-    map.addControl(new GMapTypeControl());
-    map.enableScrollWheelZoom();
-
-    //process anchor (if any)
-    var anchor = document.location.hash.split("#")[1];
+function init(scrollwheel) {
+    //default
+    var location = new google.maps.LatLng(38.61687,-96.767578);
+    var zoom = 4;
+    var maptype = google.maps.MapTypeId.TERRAIN;
+    
+    //overrride with hash params
+    anchor = document.location.hash.split("#")[1];
     if(anchor) {
         var params = anchor.split("|");
-        var pos = GLatLng.fromUrlValue(params[0]);
-        var zoom = params[1];
-        map.setCenter(pos, parseInt(zoom));
-        if(params.length > 2) {
-            switch(params[2]) {
-            case "Terrain":
-                map.setMapType(G_PHYSICAL_MAP);
-                break;
-            case "Hybrid":
-                map.setMapType(G_HYBRID_MAP);
-                break;
-            case "Map":
-                map.setMapType(G_NORMAL_MAP);
-                break;
-            }
-        }
-    } else {
-        //set it to default location
-        map.setCenter(new GLatLng(38.61687,-96.767578), 4);
+        var coords = params[0].split(",");
+        location = new google.maps.LatLng(coords[0], coords[1]);
+        zoom = parseInt(params[1]);
+        maptype = params[2];
     }
 
-    GEvent.addListener(map, "infowindowclose", function() {
+    //create map
+    map = new google.maps.Map(document.getElementById('map_canvas'), {
+        scrollwheel: scrollwheel,
+        center: location,
+        zoom: zoom,
+        mapTypeControl: false,
+        mapTypeId: maptype
+    });
+
+    //setup listeners
+    setTimeout("update_anchor()", 1000);//don't hook centerre_changed event.. it fires too often now
+    
+    //add sites
+    <?
+    foreach($this->sites as $site) {
+
+        //status counter    
+        $status_ok = 0;
+        $status_warning = 0;
+        $status_critical = 0;
+        $status_unknown = 0;
+        $status_downtime = 0;
+
+        if(!isset($this->rgs[$site->id])) continue;
+        $rgs = $this->rgs[$site->id];
+        if(count($rgs) == 0) continue; //don't show site with no resource group
+        if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
+
+        $html = "";
+        $site_has_status = false;
+        foreach($rgs as $rg) {
+            $rgname = $rg->name;
+
+            //this is now done by the controller
+            //if($rg->active == 0 || $rg->disable == 1) continue;
+
+            $target = "target=\"_blank\"";
+            $gid = $rg->id;
+            $html .= "<div class=\"resource_group_header round\"><span class=\"h3\">Resource Group: <a $target href=\"".fullbase()."/rgsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></span></div>";
+
+            $rhtml = "";
+            if(isset($this->resources_bygid[$rg->id])) {
+                $rs = $this->resources_bygid[$rg->id];
+                foreach($rs as $r) {
+                    if($r->active == 0 || $r->disable == 1) continue;
+                    $name = $r->name;
+                    if(isset($this->downtime[$r->id])) {
+                        $status = "DOWNTIME";
+                        $note = "This resource is currently under maintenance.";
+                    } else if(isset($this->resource_status[$r->id][0])) {
+                        $rstatus = $this->resource_status[$r->id][0];
+                        $status = Status::getStatus($rstatus->status_id);
+
+                        //treat status change that happened long time ago as non-reporting
+                        $expire = time()-3600*24*config()->status_expires_days;
+                        $note = $rstatus->detail;
+                        if($rstatus->timestamp < $expire && $status != "OK") {
+                            $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Status Expired</span> $note</div>";
+                            continue;//don't count this as a valid status
+                        }
+                    } else {
+                        //resource status is not calculated - skip this resource
+                        $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_UNKNOWN\">Status not calculated</div>";
+                        continue;
+                    }
+                    $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div>";
+
+                    //determine site status
+                    if($status == "OK") $status_ok++;
+                    if($status == "WARNING") $status_warning++;
+                    if($status == "CRITICAL") $status_critical++;
+                    if($status == "UNKNOWN") $status_unknown++;
+                    if($status == "DOWNTIME") $status_downtime++;
+                    $site_has_status = true;
+                }
+            }
+            if($rhtml == "") {
+                $html .= "<p class=\"warning\">No active resource</p>";
+            } else {
+                $html .= $rhtml;
+            }
+        }
+
+        //if there are no resource to show..
+        $wrap_html = "<h2>Site: $site->name</h2><div style=\"overflow: auto; max-height: 300px; width: 300px;\">$html</div>";
+        $show = false;
+        if(!$site_has_status) {
+            if(isset($_REQUEST["map_attrs_shownr"])) {
+                //show as "non reporting"
+                $status = "nr";
+                $show = true;
+            }
+        } else {
+            //decide site status
+            if($status_critical > 0) $status = "critical";
+            else if($status_downtime > 0) $status = "downtime";
+            else if($status_warning > 0) $status = "warning";
+            else if($status_unknown > 0) $status = "unknown";
+            else if($status_ok > 0) $status = "ok";
+            else $status = "unknown"; //no info!?
+
+            //show marker
+            if($site->latitude == null) $site->latitude = 0;
+            if($site->longitude == null) $site->longitude = 0;
+            $show = true;
+        }
+        if($show) {
+            switch($status) {
+            case "nr": $zindex = 0;break;
+            case "warning": $zindex = 1;break;
+            case "ok": $zindex = 2;break;
+            case "unknown": $zindex = 3;break;
+            defulat: $zindex = 4;
+            }
+            ?>
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(<?php echo $site->latitude?>, <?php echo $site->longitude?>),
+                map: map,
+                zIndex: <?php echo $zindex?>,
+                icon: '<?php echo fullbase()?>/images/status_<?php echo $status?>_map.png',
+                title: '<?php echo addslashes($site->name)?>'
+            });
+            marker_id[<?php echo $site->id?>] = marker;
+            setInfoWindow(<?php echo $site->id?>, marker,'<?php echo addslashes($wrap_html);?>');
+            <?php
+            echo "$(\"#site\").append(\"<option value='$site->id'>$site->name</option>\");\n";
+        }
+    }
+    ?>
+
+    $("#site").change(function() {
+            var id = $(this).val();
+            var marker = marker_id[id];
+            if(marker) {
+                google.maps.event.trigger(marker, 'click');
+            } else {
+                infowindow.close();
+            }
+    });
+    google.maps.event.addListener(infowindow, 'closeclick', function() {
         $("#site option[value=]").attr("selected", "selected");
     });
-    GEvent.addListener(map, "moveend",  update_anchor);
-    GEvent.addListener(map, "zoomend",  update_anchor);
-    GEvent.addListener(map, "maptypechanged",  update_anchor);
-
-    //generate icons
-    var icon = {};
-    var type = "ok";
-    icon[type] = init_icon(type, "status_ok_map.png");
-    type = "warning";
-    icon[type] = init_icon(type, "status_warning_map.png");
-    type = "unknown";
-    icon[type] = init_icon(type, "status_unknown_map.png");
-    type = "critical";
-    icon[type] = init_icon(type, "status_critical_map.png");
-    type = "downtime";
-    icon[type] = init_icon(type, "status_downtime_map.png");
-    type = "nr";
-    icon[type] = init_icon(type, "status_nr_map.png");
-
-    function createMarker(id, point, markerOptions, html) {
-      var marker = new GMarker(point, markerOptions);
-      marker_id[id] = marker;
-      GEvent.addDomListener(marker, "click", function() {
-        marker.openInfoWindowHtml(html);
-        var latlng = marker.getLatLng();
-        map.panTo(latlng);
-        $("#site option[value="+id+"]").attr("selected", "selected");
-      });
-      return marker;
-    }
-    //this function determine what status is shown above what other status
-    function zfunction(marker, something) {
-/*
-        var title = marker.getTitle();
-        if(title == "nr") {
-            return 0; //hide behind everything
-        } else if(title == "warning") {
-            return 1;
-        } else if(title == "ok") { 
-            return 2;
-        } else if(title == "unknown") { 
-            return 3;
-        }
-*/
-        var i = marker.getIcon();
-        if(i == icon["nr"]) {
-            return 0; //hide behind everything
-        } else if(i == icon["warning"]) {
-            return 1;
-        } else if(i == icon["ok"]) { 
-            return 2;
-        } else if(i == icon["unknown"]) { 
-            return 3;
-        }
-        return 4;
-    }
-<?
-foreach($this->sites as $site) {
-
-    //status counter    
-    $status_ok = 0;
-    $status_warning = 0;
-    $status_critical = 0;
-    $status_unknown = 0;
-    $status_downtime = 0;
-
-    $site_id = $site->id;
-
-    if(!isset($this->rgs[$site_id])) continue;
-    $rgs = $this->rgs[$site_id];
-    if(count($rgs) == 0) continue; //don't show site with no resource group
-    if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
-
-    $html = "";
-    $site_has_status = false;
-    foreach($rgs as $rg) {
-        $rgname = $rg->name;
-
-        //this is now done by the controller
-        //if($rg->active == 0 || $rg->disable == 1) continue;
-
-        $target = "target=\"_blank\"";
-        $gid = $rg->id;
-        $html .= "<div class=\"resource_group_header round\"><span class=\"h3\">Resource Group: <a $target href=\"".fullbase()."/rgsummary?datasource=summary&rg=on&rg_$gid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on\">$rgname</a></span></div>";
-
-        $rhtml = "";
-        if(isset($this->resources_bygid[$rg->id])) {
-            $rs = $this->resources_bygid[$rg->id];
-            foreach($rs as $r) {
-                if($r->active == 0 || $r->disable == 1) continue;
-                $name = $r->name;
-                if(isset($this->downtime[$r->id])) {
-                    $status = "DOWNTIME";
-                    $note = "This resource is currently under maintenance.";
-                } else if(isset($this->resource_status[$r->id][0])) {
-                    $rstatus = $this->resource_status[$r->id][0];
-                    $status = Status::getStatus($rstatus->status_id);
-
-                    //treat status change that happened long time ago as non-reporting
-                    $expire = time()-3600*24*config()->status_expires_days;
-                    $note = $rstatus->detail;
-                    if($rstatus->timestamp < $expire && $status != "OK") {
-                        $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\"><span class=\"round tag\" style=\"background-color: #da0;\">Status Expired</span> $note</div>";
-                        continue;//don't count this as a valid status
-                    }
-                } else {
-                    //resource status is not calculated - skip this resource
-                    $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_UNKNOWN\">Status not calculated</div>";
-                    continue;
-                }
-                $rhtml .= "<div class=\"resource round\" style=\"margin-bottom: 0;\"><span class=\"h4\">$name</span></div><div class=\"status_$status\">$note</div>";
-
-                //determine site status
-                if($status == "OK") $status_ok++;
-                if($status == "WARNING") $status_warning++;
-                if($status == "CRITICAL") $status_critical++;
-                if($status == "UNKNOWN") $status_unknown++;
-                if($status == "DOWNTIME") $status_downtime++;
-                $site_has_status = true;
-            }
-        }
-        if($rhtml == "") {
-            $html .= "<p class=\"warning\">No active resource</p>";
-        } else {
-            $html .= $rhtml;
-        }
-    }
-
-    //if there are no resource to show..
-    $wrap_html = "<h2>Site: $site->name</h2><div style=\"overflow: auto; max-height: 300px; width: 300px;\">$html</div>";
-    if(!$site_has_status) {
-        if(isset($_REQUEST["map_attrs_shownr"])) {
-            //show as "non reporting"
-            $status = "nr";
-            echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"".addslashes($site->name)."\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '".addslashes($wrap_html)."'));\n";
-            echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
-        }
-    } else {
-        //decide site status
-        if($status_critical > 0) $status = "critical";
-        else if($status_downtime > 0) $status = "downtime";
-        else if($status_warning > 0) $status = "warning";
-        else if($status_unknown > 0) $status = "unknown";
-        else if($status_ok > 0) $status = "ok";
-        else $status = "unknown"; //no info!?
-
-        //show marker
-        if($site->latitude == null) $site->latitude = 0;
-        if($site->longitude == null) $site->longitude = 0;
-        echo "map.addOverlay(createMarker($site_id, new GLatLng(".$site->latitude.", ".$site->longitude."), {title:\"".addslashes($site->name)."\", icon:icon[\"$status\"],zIndexProcess:zfunction}, '".addslashes($wrap_html)."'));\n";
-        echo "$(\"#site\").append(\"<option value='$site_id'>$site->name</option>\");\n";
-    }
 }
-?>
-  }
-    $("#site").change(function() {
-        var id = $(this).val();
-        var marker = marker_id[id];
-        if(marker) {
-            $(marker).trigger('click');
-        } else {
-            map.closeInfoWindow();
-        }
+
+function setInfoWindow(id,marker, content) {
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.close();
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+        $("#site option[value='"+id+"']").attr("selected", "selected");
     });
 }

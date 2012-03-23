@@ -620,14 +620,15 @@ color: #fff;
 
 #map_control {
 float: right;
-right: 7px;
-top: 32px;
+right: 3px;
+top: 3px;
 position: absolute;
 z-index: 1;
 background-color: white;
-padding: 1px;
-padding-left: 2px;
-border: 1px solid black;
+padding: 2px;
+color: #666;
+border-radius: 3px;
+box-shadow: 1px 1px 5px #333;
 }
 
 .message {
