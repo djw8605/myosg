@@ -89,8 +89,11 @@ function renderOIMEvent(event) {
 
     var html = "";
     var logurl = "<a href=\"https://oim.grid.iu.edu/oim/log?type=3&id="+logid+"\">Log "+logid+"</a>";
+    var contact_name = "N/A";
+    if(contact != null) contact_name = contact.name;
+
     if(action == "update") {
-        html += "<div class=\"round resource\">"+logurl+" "+contact.name+" updated "+model+"</div>";
+        html += "<div class=\"round resource\">"+logurl+" "+contact_name+" updated "+model+"</div>";
 
         //output old/new values
         html += "<table class=\"fields\">";
@@ -105,9 +108,9 @@ function renderOIMEvent(event) {
         html += "</table>";
 
     } else if(action == "insert") {
-        html += "<div class=\"round resource\">"+logurl +" "+contact.name+" inserted "+model+"</div>";
+        html += "<div class=\"round resource\">"+logurl +" "+contact_name+" inserted "+model+"</div>";
     } else if(action == "remove") {
-        html += "<div class=\"round resource\">"+logurl +" "+contact.name+" removed "+model+"</div>";
+        html += "<div class=\"round resource\">"+logurl +" "+contact_name+" removed "+model+"</div>";
     } else {
         console.log("unknown action:"+action);
     }
@@ -183,7 +186,7 @@ $(function() {
         if (!wasConnected && _connected)
         {
             // reconnected 
-            console.log("requesting all recent event");
+            //console.log("requesting all recent event");
             $.cometd.publish('/service/event/allrecent', {});
         }
 
