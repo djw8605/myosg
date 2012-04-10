@@ -48,8 +48,8 @@ class MiscstatusController extends MiscController
                 //array("name"=>"WLCG Comparison Reports", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/RSVReportsServiceLevelAgreement"),
                 //$this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
                 $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki
-                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //DOCDB
-                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage
+                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //OSG DocDb
+                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage
                 $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement"), //GOC Glidein
                 $this->getStatus(325, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareRepoServiceLevelAgreement"), //RPM repo
                 $this->getStatus(334, "https://twiki.grid.iu.edu/bin/view/Operations/JIRAServiceLevelAgreement"), //JIRA
