@@ -36,23 +36,24 @@ class MiscstatusController extends MiscController
             ),
             "High"=>array(
 
-                $this->getStatus(270, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement"), //GOC_Software Cache
                 $this->getStatus(250, "https://twiki.grid.iu.edu/bin/view/Operations/RSVServiceLevelAgreement"), //RSV collector
+                $this->getStatus(270, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement"), //GOC_Software Cache
                 $this->getStatus(233, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //RESS
             ),
             "Normal"=>array(
+                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement"), //GOC Glidein                                                                                         
                 $this->getStatus(266, "https://twiki.grid.iu.edu/bin/view/Operations/OIMServiceLevelAgreement"), //OIM
-                $this->getStatus(261, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDisplayServiceLevelAgreement"), //display.grid
-                $this->getStatus(255, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Gratia collector
+                $this->getStatus(325, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareRepoServiceLevelAgreement"), //RPM repo                                                                                          
                 $this->getStatus(265, "https://twiki.grid.iu.edu/bin/view/Operations/GOCTicketServiceLevelAgreement"), //GOC Ticket
+                $this->getStatus(344, "https://twiki.grid.iu.edu/bin/view/Operations/VOMSServiceLevelAgreement"), //VOMS                                                                                                      
+                $this->getStatus(255, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Gratia collector
+                $this->getStatus(261, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDisplayServiceLevelAgreement"), //display.grid
+                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //OSG DocDb                                                                                        
+                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage   
+                $this->getStatus(334, "https://twiki.grid.iu.edu/bin/view/Operations/JIRAServiceLevelAgreement"), //JIRA                                                                                                      
                 //array("name"=>"WLCG Comparison Reports", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/RSVReportsServiceLevelAgreement"),
                 //$this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
-                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki
-                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //OSG DocDb
-                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage
-                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement"), //GOC Glidein
-                $this->getStatus(325, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareRepoServiceLevelAgreement"), //RPM repo
-                $this->getStatus(334, "https://twiki.grid.iu.edu/bin/view/Operations/JIRAServiceLevelAgreement"), //JIRA
+                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki                                                                                                    
                 $this->getStatus(336, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //OSG-XSEDE
             )
         );
