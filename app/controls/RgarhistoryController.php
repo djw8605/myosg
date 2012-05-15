@@ -39,7 +39,7 @@ class RgarhistoryController extends RgController
                 $model = new ServiceAR();
                 $params["start_time"] = $this->view->start_time;
                 $params["end_time"] = $this->view->end_time;
-                $params["resource_id"] = $rid;
+                $params["resource_ids"] = array($rid);
                 $this->view->services[$rid] = $model->getgroupby("service_id", $params);
             }
         }

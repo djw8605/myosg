@@ -37,6 +37,15 @@ class RgarmetricController extends RgController
         $params = array();
         $params["start_time"] = $this->view->start_time;
         $params["end_time"] = $this->view->end_time;
+
+        //get list of resource ids that we are interested in
+        $resource_ids = array();
+        foreach($this->rgs as $rgid=>$rg) {
+            foreach($rg as $rid=>$resource) {
+                $resource_ids[] = $rid;
+            }
+        }
+        $params["resource_ids"] = $resource_ids;
         $ar = $model->get($params);
 
         //group by resource/service_id
@@ -51,14 +60,6 @@ class RgarmetricController extends RgController
                 $ar_resource_service[$r_id][$service_id] = array();
             }
             $ar_resource_service[$r_id][$service_id][] = $a;
-        }
-
-        //pull all resource ids that we are interested in
-        $resource_ids = array();
-        foreach($this->rgs as $rgid=>$rg) {
-            foreach($rg as $rid=>$resource) {
-                $resource_ids[] = $rid;
-            }
         }
 
         $data = array();

@@ -43,8 +43,8 @@ foreach($this->rgs as $rgid=>$rg) {
                 $skipped_x = -1;
                 foreach($recs as $rec) {
                     $x = round(($rec->timestamp - $this->start_time) / $period * 100);
-                    $a = $rec->availability*100;
-                    $r = $rec->reliability*100;
+                    $a = round($rec->availability*100, 1);
+                    $r = round($rec->reliability*100, 1);
 
                     //skip if at the same x - position
                     if($previous_x == $x) continue; 
