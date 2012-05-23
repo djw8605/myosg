@@ -35,6 +35,34 @@ if(count($this->recs) == 0) {
 //search OSG link
 echo "<br><p><a style=\"font-weight: bold;font-size: 150%;\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\" target=\"_blank\">Search Entire OSG</a></p>";
 
+//NOTE -- there is also show_contact() function
+function show_contacts($contacts) {
+    $shown_names = array();//used to group names for guest access
+    foreach($contacts as $contact) {
+        if(user()->isGuest()) {
+            //TODO -- need to group by name since user only see a list of names
+            if(!in_array($contact->name, $shown_names)) {
+                echo htmlsafe($contact->name)."<br/>";
+                $shown_names[] = $contact->name;
+            }
+        } else {
+            echo "<div class=\"contact_info\">";
+            echo "<div class=\"indent\">";
+                echo "<h3>".htmlsafe($contact->name)."</h3>";
+                echo "<table class=\"summary_table\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
+            echo "</div>";
+            echo "</div>";
+        }
+    }
+}
+
 function show_resource($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag resource\">Resource</span></td>";
@@ -44,24 +72,7 @@ function show_resource($rec) {
     echo "<p class=\"desc\">".$rec->description."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
         echo "<h4>$type_name</h4>";
-        foreach($contacts as $contact) {
-            if(user()->isGuest()) {
-                echo htmlsafe($contact->name)."<br/>";
-            } else {
-                echo "<div class=\"contact_info\">";
-                echo "<div class=\"indent\">";
-                    echo "<h3>".htmlsafe($contact->name)."</h3>";
-                    echo "<table class=\"summary_table\">"; 
-                    echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                    echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                    if($contact->sms_address != null) {
-                        echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
-                    }
-                    echo "</table>";
-                echo "</div>";
-                echo "</div>";
-            }
-        }
+        show_contacts($contacts);
     }
     echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Resource Group Summary</a>";
     echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
@@ -92,6 +103,8 @@ function show_sc($rec) {
     echo "<p><span class=\"header\">Community</span>".$rec->community."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
         echo "<h4>$type_name</h4>";
+        show_contacts($contacts);
+        /*
         foreach($contacts as $contact) {
             if(user()->isGuest()) {
                 echo htmlsafe($contact->name)."<br/>";
@@ -102,6 +115,7 @@ function show_sc($rec) {
                     echo "<table class=\"summary_table\">"; 
                     echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                     echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                    echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
                     if($contact->sms_address != null) {
                         echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
                     }
@@ -110,6 +124,7 @@ function show_sc($rec) {
                 echo "</div>";
             }
         }
+        */
     }
     echo "<a href=\"".fullbase()."/scsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&summary_attrs_showsites=on&sc=on&sc_".$rec->id."=on&active_value=1\">Show Detail</a>";
     if(user()->hasRole("admin")) {
@@ -128,6 +143,8 @@ function show_vo($rec) {
     echo "<p><span class=\"header\">Long Name</span>".$rec->long_name."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
         echo "<h4>$type_name</h4>";
+        show_contacts($contacts);
+        /*
         foreach($contacts as $contact) {
             if(user()->isGuest()) {
                 echo htmlsafe($contact->name)."<br/>";
@@ -146,6 +163,7 @@ function show_vo($rec) {
                 echo "</div>";
             }
         }
+        */
     }
     echo "<a href=\"".fullbase()."/vosummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showmember_resource=on&summary_attrs_showfield_of_science=on&summary_attrs_showreporting_group=on&summary_attrs_showparent_vo=on&summary_attrs_showcontact=on&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&vo=on&vo_".$rec->id."=on&active=on&active_value=1&sort_key=name\">Show Summary</a>";
     echo "<a href=\"".$rec->primary_url."\">".$rec->primary_url."</a>";
@@ -212,38 +230,13 @@ function show_contact($rec) {
     if(!user()->isGuest()) {
         echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."<br>".formatEmail($contact->secondary_email)."</td></tr>";
         echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+        //echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
         if($contact->sms_address != null) {
             echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
         }
         if($contact->im != null) {
             echo "<tr><th>IM</th><td>".htmlsafe($contact->im)."</td></tr>";
         }
-
-        /*
-        //address
-        $add = "";
-        if(trim($contact->address_line_1) != "") {
-            $add .= htmlsafe($contact->address_line_1)."<br/>";
-        }
-        if(trim($contact->address_line_2) != "") {
-            $add .= htmlsafe($contact->address_line_2)."<br/>";
-        }
-        if(trim($contact->city) != "") {
-            $add .= $contact->city." ";
-        }
-        if(trim($contact->state) != "") {
-            $add .= $contact->state." ";
-        }
-        if(trim($contact->zipcode) != "") {
-            $add .= $contact->zipcode."<br/>";
-        }
-        if(trim($contact->country) != "") {
-            $add .= $contact->country."<br/>";
-        }
-        if(trim($add) != "") {
-            echo "<p class=\"address\">$add</p>";
-        }
-        */
     }
     echo "</table>";
     echo "</div>";//end contact info
