@@ -64,10 +64,11 @@ background-position: 0px 1px;
     <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     <h3>Information to display</h3>
     <div class="indent">
-    <?$checked = "";
-    if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
+    <?$checked = ""; if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
     <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
-    
+
+    <?$checked = ""; if(isset($_REQUEST["map_attrs_showcampusgrid"])) { $checked = "checked=checked"; }?>
+    <input type="checkbox" name="map_attrs_showcampusgrid" <?=$checked?>/> Show Campus Grid<br>
 
     </div>
     <h3>Sites to display</h3>

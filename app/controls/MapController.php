@@ -65,8 +65,10 @@ class MapController extends ControllerBase
         $this->view->downtime = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
 
         //get campus grid icons
-        $model = new CampusGrid();
-        $this->view->campusgrid_icons = $model->getIcons();
+        if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
+            $model = new CampusGrid();
+            $this->view->campusgrid_icons = $model->getIcons();
+        }
 
         $this->setpagetitle(self::default_title());
     }

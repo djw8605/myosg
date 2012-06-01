@@ -170,18 +170,20 @@ function init(scrollwheel) {
     });
 
     <?php
-    //add campus grid icons
-    foreach($this->campusgrid_icons as $icon) {
-        ?>
-        var campus_marker = new google.maps.Marker({
-            position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
-            map: map,
-            //zIndex: <?php echo $zindex?>,
-            icon: '<?php echo fullbase()."/".$icon["icon"];?>',
-            title: '<?php echo addslashes($icon["name"])?>'
-        });
-        setInfoWindow(null, campus_marker, "<h2>Campus Grid: <?php echo $icon["name"]?></h2>");
-        <?php
+    if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
+        //add campus grid icons
+        foreach($this->campusgrid_icons as $icon) {
+            ?>
+            var campus_marker = new google.maps.Marker({
+                position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
+                map: map,
+                //zIndex: <?php echo $zindex?>,
+                icon: '<?php echo fullbase()."/".$icon["icon"];?>',
+                title: '<?php echo addslashes($icon["name"])?>'
+            });
+            setInfoWindow(null, campus_marker, "<h2>Campus Grid: <?php echo $icon["name"]?></h2>");
+            <?php
+        }
     }
     ?>
     
