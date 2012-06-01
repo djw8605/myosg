@@ -14,17 +14,25 @@ foreach($this->rgs as $rgid=>$rg) {
  
     foreach($rg as $rid=>$resource) {
         $resource_name = $resource->name;
-        $resource_fqdn = $resource->fqdn;
 
-        ?>
-        <div class="resource h4 round">
-        <span class="fqdn sidenote"><?=$resource_fqdn?></span>
-        <?
-        if(uwa()) {
-            echo "<a target=\"_blank\" href=\"".fullbase()."/wizardcurrentstatus/index?datasource=currentstatus&current_status_attrs_shownc=on&r=on&r_$rid=on\">$resource_name</a>";
-        } else {
-            echo $resource_name;
-            echo "<br/>";
+        $disabled = "";
+        if($resource->disable == 1) {
+            $disabled = "disabled";
+        }
+        echo "<div class=\"round h4 resource $disabled\">";
+        //display ticket open link if it's active
+        if($resource->disable == 0 && $resource->active == 1) {
+            echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
+            echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+        }
+
+        echo "<span class=\"fqdn sidenote\">$resource->fqdn</span>";
+        echo $resource_name;
+        if($resource->disable == 1) {
+            echo " (Removed)";
+        }
+        if($resource->active == 0) {
+            echo " (Inactive)";
         }
         ?>
         </div>

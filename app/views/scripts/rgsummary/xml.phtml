@@ -207,9 +207,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "</Description>";
         }
 
+        echo "<FQDN>".$resource->fqdn."</FQDN>";
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
-            echo "<FQDN>".$resource->fqdn."</FQDN>";
-
             echo "<FQDNAliases>";
             if(isset($this->aliases[$rid])) {
                 foreach($this->aliases[$rid] as $alias) {
@@ -218,7 +217,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             }
             echo "</FQDNAliases>";
         }
-
 
         if(isset($_REQUEST["summary_attrs_showvomembership"])) {
             echo "<SupportedVOs>";

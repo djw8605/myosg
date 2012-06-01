@@ -136,8 +136,14 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
         //show resource name & desc
         echo "<div class=\"round h4 resource $disabled\">";
-        echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/resource?resource_type=".$resource_group->osg_grid_type_id."&resource_id=$rid\" class=\"sidenote\">";
-        echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+    
+        //display ticket open link if it's active
+        if($resource->disable == 0 && $resource->active == 1) {
+            echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
+            echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+        }
+        echo "<span class=\"fqdn sidenote\">$resource->fqdn</span>";
+
         echo "<span class=\"h4\">".$resource->name."</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
@@ -246,9 +252,11 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         }
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
+            /* -- always displayed
             echo "<tr><th>FQDN</th><td>";
             echo htmlsafe($resource->fqdn);
             echo "</td></tr>";
+            */
 
             echo "<tr><th>FQDN Alias</th><td>";
             if(isset($this->aliases[$rid])) {

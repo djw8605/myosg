@@ -168,6 +168,24 @@ function init(scrollwheel) {
                 infowindow.close();
             }
     });
+
+    <?php
+    //add campus grid icons
+    foreach($this->campusgrid_icons as $icon) {
+        ?>
+        var campus_marker = new google.maps.Marker({
+            position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
+            map: map,
+            //zIndex: <?php echo $zindex?>,
+            icon: '<?php echo fullbase()."/".$icon["icon"];?>',
+            title: '<?php echo addslashes($icon["name"])?>'
+        });
+        setInfoWindow(null, campus_marker, "<h2>Campus Grid: <?php echo $icon["name"]?></h2>");
+        <?php
+    }
+    ?>
+    
+
     google.maps.event.addListener(infowindow, 'closeclick', function() {
         $("#site option[value=]").attr("selected", "selected");
     });
@@ -178,6 +196,8 @@ function setInfoWindow(id,marker, content) {
         infowindow.close();
         infowindow.setContent(content);
         infowindow.open(map, marker);
-        $("#site option[value='"+id+"']").attr("selected", "selected");
+        if(id != null) {
+            $("#site option[value='"+id+"']").attr("selected", "selected");
+        }
     });
 }
