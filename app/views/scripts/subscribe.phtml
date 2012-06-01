@@ -39,7 +39,8 @@
 <script type="text/javascript">
 function create_tinyurl() {
     $("#tinyurl_area").load("<?=fullbase()."/proxy/tinyurl?url=";?>"+escape(document.location), function() {
-        $("#tinyurl_area input").select();
+        //$("#tinyurl_area input").select();
+        $("#tinyurl_area input").focus();
     });
 }
 </script>
