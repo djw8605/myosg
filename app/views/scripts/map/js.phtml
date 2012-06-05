@@ -21,6 +21,12 @@ function init(scrollwheel) {
     
     //overrride with hash params
     anchor = document.location.hash.split("#")[1];
+    <?php 
+    //allow anchor override via parameter
+    if(isset($_REQUEST["__anchor"])) {
+        echo "anchor = '".$_REQUEST["__anchor"]."';"; 
+    }
+    ?>
     if(anchor) {
         var params = anchor.split("|");
         var coords = params[0].split(",");
