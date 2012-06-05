@@ -19,6 +19,8 @@ class CampusGrid
 {
     public function getIcons() {
         return array(
+            array("name"=>"Fermilab", "lat"=>41.85143, "lon"=>-88.242767, "icon"=>"images/campus/fermilab.gif"),
+            array("name"=>"Virginia Tech", "lat"=>37.221196, "lon"=>-80.426488, "icon"=>"images/campus/vt.png"),
             array("name"=>"Nebraska", "lat"=>40.819818, "lon"=>-96.705651, "icon"=>"images/campus/n.png"),
             array("name"=>"GLOW", "lat"=>43.071568, "lon"=>-89.406931, "icon"=>"images/campus/uw.gif")
         );
