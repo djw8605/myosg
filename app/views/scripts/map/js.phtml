@@ -177,7 +177,6 @@ function init(scrollwheel) {
             var campus_marker = new google.maps.Marker({
                 position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
                 map: map,
-                //zIndex: <?php echo $zindex?>,
                 icon: '<?php echo fullbase()."/".$icon["icon"];?>',
                 title: '<?php echo addslashes($icon["name"])?>'
             });
