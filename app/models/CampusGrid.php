@@ -19,10 +19,26 @@ class CampusGrid
 {
     public function getIcons() {
         return array(
-            array("name"=>"Fermilab", "lat"=>41.85143, "lon"=>-88.242767, "icon"=>"images/campus/fermilab.gif"),
-            array("name"=>"Virginia Tech", "lat"=>37.221196, "lon"=>-80.426488, "icon"=>"images/campus/vt.png"),
-            array("name"=>"Nebraska", "lat"=>40.819818, "lon"=>-96.705651, "icon"=>"images/campus/n.png"),
-            array("name"=>"GLOW", "lat"=>43.071568, "lon"=>-89.406931, "icon"=>"images/campus/uw.gif")
+            array("name"=>"UF", "lat"=>29.681312, "lon"=>-82.5, "icon"=>"images/campus/uf.png", 
+                "desc"=>""),
+
+            array("name"=>"UCSD", "lat"=>33.016928, "lon"=>-116.846046, "icon"=>"images/campus/ucsd.png", 
+                "desc"=>"UCSD stuff here.."),
+
+            array("name"=>"PU", "lat"=>40.424923, "lon"=>-87.0, "icon"=>"images/campus/pu.png", 
+                "desc"=>"Researchers and educators at Purdue University-West Lafayette (Purdue), Purdue University-Calumet (Calumet), and the University of Notre Dame."),
+
+            array("name"=>"Fermilab", "lat"=>41.85143, "lon"=>-88.242767, "icon"=>"images/campus/fermilab.gif",
+                "desc"=>""),
+
+            array("name"=>"Virginia Tech", "lat"=>37.221196, "lon"=>-80.426488, "icon"=>"images/campus/vt.png",
+                "desc"=>""),
+
+            array("name"=>"Nebraska", "lat"=>40.819818, "lon"=>-96.705651, "icon"=>"images/campus/n.png",
+                "desc"=>"HCC supports NU faculty and staff from a variety of fields and 4 campuses located at Lincoln, Omaha and Kearney."),
+
+            array("name"=>"GLOW", "lat"=>43.071568, "lon"=>-89.406931, "icon"=>"images/campus/w.png",
+                "desc"=>"The Grid Laboratory of Wisconsin is a campus-wide distributed computing environment designed to meet the scientific computing needs of the University of Wisconsin, Madison.")
         );
     }
 }
