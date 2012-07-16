@@ -183,10 +183,10 @@ function init(scrollwheel) {
             var campus_marker = new google.maps.Marker({
                 position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
                 map: map,
-                icon: '<?php echo fullbase()."/".$icon["icon"];?>',
+                icon: '<?php echo fullbase()."/images/smallpin.png";?>',
                 title: '<?php echo addslashes($icon["name"])?>'
             });
-            setInfoWindow(null, campus_marker, "<h2>Campus Grid: <?php echo $icon["name"]?></h2><p><?php echo $icon["desc"]?></p>");
+            setInfoWindow(null, campus_marker, "<h2><?php echo $icon["name"]?> Campus Grid</h2><p><?php echo $icon["desc"]?></p><img style=\"float: right; padding-right: 10px;\" src=\"<?php echo fullbase()."/".$icon["icon"];?>\">");
             <?php
         }
     }
