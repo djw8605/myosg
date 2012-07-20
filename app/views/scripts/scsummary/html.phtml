@@ -1,7 +1,17 @@
+<style>
+span[onclick].label{
+color: white;
+}
+table th {
+width: 180px;
+}
+.table,
+pre {
+margin-bottom: 0;
+}
+</style>
 <?
-
 foreach($this->scs as $sc_id=>$sc) {
-
     $name = $sc->name;
     $ex_class = "";
     if($sc->disable == 1) {
@@ -12,15 +22,14 @@ foreach($this->scs as $sc_id=>$sc) {
         $name .= " (Inactive)";
     }
 
-    echo "<div class=\"support_center round\">";
+    echo "<div class=\"group_header\">";
     echo "<span class=\"h3\">".htmlsafe($name)."</span>";
+    echo "</div>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
-        echo "<br/>";
         echo htmlsafe($sc->description);
     }
-    echo "</div>";
 
-    echo "<table class='summary_table'>";
+    echo "<table class='table'>";
     echo "<tr><th>Long Name</th><td>".htmlsafe(@$sc->long_name)."</td></tr>";
     echo "<tr><th>Community</th><td>".htmlsafe(@$sc->community)."</td></tr>";
 
@@ -28,40 +37,45 @@ foreach($this->scs as $sc_id=>$sc) {
         echo "<tr><th>Contacts</th><td>";
         if(isset($this->contacts[$sc_id])) {
             $contact_types = $this->contacts[$sc_id];
+            echo "<table class=\"table table-bordered table-striped\">";
             foreach($contact_types as $type_name=>$contacts) {
-                echo "<h4>$type_name</h4>";
+                echo "<tr><th>$type_name</th><td>";
+                $group = array();
                 foreach($contacts as $contact) {
-                    if(user()->isGuest()) {
-                        echo htmlsafe($contact->name)."<br/>";
-                    } else {
-                        echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlsafe($contact->name)."</h3>";
-                        echo "<table class=\"summary_subtable\">"; 
-                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                        if($contact->sms_address != null) {
-                            echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                    if(!isset($group[$contact->id])) {
+                        $group[$contact->id] = 1;
+                        if(user()->isGuest()) {
+                            echo htmlsafe($contact->name)."<br/>";
+                        } else {
+                            echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
+                            echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                            //echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+                            if($contact->sms_address != null) {
+                                echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
+                            }
                         }
-                        echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                        echo "</table>";
-                        echo "</div>";
+                    } else {
+                        $group[$contact->id]++;//just count number of records for this person (not used right now..)
                     }
                 }
+                echo "</td></tr>";
             }
+            echo "</table>";
         }
         echo "</td></tr>";
     }
 
     if(isset($_REQUEST["summary_attrs_showsites"])) {
-        echo "<tr><th>Supported Sites</th><td>";
+        echo "<tr><th>Supported OIM Sites*<br><span class=\"muted\">* Not resources</span></th><td>";
         if(isset($this->sites[$sc_id])) {
             $sites = $this->sites[$sc_id];
+            echo "<ul>";
             foreach($sites as $site) {
-                $name = str_replace(" ", "&nbsp;", $site->name);
-                echo "<span class=\"round tag\" style=\"background-color: gray;\">$name</span> ";
+                echo "<li>".htmlsafe($site->name)."</li>";
             }
+            echo "</ul>";
         } else {
-            echo "(No sites are supported)";
+            echo "<span class=\"muted\">No sites are supported</span>";
         }
         echo "</td></tr>";
     }

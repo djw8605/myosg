@@ -10,11 +10,6 @@
 {
     cursor: pointer;
 }
-div.resource
-{
-    background-color: white;
-    border: none;
-}
 .time-tooltip-content
 {
     background-color: #ccc;
@@ -23,19 +18,14 @@ div.resource
 .mark
 {
     position: absolute;
-    height: 16px;
-    width: 16px;
-    background: transparent url(<?=fullbase();?>/images/downarrow.png) no-repeat 0px 0px;
+    width: 30px;
+    height: 25px;
+    background: transparent url(images/pin.png) no-repeat 0px 0px;
 }
 </style>
 <?}?>
 
-<!--
-<script language='javascript' src='<?=base()?>/lib/jquery-1.3.1/plugins/jquery.dimensions.min.js'></script>
-<script language='javascript' src='<?=base()?>/lib/jquery-1.3.1/plugins/jquery.lazyload.mini.js'></script>
--->
 <script language='javascript' src='<?=base()?>/lib/jquery.scrollstop.js'></script>
-
 <script type="text/javascript">
 function convertXtoUnixTime(graph, x)
 {
@@ -56,10 +46,8 @@ function convertUnixTimeToX(graph, time)
     var x = (time - start_time)*(width / time_width);
     return x;
 }
-
-
 function mark(rid, sid,time) {
-    var graph = $("#resource_"+rid).find("img[sid="+sid+"]");
+    var graph = $("img[data-sid="+sid+"][data-rid="+rid+"]");
     var pos = graph.position();
     var x = pos.left + convertUnixTimeToX(graph, time)-8;
     var y = pos.top-16;
@@ -70,7 +58,7 @@ function mark(rid, sid,time) {
     mark.show();
 }
 
-$(document).ready(function() {
+$(function() {
     //load currently selected history detail
     currentAnchor = document.location.hash;
     if(currentAnchor)
@@ -93,26 +81,26 @@ $(document).ready(function() {
     }
 
     $(".graph").click(function(event) {
-        rid = $(this).attr("rid");
-        sid = $(this).attr("sid");
+        rid = $(this).data("rid");
+        sid = $(this).data("sid");
         var imgpos = $(this).position();
         var x = event.pageX - imgpos.left;
         time = convertXtoUnixTime(this, x);
 
         //update anchor
         var anchor = "detail?resource_id="+rid+"&service_id="+sid+"&time="+time;
-        document.location = "#"+anchor;
+        document.location.hash = anchor;
     
         //hide all previously opened detail (we have only one mark..)
         $(".history_detail").hide();
 
         //load detail content
         mark(rid, sid, time);
-        $("#history_detail_"+rid+"_"+sid).html("<img src='<?=fullbase()?>/images/loading_animation_small.gif'/> Loading...").load("<?=fullbase()."/".pagename()?>/"+anchor, 
-            function() {
-                $(this).slideDown();
-            }
-        );
+        $("#history_detail_"+rid+"_"+sid)
+        .html("<img src='images/loading_animation_small.gif'/> Loading...")
+        .load("<?=fullbase()."/".pagename()?>/"+anchor, function() {
+            $(this).slideDown();
+        });
     });
 
     $(".graph").mousemove(function(event) {
@@ -162,10 +150,10 @@ function processGraphScroll() {
 
     $("img.graph").each(function() {
         var jthis = $(this);
-        if(jthis.attr("name") != "") {
+        if(jthis.data("url") != "") {
             if(isScrolledIntoView(jthis, docViewTop, docViewBottom)) {
-                $(this).attr('src', $(this).attr('name'));
-                $(this).attr("name", "");
+                $(this).attr('src', $(this).data('url'));
+                $(this).data("url", "");
             }
         }
     });
@@ -184,39 +172,61 @@ function isScrolledIntoView(jthis, docViewTop, docViewBottom)
 <div id="time-tooltip" class="hidden time-tooltip">
 <span class="time-tooltip-content">to be loaded..</span>
 </div>
-<?
-echo "Between ".date(config()->date_format, $this->start_time);
-echo " and ".date(config()->date_format, $this->end_time)."<br/>";
+
+<h2><?php echo $this->page_title?> 
+<small>
+Between <?php echo date(config()->date_format, $this->start_time);?> 
+and <?php echo date(config()->date_format, $this->end_time)?></span><br>
+</small>
+</h2>
+<?php
+
 foreach($this->rgs as $rgid=>$rg) {
 
     echo "<div style=\"padding-bottom: 10px;\">"; //parent where position() is called
 
     //show resource group header
     $resource_group = $this->resource_groups[$rgid][0];
-    echo "<div class=\"resource_group_header round\">";
-    if(!uwa()) {
-        echo "<div class=\"sidenote\">";
-        echo $resource_group->grid_type_description." Group";
-        echo "</div>";
-    }
+    echo "<div class=\"group_header\">";
     echo "<span class='h3'>".$resource_group->name."</span>";
+    echo " <small>".$resource_group->grid_type."</small>";
     echo "</div>";
+    //echo $this->ruler;
 
+    echo "<table class=\"table table-rsvhistory\">";
     foreach($rg as $rid=>$resource)
     {
-        echo "<h4><div class=\"resource round\">$resource->name</div></h4>";
-        echo "<div id=\"resource_$rid\" class=\"indent\">";
-        
-        foreach($this->services[$rid] as $service) {
-            echo "<h4>$service->name Service</h4>";
-            echo "<div class=\"history_graph\">";
-            echo "<img sid=\"$service->service_id\" rid=\"$rid\" class=\"graph\" src=\"".fullbase()."/images/graph_notloaded.png\" name=\"".fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
-            echo $this->ruler;
-            echo "</div>";
-            echo "<div class=\"history_detail\" id=\"history_detail_".$rid."_".$service->service_id."\"></div>";
+        if(count($this->services[$rid]) == 0) {
+            echo "<tr>";
+            echo "<th width=\"190px\"><div class=\"resource round\">".$resource->name."</div></th><td colspan=2>(No Service)</td>";
+            echo "</tr>";
+        } else {
+            $first = true;
+            foreach($this->services[$rid] as $service) {
+                if($first) {
+                    echo "<tr><th width=\"190px\"><div class=\"resource\">".$resource->name."</div></th>";
+                    $first = false;
+                } else {
+                    echo "<tr><th style=\"border-top: none;\"></th>";//already shown resource name
+                }
+                echo "<td width=\"90px\">$service->name</td>";
+
+                echo "<td>";
+                echo "<div class=\"history_graph\">";
+                echo "<img data-sid=\"$service->service_id\" data-rid=\"$rid\" class=\"graph\" src=\"images/graph_notloaded.png\" data-url=\"history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
+                echo "</div>";//history_graph
+                echo "</td>";
+
+                echo "</tr>";//close each lines at this point
+
+                //row to store history_detail
+                echo "<tr>";
+                echo "<td colspan=3 style=\"border: none;\"><div class=\"history_detail\" id=\"history_detail_".$rid."_".$service->service_id."\"></div></td>"; 
+                echo "</tr>";
+            }
         }
-        echo "</div>";//indent
     }
+    echo "</table>";
 
     echo "</div>";
 }

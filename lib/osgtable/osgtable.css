@@ -2,10 +2,6 @@ table.osgtable {
 border-collapse: collapse;
 width: 100%;
 font-size: 8pt;
-
-/*
-http://www.456bereastreet.com/archive/200704/how_to_prevent_html_tables_from_becoming_too_wide/
-*/
 table-layout:fixed;
 }
 .osgtable th {
@@ -14,7 +10,7 @@ color: #666;
 padding: 3px 10px 3px 5px;
 border-top-left-radius: 2px;
 border-top-right-radius: 2px;
-/*vertical-align: bottom;*/
+vertical-align: top;
 }
 .osgtable th:hover {
 cursor: pointer;
@@ -73,17 +69,20 @@ border: none;
 width: 100%;
 box-shadow:inset 1px 1px 5px #ccc;
 padding: 4px;
+color: #222;
 }
 .osgtable table.subtable td {
 border: none;
-padding: 0px 5px 0px 0px;
+padding: 0px 5px 0px 3px;
+vertical-align: top;
 }
 .osgtable div.div300 {
 max-height: 150px;
 overflow: auto;
 }
 .osgtable table.subtable h3 {
-color: #666;
+color: #777;
+font-size: 14px;
 }
 span.loading {
 display: inline-block;

@@ -1,4 +1,3 @@
-<?=$this->render("search_box.phtml", true)?>
 <style>
 #primaryContent h3 {
 border-bottom: none;
@@ -6,15 +5,33 @@ border-bottom: none;
 .contact_info {
 margin-right: 200px;
 }
+#result_table td,
+#result_table th {
+vertical-align: top;
+}
+.entry .title {
+font-size: 14px;
+font-weight: bold;
+margin-bottom: 5px;
+/*color: #D98719;*/
+}
+.entry a {
+text-decoration: underline;
+}
+.entry .table {
+margin-bottom: inherit;
+}
+.entry .table th {
+width: 150px;
+}
 </style>
+<h2>Search Result</h2>
 <div id="result">
 <?
 if(count($this->recs) == 0) {
-    echo "<center>";
-    echo "<h2>No matching result</h2>";
-    echo "</center>";
+    echo "<p>No matching result.</p>";
 } else {
-    echo "<table>";
+    echo "<table id=\"result_table\">";
     foreach($this->recs as $rec) {
         switch($rec->type) {
         case "resource": show_resource($rec);break;
@@ -33,7 +50,7 @@ if(count($this->recs) == 0) {
 }
 
 //search OSG link
-echo "<br><p><a style=\"font-weight: bold;font-size: 150%;\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\" target=\"_blank\">Search Entire OSG</a></p>";
+echo "<br><p><a class=\"btn\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\">Search Entire OSG</a></p>";
 
 //NOTE -- there is also show_contact() function
 function show_contacts($contacts) {
@@ -47,17 +64,15 @@ function show_contacts($contacts) {
             }
         } else {
             echo "<div class=\"contact_info\">";
-            echo "<div class=\"indent\">";
-                echo "<h3>".htmlsafe($contact->name)."</h3>";
-                echo "<table class=\"summary_table\">"; 
-                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                if($contact->sms_address != null) {
-                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
-                }
-                echo "</table>";
-            echo "</div>";
+            echo "<b>".htmlsafe($contact->name)."</b>";
+            echo "<table class=\"table\">"; 
+            echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+            echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+            echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+            if($contact->sms_address != null) {
+                echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+            }
+            echo "</table>";
             echo "</div>";
         }
     }
@@ -67,11 +82,10 @@ function show_resource($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag resource\">Resource</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
-    echo "<p class=\"fqdn\">".$rec->fqdn."</p>";
+    echo "<div class=\"title\">".$rec->v1." <code>".$rec->fqdn."</code></div>";
     echo "<p class=\"desc\">".$rec->description."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4>$type_name</h4>";
+        echo "<h4 class=\"muted\">$type_name</h4>";
         show_contacts($contacts);
     }
     echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Resource Group Summary</a>";
@@ -86,7 +100,7 @@ function show_resourcegroup($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag resource_group\">Resource&nbsp;Group</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     echo "<p class=\"desc\">".$rec->description."</p>";
     echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Resource Group Summary</a>";
     echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
@@ -97,12 +111,12 @@ function show_sc($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag sc\">Support&nbsp;Center</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     echo "<p class=\"desc\">".$rec->description."</p>";
     echo "<p><span class=\"header\">Long Name</span>".$rec->long_name."</p>";
     echo "<p><span class=\"header\">Community</span>".$rec->community."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4>$type_name</h4>";
+        echo "<h4 class=\"muted\">$type_name</h4>";
         show_contacts($contacts);
         /*
         foreach($contacts as $contact) {
@@ -110,17 +124,15 @@ function show_sc($rec) {
                 echo htmlsafe($contact->name)."<br/>";
             } else {
                 echo "<div class=\"contact_info\">";
-                echo "<div class=\"indent\">";
-                    echo "<h3>".htmlsafe($contact->name)."</h3>";
-                    echo "<table class=\"summary_table\">"; 
-                    echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                    echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                    echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                    if($contact->sms_address != null) {
-                        echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
-                    }
-                    echo "</table>";
-                echo "</div>";
+                echo "<b>".htmlsafe($contact->name)."</b>";
+                echo "<table class=\"table\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
                 echo "</div>";
             }
         }
@@ -136,13 +148,13 @@ function show_vo($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag vo\">VO</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     if($rec->v1 != $rec->description) {
         echo "<p class=\"desc\">".$rec->description."</p>";
     }
     echo "<p><span class=\"header\">Long Name</span>".$rec->long_name."</p>";
     foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4>$type_name</h4>";
+        echo "<h4 class=\"muted\">$type_name</h4>";
         show_contacts($contacts);
         /*
         foreach($contacts as $contact) {
@@ -150,16 +162,14 @@ function show_vo($rec) {
                 echo htmlsafe($contact->name)."<br/>";
             } else {
                 echo "<div class=\"contact_info\">";
-                echo "<div class=\"indent\">";
-                    echo "<h3>".htmlsafe($contact->name)."</h3>";
-                    echo "<table class=\"summary_table\">"; 
-                    echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                    echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                    if($contact->sms_address != null) {
-                        echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
-                    }
-                    echo "</table>";
-                echo "</div>";
+                echo "<b>".htmlsafe($contact->name)."</b>";
+                echo "<table class=\"table\">"; 
+                echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
+                echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
+                if($contact->sms_address != null) {
+                    echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                }
+                echo "</table>";
                 echo "</div>";
             }
         }
@@ -176,7 +186,7 @@ function show_facility($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag facility\">Facility</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     if(isset($rec->description)) {
         echo "<p class=\"desc\">".$rec->description."</p>";
     }
@@ -187,7 +197,7 @@ function show_site($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag site\">Site</span></td>";
     echo "<td>";
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     if(isset($rec->description)) {
         echo "<p class=\"desc\">".$rec->description."</p>";
     }
@@ -201,8 +211,7 @@ function show_contact($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag contact\">Contact</span></td>";
     echo "<td>";
-
-    echo "<h1>".$rec->v1."</h1>";
+    echo "<div class=\"title\">".$rec->v1."</div>";
     if(trim($contact->photo_url) != "") {
         echo "<img class=\"avatar\" src=\"$contact->photo_url\" style=\"float: right;\">";
     }
@@ -214,7 +223,7 @@ function show_contact($rec) {
 
 
     echo "<div class=\"contact_info\">";
-    echo "<table class=\"summary_table\">"; 
+    echo "<table class=\"table\">"; 
 
     //show public profile info
     if(trim($contact->profile) != "") {
@@ -254,9 +263,9 @@ function show_gocticket($rec) {
     echo "<tr class=\"entry\">";
     echo "<td><span class=\"tag gocticket\">GOC Ticket</span></td>";
     echo "<td>";
-    echo "<h1><a href=\"".config()->gocticket_url."/".$rec->ID."\">".$rec->ID.": ".$rec->Title."</a></h1>";
+    echo "<div class=\"title\"><a href=\"".config()->gocticket_url."/".$rec->ID."\">".$rec->ID.": ".$rec->Title."</a></div>";
     if(isset($rec->Metadatas)) {
-        echo "<table class=\"summary_table\">"; 
+        echo "<table class=\"table\">"; 
         foreach($rec->Metadatas->Metadata as $metadata) {
             echo "<tr><th>".htmlsafe($metadata->Key)."</th><td>".htmlsafe($metadata->Value)."</td></tr>";
         }
@@ -282,9 +291,6 @@ function formatPhone($phone, $ext) {
 
 
 ?>
-<pre>
-<?//var_dump($this->recs)?>
-</pre>
 </div>
 
 

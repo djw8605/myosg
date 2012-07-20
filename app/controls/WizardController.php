@@ -25,12 +25,12 @@ class WizardController extends ControllerBase
         $this->setpagetitle($this->default_title());
         $this->selectmenu("wizard");
 
-        if(isset($_REQUEST["datasource"])) {
-            $this->resource_ids = $this->process_resourcelist();
-            if(count($this->resource_ids) == 0) {
-                $this->view->info = "No resource matches your current criteria. Please adjust your criteria in order to display any data.";
-            }
+        #if(isset($_REQUEST["datasource"])) {
+        $this->resource_ids = $this->process_resourcelist();
+        if(count($this->resource_ids) == 0) {
+            $this->view->info = "No resource matches your current criteria. Please adjust your criteria in order to display any data.";
         }
+        #}
         $this->load_daterangequery();
     }
 

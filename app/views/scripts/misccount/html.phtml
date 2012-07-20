@@ -1,29 +1,53 @@
-<?
+<style>
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+.table {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 3px;
+}
+table th {
+width: 200px;
+}
+</style>
+
+<?php
+echo "<table class=\"table\">";
 foreach($this->resource_groups_by_gridtype as $grid_type_id => $resource_groups) {
     $counts = $this->counts[$grid_type_id];
     $gridtype_info = $this->grid_types[$grid_type_id][0];
-    echo "<div class=\"header round\">$gridtype_info->description</div>";
 
-    echo "<table class=\"summary_table\">";
+    echo "<tr class=\"noborder\"><th colspan=\"3\">";
+    echo "<div class=\"group_header\"><span class=\"h3\">".$gridtype_info->description."</span></div>";
+    echo "</th>";
+    echo "</tr>";
 
     if(isset($_REQUEST["count_total"])) {
-        echo "<tr><th>Total Resource Count</th><td>".$this->resource_counts[$grid_type_id]."</td></tr>";
+        echo "<tr><th colspan=\"2\">Total Resource Count</th><td>".$this->resource_counts[$grid_type_id]."</td></tr>";
     }
 
     foreach($this->service_groups as $service_group_id => $service_group) {
-        echo "<tr><th>".$service_group[0]->name."</th><td>";
-        echo "<table class=\"summary_subtable\">";
+        $first = true;
         foreach($this->services as $service_id => $service) {
             if($service[0]->service_group_id == $service_group_id) {
                 $count = 0;
                 if(isset($counts[$service_id])) {
                     $count = $counts[$service_id];
                 }
-                echo "<tr><th>".htmlsafe($service[0]->name)."</th><td>".$count."</td></tr>";
+                echo "<tr>";
+                if($first) {
+                    echo "<th class=\"muted\">".$service_group[0]->name."</th>";
+                    $first = false;
+                } else {
+                    echo "<th style=\"border-top: none;\"></th>";
+                } 
+                echo "<th>".htmlsafe($service[0]->name)."</th><td>".$count."</td></tr>";
             }
         }
-        echo "</table>";
-        echo "</td></tr>";
     }
-    echo "</table>";
 }
+echo "</table>";

@@ -7,9 +7,8 @@
 //the widget compiler.. since anchor isn't passed to the server, I have to convert 
 //it to a query parameter "__anchor", and let uwa handler convert it back to anchor.
 ?>
-<h3>Subscribe</h3>
-<div class="indent">
-    <p>Subscribe to the content of this page.</p>
+<span class="help-block">Subscribe to the content of this page.</span>
+<div class="">
 
 <?if($this->has_subscribe_igoogle) {?>
     <span class="external_link" onclick="window.open('<?=fullbase()."/".pagename()?>/addigoogle'+document.location.search+'&__anchor='+escape(document.location.hash.substr(1)));">iGoogle</span><br/>
@@ -33,14 +32,15 @@
 
     <br/>
 
-    <div class="tinyurl" id="tinyurl_area" onclick="create_tinyurl();"><span class="button">Create TinuURL</span></div>
+    <div class="tinyurl" id="tinyurl_area"><span class="btn">Create TinyURL</span></div>
 </div>
 
 <script type="text/javascript">
-function create_tinyurl() {
-    $("#tinyurl_area").load("<?=fullbase()."/proxy/tinyurl?url=";?>"+escape(document.location), function() {
-        //$("#tinyurl_area input").select();
-        $("#tinyurl_area input").focus();
+$(function() {
+    $("#tinyurl_area").click(function() {
+        $(this).unbind("click").html("Creating ...").load("<?=fullbase()."/proxy/tinyurl?url=";?>"+escape(document.location), function() {
+            $("#tinyurl_area input").focus();
+        });
     });
-}
+});
 </script>

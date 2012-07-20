@@ -1,3 +1,40 @@
+<style>
+div.resource {
+background-color: inherit;
+border: none;
+}
+.content a {
+text-decoration: underline;
+}
+.table,
+pre {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 2px;
+}
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+table th {
+max-width: 300px;
+margin: 0px;
+}
+.label {
+font-weight: normal;
+}
+.service {
+background-color: gray;
+display: inline-block;
+color: white;
+padding: 1px 6px;
+font-weight: bold;
+margin-left: 3px;
+}
+</style>
+<table class="table">
 <?
 foreach($this->resource_groups as $rgid=>$record) {
     $gipstatus = $record["gipstatus"];
@@ -15,16 +52,12 @@ foreach($this->resource_groups as $rgid=>$record) {
     $resources = $record["resources"];
     $wlcgstatus = $record["wlcgstatus"];
 
-?>
-    <div class="resource_group_header round">
-    <?
-    if(!uwa()) {
-        echo "<div class=\"sidenote\">";
-        echo $gridtype. " Group";
-        echo "</div>";
-    }
+    echo "<tr class=\"noborder\"><td colspan=\"4\">";
+    echo "<div class=\"group_header\">";
     echo "<span class='h3'>".$group_name."</span>";
+    echo " <small>$gridtype</small>";
     echo "</div>";
+    echo "</tr>";
 
     if (isset($_REQUEST["gip_status_attrs_showtestresults"])) {
         switch($overallstatus) {
@@ -49,16 +82,16 @@ foreach($this->resource_groups as $rgid=>$record) {
             $overall_detail = "GIP validation result is not available for this resource";
         }
 
+        echo "<tr><th>GIP Validation Status</th>";
+        echo "<td colspan=3>";
         if($testtime !== null) {
             echo "<div class=\"sidenote\">Tests performed $testtime ago</div>";
         }
-        echo "<h3>GIP Validation Status</h3>";
         echo "<div class=\"status_$overall\">";
-        if($messages == null || count($messages->Message) == 0) {
-            echo "<p>$overall_detail</p>";
-        } else {
-            $count = 0;
-            $errors = "";
+        echo "<p>$overall_detail</p>";
+        $count = 0;
+        $errors = "";
+        if(isset($messages->Message)) {
             foreach($messages->Message as $message) {
                 if($count < 3) { 
                     echo "<p><pre>$message</pre>";
@@ -69,70 +102,63 @@ foreach($this->resource_groups as $rgid=>$record) {
                 }
                 $count++;
             }
-            if($errors != "") {
-                echo outputtoggle("Show All Error Messages", "Hide Some Error Messages", $errors);
-            }
+        } else {
+            //echo "<p class=\"muted\">No Messages</p>";
         }
-        echo "</div>";//indent
+        if($errors != "") {
+            echo outputtoggle("Show All Error Messages", "Hide Some Error Messages", $errors);
+        }
+        echo "</div>";//status_
+        echo "</td></tr>";
     }
 
-    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { 
+    if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) {
+        echo "<tr><th>WLCG Status</th>";
+        echo "<td colspan=3>";
         if(isset($this->wlcgstatus_updatetime)) {
             $testtime = agoCalculation($this->wlcgstatus_updatetime);
             echo "<div class=\"sidenote\">Tests performed $testtime ago</div>";
         }
-        echo "<h3>WLCG Status</h3>";
         if($wlcgstatus != null) {
-            echo "<table width=\"100%\"><tr>";
             foreach($wlcgstatus as $hostname => $status_package) { 
-                echo "<td width=\"50%\">"; //TODO - adjust width based on number of hosts
                 $groupstatus = $status_package[0];
                 $statuses = $status_package[1];
                 echo "<div class=\"status_$groupstatus\" style=\"min-height: 25px;\">";
-                echo "<span><b>$hostname</b></p>";
+                echo "<span>$hostname</span>";
                 foreach($statuses as $status) {
                     if($status->Status != "OK") {
-                        echo "<div class=\"bottom_border\">";
-                        echo "<p>Test failed on ".$status->LDAPURI. "</p>";
-                        echo "<pre>".$status->Notes."</pre>";
-                        echo "</div>";
+                        echo "<p>Test failed on ".$status->LDAPURI;
+                        echo "<pre>".$status->Notes."</pre></p>";
                     }
                 }
-                echo "</div>"; //status indent
-                echo "</td>";
             }
-            echo "</tr></table>";
         } else {
             echo "<div class=\"status_UNKNOWN\" style=\"min-height: 25px;\">";
             echo "<p>WLCG Status information not reported</p>";
             echo "</div>";
         }
+        echo "</td></tr>";
     }
 
     if(isset($_REQUEST["gip_status_attrs_showresource"])) { 
         //show resources
         foreach($resources as $rid=>$resource) {
-            echo "<div class=\"resource h4 round\">";
-            echo "<div class=\"sidenote\"><span class=\"fqdn\">".$resource->fqdn."</span></div>";
+            echo "<tr>";
+
+            //resource name
+            echo "<th><div class=\"resource\">";
             echo $resource->name."<br/>";
-            echo "</div>";
+            echo "<code>".$resource->fqdn."</code>";
+            echo "</div></th>";
 
             //resource details
-            $details = $this->resource_details[$rid];
-            echo "<table class=\"summary_table\">";
-
             if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { 
                 if(!uwa()) {
-                    echo "<th>LDIF URLs</th>";
-                    echo "<td style='padding: 0px;'>";
-                    
+                    $details = $this->resource_details[$rid];
                     if(isset($details["cemon_raw_data"])) {
-                        echo "<table width='100%'><tr>";
-
                         //show raw data link
                         $data = $details["cemon_raw_data"];
-
-                        echo "<td width='33%' style='padding: 0; border: none;'>";
+                        echo "<td>";
 
                         $link = $data->cemon_raw_data[0]->link;
                         $age = $data->cemon_raw_data[0]->age;
@@ -141,7 +167,7 @@ foreach($this->resource_groups as $rgid=>$record) {
                         } else {
                             echo "<a target='_blank' href='$link'>Incoming Data<br>(Age $age)</a>";
                         }
-                        echo "</td><td width='33%' style='padding: 0; border: none;'>";
+                        echo "</td><td>";
                         //show osg processed link
                         $link = $data->processed_osg_data[0]->link;
                         $age = $data->processed_osg_data[0]->age;
@@ -150,7 +176,7 @@ foreach($this->resource_groups as $rgid=>$record) {
                         } else {
                             echo "<a target='_blank' href='$link' title='Port - 2170'>Fed to OSG BDII<br>(Age $age)</a>";
                         }
-                        echo "</td><td style='padding: 0; border: none;'>";
+                        echo "</td><td>";
                         //show wlcg processed link
                         $link = $data->processed_wlcg_interop_data[0]->link;
                         $age = $data->processed_wlcg_interop_data[0]->age;
@@ -159,37 +185,19 @@ foreach($this->resource_groups as $rgid=>$record) {
                         } else {
                             echo "<a target='_blank' href='$link' title='Port - 2180'>Fed to Interop BDII<br>(Age $age)</a>";
                         }
-                        echo "</td></tr></table>";
+                        echo "</td>";
 
                     } else {
-                        echo "&nbsp;Raw data not available";
+                        echo "<td colspan=3><p class=\"muted\">LDIF data not available</p></td>";
                     }
-                    echo "</td>";
                 }
+            } else {
+                //for now, ldif url is the only posssible information to display
+                echo "<td colspan=3></td>";
             }
-            echo "</table>"; //end - resource detail
+            echo "</tr>";
         }
     }
 }
-
-function outputTestInfo($name, $status, $reason, $rid)
-{
-    $out = "";
-    $out .= "<div class=\"bottom_border status_".$status."\">";
-
-    $out .= "<span class=\"h4\">".$name."</span>";
-    if(!uwa()) {
-        if($reason != "") {
-            $out .= "<br/>$reason";
-        }
-        if($status == "CRITICAL") {
-            $out .= outputAjaxToggle("Issue Detail", base()."/rggipstatus/detail?rid=".$rid."&name=".$name);
-        } else {
-            $out .= "<br/>No issues found for this test.";
-        }
-    }
-    $out .= "</div>";
-
-    return $out;
-}
-
+?>
+</table>

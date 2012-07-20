@@ -1,15 +1,24 @@
+<style>
+div.resource {
+background-color: inherit;
+border: none;
+}
+.content a {
+text-decoration: underline;
+}
+table th {
+width: 50px;
+}
+</style>
+
 <?
 foreach($this->rgs as $rgid=>$rg) {
     
     //show resource group header
     $resource_group = $this->resource_groups[$rgid][0];
-    echo "<div class=\"resource_group_header round\">";
-    if(!uwa()) {
-        echo "<div class=\"sidenote\">";
-        echo $resource_group->grid_type_description." Group";
-        echo "</div>";
-    }
+    echo "<div class=\"group_header\">";
     echo "<span class='h3'>".$resource_group->name."</span>";
+    echo " <small>".$resource_group->grid_type."</small>";
     echo "</div>";
  
     foreach($rg as $rid=>$resource) {
@@ -19,129 +28,124 @@ foreach($this->rgs as $rgid=>$rg) {
         if($resource->disable == 1) {
             $disabled = "disabled";
         }
-        echo "<div class=\"round h4 resource $disabled\">";
+        echo "<div class=\"resource $disabled\">";
+        echo "<code style=\"float: right;\">$resource->fqdn</code>";
         //display ticket open link if it's active
         if($resource->disable == 0 && $resource->active == 1) {
             echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
             echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
         }
-
-        echo "<span class=\"fqdn sidenote\">$resource->fqdn</span>";
-        echo $resource_name;
+        echo "<span class=\"h4\">$resource_name</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
         }
         if($resource->active == 0) {
             echo " (Inactive)";
         }
-        ?>
-        </div>
+        echo "</div>";//resource
 
-        <?
         if(!isset($this->cache[$rid])) {
-            echo "<p class=\"warning\">Current status data is not available for this resource.</p>";
-            continue;
-        }
-        $cache = $this->cache[$rid];
-        $timestamp = (int)$cache->Timestamp[0];
-        $status = $cache->Status[0];
-        $note = $cache->Note[0];
-        $services = $cache->Services[0];
-        ?>
+            echo "<p class=\"muted\">Current status data is not available for this resource.</p>";
+        } else {
+            $cache = $this->cache[$rid];
+            $timestamp = (int)$cache->Timestamp[0];
+            $status = $cache->Status[0];
+            $note = $cache->Note[0];
+            $services = $cache->Services[0];
+            ?>
 
-        <div class="status_<?=$status?>">
-        <p><?=$note?></p>
-        </div>
-        <div class="indent">
-        <?
-        foreach($services as $service) {
+            <div class="status_<?=$status?>">
+            <p><?=$note?></p>
+            </div>
 
-            $service_status = $service->Status;
-            $note = $service->Note;
-            $downtime_note = $service->DowntimeNote;
+            <?php
+            echo "<table class=\"table table-bordered\">";
+            foreach($services as $service) {
+                $service_status = $service->Status;
+                $note = $service->Note;
+                $downtime_note = $service->DowntimeNote;
 
-            echo "<h3>".$service->ServiceName." Service Status</h3>"; 
-            echo "<div class=\"status_$service_status\">";
-            if(isset($service->DowntimeNote)) {
-                //downtime info is bit complicated
-                $internal_status = $downtime_note[0]->InternalStatus;
-                $dnote = $downtime_note[0]->Note;
-                $summary = $downtime_note[0]->MaintenanceSummary;
-                $from = $downtime_note[0]->From;
-                $to = $downtime_note[0]->To;
+                echo "<tr><th>".$service->ServiceName."</th>"; 
+                echo "<td>";
+                echo "<div class=\"status_$service_status\">";
+                if(isset($service->DowntimeNote)) {
+                    //downtime info is bit complicated
+                    $internal_status = $downtime_note[0]->InternalStatus;
+                    $dnote = $downtime_note[0]->Note;
+                    $summary = $downtime_note[0]->MaintenanceSummary;
+                    $from = $downtime_note[0]->From;
+                    $to = $downtime_note[0]->To;
 
-                echo $dnote;
-                echo "<div class=\"downtime\">";
-                echo "<b>Maintenance Summary</b><div>$summary</div>";
-                echo "<table width=\"100%\"><tr>";
-                echo "<td><b>From</b><div>$from</div></td>";
-                echo "<td><b>To</b><div>$to</div></td>";
-                echo "</tr></table>";
-                echo "<b>Internal Status</b><div class=\"status_$internal_status\">$note</div>";
-                echo "</div>";
-            } else {
-                //normal status
-                echo "<p>$note</p>";
-            }
+                    echo $dnote;
+                    echo "<div class=\"downtime\">";
+                    echo "<b>Maintenance Summary</b><div>$summary</div>";
+                    echo "<table width=\"100%\"><tr>";
+                    echo "<td><b>From</b><div>$from</div></td>";
+                    echo "<td><b>To</b><div>$to</div></td>";
+                    echo "</tr></table>";
+                    echo "<b>Internal Status</b><div class=\"status_$internal_status\">$note</div>";
+                    echo "</div>";
+                } else {
+                    //normal status
+                    echo "<p>$note</p>";
+                }
 
-            //critical metrics
-            $critical_outs = array();
-            foreach($service->CriticalMetrics[0] as $metric) {
-                $freshfor = $metric->MetricFreshFor;
-                $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
-                $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
-            }
-            
-            echo "<div>";
-            if(count($critical_outs) != 0) {
-                ksort($critical_outs);
-                echo "<p><span class=\"h3\">Critical Metrics</span></p>";
-                foreach($critical_outs as $out) {
-                    echo $out;
-                } 
-            }
-            echo "</div><br>";
+                //critical metrics
+                $critical_outs = array();
+                foreach($service->CriticalMetrics[0] as $metric) {
+                    $freshfor = $metric->MetricFreshFor;
+                    $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+                    $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                }
+                
+                if(count($critical_outs) != 0) {
+                    ksort($critical_outs);
+                    echo "<p><span class=\"h3\">Critical Metrics</span></p>";
+                    foreach($critical_outs as $out) {
+                        echo $out;
+                    } 
+                }
 
-            //non-critical metrics
-            if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
-                $non_critical_metrics = $service->NonCriticalMetrics[0];
-                $non_critical_outs = array();
-                $non_critical_expired_outs = array();
-                foreach($non_critical_metrics as $metric) {
-                    if($metric->Detail != "") {
-                        $freshfor = $metric->MetricFreshFor;
-                        $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
-                        if($expired) {
-                            $non_critical_expired_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
-                        } else {
-                            $non_critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                //non-critical metrics
+                if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                    $non_critical_metrics = $service->NonCriticalMetrics[0];
+                    $non_critical_outs = array();
+                    $non_critical_expired_outs = array();
+                    foreach($non_critical_metrics as $metric) {
+                        if($metric->Detail != "") {
+                            $freshfor = $metric->MetricFreshFor;
+                            $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
+                            if($expired) {
+                                $non_critical_expired_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                            } else {
+                                $non_critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
+                            }
                         }
                     }
-                }
-                echo "<div>";
-                if(count($non_critical_outs) != 0) {
-                    ksort($non_critical_outs);
-                    echo "<p><span class=\"h3\">Non-Critical Metrics</span></p>";
-                    foreach($non_critical_outs as $out) {
-                        echo $out;
+                    if(count($non_critical_outs) != 0) {
+                        ksort($non_critical_outs);
+                        echo "<p><span class=\"h3\">Non-Critical Metrics</span></p>";
+                        foreach($non_critical_outs as $out) {
+                            echo $out;
+                        }
+                    }
+                    if(count($non_critical_expired_outs) != 0) {
+                        ksort($non_critical_expired_outs);
+                        $detail = "";
+                        foreach($non_critical_expired_outs as $out) {
+                            $detail .= $out;
+                        }
+                        echo outputToggle(
+                            "<span class=\"h3\">Expired Non-Critical Metrics</span>", 
+                            "<span class=\"h3\">Expired Non-Critical Metrics</span>", $detail);
                     }
                 }
-                if(count($non_critical_expired_outs) != 0) {
-                    ksort($non_critical_expired_outs);
-                    $detail = "";
-                    foreach($non_critical_expired_outs as $out) {
-                        $detail .= $out;
-                    }
-                    echo outputToggle(
-                        "<span class=\"h3\">Expired Non-Critical Metrics</span>", 
-                        "<span class=\"h3\">Expired Non-Critical Metrics</span>", $detail);
-                }
-                echo "</div>";
-            }
 
-            echo "</div>"; //status_
+                echo "</div>"; //status_
+                echo "</td></tr>";
+            }
+            echo "</table>";
         }
-        echo "</div>";//indent
     }
 }
 

@@ -1,0 +1,113 @@
+<style type="text/css">
+.list
+{
+    padding: 2px;
+    background-color: #eee;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    width: 90%;
+}
+.scrolled_list
+{
+    height: 160px;
+    overflow: auto;
+}
+</style>
+
+<form method="get" id="wizard">
+    <div class="form-actions">
+    <input type="submit" class="btn btn-primary" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
+
+    <h3>Information to display</h3>
+    <div class="indent">
+        <?$checked = ""; if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
+        <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
+
+        <?$checked = ""; if(isset($_REQUEST["map_attrs_showcampusgrid"])) { $checked = "checked=checked"; }?>
+        <input type="checkbox" name="map_attrs_showcampusgrid" <?=$checked?>/> Show Campus Grid<br>
+    </div>
+
+    <h3>Sites to display</h3>
+    <div class="indent" id="site_area">
+<?
+        $checked = "";
+        if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
+        echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Sites<br/>";
+
+        $model = new Facilities();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { 
+            //grab active, non-disabled records
+            if($item->active == 1 and $item->disable == 0) {
+                $kv[$item->id] = array($item->name, null);//$item->description);
+            }
+        }
+        echo fblist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
+
+        $model = new SupportCenters();
+        $scs = $model->get();
+        $kv = array();
+        foreach($scs as $sc) { 
+            //grab active, non-disabled records
+            if($sc->active == 1 and $sc->disable == 0) {
+                $kv[$sc->id] = array($sc->name, null);//$sc->long_name);
+            }
+        }
+        echo fblist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
+
+?>
+    </div>
+
+    <h3>Filter</h3>
+    <div class="indent">
+            <p>Only show sites that matches following criteria (conditions are and-ed).</p>
+    <?
+        $model = new GridTypes();
+        $list = $model->get();
+        $kv = array();
+        foreach($list as $item) { $kv[$item->id] = $item->name; }
+        echo checklist("gridtype", "Has resource Group with grid type of", $kv);
+
+        $kv = array();
+        $kv[0] = "Inactive";
+        $kv[1] = "Active";
+        echo radiolist("active", "Active Status", $kv, 1); //1 by default
+
+        $kv = array();
+        $kv[0] = "Not Disabled (Normal)";
+        $kv[1] = "Disabled (Removed)";
+        echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
+
+    ?>
+    </div>
+    <div class="form-actions">
+    <input type="submit" class="btn btn-primary" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
+
+    <?=$this->render("subscribe.phtml")?>
+</form>
+
+<span class="help-block">Export Map</span>
+<a target="_blank" href="<?=fullbase()?>/map/kml">KML (Google Earth Format)</a><br/>
+<br>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    function list_click()
+    {
+        if(this.checked) { $("input[name=all_sites]").removeAttr("checked"); }
+    }
+    var items = $("input[name=all_sites]").siblings("input"); 
+    $(items).click(list_click);
+});
+
+function uncheck_sibs(e)
+{
+    $('#site_area .fblist_container').hide(); //TODO - hiding of list just doesn't work on opera..
+    var items = $(e).siblings("input"); 
+    $(items).removeAttr('checked');
+}
+</script>
+

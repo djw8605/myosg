@@ -1,21 +1,20 @@
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showtestresults"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showtestresults" <?=$checked?>/> Show GIP Validation Results<br/>
+<input type="checkbox" name="gip_status_attrs_showtestresults" <?=$checked?>/> GIP Validation Results<br/>
 
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showwlcgstatus"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showwlcgstatus" <?=$checked?>/> Show WLCG Status<br/>
+<input type="checkbox" name="gip_status_attrs_showwlcgstatus" <?=$checked?>/> WLCG Status<br/>
 
 
 <?$checked = "";
 if(isset($_REQUEST["gip_status_attrs_showresource"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="gip_status_attrs_showresource" <?=$checked?> onclick="$('#resource_details').toggle('fast');"/> Show Resources<br/>
+<input type="checkbox" name="gip_status_attrs_showresource" <?=$checked?> onclick="$('#resource_details').toggle('fast');"/> Resources<br/>
 
 <div id="resource_details" class="hidden list">
-<h4>For Each Resource</h4>
-    <?$checked = "";
-    if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { $checked = "checked=checked"; }?>
-    <input type="checkbox" name="gip_status_attrs_showcemondata" <?=$checked?>/> Show LDIF URLs<br/>
+<?$checked = "";
+if(isset($_REQUEST["gip_status_attrs_showcemondata"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="gip_status_attrs_showcemondata" <?=$checked?>/> LDIF URLs<br/>
 </div>
 <script type="text/javascript">
 if($("input[name='gip_status_attrs_showresource']").attr('checked')) {

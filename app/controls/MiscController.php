@@ -24,10 +24,6 @@ class MiscController extends ControllerBase
     {
         $this->setpagetitle($this->default_title());
         $this->selectmenu("misc");
-
-        //TODO ??
-        if(isset($_REQUEST["datasource"])) {
-        }
     }
 
     public function xmlAction()

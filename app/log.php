@@ -116,23 +116,22 @@ function slog($obj)
 }
 
 //session message (in HTML format)
-function addMessage($content)
+function message($type, $content)
 {
-    $message = new Zend_Session_Namespace("message");
-    if(isset($message->content)) {
-        $message->content .= $content;
-    } else {
-        $message->content = $content;
+    $messages = new Zend_Session_Namespace("messages");
+    if(!isset($messages->msgs)) {
+        $messages->msgs = array();
     }
+    $messages->msgs[] = array($type, $content);
 }
-function flushMessage() {
-    $message = new Zend_Session_Namespace("message");
-    if(isset($message->content)) {
-        $content = $message->content;
-        unset($message->content);
-        return $content;
+function flushMessages() {
+    $messages = new Zend_Session_Namespace("messages");
+    if(isset($messages->msgs)) {
+        $msgs = $messages->msgs;
+        unset($messages->msgs);
+        return $msgs;
     }
-    return "";
+    return array();
 }
 
 

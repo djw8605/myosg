@@ -90,7 +90,7 @@ class RggipstatusController extends RgController
             //put everything together
             $this->view->resource_groups[$rgid] = array(
                 "name"=>$resource_group->name, 
-                "gridtype"=>$resource_group->grid_type_description,
+                "gridtype"=>$resource_group->grid_type,
                 "resources"=>$resources,
                 "gipstatus"=>$gipstatus,
                 "wlcgstatus"=>@$wlcgstatus[$rgid]

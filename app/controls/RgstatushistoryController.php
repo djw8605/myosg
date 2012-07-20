@@ -27,6 +27,8 @@ class RgstatushistoryController extends RgController
         $this->view->ruler = $this->generateRuler($this->view->start_time, $this->view->end_time);
         $this->view->rgs = $this->rgs;
 
+        //message("success", "Hello there");
+
         $model = new ResourceGroup();
         $this->view->resource_groups = $model->getindex();
 

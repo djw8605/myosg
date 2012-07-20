@@ -1,10 +1,17 @@
+<style>
+.well {
+margin: 5px 5px 5px 0;
+padding-top: 10px;
+}
+</style>
+<div class="history_detail_content">
 <?
 
 if(isset($this->downtime)) {
     //this is in downtime..
-    echo "<div class=\"status_DOWNTIME\">";
+    echo "<div class=\"status_DOWNTIME well\">";
     echo "This resource is currently under maintenance.<br/>";
-    echo "<div class=\"downtime\">";
+    echo "<div class=\"well downtime\">";
     echo "<b>Maintenance Summary:</b><div>".$this->downtime->downtime_summary."</div>";
     echo "<table width=\"100%\"><tr>";
     $start = date(config()->date_format_full, $this->downtime->unix_start_time);
@@ -15,36 +22,44 @@ if(isset($this->downtime)) {
     echo "</tr></table>";
     if($this->detail_service_status !== null) {
         $status = Status::getStatus($this->detail_service_status->status_id);
-        echo "<b>Internal Status:</b><div class=\"status_$status\">";
+        echo "<b>RSV Status:</b><div class=\"status_$status\">";
         echo $this->detail_service_status->detail."</div>";
     }
-    echo "</div>";
+    echo "</div>";//well downtime
+    echo "</div>";//status_DOWNTIME
 } else {
     //process normal status
     if($this->detail_service_status !== null) {
         $status = Status::getStatus($this->detail_service_status->status_id);
-        echo "<div class=\"status_".$status."\">";
+        echo "<div class=\"well status_".$status."\">";
         $status_time = $this->detail_service_status->timestamp;
         echo "<p>Status changed to $status at ".date(config()->date_format_full, $status_time)."<br/>";
         echo $this->detail_service_status->detail."</p>";
+        echo "</div>";
+
         if($this->detail_time != $status_time) {
-            echo "<p>(Above reason is applicable at the time when this status change occured.)</p>";
+            //echo "<p class=\"muted\">Above status is applicable at the time when this status change occured.</p>";
         }
     } else {
-        echo "<div class=\"status_UNKNOWN\">";
+        echo "<div class=\"well status_UNKNOWN\">";
         echo "<p>No status change has ever occured for this service.</p>";
+        echo "</div>";
     }
 }
 
-echo "<span class=\"h3\">Critical Metrics</span>";
-echo showmetrics($this->detail_critical_metrics, $this->metric_details, $this->detail_time);
+$content = showmetrics($this->detail_critical_metrics, $this->metric_details, $this->detail_time);
+if($content != "") {
+    echo "<span class=\"h3\">Critical Metrics</span>";
+    echo $content;
+}
 
 $content = showmetrics($this->detail_noncritical_metrics, $this->metric_details, $this->detail_time, true);
 if($content != "") {
     $title = "<span class=\"h3\">Non-Critical Metrics</span>";
     echo outputToggle($title, $title, $content);
 }
-echo "</div>"; //closeing status_XXX div
+
+echo "</div>";//history_detail_content
 
 function showmetrics($metrics, $metric_details, $timestamp, $hide_empty = false) 
 {
@@ -100,10 +115,6 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         if($expired) $name .= " (Expired)";
     } else {
         return "";
-/*
-        $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
-        $name .= " (Not Reported)";
-*/
     }
 
     $out .= "<span class=\"h4\">$name</span>";
@@ -122,7 +133,7 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
             preg_match("/[^\.\/]+\.[^\.\/]+$/", $gathered_at, $matches);
             $gathered_at_domain = $matches[0];
             if($service_uri_domain != $gathered_at_domain) {
-                $detail .= " <span class=\"warning\">Not on the same domain</span>";
+                $detail .= " <span class=\"label label-warning\">Not on the same domain</span>";
             }
 
             $detail .= "<br/>";

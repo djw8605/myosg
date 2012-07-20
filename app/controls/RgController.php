@@ -26,9 +26,9 @@ class RgController extends ControllerBase
         $this->selectmenu("rg");
 
         $this->rgs = array();
-        if(isset($_REQUEST["datasource"])) {
-            $this->rgs = $this->process_rglist();
-        }
+        #if(isset($_REQUEST["datasource"])) {
+        $this->rgs = $this->process_rglist();
+        #}
         $this->load_daterangequery();
     }
 
@@ -369,7 +369,7 @@ class RgController extends ControllerBase
                 }
             }
         } else {
-            addMessage("Active Flag filter is enabled but no value is specified.");
+            message("error", "Active Flag filter is enabled but no value is specified.");
         }
         return $resources_to_keep;
     }

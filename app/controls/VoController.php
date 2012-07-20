@@ -26,9 +26,9 @@ class VoController extends ControllerBase
         $this->selectmenu("vo");
 
         $this->vo_ids = array();
-        if(isset($_REQUEST["datasource"])) {
-            $this->vo_ids = $this->process_volist();
-        }
+        #if(isset($_REQUEST["datasource"])) {
+        $this->vo_ids = $this->process_volist();
+        #}
     
         //why am I not using SQL order by statement? because our filter logic is not written to respect the ordering from SQL
         //also, I like to sort it so that we can extend the functionality of sorting more easily. it's also inline with NOSQL phylosophy

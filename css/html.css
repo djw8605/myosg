@@ -379,19 +379,15 @@ table.summary_subtable th
 }
 div.downtime
 {
-    margin-top: 5px;
     background-color: #cce;
     background: -moz-linear-gradient(center top , #cce, #fff) repeat scroll 0 0 #cce;
-
-    padding: 10px;
-    border-right: 1px #aac;
-    border-bottom: 1px #aac;
 }
+/*
 div.downtime_detail
 {
     padding: 3px;
 }
-
+*/
 #content a[target=_blank], span.external_link
 {
 padding-left:15px;

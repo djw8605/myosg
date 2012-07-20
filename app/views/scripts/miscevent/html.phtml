@@ -9,6 +9,7 @@ cursor: pointer;
 color: #999;
 }
 .event {
+border-top: 1px solid #eee;
 padding: 3px;
 }
 .rsv .tag {
@@ -93,10 +94,10 @@ function renderOIMEvent(event) {
     if(contact != null) contact_name = contact.name;
 
     if(action == "update") {
-        html += "<div class=\"round resource\">"+logurl+" "+contact_name+" updated "+model+"</div>";
+        html += "<div>"+logurl+" "+contact_name+" updated "+model+"</div>";
 
         //output old/new values
-        html += "<table class=\"fields\">";
+        html += "<table class=\"table table-bordered\">";
         html += "<tr><th>Parameter Name</th><th>Old Value</th><th>New Value</th></tr>";
         for(var id in fields_n) {
             var field = fields_n[id];
@@ -108,9 +109,9 @@ function renderOIMEvent(event) {
         html += "</table>";
 
     } else if(action == "insert") {
-        html += "<div class=\"round resource\">"+logurl +" "+contact_name+" inserted "+model+"</div>";
+        html += "<div>"+logurl +" "+contact_name+" inserted "+model+"</div>";
     } else if(action == "remove") {
-        html += "<div class=\"round resource\">"+logurl +" "+contact_name+" removed "+model+"</div>";
+        html += "<div>"+logurl +" "+contact_name+" removed "+model+"</div>";
     } else {
         console.log("unknown action:"+action);
     }
@@ -129,7 +130,7 @@ function renderRSVEvent(event) {
     var new_status = event.content.ResourceStatusChange.NewStatus;
     var note = event.content.ResourceStatusChange.Note;
 
-    html += "<div class=\"round resource\">Resource <a href=\"<?php echo fullbase()?>/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_"+resource_group_id+"=on\">"+resource_name+"</a> status changed</div>";
+    html += "<div>Resource <a href=\"<?php echo fullbase()?>/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_"+resource_group_id+"=on\">"+resource_name+"</a> status changed</div>";
 
     html += "<table class=\"layout\"><tr>";
     html += "<td width=\"150px\"><div class=\"status_"+old_status+"\">"+old_status+"</div></td>";
@@ -147,10 +148,10 @@ function renderTicketEvent(event) {
     var ticket_id = key[0];
     var action = key[1];
     if(action == "update") {
-        html += "<div class=\"round resource\">"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">Ticket "+ticket_id+"</a></div>";
+        html += "<div>"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">Ticket "+ticket_id+"</a></div>";
         html += "<pre>"+desc+"</pre>";
     } else if(action == "create") {
-        html += "<div class=\"round resource\">"+submitter_id+" opened ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></div>";
+        html += "<div>"+submitter_id+" opened ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></div>";
         html += "<pre>"+desc+"</pre>";
     }
     return html;

@@ -1,8 +1,6 @@
 div.hierarchy_facility {
-padding: 5px;
-padding-left:25px;
-background:#c96 url(../images/database.png) no-repeat 5px 5px;
-color: white;
+padding: 7px 15px 5px 15px;
+margin-bottom: 10px;
 }
 
 div.hierarchy_site {

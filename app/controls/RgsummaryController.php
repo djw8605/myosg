@@ -143,6 +143,7 @@ class RgsummaryController extends RgController
                             if(!isset($types[$contact->contact_type])) {
                                 $types[$contact->contact_type] = array();
                             }
+                            //group by contact name
                             $types[$contact->contact_type][] = $contact;
                         }
                         $this->view->contacts[$resource_id] = $types;

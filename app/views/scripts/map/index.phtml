@@ -1,158 +1,27 @@
-<?=$this->render("full_header.phtml", true)?>
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+<div class="row-fluid content">
+    <div class="span9">
+        <?=$this->render("banner.phtml", true)?>
+        <h2><?=$this->page_title?></h2>
+        <?=$this->info?>
+        <?=$this->render(pagename()."/html.phtml")?>
+    </div>
+    <div class="span3">
+        <?=$this->render("map/wizard.phtml");?>
+        <?=$this->render("legend_rsvstatus.phtml")?>
+        <?=$this->render("feedback.phtml", true)?>
+    </div>
+</div>
+<?=$this->render("footer.phtml", true)?>
+</div><!--container-fluid-->
+
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
 <?=$this->render(pagename()."/js.phtml");?>
-$(document).ready(function() {
+$(function() {
     init(true); //scroll wheel - on
 });
 </script>
-<style type="text/css">
-.list
-{
-    padding: 2px;
-    background-color: #eee;
-    margin-bottom: 10px;
-    margin-left: 16px;
-    width: 90%;
-}
-.scrolled_list
-{
-    height: 160px;
-    overflow: auto;
-}
-#map_canvas {
-width: 100%;
-height: 500px;
-font-size: 10px;
-}
-/*shrink the font size slightly*/
-#map_canvas h2 {
-font-size: 12px;
-}
-#map_canvas span.h3, #map_canvas span.h4 {
-font-size: 10px;
-}
-#map_canvas .resource_group_header {
-padding: 2px 4px;
-}
-#map_canvas .resource {
-padding-top: 0px;
-padding-bottom: 0px;
-background-position: 2px 1px;
-}
 
-.status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME {
-padding: 3px 3px 3px 33px;
-background-position: 0px 1px;
-}
-
-</style>
-<div id="primaryContentContainer">
-    <div id="primaryContent">
-        <?=$this->render("breadcrumb.phtml", true)?>
-        <h2><?=$this->page_title?></h2>
-        <?=$this->render(pagename()."/html.phtml");?>
-    </div>
-</div>
-<div id="sideContent">
-    <?=$this->render("legend_rsvstatusmap.phtml")?>
-    <div class="indent">
-        <p>URL of this page is updated everytime you change position / zoom of the map. You can bookmark, or copy & paste the URL of this page in order to go back to where you are right now.</p>
-    </div>
-
-<form method="get" id="wizard">
-    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
-    <h3>Information to display</h3>
-    <div class="indent">
-    <?$checked = ""; if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
-    <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
-
-    <?$checked = ""; if(isset($_REQUEST["map_attrs_showcampusgrid"])) { $checked = "checked=checked"; }?>
-    <input type="checkbox" name="map_attrs_showcampusgrid" <?=$checked?>/> Show Campus Grid<br>
-
-    </div>
-    <h3>Sites to display</h3>
-    <div class="indent" id="site_area">
-<?
-        $checked = "";
-        if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
-        echo "<input type=\"checkbox\" name=\"all_sites\" $checked onclick=\"if(this.checked) { uncheck_sibs(this);}\"/> All Sites<br/>";
-
-        $model = new Facilities();
-        $list = $model->get();
-        $kv = array();
-        foreach($list as $item) { 
-            //grab active, non-disabled records
-            if($item->active == 1 and $item->disable == 0) {
-                $kv[$item->id] = array($item->name, null);//$item->description);
-            }
-        }
-        echo fblist("facility", "Sites in Facility ".helpbutton("Facility"), $kv);
-
-        $model = new SupportCenters();
-        $scs = $model->get();
-        $kv = array();
-        foreach($scs as $sc) { 
-            //grab active, non-disabled records
-            if($sc->active == 1 and $sc->disable == 0) {
-                $kv[$sc->id] = array($sc->name, null);//$sc->long_name);
-            }
-        }
-        echo fblist("sc", "Sites supported by Support Centers ".helpbutton("Support_Center"), $kv);
-
-?>
-    </div>
-
-
-    <h3>Filter</h3>
-    <div class="indent">
-            <p>Only show sites that matches following criteria (conditions are and-ed).</p>
-    <?
-        $model = new GridTypes();
-        $list = $model->get();
-        $kv = array();
-        foreach($list as $item) { $kv[$item->id] = $item->name; }
-        echo checklist("gridtype", "Has resource Group with grid type of", $kv);
-
-        $kv = array();
-        $kv[0] = "Inactive";
-        $kv[1] = "Active";
-        echo radiolist("active", "Active Status", $kv, 1); //1 by default
-
-        $kv = array();
-        $kv[0] = "Not Disabled (Normal)";
-        $kv[1] = "Disabled (Removed)";
-        echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
-
-    ?>
-    </div>
-    <br/>
-    <input type="submit" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
-    <?=$this->render("subscribe.phtml")?>
-    <div class="indent">
-<!--
-    <a href="<?=fullbase()?>/map/promo">OSG Sites in US</a>
--->
-    <a target="_blank" href="<?=fullbase()?>/map/kml">KML (Google Earth Format)</a><br/>
-    </div>
-</div>
-<script type="text/javascript">
-$(document).ready(function() {
-    function list_click()
-    {
-        if(this.checked) { $("input[name=all_sites]").attr("checked", ""); }
-    }
-    var items = $("input[name=all_sites]").siblings("input"); 
-    $(items).click(list_click);
-});
-
-function uncheck_sibs(e)
-{
-    $('#site_area .fblist_container').hide(); //TODO - hiding of list just doesn't work on opera..
-    var items = $(e).siblings("input"); 
-    $(items).attr('checked', '');
-}
-</script>
-
-    
-<?=$this->render("full_footer.phtml", true)?>
+<?=$this->render("bootfooter.phtml", true)?>

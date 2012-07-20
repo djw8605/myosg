@@ -1,11 +1,34 @@
 <meta http-equiv="refresh" content="300">
+<style>
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+.content a {
+text-decoration: underline;
+}
+.table {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 3px;
+}
+table th {
+width: 200px;
+}
+</style>
 <?
+echo "<table class=\"table\">";
 foreach($this->statuses as $priority=>$statuses) {
-    echo "<div class=\"header round\">$priority Priority Services</div>";
-    echo "<table class=\"summary_table\">";
+
+    echo "<tr class=\"noborder\"><th colspan=\"3\">";
+    echo "<div class=\"group_header\"><span class=\"h3\">$priority Priority Services</span></div>";
+    echo "</th></tr>";
+
     foreach($statuses as $status) {
         echo "<tr>";
-        echo "<th style=\"width:200px\"><a class=\"hidden_link\" href=\"".$status["url"]."\">".$status["name"]."</a></th>";
+        echo "<th>".$status["name"]."</th>";
 
         if(isset($status["resource_group_id"])) {
             $resource_group_id = $status["resource_group_id"];
@@ -14,7 +37,9 @@ foreach($this->statuses as $priority=>$statuses) {
             echo "<td width=\"120px;\">".showStatus($status["status"])."</td>";
             if(!uwa()) {
                 echo "<td><a href=\"$detail_url\">Current Status Detail</a>&nbsp;&nbsp;&nbsp;";
-                echo "<a href=\"$history_url\">Status History</a></td>";
+                echo "<a href=\"$history_url\">Status History</a>&nbsp;&nbsp;&nbsp;";
+                echo "<a target=\"_blank\" href=\"".$status["url"]."\">SLA</a>";
+                echo "</td>";
             } else {
                 echo "<td></td>";
             }
@@ -25,9 +50,8 @@ foreach($this->statuses as $priority=>$statuses) {
         }
         echo "</tr>";
     }
-    echo "</table>";
 }
-
+echo "</table>";
 
 function showStatus($status) {
     $img = "status_unknown.png";

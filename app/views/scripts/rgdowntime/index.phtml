@@ -1,38 +1,28 @@
-<?=$this->render("full_header.phtml", true)?>
-        <div id="primaryContentContainer">
-            <div id="primaryContent">
-                <?=$this->render("breadcrumb.phtml", true)?>
-                <h2><?=$this->page_title?></h2>
-                <?=$this->info?>
-                <?=$this->render(pagename()."/html.phtml")?>
-            </div>
-        </div>
-        <div id="sideContent">
-            <?=$this->render("rg/wizard.phtml")?>
-            <div class="indent">
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+<div class="row-fluid content">
+    <div class="span9">
+        <?=$this->render("banner.phtml", true)?>
+        <?=$this->info?>
+        <?=$this->render(pagename()."/html.phtml")?>
+    </div>
+    <div class="span3">
+        <?=$this->render("rg/wizard.phtml")?>
 
-            <?
-/*
-                $params = explode("&", $_SERVER["QUERY_STRING"]);
-                $downtime_params = "";
-                foreach($params as $param) {
-                    $kv = explode("=", $param);
-                    slog(print_r($kv, true));
-                    if(strstr("downtime_attrs_", $kv[0]) !== 0) {
-                        continue;
-                    }
-                    if($downtime_params != "") {
-                        $downtime_params .= "&";
-                    }
-                    $downtime_params .= $param;
-                }
-*/
-            $url = fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"];
-            $url = "http://tinyurl.com/create.php?url=".urlencode($url);
-            ?>
-            <a onclick="alert('Creating TinyURL version of this iCAL since Google Calendar does not import iCAL feed that is more than 257 characters. Please use generated TinyURL as iCAL feed URL.');" target="_blank" href="<?=$url?>">iCal</a><br/>
-            <a href="http://www.google.com/calendar/embed?src=aeh4pnhvhi90h2qm36fn9h8897hkqcha%40import.calendar.google.com&ctz=America/New_York" target="_blank">Google Calendar</a><br/>
-            </div>
-            <?=$this->render("feedback.phtml", true)?>
-        </div>
-<?=$this->render("full_footer.phtml", true)?>
+        <span class="help-block">Export Calendar</span>
+        <?  $url = fullbase()."/".pagename()."/ical?".$_SERVER["QUERY_STRING"];
+            $url = "http://tinyurl.com/create.php?url=".urlencode($url); ?>
+        <a onclick="alert('Creating TinyURL version of this iCAL since Google Calendar does not import iCAL feed that is more than 257 characters. Please use generated TinyURL as iCAL feed URL.');" target="_blank" href="<?=$url?>">iCal</a><br/>
+        <a href="http://www.google.com/calendar/embed?src=aeh4pnhvhi90h2qm36fn9h8897hkqcha%40import.calendar.google.com" target="_blank">Google Calendar</a><br/>
+        <br>
+
+        <?=$this->render("feedback.phtml", true)?>
+    </div>
+</div>
+<?=$this->render("footer.phtml", true)?>
+</div><!--container-fluid-->
+<?=$this->render("bootfooter.phtml", true)?>
+
+
+
+

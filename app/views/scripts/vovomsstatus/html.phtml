@@ -1,6 +1,17 @@
-<p>Status Gathered at <?=date(config()->date_format_full, $this->timestamp)?></p>
+<style>
+pre {
+margin-bottom: 0px;
+}
+p.desc {
+font-size: 11px;
+}
+.table th,
+.table td {
+padding: 3px;
+}
+</style>
 <?
-
+echo "<table class=\"table\">";
 foreach($this->voms_status as $voms_status) {
     $info = $voms_status["info"];
     $vomses = $voms_status["voms"];
@@ -8,28 +19,31 @@ foreach($this->voms_status as $voms_status) {
     $id = $info->id;
     $name = $info->name;
 
-    echo "<div class=\"vo round\"><span class=\"h3\">$name</span>";
+    echo "<tr><td style=\"max-width: 300px\">";
+    echo "<div class=\"group_header\"><span class=\"h3\">$name</span>";
+    echo "</div>";
     if(isset($_REQUEST["vomsstatus_attrs_showdesc"])) {
         $description = $info->description;
-        echo "<p>".htmlsafe($description)."</p>";
+        echo "<p class=\"desc\">".htmlsafe($description)."</p>";
     }
-    echo "</div>";
-
+    echo "</td><td>";
     echo outputStatus($info, $vomses);
+    echo "</td></tr>";
 }
+echo "</table>";
 
 function outputStatus($info, $vomses) {
     $out = "";
     if(count($vomses) == 0) {
-        $out .= "<p class=\"warning\">No VOMS server exists or reported for this VO.</p>";
+        $out .= "<p class=\"muted\">No VOMS server exists or reported for this VO.</p>";
     } else {
         foreach($vomses as $voms) {
             $status = $voms->Status;
             $note = $voms->Note;
             $server_url = $voms->VOMSServerURL;
-            $out .= "<div class=\"bottom_border status_".$status."\">";
+            $out .= "<div class=\"status_".$status."\">";
             $out .= "<span class=\"h4\">".htmlsafe($server_url)."</span><br/>";
-            $out .= $note;
+            $out .= "<pre>$note</pre>";
             $out .= "</div>";//staus
         }
     }

@@ -16,15 +16,17 @@
 </style>
 
 <form method="get" id="wizard">
-    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <div class="form-actions">
+        <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
     <h3>Information to display</h3>
     <div class="indent" id="datasource_area">
-        <select name="datasource">
+        <select id="datasource">
         <option value="">(Please Select)</option>
-        <option value="summary">Support Center Summary</option>
+        <option value="scsummary">Support Center Summary</option>
         </select>
         <p>
-            <div id="summary_attrs" class="attrs indent hidden">
+            <div id="scsummary_attrs" class="attrs indent hidden">
                 <?=$this->render("sc/wizard_summary.phtml")?>
             </div>
         </p>
@@ -74,17 +76,18 @@
     </div>
 
     <br/>
-    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
-
+    <div class="form-actions">
+        <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
     <?=$this->render("subscribe.phtml")?>
 
 </form>
 
 <script type="text/javascript">
 
-function showhide_attrs(show_speed)
+function showhide_attrs(v, show_speed)
 {
-    var v = $("select[name=datasource]").val();
+    //var v = $("select[name=datasource]").val();
     $(".attrs").hide();
     if(v != "") {
         $("#"+v+"_attrs").show(show_speed);
@@ -109,14 +112,14 @@ function showhide_attrs(show_speed)
 $(document).ready(function() {
 
     //setup form
-    $("select[name=datasource]").change(function() {
-        showhide_attrs('normal');
+    $("#datasource").change(function() {
+        showhide_attrs(this.value, 'normal');
     });
 
     function list_click()
     {
         $("#all_scs_attrs").hide();
-        if(this.checked) { $("input[name=all_scs]").attr("checked", ""); }
+        if(this.checked) { $("input[name=all_scs]").removeAttr("checked"); }
     }
     var items = $("input[name=all_scs]").siblings("input");
     $(items).click(list_click);
@@ -124,14 +127,10 @@ $(document).ready(function() {
 
     <?
     //select currently selected datasouce
-    if(isset($_REQUEST["datasource"])) {
-        $datasource = $_REQUEST["datasource"];
-        switch($datasource) {
-        case "summary":
-            echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
-            echo "showhide_attrs();\n";
-        }
-    }
+    $front = Zend_Controller_Front::getInstance();
+    $controllerName = $front->getRequest()->getControllerName();
+    echo "$('#datasource option[value=$controllerName]').attr('selected', 'selected');\n";
+    echo "showhide_attrs('$controllerName');\n";
 
     if(isset($_REQUEST["all_scs"])) {
         echo "disable($('input[name=all_scs]'));";
@@ -141,7 +140,7 @@ $(document).ready(function() {
 
 function wizard_submit(format)
 {
-    var action = '<?=fullbase()?>/sc'+$('select[name=datasource]').val(); 
+    var action = '<?=fullbase()?>/'+$('#datasource').val(); 
     action += "/"+format;
     $('#wizard').attr('action', action);
     $('#wizard').submit(); 
@@ -155,7 +154,7 @@ function disable(e)
 
     $('#sc_area .fblist_container').hide(); //TODO - hiding of list just doesn't work on opera..
     var items = $(e).siblings("input"); 
-    $(items).attr('checked', '');
+    $(items).removeAttr('checked');
 }
 
 function enable(e)

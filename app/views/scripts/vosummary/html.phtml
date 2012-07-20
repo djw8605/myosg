@@ -1,4 +1,22 @@
+<style>
+span[onclick].label{
+color: white;
+}
+table th {
+width: 180px;
+}
+.table,
+pre {
+margin-bottom: 0;
+}
+</style>
 <?
+function resource_ownership_cmp($a, $b) {
+    if($a->name == $b->name) {
+        return 0;
+    } 
+    return ($a->name < $b->name) ? -1 : 1;
+}
 
 foreach($this->vos as $vo_id=>$vo) {
     $name = htmlsafe($vo->header);
@@ -12,18 +30,14 @@ foreach($this->vos as $vo_id=>$vo) {
         $name .= " (Inactive)";
     }
 
-    echo "<div class=\"vo round\">";
-    echo "<span class=\"h3\">".$name."</span>";
+    echo "<div class=\"group_header\">";
+    echo "<span class=\"h3\">$name</span>";
+    echo "</div>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
-        echo "<br/>";
         echo htmlsafe($vo->description);
     }
-    echo "</div>";
-    echo "<div class=\"$ex_class\">";
-
-    echo "<table class='summary_table'>";
-    echo "<tr><th>Name</th><td>".htmlsafe($vo->name)."</td></tr>";
-    echo "<tr><th>Long Name</th><td>".htmlsafe($vo->long_name)."</td></tr>";
+    echo "<table class=\"table $ex_class\">";
+    echo "<tr><th>Name / Long Name</th><td>".htmlsafe($vo->name)." / ".htmlsafe($vo->long_name)."</td></tr>";
     echo "<tr><th>Primary URL</th><td>".externalurl($vo->primary_url)."</td></tr>";
     echo "<tr><th>Membership Services URL</th><td>".externalurl($vo->membership_services_url)."</td></tr>";
     echo "<tr><th>Purpose URL</th><td>".externalurl($vo->purpose_url)."</td></tr>";
@@ -33,7 +47,7 @@ foreach($this->vos as $vo_id=>$vo) {
 
     if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
         echo "<tr><th>Parent VO</th><td>";
-        if(isset($this->vovo[$vo_id])) {
+        if(isset($this->vovo[$vo_id]) && $this->vovo[$vo_id] == "") {
             $parent_vo_id = $this->vovo[$vo_id][0]->parent_vo_id;
             $parent_vo = $this->vos[$parent_vo_id];
             echo "<a href=\"".
@@ -42,7 +56,7 @@ foreach($this->vos as $vo_id=>$vo) {
                 $parent_vo_id.
                 "=on&active_value=1\">".htmlsafe($parent_vo->name)."</a> ";
         } else {
-            echo "(No Parent VO)";
+            echo "<span class=\"muted\">No Parent VO</span>";
         }
         echo "</td></tr>";
     }
@@ -53,9 +67,19 @@ foreach($this->vos as $vo_id=>$vo) {
     if(isset($_REQUEST["summary_attrs_showmember_resource"])) {
         echo "<tr><th>Member Resources</th><td>";
         $resource_ownerships = $this->resource_ownerships[$vo_id];
-        foreach($resource_ownerships as $resource_ownership) {
-            $rid = $resource_ownership->id;
-            echo "<span class=\"round tag\" style=\"background-color: gray;\" onclick=\"document.location='".fullbase()."/wizardsummary?datasource=summary&r=on&r_$rid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on';\">".htmlsafe($resource_ownership->name)."</span> ";
+        usort($resource_ownerships, "resource_ownership_cmp");
+        if(count($resource_ownerships) != 0) {
+            echo "<ul>";
+            foreach($resource_ownerships as $resource_ownership) {
+                $rid = $resource_ownership->id;
+                echo "<li>";
+                echo "<b>$resource_ownership->name</b> <code>$resource_ownership->fqdn</code><br>";
+                //echo "<span class=\"label\" onclick=\"document.location='".fullbase()."/rgsummary?rg=on&rg_$rgid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on';\">".htmlsafe($resource_ownership->name)."</span> ";
+                echo "</li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<span class=\"muted\">No member resources</span>";
         }
         echo "</td></tr>";
     }
@@ -64,52 +88,54 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "<tr><th>Field Of Science</th><td>";
         $fss = $this->field_of_science[$vo_id];
         foreach($fss as $fs) {
-            echo htmlsafe($fs->name)."<br/>";
+            echo "<span class=\"label\">".htmlsafe($fs->name)."</span> ";
         }
         echo "</td></tr>";
     }
 
     if(isset($_REQUEST["summary_attrs_showreporting_group"])) {
-        echo "<tr><th>Reporting Group</th><td>";
+        echo "<tr><th>Reporting Groups</th><td>";
         $reports = $this->reports[$vo_id];
-        
         foreach($reports as $report) {
-            echo "<div class=\"vo_report\">";
-            echo "<h4>".htmlsafe($report->name)."</h4>";
+            echo "<div class=\"group_header\">".htmlsafe($report->name)."</div>";
+            echo "<table class=\"table table-bordered\">";
+
+            echo "<tr><th>FQANs</th><td>";
             if($report->fqans !== null) {
-                echo "<h3>FQANs</h3>";
+                echo "<table class=\"table table-bordered table-striped\">";
+                echo "<tr><th>Group Name</th><th>Role</th></tr>";
                 foreach($report->fqans as $fqan) {
-                    echo "<div class=\"vo_report_fqan\">";
-                    echo "<table class=\"summary_subtable\">"; 
-                    echo "<tr><th>Group Name:</th><td>".htmlsafe($fqan->group_name)."</td></tr>";
-                    echo "<tr><th>Role:</th><td>".htmlsafe($fqan->role)."</td></tr>";
-                    echo "</table>";
-                    echo "</div>";
+                    echo "<tr><td>".htmlsafe($fqan->group_name)."</td><td>".htmlsafe($fqan->role)."</td></tr>";
                 }
+                echo "</table>";
             }
+            echo "</td></tr>";
+
+            echo "<tr><th>Report Contacts</th><td>";
             if($report->contacts !== null) {
-                echo "<h3>Report Contacts</h3>";
+                $group = array();//used to group same contact with different dn together
                 foreach($report->contacts as $contact) {
-                    echo "<div class=\"vo_report_contact\">";
-                    if(user()->isGuest()) {
-                        echo htmlsafe($contact->name)."<br/>";
-                    } else {
-                        echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlsafe($contact->name)."</h3>";
-                        echo "<table class=\"summary_subtable\">"; 
-                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                        if($contact->sms_address != null) {
-                            echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                    if(!isset($group[$contact->id])) {
+                        $group[$contact->id] = 1;
+                        if(user()->isGuest()) {
+                            echo htmlsafe($contact->name)."<br/>";
+                        } else {
+                            echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
+                            echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                            //echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+                            if($contact->sms_address != null) {
+                                echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
+                            }
                         }
-                        echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                        echo "</table>";
-                        echo "</div>";
+                    } else {
+                            $group[$contact->id]++;//just count number of records for this person (not used right now..)
                     }
-                    echo "</div>";
                 }
+            } else {
+                echo "<span class=\"muted\">No report contacts</span>";
             }
-            echo "</div>";
+            echo "</td></tr>";
+            echo "</table>";
         }
         echo "</td></tr>";
     }
@@ -118,30 +144,33 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "<tr><th>Contacts</th><td>";
         if(isset($this->contacts[$vo_id])) {
             $contact_types = $this->contacts[$vo_id];
+            echo "<table class=\"table table-bordered table-striped\">";
             foreach($contact_types as $type_name=>$contacts) {
-                echo "<h4>$type_name</h4>";
+                echo "<tr><th>$type_name</th><td>";
+                $group = array();
                 foreach($contacts as $contact) {
-                    if(user()->isGuest()) {
-                        echo htmlsafe($contact->name)."<br/>";
-                    } else {
-                        echo "<div class=\"contact_info\">";
-                        echo "<h3>".htmlsafe($contact->name)."</h3>";
-                        echo "<table class=\"summary_subtable\">"; 
-                        echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                        echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                        if($contact->sms_address != null) {
-                            echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                    if(!isset($group[$contact->id])) {
+                        $group[$contact->id] = 1;
+                        if(user()->isGuest()) {
+                            echo htmlsafe($contact->name)."<br/>";
+                        } else {
+                            echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
+                            echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                            //echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
+                            if($contact->sms_address != null) {
+                                echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
+                            }
                         }
-                        echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                        echo "</table>";
-                        echo "</div>";
+                    } else {
+                        $group[$contact->id]++;//just count number of records for this person (not used right now..)
                     }
                 }
+                echo "</td></tr>";
             }
+            echo "</table>";
         }
         echo "</td></tr>";
     }
 
     echo "</table>";
-    echo "</div>"; //ex-class
 }

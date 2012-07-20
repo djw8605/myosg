@@ -1,37 +1,50 @@
 <?
-
 function showvolist($list) {
     if(count($list) == 0) {
-        echo "<p class=\"info\">No VO under this list.</p>";
+        echo "<p class=\"muted\">No VO under this list.</p>";
     }
     foreach($list as $vo_id=>$vo) {
         $name = htmlsafe($vo->name);
 
-        echo "<div class=\"vo round\">";
+        echo "<div class=\"group_header\">";
         echo "<span class=\"h3\">".$name."</span>";
+        /*
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
             echo htmlsafe($vo->description);
         }
+        */
         echo "</div>";
-        echo "<div>";
+        //echo htmlsafe($vo->app_description);
+        echo htmlsafe($vo->long_name);
 
+        /*
+        echo "<div>";
         echo "<table class='summary_table'>";
         echo "<tr><th>Long Name</th><td>".htmlsafe($vo->long_name)."</td></tr>";
-        echo "<tr><th>App Description</th><td>".htmlsafe($vo->app_description)."</td></tr>";
         echo "</table>";
         echo "</div>"; //ex-class
+        */
     }
 }
 
-echo "<div class=\"group_header round\"><span class=\"h3\">Been active at some point</span></div>";
-echo "<p>Following VOs have been active at least once during the specified date range.</p>";
+echo "<div class=\"row-fluid\">";
+echo "<div class=\"span4 well\">";
+echo "<h4>Been active at some point</h4>";
+echo "<p class=\"muted\">Following VOs have been active at least once during the specified date range.</p>";
 showvolist($this->active_once_vos);
+echo "</div>";
 
-echo "<div class=\"group_header round\"><span class=\"h3\">Never been active but enabled at some point</span></div>";
-echo "<p>Following VOs have never been active and have been flaged as enabled at least once during the specified date range.</p>";
+echo "<div class=\"span4 well\">";
+echo "<h4>Never been active but enabled at some point</h4>";
+echo "<p class=\"muted\">Following VOs have never been active and have been flaged as enabled at least once during the specified date range.</p>";
 showvolist($this->never_active_enabled_vos);
+echo "</div>";
 
-echo "<div class=\"group_header round\"><span class=\"h3\">Never been active nor enabled</span></div>";
-echo "<p>Following VOs have never been active and never been enabled during the specified date range.</p>";
+echo "<div class=\"span4 well\">";
+echo "<h4>Never been active nor enabled</h4>";
+echo "<p class=\"muted\">Following VOs have never been active and never been enabled during the specified date range.</p>";
 showvolist($this->never_never_vos);
+echo "</div>";
+echo "</div>";//row-fluid
+

@@ -13,105 +13,97 @@
     height: 160px;
     overflow: auto;
 }
+#datasource {
+margin-bottom: 5px;
+}
 </style>
 
 <form method="get" id="wizard">
-    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
-    <h3>Information to display</h3>
-    <div class="indent" id="datasource_area">
-        <select name="datasource">
+    <div class="form-actions">
+    <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
+    <h3>Information to Display</h3>
+    <div id="datasource_area">
+        <select id="datasource">
         <option value="">(Please Select)</option>
-        <option value="summary">Resource Group Summary</option>
-        <option value="currentstatus">Current RSV Status</option>
-        <option value="gipstatus">Current GIP Validation Status</option>
-        <option value="statushistory">RSV Status History</option>
-        <option value="arhistory">Availability History</option>
-        <option value="armetric">Availability Metrics</option>
-        <option value="downtime">Downtime Information</option>
-        <option value="account">Gratia Accounting</option>
-        <option value="ce">Gratia Accounting (CE Specific)</option>
-        <option value="se">Gratia Accounting (SE Specific)</option>
-        <option value="bdii">BDII Information</option>
-    <!--
-        <option value="event">Realtime Resource Events</option>
-    -->
-
-        <?
-        //until bdiitree becomes production ready, hide it unless specifically chosen
-        if((isset($_REQUEST["datasource"]) and $_REQUEST["datasource"] == "bdiitree")) { ?>
-            <option value="bdiitree">BDII Treemap</option>
-        <?}?>
+        <option value="rgsummary">Resource Group Summary</option>
+        <option value="rgcurrentstatus">Current RSV Status</option>
+        <option value="rggipstatus">Current GIP Validation Status</option>
+        <option value="rgstatushistory">RSV Status History</option>
+        <option value="rgarhistory">Availability History</option>
+        <option value="rgarmetric">Availability Metrics</option>
+        <option value="rgdowntime">Downtime Information</option>
+        <option value="rgaccount">Gratia Accounting</option>
+        <option value="rgce">Gratia Accounting (CE Specific)</option>
+        <option value="rgse">Gratia Accounting (SE Specific)</option>
+        <option value="rgbdii">BDII Information</option>
         </select>
         
-        <p>
-
-        <div id="summary_attrs" class="attrs indent hidden">
+        <div id="rgsummary_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_summary.phtml")?>
         </div>
 
-        <div id="currentstatus_attrs" class="attrs indent hidden">
+        <div id="rgcurrentstatus_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_currentstatus.phtml")?>
         </div>
 
-        <div id="gipstatus_attrs" class="attrs indent hidden">
+        <div id="rggipstatus_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_gipstatus.phtml")?>
         </div>
 
-        <div id="statushistory_attrs" class="attrs indent hidden">
+        <div id="rgstatushistory_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_statushistory.phtml")?>
         </div>
 
-        <div id="arhistory_attrs" class="attrs indent hidden">
+        <div id="rgarhistory_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_arhistory.phtml")?>
         </div>
 
-        <div id="armetric_attrs" class="attrs indent hidden">
+        <div id="rgarmetric_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_armetric.phtml")?>
         </div>
 
-        <div id="downtime_attrs" class="attrs indent hidden">
+        <div id="rgdowntime_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_downtime.phtml")?>
         </div>
 
-        <div id="account_attrs" class="attrs indent hidden">
+        <div id="rgaccount_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_account.phtml")?>
         </div>
 
-        <div id="ce_attrs" class="attrs indent hidden">
+        <div id="rgce_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_ce.phtml")?>
         </div>
 
-        <div id="se_attrs" class="attrs indent hidden">
+        <div id="rgse_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_se.phtml")?>
         </div>
 
-        <div id="bdiitree_attrs" class="attrs indent hidden">
+        <div id="rgbdiitree_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_bdiitree.phtml")?>
         </div>
 
-        <div id="bdii_attrs" class="attrs indent hidden">
+        <div id="rgbdii_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_bdii.phtml")?>
         </div>
 
-        <div id="event_attrs" class="attrs indent hidden">
+        <div id="rgevent_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_event.phtml")?>
         </div>
 
-        <div id="_daterange_attrs" class="attrs indent hidden">
+        <div id="_daterange_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard__daterange.phtml")?>
         </div>
 
-        <div id="gratia_notes" class="attrs indent hidden">
+        <div id="gratia_notes" class="attrs hidden">
             <p class="info">This page uses GratiaWeb service (<a target="_blank" href="http://gratiaweb.grid.iu.edu">http://gratiaweb.grid.iu.edu</a>) to render graphs. You can also use
             <a target="_blank" href="http://gratia-osg-prod-reports.opensciencegrid.org/gratia-reporting/">Gratia Reporting</a> service at Fermilab for more detailed graphs.</p>
         </div>
 
-        </p>
-
     </div>
 
-    <h3>Resource Groups to display</h3>
-    <div class="indent">
+    <h3>Resource Groups to Display</h3>
+    <div class="">
         <div id="resource_area_standby">
             <p>Please select the information to display first.</p>
         </div>
@@ -169,7 +161,7 @@
     </div>
 
     <h3>Filter By</h3>
-    <div class="indent">
+    <div class="">
         <div id="filter_area_standby">
             <p>Please select the information to display first.</p>
         </div>
@@ -187,7 +179,7 @@
             echo checklist("gipstatus", "Current GIP Status", $kv);
 
             ?>
-            <h4>For Resource</h4>
+            <h4 style="margin-top: 5px;">For Resource</h4>
             <?
             $model = new Status();
             $list = $model->get();
@@ -259,9 +251,9 @@
             ?>
         </div>
     </div>
-
-    <br/>
-    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <div class="form-actions">
+        <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
 
     <?=$this->render("subscribe.phtml")?>
 
@@ -269,9 +261,9 @@
 
 <script type="text/javascript">
 
-function showhide_attrs(show_speed)
+function showhide_attrs(v, show_speed)
 {
-    var v = $("select[name=datasource]").val();
+    //var v = $("select[name=datasource]").val();
     $(".attrs").hide();
     if(v != "") {
         $("#"+v+"_attrs").show(show_speed);
@@ -282,17 +274,17 @@ function showhide_attrs(show_speed)
 
         //pages that uses date range contoller
         if(
-            v == "statushistory" ||
-            v == "arhistory" ||
-            v == "armetric" ||
-            v == "account" ||
-            v == "se" ||
-            v == "ce") {
+            v == "rgstatushistory" ||
+            v == "rgarhistory" ||
+            v == "rgarmetric" ||
+            v == "rgaccount" ||
+            v == "rgse" ||
+            v == "rgce") {
             $("#_daterange_attrs").show(show_speed);
         }
-        if( v == "account" ||
-            v == "se" ||
-            v == "ce" ) {
+        if( v == "rgaccount" ||
+            v == "rgse" ||
+            v == "rgce" ) {
             $("#gratia_notes").show(show_speed);
         }
     } else {
@@ -306,31 +298,37 @@ function showhide_attrs(show_speed)
 $(document).ready(function() {
 
     //setup form
-    $("select[name=datasource]").change(function() {
-        showhide_attrs('normal');
+    $("#datasource").change(function() {
+        showhide_attrs(this.value, 'normal');
     });
 
     function list_click()
     {
-        if(this.checked) { $("input[name=all_resources]").attr("checked", ""); }
+        if(this.checked) { $("input[name=all_resources]").removeAttr("checked"); }
     }
     var items = $("input[name=all_resources]").siblings("input"); 
     $(items).click(list_click);
 
-    <?
+    <?php
     //select currently selected datasouce
+    /*
     if(isset($_REQUEST["datasource"])) {
         $datasource = $_REQUEST["datasource"];
         echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
         echo "showhide_attrs();\n";
     }
+    */
+    $front = Zend_Controller_Front::getInstance();
+    $controllerName = $front->getRequest()->getControllerName();
+    echo "$('#datasource option[value=$controllerName]').attr('selected', 'selected');\n";
+    echo "showhide_attrs('$controllerName');\n";
 
     ?>
 });
 
 function wizard_submit(format)
 {
-    var action = '<?=fullbase()?>/rg'+$('select[name=datasource]').val(); 
+    var action = '<?=fullbase()?>/'+$('#datasource').val(); 
     action += "/"+format;
     $('#wizard').attr('action', action);
     $('#wizard').submit(); 
@@ -339,9 +337,9 @@ function wizard_submit(format)
 
 function uncheck_sibs(e)
 {
-    $('#resource_area .fblist_container').hide(); //TODO - hiding of list just doesn't work on opera..
+    $('#resource_area .fblist_container').hide(); 
     var items = $(e).siblings("input"); 
-    $(items).attr('checked', '');
+    $(items).removeAttr("checked");
 }
 
 </script>

@@ -26,9 +26,9 @@ class ScController extends ControllerBase
         $this->selectmenu("sc");
         $this->sc_ids = array();
 
-        if(isset($_REQUEST["datasource"])) {
-            $this->sc_ids = $this->process_sclist();
-        }
+        #if(isset($_REQUEST["datasource"])) {
+        $this->sc_ids = $this->process_sclist();
+        #}
         $this->load_daterangequery();
     }
 

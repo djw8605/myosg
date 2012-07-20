@@ -1,6 +1,4 @@
-
-<p>
-Type
+Type:<br>
 <select name="bdii_object">
 <?php $selected = ""; if(@$_REQUEST["bdii_object"] == "service") $selected = "selected=\"selected\"";?>
 <option <?php echo $selected?> value="service">Service</option>
@@ -13,10 +11,9 @@ Type
 <?php $selected = ""; if(@$_REQUEST["bdii_object"] == "cluster") $selected = "selected=\"selected\"";?>
 <option <?php echo $selected?> value="cluster">Cluster</option>
 </select>
-</p>
+<br>
 
-<p>
-BDII Server
+BDII Server:<br>
 <select name="bdii_server">
 <?php $selected = ""; if(@$_REQUEST["bdii_server"] == "is-osg") $selected = "selected=\"selected\"";?>
 <option <?php echo $selected?> value="is-osg">is.grid.iu.edu (osg)</option>
@@ -25,5 +22,3 @@ BDII Server
 <?php $selected = ""; if(@$_REQUEST["bdii_server"] == "lcg") $selected = "selected=\"selected\"";?>
 <option <?php echo $selected?> value="lcg">lcg.bdii.cern.ch</option>
 </select>
-</p>
-

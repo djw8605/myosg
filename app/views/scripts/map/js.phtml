@@ -7,7 +7,7 @@ function update_anchor() {
     var pos = map.getCenter();
     var new_anchor ="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getMapTypeId();
     if(anchor != new_anchor) {
-        document.location="#"+pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getMapTypeId();
+        document.location.hash=pos.toUrlValue()+"|"+map.getZoom()+"|"+map.getMapTypeId();
         anchor = new_anchor;
     }
     setTimeout("update_anchor()", 1000);
@@ -15,7 +15,8 @@ function update_anchor() {
 
 function init(scrollwheel) {
     //default
-    var location = new google.maps.LatLng(38.61687,-96.767578);
+    //var location = new google.maps.LatLng(38.61687,-96.767578);
+    var location = new google.maps.LatLng(29.22889,-90.08789);//show south americas
     var zoom = 4;
     var maptype = google.maps.MapTypeId.TERRAIN;
     
@@ -191,8 +192,6 @@ function init(scrollwheel) {
         }
     }
     ?>
-    
-
     google.maps.event.addListener(infowindow, 'closeclick', function() {
         $("#site option[value=]").attr("selected", "selected");
     });

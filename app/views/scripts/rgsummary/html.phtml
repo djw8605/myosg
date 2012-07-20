@@ -1,40 +1,63 @@
 <link rel="stylesheet" type="text/css" href="<?=fullbase()?>/css/hierarchy.css"/>
+<style>
+div.resource {
+background-color: inherit;
+border: none;
+}
+.content a {
+text-decoration: underline;
+}
+.table,
+pre {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 4px;
+}
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+table th {
+max-width: 300px;
+margin: 0px;
+}
+.label {
+font-weight: normal;
+}
+.service {
+background-color: gray;
+display: inline-block;
+color: white;
+padding: 1px 6px;
+font-weight: bold;
+margin-left: 3px;
+}
+</style>
 <?
+echo "<table class=\"table\">";
 foreach($this->rgs as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
-    $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
-    echo "<div class='resource_group_header round'>";
-    if(!uwa()) {
-        echo "<div class=\"sidenote\">";
-        echo $gridtype_name. " Group";
-        echo "</div>";
-    }
-    //echo "<div class=\"resource_group\">";
     $group_name = $resource_group->name;
-/*
-    if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
-        $hierarchy = $this->hierarchy[$resource_group_id];
-        $group_name = "<span class=\"hierarchy\">".$hierarchy["facility"]." (Facility) &gt; ".$hierarchy["site"]." (Site) &gt; </span>".$group_name;
-    }
-*/
-
     if($resource_group->disable == 1) {
         $group_name .= " (Removed)";
     }
-    echo "<span class='h3'>".$group_name."</span>";
+    echo "<tr class=\"noborder\"><td colspan=\"2\">";
+    echo "<div class=\"group_header\">";
+    echo "<span class='h3'>$group_name</span>";
+    $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->name;
+    echo " <small>$gridtype_name</small>";
+    echo "</div>";
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
-        echo "<br/>";
         if($resource_group->description != "") {
-            echo $resource_group->description;
+            echo htmlsafe($resource_group->description);
         } else {
-            echo "(No resource group description)";
+            echo "<span class=\"muted\">No resource group description</span>";
         }
     }
+    echo "</tr>";
 
-    //echo "</div>"; //resource_group
-    echo "</div>"; //resourcee_group_header
-
-    echo "<table class=\"summary_table\">";
     if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
         echo "<tr>";
         echo "<th>GIP&nbsp;Validation</th>";
@@ -80,70 +103,59 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 
         echo "<tr><th>OIM&nbsp;Hierarchy</th><td>";
     
-        echo "<table width=\"100%\" class=\"plain\"><tr><td>";
+        echo "<div class=\"hierarchy_facility round well\">";
+        echo "<b>".$hierarchy["facility"]->name."</b>&nbsp;<span>Facility</span>";
 
-            echo "<div class=\"hierarchy_facility round\">";
-            echo "<b>".$hierarchy["facility"]->name."</b>&nbsp;<span>Facility</span>";
+        echo "<div class=\"hierarchy_site round\">";
+        echo "<span class=\"pull-right\">Supported by <b>".$hierarchy["sc"]->name."</b></span>";
+        echo "<b>".$hierarchy["site"]->name."</b>&nbsp;<span>Site</span>";
 
-            echo "<div class=\"hierarchy_site round\">";
-            echo "<b>".$hierarchy["site"]->name."</b>&nbsp;<span>Site</span>";
+        echo "<div class=\"hierarchy_rg round\">";
+        echo "<b>".$group_name."</b>&nbsp;<span>Resource Group</span>";
 
-            echo "<div class=\"hierarchy_rg round\">";
-            echo "<b>".$group_name."</b>&nbsp;<span>Resource Group</span>";
+        echo "</div>"; //rg
+        echo "</div>"; //site
 
-            echo "</div>"; //rg
-            echo "</div>"; //site
-
-            //show sigling sites
-            foreach($this->sites as $site_id=>$site) {
-                if($site_id == $hierarchy["site"]->id) continue;
-                if($site[0]->facility_id == $hierarchy["facility"]->id) {
-                    echo "<div style=\"width: 60%\" class=\"hierarchy_site round\">";
-                    echo "<b>".$site[0]->name."</b>&nbsp;<span>Site</span>";
-                    echo "</div>";
-                }
+        //show sigling sites
+        foreach($this->sites as $site_id=>$site) {
+            if($site_id == $hierarchy["site"]->id) continue;
+            if($site[0]->facility_id == $hierarchy["facility"]->id) {
+                echo "<div style=\"width: 60%\" class=\"hierarchy_site round\">";
+                echo "<b>".$site[0]->name."</b>&nbsp;<span>Site</span>";
+                echo "</div>";
             }
+        }
 
-            echo "</div>"; //facility
+        echo "</div>"; //facility
 
-        echo "</td><td>";
-        
+/*
         echo "<div class=\"hierarchy_sc round\">";
         echo "<b>".$hierarchy["sc"]->name."</b> Support Center";
         echo "</div>";
-        echo "<div class=\"hierarchy_supports\">";
-        echo "Supports";
-        echo "<img class=\"arrowhead\" src=\"".fullbase()."/images/arrow_head.png\"/>";
-        echo "</div>";
-        
-        echo "</td></tr></table>";
+*/
         echo "</td></tr>";
     }
-    echo "</table>";
 
-    //show resources 
-    echo "<table width=\"100%\">";
     if(count($resource_list) == 0) {
-        echo "<tr><td colspan=2><p class=\"warning\">There are no resources that match your current filter</p></td></tr>";
+        echo "<tr><td colspan=2><p class=\"alert\">There are no resources that match your current filter</p></td></tr>";
     }
+    $first = true;
     foreach($resource_list as $rid=>$resource) {
-        echo "<tr>";
+        if($first) {
+            echo "<tr >";
+            $first = false;
+        } else {
+            echo "<tr class=\"noborder\">";
+        }
         $disabled = "";
         if($resource->disable == 1) {
             $disabled = "disabled";
         }
-        echo "<td>";
+        echo "<th>";
 
         //show resource name & desc
-        echo "<div class=\"round h4 resource $disabled\">";
+        echo "<div class=\"resource $disabled\">";
     
-        //display ticket open link if it's active
-        if($resource->disable == 0 && $resource->active == 1) {
-            echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
-            echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
-        }
-        echo "<span class=\"fqdn sidenote\">$resource->fqdn</span>";
-
         echo "<span class=\"h4\">".$resource->name."</span>";
         if($resource->disable == 1) {
             echo " (Removed)";
@@ -151,21 +163,29 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         if($resource->active == 0) {
             echo " (Inactive)";
         }
+        if($resource->disable == 0 && $resource->active == 1) {
+            echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
+            echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+        }
+        echo "<br/><code>$resource->fqdn</code>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
             echo "<p style=\"font-weight: normal; font-size: 11px;\">";
             if($resource->description != "") {
                 echo $resource->description;
             } else {
-                echo "(No resource description)";
+                echo "<span class=\"muted\">No resource description</span>";
             }
             echo "</p>";
         }
         echo "</div>";
+        echo "</th>";
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Optional Information
-        echo "<table class='summary_table $disabled'>";
+        echo "<td>";
+        //display ticket open link if it's active
+        echo "<table class='table table-bordered $disabled'>";
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<tr>";
             echo "<th>Services</th>";
@@ -176,35 +196,15 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 $services = $this->resource_services[$rid];
                 $service_names = "";
                 foreach($services as $service) {
-                    echo "<div class=\"service_info\">";
                     echo "<div class=\"service round\">";
                     if(isset($this->servicetypes[$service->service_id])) {
 
                         $service_info = $this->servicetypes[$service->service_id][0];
-/*
-                        echo "<span class=\"sidenote fqdn\">";
-                        if ($service->endpoint_override != "") {
-                            //bold this since it's not default
-                            echo "<b>$service->endpoint_override</b>";
-                        } else {
-                            echo $resource->fqdn.":".$service_info->port;
-                        }
-                        echo "</span>";
-
-                        if($service->central == 1) {
-                            echo "<span class=\"round tag\" style=\"background-color: #99b\">Central Service</span>";
-                        }
-                        if($service->hidden == 1) {
-                            echo "<span class=\"round tag\" style=\"background-color: #9b9\">Hidden Service</span>";
-                        }
-*/
-                        echo "<span style=\"float: left; width: 25%\"><b>".htmlsafe($service_info->name)."</b></span>";
+                        echo "<span>".htmlsafe($service_info->name)."</span>";
                         if(count($service->details) > 0) {
-                            echo "<table style=\"width: 75%;\" class=\"summary_subtable\">";
                             foreach($service->details as $key=>$value) {
-                                echo "<tr><th>".htmlsafe($key)."</th><td>".htmlsafe($value)."</td></tr>";
+                                echo " <span class=\"label\"><b>".htmlsafe($key)."</b> = ".htmlsafe($value)."</span>";
                             }
-                            echo "</table>";
                         } else {
                             echo "<br>";
                         }
@@ -212,7 +212,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     } else {
                         echo "(Unknown Service ID:".$service->service_id.")";
                     }
-                    echo "</div>";
                     echo "</div>";
                 }
             }
@@ -241,7 +240,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 $downtime_desc = $downtime->downtime_summary;
                 $internal_note = $note;
                 $note = "This resource is currently under maintenance.<br/>";
-                $note .= "<div class=\"downtime\"><b>Maintenance Summary:</b><div>$downtime_desc</div>";
+                $note .= "<div class=\"well downtime\"><b>Maintenance Summary:</b><div>$downtime_desc</div>";
                 $note .= "<b>Internal status:</b><div class=\"status_$instatus\">$internal_note</div></div>";
             }
 
@@ -252,19 +251,13 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         }
 
         if(isset($_REQUEST["summary_attrs_showfqdn"])) {
-            /* -- always displayed
-            echo "<tr><th>FQDN</th><td>";
-            echo htmlsafe($resource->fqdn);
-            echo "</td></tr>";
-            */
-
             echo "<tr><th>FQDN Alias</th><td>";
             if(isset($this->aliases[$rid])) {
                 foreach($this->aliases[$rid] as $alias) {
-                    echo htmlsafe($alias->resource_alias);
+                    echo "<code>".$alias->resource_alias."</code> ";
                 }
             } else {
-                echo "(No Alias)";
+                echo "<span class=\"muted\">No Alias</span>";
             }
             echo "</td></tr>";
         }
@@ -298,7 +291,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     }
                 }
             } else {
-                echo "Information not reported";
+                echo "<span class=\"muted\">Information not reported</span>";
             }
             echo "</td></tr>";
         }
@@ -308,7 +301,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "<th>VO&nbsp;Ownership</th>";
             echo "<td>";
             if(!isset($this->resource_ownerships[$rid])) {
-                echo "(Information not available)";
+                echo "<span class=\"muted\">Information not available</span>";
             } else {
                 $ownership = $this->resource_ownerships[$rid];
                 $chd = "";
@@ -342,10 +335,10 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         if(isset($_REQUEST["summary_attrs_showwlcg"])) {
             echo "<tr><th>WLCG Information</th><td>";
             if(!isset($this->resource_wlcg[$rid][0]->interop_bdii)) {
-                echo "(Information not available)<br/>";
+                echo "<span class=\"muted\">Not a WLCG resource</span>";
             } else {
                 $info = $this->resource_wlcg[$rid][0];
-                echo "<table class=\"summary_subtable\">";
+                echo "<table class=\"table table-bordered table-striped\">";
 
                 $value = "False";
                 if($info->interop_bdii == 1) { 
@@ -382,7 +375,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "<tr><th>Environment Parameters</th><td>";
             $xml = @$this->envs[$rid];
             if($xml === null) {
-                echo "<p class=\"warning\">Information Not available</p>";
+                echo "<span class=\"muted\">Information not available</span>";
             } else {
                 echo "<table class=\"summary_subtable\">";
                 foreach($xml as $key=>$value) {
@@ -397,26 +390,30 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "<tr><th>Contacts</th><td>";
             if(isset($this->contacts[$rid])) {
                 $contact_types = $this->contacts[$rid];
+                echo "<table class=\"table table-bordered table-striped\">";
                 foreach($contact_types as $type_name=>$contacts) {
-                    echo "<h4>$type_name</h4>";
+                    echo "<tr><th>$type_name</th><td>";
+                    $group = array();//used to group same contact with different dn together
                     foreach($contacts as $contact) {
-                        if(user()->isGuest()) {
-                            echo htmlsafe($contact->name)."<br/>";
-                        } else {
-                            echo "<div class=\"contact_info\">";
-                            echo "<h3>".htmlsafe($contact->name)."</h3>";
-                            echo "<table class=\"summary_subtable\">"; 
-                            echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-                            echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-                            echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-                            if($contact->sms_address != null) {
-                                echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
+                        if(!isset($group[$contact->id])) {
+                            $group[$contact->id] = 1;
+                            if(user()->isGuest()) {
+                                echo htmlsafe($contact->name)."<br/>";
+                            } else {
+                                echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
+                                echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                                //echo htmlsafe($contact->dn)."<br>";
+                                if($contact->sms_address != null) {
+                                    echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
+                                }
                             }
-                            echo "</table>";
-                            echo "</div>";
+                        } else {
+                            $group[$contact->id]++;//just count number of records for this person (not used right now..)
                         }
                     }
+                    echo "</td></tr>";
                 }
+                echo "</table>";
             }
             echo "</td></tr>";
         }
@@ -429,13 +426,17 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     echo "<a class=\"suppress_deco\" href=\"".$ticket->URL."\" target=\"_blank\">(".$ticket->ID.") ".$ticket->Title."</a><br>";
                 }
             } else {
-                echo "No Tickets";
+                echo "<span class=\"muted\">No Tickets</span>";
             }
             echo "</td></tr>";
         }
 
-        echo "</table>";
+        echo "</table>";//resource summary table
         echo "</td>";
+        echo "</tr>";
     }
-    echo "</tr></table>";
 }
+echo "</table>";
+
+
+

@@ -233,7 +233,7 @@ function checklist($id, $title, $kv)
         </script>
         <?php
     }
-    $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+    $title = "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide('normal');}\"/> <span>$title</span><br/>";
 
     //determine list class
     $c = "hidden ";
@@ -276,7 +276,7 @@ function fblist($id, $title, $kv)
     $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
 
     //output list editor
-    $out .= "<div class=\"indent hidden fblist_container\" id=\"${id}__list\"><div class=\"fblist\" style=\"position: relative;\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
+    $out .= "<div class=\"hidden fblist_container\" id=\"${id}__list\"><div class=\"fblist\" style=\"position: relative;\" onclick=\"$(this).find('.autocomplete').focus(); return false;\">";
 
     //output script
     $delete_url = fullbase()."/images/delete.png";
@@ -323,7 +323,7 @@ BLOCK;
     $out .= $script;
 
     //display note
-    $out .= "<p id=\"${id}__acnote\" class=\"hidden\" style=\"z-index: -1; position: absolute; color: #999; font-size: 9px; right: 3px; bottom: 0px; text-align: right; font-size: 10px;line-height: 100%;\">Double click to show all</p>";
+    $out .= "<p id=\"${id}__acnote\" class=\"hidden\" style=\"z-index: -1; position: absolute; color: #999; font-size: 9px; right: 5px; bottom: 5px; text-align: right; font-size: 10px;line-height: 100%;\">Double click to show all</p>";
 
     $out .= "</div>";
     $out .= "</div>";

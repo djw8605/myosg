@@ -1,8 +1,10 @@
 <link href="<?=fullbase()?>/css/search.css" rel="stylesheet" type="text/css">
-<div class="search_box">
-    <p class="slogan">MyOSG is an <b>one-stop</b> location for various OSG information</p>
+<div class="hero-unit">
+    <p>MyOSG is an <b>one-stop</b> location for various OSG information</p>
     <form method="GET" action="<?=fullbase()?>/search">
-    <span><font color="orange">OIM</font> Search</span>&nbsp;&nbsp;&nbsp;<input type="text" id="searchbox" name="q" value="<?=$this->query?>"/>&nbsp;<input type="submit" value="Search"/>
+    <span><font color="orange">OIM</font> Search</span>&nbsp;&nbsp;&nbsp;
+    <input type="text" id="searchbox" name="q" value="<?=$this->query?>" placeholder="Like.. FNAL"/>&nbsp;
+    <input type="submit" value="Search" class="btn btn-large btn-primary"/>
     </form>
 </div>
 <script>

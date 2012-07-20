@@ -1,0 +1,463 @@
+/*/////////////////////////////////////////////////////////////////////////////////////////
+boostrap fixer
+*/
+.hidden {
+visibility: inherit; /*boostrap-responsive.css sets this.. which breaks jquery's show/hide*/
+}
+select,input {
+margin-bottom: inherit;
+}
+.page-header {
+padding-bottom: 5px;
+margin: 0px 0px 5px 0px;
+}
+img {
+max-width: inherit;
+vertical-align: inherit;
+}
+input[type="radio"], input[type="checkbox"] {
+margin: 0 0 3px 0px;
+}
+.form-actions {
+margin-top: 5px;
+margin-bottom: 5px;
+padding: 8px 10px 9px;
+}
+.navbar input {
+margin-bottom: 0px;
+}
+/*/////////////////////////////////////////////////////////////////////////////////////////
+common myosg styles
+*/
+span.h3 {
+font-size: 13px;
+}
+.page-header .lead {
+margin-bottom: 0px;
+padding-top: 5px;
+color: #666;
+}
+.content {
+font-size: 12px;
+}
+
+.navbar .brand {
+padding: 6px 0px 0px 6px !important;
+}
+.footer {
+margin-top: 45px;
+padding: 35px 0 36px;
+border-top: 1px solid #E5E5E5;
+}
+.footer p {
+  margin-bottom: 0;
+  color: #555;
+}
+#wizard h3 {
+color: #999;
+font-size: 12pt;
+margin: 4px 0px;
+text-transform: uppercase;
+}
+a[target="_blank"], 
+span.external_link {
+padding-left: 15px;
+background: transparent url(../images/external_link_icon.gif) no-repeat 0 -1px;
+color: #005580;
+}
+li[onclick], span[onclick] {
+cursor: pointer;
+color: #005580;
+}
+li[onclick]:hover, span[onclick]:hover {
+text-decoration: underline;
+}
+.indent {
+margin-left: 10px;
+}
+
+.sidenote
+{
+float: right;
+text-align: right;
+margin-right: 5px;
+color: #777;
+}
+.bottom_border
+{
+border-bottom: 1px dotted #ddd;
+padding-bottom: 5px;
+margin-bottom: 5px;
+}
+span.fqdn
+{
+font-family: "Courier New";
+font-size: 12px;
+font-weight: normal;
+}
+span.note {
+color: #888;
+}
+span.h4 {
+font-weight: bold;
+}
+div.button {
+cursor: pointer;
+}
+/*/////////////////////////////////////////////////////////////////////////////////////////
+fblist
+*/
+.fblist
+{
+border: 1px solid #ccc;
+padding: 2px;
+margin-bottom: 5px;
+}
+.fblist input.autocomplete
+{
+border: 0;
+width: 97%;
+}
+.fblist div
+{
+padding: 2px;
+background-color:#DDDDDD;
+border:1px solid #AAAAAA;
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-bottomright:4px;
+-moz-border-radius-topleft:4px;
+-moz-border-radius-topright:4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+margin:1px;
+}
+.fblist div img
+{
+vertical-align: text-top;
+cursor: pointer;
+padding-right: 2px;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+hierarchy
+*/
+div.resource
+{
+padding: 0px 2px;
+padding-left:20px;
+background:white url(../images/server.png) no-repeat 2px 3px;
+}
+
+div.resource_group
+{
+padding-left:5px;
+padding-right:5px;
+}
+div.site
+{
+padding-left:20px;
+background:transparent url(../images/house.png) no-repeat 0 0px;
+min-height: 16px;
+}
+
+div.support_center
+{
+padding: 2px;
+padding-left:5px;
+padding-right:5px;
+background-color: #ccc;
+margin-bottom: 5px;
+border: 1px solid #bbb;
+}
+
+div.facility
+{
+padding-left:20px;
+background:transparent url(../images/database.png) no-repeat 0 0px;
+min-height: 16px;
+}
+div.contact
+{
+padding-left:20px;
+background:transparent url(../images/user.png) no-repeat 0 0px;
+min-height: 16px;
+}
+div.vo
+{
+padding: 2px;
+padding-left:5px;
+padding-right:7px;
+background-color:#ccc;
+margin-bottom: 5px;
+border: 1px solid #bbb;
+}
+div.metric
+{
+padding-left:20px;
+background:transparent url(../images/drive_magnify.png) no-repeat 0 0px;
+min-height: 16px;
+}
+div.metricinfo_header
+{
+padding:2px;
+padding-left:22px;
+background:#ccc url(../images/drive_magnify.png) no-repeat 3px 3px;
+min-height: 16px;
+margin-bottom: 5px;
+border: 1px solid #bbb;
+}
+
+div.header
+{
+padding:2px;
+padding-left: 5px;
+background-color:#ccc;
+min-height: 16px;
+border: 1px solid #bbb;
+margin-bottom: 3px;
+font-size: 13px;
+}
+
+div.grid_type
+{
+padding-left:20px;
+background:transparent url(../images/list-items.gif) no-repeat 0 0px;
+min-height: 16px;
+}
+
+div.border
+{
+border: 1px solid #ccc;
+margin: 3px;
+padding: 3px;
+}
+
+div.downtime_group, div.group_header
+{
+color: #D98719;
+font-weight: bold;
+margin-bottom: 2px;
+}
+div.group_header a {
+padding-left:0px;
+background: none;
+}
+div.group_header small {
+color: #aaa;
+}
+.contact_info
+{
+    background-color: #eee;
+    padding: 10px;
+    margin: 3px;
+}
+.service_info
+{
+    background-color: #eee;
+    padding: 5px;
+    margin-bottom: 3px;
+}
+.round, .vo_report h4, .vo_report_fqan, .contact_info, .service_info
+{
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+}
+/*/////////////////////////////////////////////////////////////////////////////////////////
+downtime
+*/
+.disabled
+{
+    background-color: #eee;
+    color: #999;
+}
+div.downtime
+{
+    margin-top: 5px;
+    background-color: #cce;
+    background: -moz-linear-gradient(center top , #cce, #fff) repeat scroll 0 0 #cce;
+    padding: 10px;
+    border-right: 1px #aac;
+    border-bottom: 1px #aac;
+}
+div.downtime_detail
+{
+    padding: 3px;
+}
+
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+fblist
+*/
+
+div.history_graph
+{
+    width: 100%;
+    line-height: 100%;
+}
+div.history_graph img.graph
+{
+    width: 100%;
+    height: 18px; 
+}
+table.graph
+{
+    border-collapse: collapse; 
+}
+table.ruler
+{
+    border-collapse: collapse; 
+    font-size: 10px;
+    color: #333;
+    margin-bottom: 3px;
+}
+table.ruler td
+{
+    padding: 0px !important;
+    margin: 0px !important;
+    white-space: nowrap;
+    text-align: right;
+}
+.expired .sidenote
+{
+color: #c00;
+}
+.expired .h4, .notreported .h4
+{
+    color: gray;
+}
+.expired, .notreported
+{
+    background-color: #ddd !important;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+RSV Status
+*/
+.status_, .status_OK, .status_CRITICAL, .status_WARNING, .status_UNKNOWN, .status_DOWNTIME
+{
+padding: 5px;
+padding-left: 50px;
+min-height: 20px;
+height: auto !important;
+height: 25px;
+}
+.status_CRITICAL
+{
+background:transparent url(../images/button_cancel.png) no-repeat 5px 5px;
+}
+.status_DOWNTIME
+{
+background:transparent url(../images/status_downtime.png) no-repeat 5px 5px;
+}
+.status_OK
+{
+background:transparent url(../images/status_ok.png) no-repeat 5px 5px;
+}
+.status_WARNING
+{
+background:transparent url(../images/status_warning.png) no-repeat 5px 5px;
+}
+.status_UNKNOWN, .status_
+{
+background:transparent url(../images/status_unknown.png) no-repeat 5px 5px;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+RSV history 
+*/
+.table-rsvhistory tbody tr:hover td, 
+.table-rsvhistory tbody tr:hover th {
+background-color: inherit;
+}
+.table-rsvhistory th,
+.table-rsvhistory td {
+padding: 0px;
+}
+.table-rsvhistory {
+margin-bottom: 0px;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+Search result
+*/
+span.tag {
+padding: 5px;
+float: right;
+-moz-border-radius: 2px;
+-webkit-border-top-left: 2px;
+border-top-left: 2px;
+text-transform:capitalize;
+color: #333;
+white-space: nowrap;
+}
+.entry span.tag {
+float: right;
+margin-right: 10px;
+}
+.entry img.avatar {
+width: 150px;
+}
+span.resource {
+    background-color: #ddd;
+}
+span.resource_group {
+    background-color: #999;
+}
+span.resource_fqdn{
+    background-color: #c99;
+}
+span.facility {
+    background-color: #9c9;
+}
+span.vo {
+    background-color: #99c;
+}
+span.site {
+    background-color: #9cc;
+}
+span.sc {
+    background-color: #cc9;
+}
+span.contact {
+    background-color: #ccc;
+}
+span.gocticket {
+    background-color: #69c;
+}
+#result {
+min-height: 200px;
+}
+#result h1 {
+font-size: 16px;
+}
+#result a {
+margin-right: 10px;
+}
+#result span.header {
+width: 150px;
+font-weight: bold;
+display: inline-block;
+}
+#result td {
+padding-bottom: 3px;
+}
+.fqdn {
+font-family: "Courier New";
+font-size: 10pt;
+color: #666;
+}
+.contact_info
+{
+    background-color: inherit;
+    padding: 0px;
+    margin: 0px;
+}
+

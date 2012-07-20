@@ -1,64 +1,82 @@
+<style>
+.table th,
+.table td {
+padding: 6px;
+
+}
+.table {
+margin-bottom: 3px;
+}
+
+table.table-page {
+width: 100%;
+}
+table.table-page th,
+table.table-page td {
+vertical-align: top;
+text-align: left;
+}
+</style>
+
+<table class="table-page">
 <?php if(isset($_REQUEST["downtime_attrs_showpast"])) {
-    if($_REQUEST["downtime_attrs_showpast"] != "") { ?>
-        <div class="downtime_group round">
-        <span class="h3">Past Downtimes</span>
-        </div>
-        <?
+    if($_REQUEST["downtime_attrs_showpast"] != "") { 
+        echo "<tr class=\"noborder\"><td colspan=\"2\"><h2>Past Downtimes</h2></td></tr>";
         showdowntimes($this->past_downtimes);
     }
 }
 ?>
 
-<div class="downtime_group round">
-<span class="h3">Current Downtimes</span>
-</div>
-<?php
-showdowntimes($this->current_downtimes);
-?>
+<tr><td colspan="2"><h3>Current Downtimes</h3></td></tr>
+<?php showdowntimes($this->current_downtimes); ?>
 
-<div class="downtime_group round">
-<span class="h3">Future Downtimes</span>
-</div>
-<?php
-showdowntimes($this->future_downtimes);
+<tr><td colspan="2"><h3>Future Downtimes</h3></td></tr>
+<?php showdowntimes($this->future_downtimes); ?>
+</table>
 
+<?
 function showdowntimes($downtimes) {
-    echo "<div class=\"downtime_detail\">";
     if(count($downtimes) == 0) {
-        echo "No downtimes";
+        echo "<tr><td colspan=2><p class=\"muted\">No downtimes</p></td></tr>";
     }
+    $first = true;
     foreach($downtimes as $downtime)
     {
-        echo "<div class='resource h4 round'>";
-        echo "<span class=\"hierarchy\">".htmlsafe($downtime["rg_name"])." (Resource Group) &gt; </span>";
-        echo htmlsafe($downtime["name"]);
+        if($first) {
+            echo "<tr class=\"noborder\">";
+            $first = false;
+        } else {
+            echo "<tr>";
+        }
+
+        //hierarchy
+        echo "<th>";
+        echo "<div class='group_header'>";
+        echo "<span class=\"h3\">".htmlsafe($downtime["rg_name"])."</span>";
         echo "</div>";
-        echo "<table class=\"summary_table\">";
+        echo "<div class=\"resource\">";
+        echo "<span class=\"h4\">".htmlsafe($downtime["name"])."</span><br>";
+        echo "<code>".htmlsafe($downtime["fqdn"])."</code>";
+        echo "</div>";
+        echo "</th>";
 
-        echo "<tr><th>FQDN</th><td>".htmlsafe($downtime["fqdn"])."</td></tr>";
-        echo "<tr><th>Start Time</th><td>".$downtime["start_time"]."</td></tr>";
-        echo "<tr><th>End Time</th><td>".$downtime["end_time"]."</td></tr>";
-
-        echo "<tr><th>Class</th><td>".htmlsafe($downtime["class"])."</td></tr>";
-        echo "<tr><th>Severity</th><td>".htmlsafe($downtime["severity"])."</td></tr>";
-        if(!user()->isGuest()) {
-            echo "<tr><th>DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
-        }
-
-        echo "<tr><th>Affected&nbsp;Services</th><td>";
+        //details
+        echo "<td>";
+        echo "<table class=\"table table-bordered\">";
+        echo "<tr><td colspan=2>".htmlsafe($downtime["desc"])."</td></tr>";
+        echo "<tr><th>Class / Severity</th><td>".htmlsafe($downtime["class"])." / ".htmlsafe($downtime["severity"])."</td></tr>";
+        echo "<tr><th>Time</th><td>".$downtime["start_time"]." &#8764; ".$downtime["end_time"]."</td></tr>";
+        echo "<tr><th>Affected Services</th><td>";
         foreach($downtime["services"] as $service) {
-            echo htmlsafe($service->name)."<br/>";
+            echo " <span class=\"label\">".htmlsafe($service->name)."</span>";
         }
         echo "</td></tr>";
-        
-        
-        //show downtime detail
-        echo "<tr><th>Detail</th><td>";
-        echo htmlsafe($downtime["desc"]);
-        echo "</td></tr>";
-
+        if(!user()->isGuest()) {
+            echo "<tr><th>Submitter DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
+        }
         echo "</table>";
+
+        echo "</td></tr>";
     }
-    echo "</div>";
 }
 

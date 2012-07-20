@@ -1,33 +1,51 @@
-<?
-echo "Between ".date(config()->date_format_full, $this->start_time);
-echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
-?>
 <style>
-div.resource
-{
+div.resource {
 margin-bottom: 0px;
 }
+table th {
+max-width: 300px;
+}
+.table th, 
+.table td {
+padding: 3px;
+}
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
 </style>
-<table class="real" width="100%">
-    <tr><th>Resource</th><th>Service</th><th width="100px">Availability</th><th width="100px">Reliability</th><th>&nbsp;</th></tr>
+<h2><?php echo $this->page_title?> 
+<small>
+Between <?php echo date(config()->date_format, $this->start_time);?> 
+and <?php echo date(config()->date_format, $this->end_time)?></span><br>
+</small>
+</h2>
+<table class="table">
 <?
+    $first_rg = true;
     foreach($this->rgs as $rgid=>$rg) {
-        echo "<tr><td colspan='5'>";
 
         //show resource group header
         $resource_group = $this->resource_groups[$rgid][0];
-        echo "<div class=\"resource_group_header round\">";
-        if(!uwa()) {
-            echo "<div class=\"sidenote\">";
-            echo $resource_group->grid_type_description." Group";
-            echo "</div>";
+        $resource_group_header = "<div class=\"group_header\">";
+        $resource_group_header .= "<span class='h3'>".$resource_group->name."</span>";
+        $resource_group_header .= " <small>".$resource_group->grid_type."</small>";
+        $resource_group_header .= "</div>";
+        if($first_rg) {
+            echo "<tr class=\"noborder\"><th>$resource_group_header</th><th></th><th>Availability</th><th>Reliability</th>";
+            $first_rg = false;
+        } else {
+            echo "<tr class=\"noborder\"><td colspan='4'>$resource_group_header</td></tr>";
         }
-        echo "<span class='h3'>".htmlsafe($resource_group->name)."</span>";
-        echo "</div>";
- 
-        echo "</td></tr>";
 
         foreach($rg as $resource_id=>$resource_info) {
+            $resource_th = "<th>";
+            $resource_th .= "<div class=\"resource\">";
+            $resource_th .= "<span class=\"h4\">".$resource_info->name."</span>";
+            $resource_th .= " <code>$resource_info->fqdn</code>";
+            $resource_th .= "</div>";
+            $resource_th .= "</th>";
+
             if(isset($this->data[$resource_id])) {
                 $resource = $this->data[$resource_id];
                 $resource_name = $resource_info->name;
@@ -40,18 +58,20 @@ margin-bottom: 0px;
                     $a = round((double)$data["availability"]*100, 2);
                     $r = round((double)$data["reliability"]*100, 2);
 
-                    echo "<tr><td>";
+                    echo "<tr>";
                     if($first) {
-                        echo "<div class=\"resource round\">$resource_name</div>";
+                        echo $resource_th;
+                        $first = false;
+                    } else {
+                        echo "<th style=\"border: none\"></th>";//don't show resource name.
                     }
-                    echo "</td><td>$service_name</td><td>$a%</td><td>$r%</td><td>";
-                    echo "</td></tr>";
-                    $first = false;
+                    echo "<td>$service_name</td><td>$a%</td><td>$r%</td>";
+                    echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>";
-                echo "<div class=\"resource round\">$resource_name</div>";
-                echo "<p class=\"warning\">No data available for this resource</p></td><tr>";
+                echo "<tr>".$resource_th;
+                echo "<td colspan='3'><span class=\"muted\">No data available for this resource</span></td>";
+                echo "</tr>";
             }
         }
     }

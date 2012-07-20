@@ -20,40 +20,42 @@ span.disabled_span
 </style>
 
 <form method="get" id="wizard">
-    <input type="button" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    <div class="form-actions">
+        <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
+    </div>
     <h3>Information to display</h3>
     <div class="indent" id="datasource_area">
-        <select name="datasource">
+        <select id="datasource">
             <option value="">(Please Select)</option>
-            <option value="metric">RSV Metrics</option>
-            <option value="cpuinfo">CPU Information</option>
-            <option value="count">Resource Service Counts</option>
-            <option value="status">Operations Status Overview</option>
-            <option value="event">GOC Realtime Events</option>
+            <option value="miscmetric">RSV Metrics</option>
+            <option value="misccpuinfo">CPU Information</option>
+            <option value="misccount">Resource Service Counts</option>
+            <option value="miscstatus">Operations Status Overview</option>
+            <option value="miscevent">GOC Realtime Events</option>
             <?if(!user()->isGuest()) {?>
-                <option value="user">OSG Users</option>
+                <option value="miscuser">OSG Users</option>
             <?}?>
         </select>
 
         <p>
-            <div id="metric_attrs" class="attrs indent hidden">
+            <div id="miscmetric_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_metric.phtml")?>
             </div>
-            <div id="cpuinfo_attrs" class="attrs indent hidden">
+            <div id="misccpuinfo_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_cpuinfo.phtml")?>
             </div>
-            <div id="count_attrs" class="attrs indent hidden">
+            <div id="misccount_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_count.phtml")?>
             </div>
-            <div id="status_attrs" class="attrs indent hidden">
+            <div id="miscstatus_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_status.phtml")?>
             </div>
             <?if(!user()->isGuest()) {?>
-                <div id="user_attrs" class="attrs indent hidden">
+                <div id="miscuser_attrs" class="attrs indent hidden">
                     <?=$this->render("misc/wizard_user.phtml")?>
                 </div>
             <?}?>
-            <div id="event_attrs" class="attrs indent hidden">
+            <div id="miscevent_attrs" class="attrs indent hidden">
                 <?=$this->render("misc/wizard_event.phtml")?>
             </div>
         </p>
@@ -64,9 +66,9 @@ span.disabled_span
 
 <script type="text/javascript">
 
-function showhide_attrs(show_speed)
+function showhide_attrs(v, show_speed)
 {
-    var v = $("select[name=datasource]").val();
+    //var v = $("select[name=datasource]").val();
     $(".attrs").hide();
     if(v != "") {
         $("#"+v+"_attrs").show(show_speed);
@@ -75,17 +77,23 @@ function showhide_attrs(show_speed)
 $(document).ready(function() {
 
     //setup form
-    $("select[name=datasource]").change(function() {
-        showhide_attrs('normal');
+    $("#datasource").change(function() {
+        showhide_attrs(this.value, 'normal');
     });
 
     <?
     //select currently selected datasouce
+    /*
     if(isset($_REQUEST["datasource"])) {
         $datasource = $_REQUEST["datasource"];
         echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
         echo "showhide_attrs();\n";
     }
+    */
+    $front = Zend_Controller_Front::getInstance();
+    $controllerName = $front->getRequest()->getControllerName();
+    echo "$('#datasource option[value=$controllerName]').attr('selected', 'selected');\n";
+    echo "showhide_attrs('$controllerName');\n";
 
     if(isset($_REQUEST["all_vos"])) {
         echo "disable($('input[name=all_vos]'));";
@@ -94,7 +102,7 @@ $(document).ready(function() {
 
 function wizard_submit(format)
 {
-    var action = '<?=fullbase()?>/misc'+$('select[name=datasource]').val(); 
+    var action = '<?=fullbase()?>/'+$('#datasource').val(); 
     action += "/"+format;
     $('#wizard').attr('action', action);
     $('#wizard').submit(); 

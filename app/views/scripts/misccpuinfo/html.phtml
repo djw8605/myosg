@@ -1,23 +1,22 @@
-<?
+<table class="table">
+<thead>
+<tr><th><h2><?php echo $this->page_title?></h2></th><th>Normalization Constant</th><th>HEPSPEC Constant</th></tr>
+</thead>
+
+<tbody>
+<?php
 foreach($this->cpuinfos as $info)
 {
-    //header
-    echo "<div class=\"header round\">$info->name</div>";
+    echo "<tr>";
 
-    ?>
-    <table class="summary_table">
-    <tr>
-        <th>Normalization Constant</th>
-        <td><?=htmlsafe($info->normalization_constant)?></td>
-    </tr>
-    <tr>
-        <th>HEPSPEC Constant</th>
-        <td><?=htmlsafe($info->hepspec_normalization_constant)?></td>
-    </tr>
-    <tr>
-        <th>Notes</th>
-        <td><?=htmlsafe($info->notes)?></td>
-    </tr>
-    </table>
-    <?
+    echo "<td>";
+    echo "<div class=\"group_header\"><span class=\"h3\">$info->name</span></div>";
+    echo htmlsafe($info->notes);
+    echo "</td>";
+    echo "<td>".htmlsafe($info->normalization_constant)."</td>";
+    echo "<td>".htmlsafe($info->hepspec_normalization_constant)."</td>";
+    echo "</tr>";
 }
+?>
+</tbody>
+</table>

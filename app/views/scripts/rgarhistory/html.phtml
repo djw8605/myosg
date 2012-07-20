@@ -1,33 +1,67 @@
-<?
-echo "Between ".date(config()->date_format_full, $this->start_time);
-echo " and ".date(config()->date_format_full, $this->end_time)."<br/>";
-
+<style>
+table th {
+max-width: 300px;
+}
+.table th, 
+.table td {
+padding: 3px;
+}
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+</style>
+<h2><?php echo $this->page_title?> 
+<small>
+Between <?php echo date(config()->date_format, $this->start_time);?> 
+and <?php echo date(config()->date_format, $this->end_time)?></span><br>
+</small>
+</h2>
+<?php
+echo "<table class=\"table\">";
 foreach($this->rgs as $rgid=>$rg) {
-
     //show resource group header
     $resource_group = $this->resource_groups[$rgid][0];
-    echo "<div class=\"resource_group_header round\">";
-    if(!uwa()) {
-        echo "<div class=\"sidenote\">";
-        echo $resource_group->grid_type_description." Group";
-        echo "</div>";
-    }
+    echo "<tr class=\"noborder\"><td colspan=\"3\">";
+    echo "<div class=\"group_header\">";
     echo "<span class='h3'>".$resource_group->name."</span>";
+    echo " <small>".$resource_group->grid_type."</small>";
     echo "</div>";
+    //echo $this->ruler;
+    echo "</td></tr>";
 
     foreach($rg as $rid=>$resource_info) {
         $services = $this->services[$rid];
-        //$resource_info = $this->resource_info[$rid][0];
-        echo "<div class=\"resource h4 round\">$resource_info->name</div>";
         asort($services);
+        $resource_th = "<th>";
+        $resource_th .= "<div class=\"resource\">";
+        $resource_th .= "<span class=\"h4\">".$resource_info->name."</span>";
+        $resource_th .= "<br><code>$resource_info->fqdn</code>";
+        $resource_th .= "</div>";
+        $resource_th .= "</th>";
         if(count($services) == 0) {
-            echo "<p><b>No availability history available for this duration.</b></p>";
+            echo "<tr>";
+            echo $resource_th;
+            echo "<td colspan=2>";
+            echo "<p class=\"muted\">No availability history available for this duration.</p>";
+            echo "</td>";
+            echo "</tr>";
         } else {
+            $first = true;
             foreach($services as $service_id=>$recs)
             {
+                if($first) {
+                    echo "<tr>";
+                    echo $resource_th;
+                    $first = false;
+                } else {
+                    //dont show resource name.. 
+                    echo "<tr><th style=\"border: none\"></th>";
+                }
+
                 $service_info = $this->service_info[$service_id];
                 $service_name = $service_info[0]->name; //description is sometimes too long..
-                echo "<p><b>$service_name</b></p>";
+                echo "<td>$service_name</td>";
                 $ax = "0";
                 $ay = "-1";
                 $rx = "0";
@@ -105,7 +139,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 if(uwa()) {
                     $size = "270x100";
                 } else {
-                    $size = "550x100";
+                    $size = "450x100";
                 }
                 $url = "http://chart.apis.google.com/chart?chs=$size";
                 $url .= "&cht=lxy&chxt=x,y";
@@ -119,9 +153,11 @@ foreach($this->rgs as $rgid=>$rg) {
                 $url .= "&chd=t:$ax|$ay|$rx|$ry";
                 $url .= "&chg=10,25,1";
                 $url .= "&chls=2,1,0|2,1,0";
-                echo "<img src='$url'/><br/>";
+                echo "<td><img src='$url'/></td>";
+                echo "</tr>";
             }
 
         }
     }
 }
+echo "</table>";

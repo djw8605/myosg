@@ -105,6 +105,7 @@ abstract class ControllerBase extends Zend_Controller_Action
         $this->view->header .= "-->";
     }
 
+/*
     public function waveAction()
     {
         $this->load();
@@ -130,6 +131,7 @@ abstract class ControllerBase extends Zend_Controller_Action
 <?php
         $this->render("none", null, true);
     }
+*/
 
     public function csvAction()
     {

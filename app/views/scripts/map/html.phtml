@@ -1,3 +1,37 @@
+<style>
+#map_canvas {
+width: 100%;
+height: 600px;
+font-size: 10px;
+}
+/*shrink the font size slightly*/
+#map_canvas h2 {
+font-size: 12px;
+}
+#map_canvas span.h3, #map_canvas span.h4 {
+font-size: 10px;
+}
+#map_canvas .resource_group_header {
+padding: 2px 4px;
+}
+#map_canvas .resource {
+padding-top: 0px;
+padding-bottom: 0px;
+background-position: 2px 1px;
+}
+#map_control {
+float: right;
+right: 3px;
+top: 3px;
+position: absolute;
+z-index: 1;
+background-color: white;
+padding: 2px;
+color: #666;
+border-radius: 3px;
+box-shadow: 1px 1px 5px #333;
+}
+</style>
 <div style="position: relative; height: 100%;">
 <div id="map_control">&nbsp;Site&nbsp;&nbsp;<select id="site" style="border: none;">
     <option value="">(None)</option>

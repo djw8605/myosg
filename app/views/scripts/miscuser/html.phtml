@@ -1,9 +1,4 @@
 <style>
-.contact_preference {
-padding: 5px;
-margin-bottom: 3px;
-}
-
 .address {
 padding: 5px;
 margin-bottom: 3px;
@@ -14,18 +9,40 @@ margin: 2px;
 max-height: 80px;
 max-width: 80px;
 }
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+.table {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 3px;
+}
+table th {
+width: 200px;
+}
 </style>
 
 <?
 
+echo "<table class=\"table\">";
 foreach($this->contacts as $cid => $contact) {
     $contact = $contact[0];
     if($contact->disable == 1) continue;
 
-    echo "<h3>".htmlsafe($contact->name)."</h3>";
+    //name header
+    echo "<tr class=\"noborder\"><th colspan=\"3\">";
+    echo "<div class=\"group_header\">";
+    echo "<span class=\"h3\">".htmlsafe($contact->name)."</span>";
+    echo "</div>";
+    echo "</th>";
+    echo "</tr>";
 
-    echo "<table width=\"100%\">";
-    echo "<tr><td width=\"90px\">";
+    //image
+    echo "<tr>";
+    echo "<td>";
     if(trim($contact->photo_url) != "") {
         echo "<img class=\"avatar\" src=\"$contact->photo_url\"/>";
     } else {
@@ -35,15 +52,19 @@ foreach($this->contacts as $cid => $contact) {
     }
     echo "</td>";
 
+    //profile
     echo "<td>";
     if(trim($contact->profile) != "") {
         echo "<p>".htmlsafe($contact->profile)."</p>";
     } else {
-        echo "(No profile information provided)";
+        echo "<p class=\"muted\">No profile information provided</p>";
+    }
+    if(trim($contact->contact_preference) != "" && trim($contact->contact_preference) != trim($contact->profile)) {
+        echo "<p>Contact Preference: ".htmlsafe($contact->contact_preference)."</p>";
     }
     echo "</td>";
 
-    //echo $contact->timezone;
+    //profile detail
     if(!user()->isGuest()) {
         echo "<td width=\"60%\">";
         echo formatEmail($contact->primary_email);
@@ -51,26 +72,24 @@ foreach($this->contacts as $cid => $contact) {
         echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);
         //echo formatPhone($contact->secondary_phone, $contact->secondary_phone_ext);
         if(trim($contact->im) != "") {
-            echo "<b>IM</b> ".htmlsafe($contact->im);
+            echo "<b>IM</b> ".htmlsafe($contact->im)."<br>";
         }
-        echo "<p>".htmlsafe($contact->dn)."</p>";
-        if(trim($contact->contact_preference) != "") {
-            echo "<p class=\"contact_preference\">".htmlsafe($contact->contact_preference)."</p>";
-        }
+        echo "<i class=\"icon-certificate\"></i> ".htmlsafe($contact->dn)."<br>";
         echo "</td>";
     }
-    echo "</tr></table>";
+    echo "</tr>";
 }
+echo "</table>";
 
 function formatEmail($email) {
     if(trim($email) == "") return "";
-    $out = "<img align=\"top\" src=\"".fullbase()."/images/email.png\"/> <a href=\"mailto: $email\">".htmlsafe($email)."</a><br>";
+    $out = "<i class=\"icon-envelope\"></i> <a href=\"mailto: $email\">".htmlsafe($email)."</a><br>";
     return $out;
 }
 
 function formatPhone($phone, $ext) {
     if(trim($phone) == "") return "";
-    $out = "<img align=\"top\" src=\"".fullbase()."/images/telephone.png\"/> ".htmlsafe($phone)." ";
+    $out = "<i class=\"icon-headphones\"></i> ".htmlsafe($phone)." ";
     if(trim($ext) != "") {
         $out .= "(ext. ".htmlsafe($ext).")";
     }

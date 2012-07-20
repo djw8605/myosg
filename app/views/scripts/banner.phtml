@@ -1,0 +1,16 @@
+<?php
+if(config()->banner) {
+    echo "<div id=\"banner\" class=\"alert alert-info\">".config()->banner."</div>";
+}
+/*
+if(config()->debug) {
+    echo "<div class=\"alert alert-warning\"><h4 class=\"alert-heading\">Debug mode</h4>This instance is running in debug mode.</div>";
+}
+*/
+foreach(flushMessages() as $msgs) {
+    $type = $msgs[0];
+    $msg = $msgs[1];
+    echo "<div class=\"alert alert-$type\">$msg</div>";
+}
+
+

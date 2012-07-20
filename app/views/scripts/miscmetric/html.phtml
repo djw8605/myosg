@@ -1,71 +1,84 @@
+<style>
+.table,
+pre {
+margin-bottom: 0;
+}
+.table th,
+.table td {
+padding: 4px;
+}
+tr.noborder > th,
+tr.noborder > td {
+border-top: none;
+}
+.service {
+background-color: gray;
+display: inline-block;
+color: white;
+padding: 1px 6px;
+font-weight: bold;
+margin-left: 3px;
+}
+</style>
+<table class="table">
+<thead>
+<tr><td><h2><?php echo $this->page_title?></h2></td><th width="100px">Abbr.</th><th width="100px">Time Interval</th><th width="100px">Fresh For</th><th width="100px">Metric Type</th></tr>
+</thead>
+<tbody>
 <?
 foreach($this->metrics as $id=>$info)
 {
+    echo "<tr>";
     $info = $info[0];
 
     //header
-    echo "<div class=\"metricinfo_header round\">";
-    echo "<span class=\"h3\">$info->name</span>";
-    echo "</div>";
+    echo "<td>";
+    echo "<div class=\"group_header\"><span class=\"h3\">".htmlsafe($info->name)."</span></div>";
+    echo "</td>";
 
-    ?>
-    <table class="summary_table">
-    <tr>
-        <th>Common Name</th>
-        <td><?=htmlsafe($info->common_name)?></td>
-    </tr>
-    <tr>
-        <th>Abbreviation</th>
-        <td><?=htmlsafe($info->abbrev)?></td>
-    </tr>
-    <tr>
-        <th>Description</th>
-        <td><?=htmlsafe($info->description)?></td>
-    </tr>
-    <tr>
-        <th>Time Interval</th>
-        <td><?=htmlsafe($info->time_interval)?></td>
-    </tr>
-    <tr>
-        <th>Fresh For</th>
-        <td><?=htmlsafe($info->fresh_for)?></td>
-    </tr>
-    <tr>
-        <th>WLCG Metric Type</th>
-        <td><?=htmlsafe($info->wlcg_metric_type)?></td>
-    </tr>
-    <tr>
-        <th>Help URL</th>
-        <?
-        if($info->help_url == "") {
-            echo "<td>(No URL)</td>";
-        } else {?>
-            <td><a href="<?=$info->help_url?>" target="_blank"><?=htmlsafe($info->help_url)?></a></td>
-        <?}?>
+    /* //this is never set really..
+    if($info->help_url == "") {
+        echo "<td><span class=\"muted\">No URL</span></td>";
+    } else {
+        echo "<td><a href=\"".$info->help_url."\" target=\"_blank\">".htmlsafe($info->help_url)."</a></td>";
+    }
+    */
+
+?>
+    <td><?=htmlsafe($info->abbrev)?></td>
+    <td><?=htmlsafe($info->time_interval)?> seconds</td>
+    <td><?=htmlsafe($info->fresh_for)?> seconds</td>
+    <td><?=htmlsafe($info->wlcg_metric_type)?></td>
     </tr>
 
-    <?if(isset($_REQUEST["metric_attrs_showservices"])) {
-    echo "<tr>";
-        echo "<th>Services</th>";
-        echo "<td>";
+<?php
+    echo "<tr class=\"noborder\">";
+    echo "<td>";
+    echo "Common Name: ".htmlsafe($info->common_name)."<br>";
+    echo "<p class=\"muted\">";
+    echo htmlsafe($info->description);
+    echo "</p>";
+    echo "</td>";
+
+    echo "<td colspan=\"4\">";
+    if(isset($_REQUEST["metric_attrs_showservices"])) {
         if(isset($this->metricservices[$id])) {
             foreach($this->metricservices[$id] as $service) {
                 $service_info = $this->services[$service->service_id];
-                echo $service_info[0]->name;
                 if($service->critical == 1) {
-                    echo " (Critical Metric)";
+                    echo "<span class=\"label label-important\">";
                 } else {
-                    echo " (Non-critical Metric)";
+                    echo "<span class=\"label\">";
                 }
-                echo "<br/>";
+                echo $service_info[0]->name."</span> ";
             }
         } else {
-            echo "(No Services)";
+            echo "<span class=\"muted\">No Services</span>";
         }
-        echo "</td>";
+    }
+    echo "</td>";
     echo "</tr>";
-    }?>
-
-    </table>
-    <?
 }
+?>
+</tbody>
+</table>
