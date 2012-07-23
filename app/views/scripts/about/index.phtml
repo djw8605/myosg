@@ -16,7 +16,7 @@ display: block;
 }
 </style>
 <div class="page-header">
-<div><h1>MyOSG</h1><p class="lead">One-stop location for various OSG information</p></div></div>
+<div><h1>MyOSG</h1><p class="lead">One-Stop location for various OSG information</p></div></div>
 
 <div class="container-fluid">
 
@@ -52,8 +52,7 @@ display: block;
     </div>
     <div class="row-fluid">
         <div class="span3">
-            <?$url = "map?map_attrs_shownr=on&all_sites=on&active=on&active_value=1&disable_value=1&gridtype=on&gridtype_1=on";?>
-            <h4><a href="<?=$url?>">Status Map</a></h4>
+            <h4><a href="map<?php echo config()->default_url("map");?>">Status Map</a></h4>
             <p><img class="screenshot" src="<?=fullbase()?>/images/screenshots/statusmap.jpg" align="top"/>
             </p>
         </div>
