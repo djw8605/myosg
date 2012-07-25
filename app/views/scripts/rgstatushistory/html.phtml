@@ -76,6 +76,7 @@ $(function() {
             function() {
                 mark(rid,sid,time);
                 window.scroll(0, $(this).parent().position().top);
+                $("span[rel='tooltip']").tooltip();
             }
         );
     }
@@ -100,6 +101,7 @@ $(function() {
         .html("<img src='images/loading_animation_small.gif'/> Loading...")
         .load("<?=fullbase()."/".pagename()?>/"+anchor, function() {
             $(this).slideDown();
+            $("span[rel='tooltip']").tooltip();
         });
     });
 

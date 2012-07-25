@@ -29,6 +29,16 @@ margin-bottom: 0px;
 .navbar .nav > li > a {
 padding: 9px 8px 11px;
 }
+/*fix issues with bootstrap-responsive.min.css*/
+.navbar-fixed-top {
+margin-bottom: 0px !important;
+}
+.navbar .brand {
+padding: 6px 0px 0px 6px !important;
+}
+a {
+color: #D98719;
+}
 /*/////////////////////////////////////////////////////////////////////////////////////////
 common myosg styles
 */
@@ -66,11 +76,11 @@ a[target="_blank"],
 span.external_link {
 padding-left: 15px;
 background: transparent url(../images/external_link_icon.gif) no-repeat 0 -1px;
-color: #005580;
+color: #D98719;
 }
 li[onclick], span[onclick] {
 cursor: pointer;
-color: #005580;
+color: #D98719;
 }
 li[onclick]:hover, span[onclick]:hover {
 text-decoration: underline;
@@ -463,4 +473,6 @@ color: #666;
     padding: 0px;
     margin: 0px;
 }
-
+span[rel='tooltip'] {
+cursor: pointer;
+}

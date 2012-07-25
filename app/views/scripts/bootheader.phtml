@@ -25,6 +25,9 @@
       .sidebar-nav {
         padding: 9px 0;
       }
+        #search {
+            width: 120px;
+        }
     </style>
     <link href="lib/bootstrap-2.0.4/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="lib/jquery-ui-1.8.21/css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet">
@@ -40,6 +43,7 @@
     <script src="lib/bootstrap-2.0.4/plugin/bootstrap-alert.js"></script>
     <script src="lib/bootstrap-2.0.4/plugin/bootstrap-dropdown.js"></script>
     <script src="lib/bootstrap-2.0.4/plugin/bootstrap-collapse.js"></script>
+    <script src="lib/bootstrap-2.0.4/plugin/bootstrap-tooltip.js"></script>
     <script src="lib/jquery.autocomplete.min.js"></script>
 
     <?php if(isset($this->include_cometd)) { ?>
@@ -131,10 +135,10 @@
                         <li id="menu_vovomsstatus"><a href="vovomsstatus<?php echo config()->default_url("vo")?>">VOMS Status</a></li>
                         </ul>
                     </li>
-                    <li id="menu_sc"><a href="scsummary<?php echo config()->default_url("sc")?>">Support Center</a></li>
                     <li id="menu_map"><a href="map<?php echo config()->default_url("map");?>">Status Map</a></li>
                     <li id="menu_misc" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Misc<b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                        <li id="menu_sc"><a href="scsummary<?php echo config()->default_url("sc")?>">Support Center Summary</a></li>
                         <li id="menu_miscmetric"><a href="miscmetric<?php echo config()->default_url("misc")?>">RSV Metrics</a></li>
                         <li id="menu_misccpuinfo"><a href="misccpuinfo<?php echo config()->default_url("misc")?>">CPU Information</a></li>
                         <li id="menu_misccount"><a href="misccount<?php echo config()->default_url("misc")?>&count_sg_1=on&count_active=on&count_enabled=on">Resource Service Count</a></li>

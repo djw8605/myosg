@@ -20,7 +20,6 @@ tr.noborder > td {
 border-top: none;
 }
 table th {
-max-width: 300px;
 margin: 0px;
 }
 .label {
@@ -167,7 +166,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
             echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
             echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
         }
-        echo "<br/><code>$resource->fqdn</code>";
         if(isset($_REQUEST["summary_attrs_showdesc"])) {
             echo "<br/>";
             echo "<p style=\"font-weight: normal; font-size: 11px;\">";
@@ -186,6 +184,10 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<td>";
         //display ticket open link if it's active
         echo "<table class='table table-bordered $disabled'>";
+
+        //fqdn
+        echo "<tr><th>FQDN</th><td><code>$resource->fqdn</code></td></th></tr>";
+
         if(isset($_REQUEST["summary_attrs_showservice"])) {
             echo "<tr>";
             echo "<th>Services</th>";
@@ -286,7 +288,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                         }
                     } else {
                         if($vonames == "") {
-                            echo "No VOs supported";
+                            echo "<span class=\"muted\">No VOs supported</span>";
                         }
                     }
                 }

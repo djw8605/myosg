@@ -117,10 +117,9 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         return "";
     }
 
-    $out .= "<span class=\"h4\">$name</span>";
+    $out .= "<span class=\"h4\" rel=\"tooltip\" title=\"$desc\">$name</span>";
     if(!uwa()) {
-        $out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
-        $out .= "<br/><span class=\"note\">$desc</span>";
+        //$out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
         if(trim($detail) != "") {
             $detail = "<pre>$detail</pre>";
             $detail .= "Fresh for: ".humanDuration($freshfor);
@@ -139,7 +138,7 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
             $detail .= "<br/>";
             $show = true;
             if($metric["status"] == "OK") $show = false;
-            $out .= outputToggle("Show Detail", "Hide Detail", $detail, $show);
+            $out .= outputToggle("Show Detail", null, $detail, $show);
         }
     }
     $out .= "</div>";
