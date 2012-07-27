@@ -160,7 +160,8 @@ div.resource
 {
 padding: 0px 2px;
 padding-left:20px;
-background:white url(../images/server.png) no-repeat 2px 3px;
+background-image: url(../images/server.png);
+background-repeat: no-repeat;
 }
 
 div.resource_group
@@ -310,16 +311,6 @@ div.downtime_detail
 fblist
 */
 
-div.history_graph
-{
-    width: 100%;
-    line-height: 100%;
-}
-div.history_graph img.graph
-{
-    width: 100%;
-    height: 18px; 
-}
 table.graph
 {
     border-collapse: collapse; 
