@@ -110,7 +110,7 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
     if($reported) {
         $css = "";
         if($expired) $css = "expired";
-        $out .= "<div class=\"bottom_border status_".$metric["status"]." $css\">";
+        $out .= "<div class=\"status_".$metric["status"]." $css\">";
         $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric["timestamp"])."</div>";
         if($expired) $name .= " (Expired)";
     } else {

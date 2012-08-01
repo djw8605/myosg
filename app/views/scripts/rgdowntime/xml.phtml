@@ -32,6 +32,7 @@ function showdowntimes($downtimes) {
         if(!user()->isGuest()) {
             echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
         }
+        echo "<UpdateTime>".$downtime["timestamp"]."</UpdateTime>";
 
         echo "<Services>";
         foreach($downtime["services"] as $service) {

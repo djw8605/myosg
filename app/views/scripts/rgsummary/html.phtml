@@ -106,7 +106,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<tr><th class=\"main_th\">OIM&nbsp;Hierarchy</th><td>";
     
         echo "<div class=\"hierarchy_facility round well\">";
-        echo "<b>".$hierarchy["facility"]->name."</b>&nbsp;<span>Facility</span>";
+        $facility_url = "https://oim.grid.iu.edu/oim/topology?facility_id=".$hierarchy["facility"]->id;
+        echo "<a href=\"$facility_url\"><b>".$hierarchy["facility"]->name."</b></a>&nbsp;<span>Facility</span>";
 
         echo "<div class=\"hierarchy_site round\">";
         echo "<span class=\"pull-right\">Supported by <b>".$hierarchy["sc"]->name."</b></span>";
@@ -407,8 +408,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                             if(user()->isGuest()) {
                                 echo htmlsafe($contact->name)."<br/>";
                             } else {
-                                echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
-                                echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                                echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a> ";
+                                echo htmlsafe($contact->primary_phone)."<br>";
                                 //echo htmlsafe($contact->dn)."<br>";
                                 if($contact->sms_address != null) {
                                     echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";

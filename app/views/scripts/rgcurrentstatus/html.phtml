@@ -100,7 +100,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 
                 if(count($critical_outs) != 0) {
                     ksort($critical_outs);
-                    echo "<p><span class=\"h3\">Critical Metrics</span></p>";
+                    echo "<span class=\"h3\">Critical Metrics</span>";
                     foreach($critical_outs as $out) {
                         echo $out;
                     } 
@@ -124,7 +124,7 @@ foreach($this->rgs as $rgid=>$rg) {
                     }
                     if(count($non_critical_outs) != 0) {
                         ksort($non_critical_outs);
-                        echo "<p><span class=\"h3\">Non-Critical Metrics</span></p>";
+                        echo "<span class=\"h3\">Non-Critical Metrics</span>";
                         foreach($non_critical_outs as $out) {
                             echo $out;
                         }
@@ -169,11 +169,11 @@ function outputMetricInfo($metric, $expired)
     if($reported) {
         $css = "";
         if($expired) $css = "expired";
-        $out .= "<div class=\"bottom_border status_".$metric->Status." $css\">";
+        $out .= "<div class=\"status_".$metric->Status." $css\">";
         $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)." ago</div>";
         if($expired) $name .= " (Expired)";
     } else {
-        $out .= "<div class=\"bottom_border status_UNKNOWN notreported\">";
+        $out .= "<div class=\"status_UNKNOWN notreported\">";
         $name .= " (Not Reported)";
     }
 

@@ -74,6 +74,7 @@ function showdowntimes($downtimes) {
         if(!user()->isGuest()) {
             echo "<tr><th>Submitter DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
         }
+        echo "<tr><th>Updated At</th><td>".htmlsafe($downtime["timestamp"])."</td></tr>";
         echo "</table>";
 
         echo "</td></tr>";

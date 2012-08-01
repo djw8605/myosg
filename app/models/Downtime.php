@@ -37,7 +37,7 @@ class Downtime extends CachedIndexedModel
             $where .= "(UNIX_TIMESTAMP(start_time) < $start_time and UNIX_TIMESTAMP(end_time) > $end_time)";
             $where .= " )"; 
         }
-        $sql = "SELECT *, UNIX_Timestamp(start_time) AS unix_start_time, UNIX_Timestamp(end_time) AS unix_end_time FROM resource_downtime $where ORDER BY start_time";
+        $sql = "SELECT *, UNIX_Timestamp(timestamp) AS unix_timestamp, UNIX_Timestamp(start_time) AS unix_start_time, UNIX_Timestamp(end_time) AS unix_end_time FROM resource_downtime $where ORDER BY start_time";
         return $sql;
     }
     public function key() { return "resource_id"; }

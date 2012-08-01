@@ -115,6 +115,7 @@ class RgdowntimeController extends RgController
                 if($resource_name !== null) {
                     $start = date(config()->date_format_full, $downtime->unix_start_time);
                     $end = date(config()->date_format_full, $downtime->unix_end_time);
+                    $timestamp = date(config()->date_format_full, $downtime->unix_timestamp);
 
                     //get affected services
                     $affected_services = array();
@@ -148,6 +149,7 @@ class RgdowntimeController extends RgController
                         "unix_end_time"=>$downtime->unix_end_time,
                         "start_time"=>$start,
                         "dn"=>$dn,
+                        "timestamp"=>$timestamp,
                         "contact_name"=>$contact_name,
                         "end_time"=>$end
                     );
