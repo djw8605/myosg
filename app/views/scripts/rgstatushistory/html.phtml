@@ -248,7 +248,7 @@ foreach($this->rgs as $rgid=>$rg) {
                 } else {
                     echo "<tr class=\"graph_row\"><th></th>";//already shown resource name
                 }
-                echo "<td width=\"90px\">$service->name</td>";
+                echo "<td width=\"130px\">$service->name</td>";
                 echo "<td class=\"history_graph\">";
                 echo "<img data-sid=\"".$service->service_id."\" data-rid=\"$rid\" class=\"graph\" src=\"images/graph_notloaded.png\" data-url=\"history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
                 echo "</td>";
