@@ -1,13 +1,10 @@
-<?php echo $this->render("full_header.phtml", true)?>
-<div id="primaryContentContainer">
-    <div id="primaryContent">
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
 <?php
 if(isset($this->detail)) {
-        echo "<p>".$this->detail."</p>";
+    echo "<p>".$this->detail."</p>";
 } else { ?>
-        <p>404 Error!</p>
-        <p>Requested page does not exist.</p>
+    <h2>Page Not Found <small>Requested page does not exist.</small></h2>
 <?php } ?>
-    </div>
 </div>
-<?php echo $this->render("full_footer.phtml", true)?>
+<?=$this->render("bootfooter.phtml", true)?>

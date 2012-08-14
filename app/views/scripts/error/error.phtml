@@ -1,9 +1,7 @@
-<?=$this->render("full_header.phtml", true)?>
-<div id="primaryContentContainer">
-    <div id="primaryContent">
-        <p>Oops!</p>
-        <?=$this->content?>
-    </div>
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+    <h2>Oops! <small>MyOSG encountered an application error</small></h2>
+    <?=$this->content?>
 </div>
-<?=$this->render("full_footer.phtml", true)?>
+<?=$this->render("bootfooter.phtml", true)?>
 
