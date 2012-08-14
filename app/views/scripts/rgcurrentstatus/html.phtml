@@ -79,10 +79,10 @@ foreach($this->rgs as $rgid=>$rg) {
                     echo $dnote;
                     echo "<div class=\"downtime\">";
                     echo "<b>Maintenance Summary</b><div>$summary</div>";
-                    echo "<table width=\"100%\"><tr>";
-                    echo "<td><b>From</b><div>$from</div></td>";
-                    echo "<td><b>To</b><div>$to</div></td>";
-                    echo "</tr></table>";
+                    echo "<div class=\"row-fluid\">";
+                    echo "<div class=\"span6\"><b>From</b><br>$from</div>";
+                    echo "<div class=\"span6\"><b>To</b><br>$to</div>";
+                    echo "</div>";
                     echo "<b>Internal Status</b><div class=\"status_$internal_status\">$note</div>";
                     echo "</div>";
                 } else {

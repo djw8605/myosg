@@ -22,7 +22,7 @@ margin-left: 3px;
 </style>
 <table class="table">
 <thead>
-<tr><td><h2><?php echo $this->page_title?></h2></td><th width="100px">Abbr.</th><th width="100px">Time Interval</th><th width="100px">Fresh For</th><th width="100px">Metric Type</th></tr>
+<tr><td><h2><?php echo $this->page_title?></h2></td><th>Common Name</th><th width="100px">Abbr.</th><th width="100px">Time Interval</th><th width="100px">Fresh For</th><th width="100px">Metric Type</th></tr>
 </thead>
 <tbody>
 <?
@@ -33,7 +33,7 @@ foreach($this->metrics as $id=>$info)
 
     //header
     echo "<td>";
-    echo "<div class=\"group_header\"><span class=\"h3\">".htmlsafe($info->name)."</span></div>";
+    echo "<div class=\"group_header\"><span class=\"h3\" ref=\"tooltip\" title=\"".htmlsafe($info->description)."\">".htmlsafe($info->name)."</span></div>";
     echo "</td>";
 
     /* //this is never set really..
@@ -45,6 +45,7 @@ foreach($this->metrics as $id=>$info)
     */
 
 ?>
+    <td><?=htmlsafe($info->common_name)?></td>
     <td><?=htmlsafe($info->abbrev)?></td>
     <td><?=htmlsafe($info->time_interval)?> seconds</td>
     <td><?=htmlsafe($info->fresh_for)?> seconds</td>
@@ -54,13 +55,9 @@ foreach($this->metrics as $id=>$info)
 <?php
     echo "<tr class=\"noborder\">";
     echo "<td>";
-    echo "Common Name: ".htmlsafe($info->common_name)."<br>";
-    echo "<p class=\"muted\">";
-    echo htmlsafe($info->description);
-    echo "</p>";
     echo "</td>";
 
-    echo "<td colspan=\"4\">";
+    echo "<td colspan=\"5\">";
     if(isset($_REQUEST["metric_attrs_showservices"])) {
         if(isset($this->metricservices[$id])) {
             foreach($this->metricservices[$id] as $service) {
@@ -82,3 +79,8 @@ foreach($this->metrics as $id=>$info)
 ?>
 </tbody>
 </table>
+<script>
+$(function() {
+    $("span.h3").tooltip();
+});
+</script>

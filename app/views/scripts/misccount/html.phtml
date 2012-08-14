@@ -27,7 +27,7 @@ foreach($this->resource_groups_by_gridtype as $grid_type_id => $resource_groups)
     echo "</tr>";
 
     if(isset($_REQUEST["count_total"])) {
-        echo "<tr><th colspan=\"2\">Total Resource Count</th><td>".$this->resource_counts[$grid_type_id]."</td></tr>";
+        echo "<tr><th colspan=\"2\">Total Resource Count</th><th>".$this->resource_counts[$grid_type_id]."</th></tr>";
     }
 
     foreach($this->service_groups as $service_group_id => $service_group) {
