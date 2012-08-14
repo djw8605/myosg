@@ -2,6 +2,27 @@
 <html lang="en">
 <head>
     <base href="<?php echo base()?>/">
+    <!--[if IE]>
+            <script type="text/javascript">
+                //fix ie's broken base href handling
+                function toAbsURL(s) {
+                 var l = location, h, p, f, i;
+                 if (/^\w+:/.test(s)) { return s; }
+                 h = l.protocol + '//' + l.host + (l.port!=''?(':' + l.port):'');
+                 if (s.indexOf('/') == 0) { return h + s; }
+                 p = l.pathname.replace(/\/[^\/]*$/, '');
+                 f = s.match(/\.\.\//g);
+                 if (f) {
+                   s = s.substring(f.length * 3);
+                   for (i = f.length; i--;) { p = p.substring(0, p.lastIndexOf('/')); }
+                 }
+                 return h + p + '/' + s;
+               }
+            var base = document.getElementsByTagName('base')[0];
+            base.href = toAbsURL(base.href);
+            </script>
+    <![endif]-->
+
     <meta charset="utf-8">
     <meta name="verify-v1" content="na5IcAJsZVOfEkboRxuIiZ1zpZgnZiWra+nKcS7nA/o=" />
     <title><?php
