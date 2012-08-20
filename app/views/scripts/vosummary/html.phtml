@@ -69,15 +69,14 @@ foreach($this->vos as $vo_id=>$vo) {
         $resource_ownerships = $this->resource_ownerships[$vo_id];
         usort($resource_ownerships, "resource_ownership_cmp");
         if(count($resource_ownerships) != 0) {
-            echo "<ul>";
+            echo "<table class=\"table table-condensed\">";
             foreach($resource_ownerships as $resource_ownership) {
                 $rid = $resource_ownership->id;
-                echo "<li>";
-                echo "<b>$resource_ownership->name</b> <code>$resource_ownership->fqdn</code><br>";
-                //echo "<span class=\"label\" onclick=\"document.location='".fullbase()."/rgsummary?rg=on&rg_$rgid&summary_attrs_showdesc=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on';\">".htmlsafe($resource_ownership->name)."</span> ";
-                echo "</li>";
+                echo "<tr>";
+                echo "<th>$resource_ownership->name</th><td><code>$resource_ownership->fqdn</code></td>";
+                echo "</tr>";
             }
-            echo "</ul>";
+            echo "</table>";
         } else {
             echo "<span class=\"muted\">No member resources</span>";
         }
