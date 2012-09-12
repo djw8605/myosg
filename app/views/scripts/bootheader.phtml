@@ -66,16 +66,28 @@
     <script src="lib/bootstrap-2.0.4/plugin/bootstrap-collapse.js"></script>
     <script src="lib/bootstrap-2.0.4/plugin/bootstrap-tooltip.js"></script>
     <script src="lib/jquery.autocomplete.min.js"></script>
-
     <?php if(isset($this->include_cometd)) { ?>
     <script type='text/javascript' src='<?php echo base()?>/lib/cometd-2.3.1/cometd.js'></script>
     <script type='text/javascript' src='<?php echo base()?>/lib/cometd-2.3.1/jquery/jquery.cometd.js'></script>
     <?php } ?>
-
     <?php if(isset($this->include_timeago)) { ?>
     <script type='text/javascript' src='<?php echo base()?>/lib/jquery.timeago.js'></script>
     <?php } ?>
+    <?php if(!is_null(config()->google_analytics_id)) {?>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '<?php echo config()->google_analytics_id?>']);
+      _gaq.push(['_setDomainName', 'grid.iu.edu']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
 
+    </script>
+    <?php } ?>
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -96,7 +108,7 @@
                     <li><a href="https://twiki.grid.iu.edu">TWiki</a></li>
                     <li class="divider"></li>
                     <li><a href="http://repo.grid.iu.edu">Repo</a></li>
-                    <li><a href="http://software.grid.iu.edu">Software Cache</a></li>
+                    <!--<li><a href="http://software.grid.iu.edu">Software Cache</a></li>-->
                     <li><a href="http://is.grid.iu.edu">OSG BDII</a></li>
                     <li class="divider"></li>
                     <li><a href="http://blogs.grid.iu.edu">Blog</a></li>
@@ -119,7 +131,7 @@
                     echo "</div>";
                 } else if(@$_SERVER['HTTPS'] == "on") {
                     //no cert, or not-registered
-            
+                    echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">(NoCert)</a></li>";
                 } else {
                     //probably via http
                     echo "<li><a href=\"https://".$_SERVER["SERVER_NAME"].base()."\">Login</a></li>";

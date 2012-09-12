@@ -76,6 +76,7 @@ class common_config
         //google map v3 doesn't need api key
         //http://code.google.com/apis/maps/signup.html
         //$this->gmap_key = "get your own key";
+        $this->google_analytics_id = "UA-69012-10";
 
         //if metric age is longer than this value, it is considred stale
         $this->metric_considered_old = 3600*24;
