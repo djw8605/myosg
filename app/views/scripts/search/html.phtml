@@ -65,7 +65,7 @@ function show_contacts($contacts) {
         } else {
             echo "<div class=\"contact_info\">";
             echo "<b>".htmlsafe($contact->name)."</b>";
-            echo "<table class=\"table\">"; 
+            echo "<table class=\"table table-condensed\">"; 
             echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
             echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
             echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
@@ -125,7 +125,7 @@ function show_sc($rec) {
             } else {
                 echo "<div class=\"contact_info\">";
                 echo "<b>".htmlsafe($contact->name)."</b>";
-                echo "<table class=\"table\">"; 
+                echo "<table class=\"table table-condensed\">"; 
                 echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                 echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
                 echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
@@ -163,7 +163,7 @@ function show_vo($rec) {
             } else {
                 echo "<div class=\"contact_info\">";
                 echo "<b>".htmlsafe($contact->name)."</b>";
-                echo "<table class=\"table\">"; 
+                echo "<table class=\"table table-condensed\">"; 
                 echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
                 echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
                 if($contact->sms_address != null) {
@@ -223,7 +223,7 @@ function show_contact($rec) {
 
 
     echo "<div class=\"contact_info\">";
-    echo "<table class=\"table\">"; 
+    echo "<table class=\"table table-condensed\">"; 
 
     //show public profile info
     if(trim($contact->profile) != "") {
@@ -265,7 +265,7 @@ function show_gocticket($rec) {
     echo "<td>";
     echo "<div class=\"title\"><a href=\"".config()->gocticket_url."/".$rec->ID."\">".$rec->ID.": ".$rec->Title."</a></div>";
     if(isset($rec->Metadatas)) {
-        echo "<table class=\"table\">"; 
+        echo "<table class=\"table table-condensed\">"; 
         foreach($rec->Metadatas->Metadata as $metadata) {
             echo "<tr><th>".htmlsafe($metadata->Key)."</th><td>".htmlsafe($metadata->Value)."</td></tr>";
         }

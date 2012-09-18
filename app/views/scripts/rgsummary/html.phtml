@@ -1,31 +1,38 @@
 <link rel="stylesheet" type="text/css" href="<?=fullbase()?>/css/hierarchy.css"/>
 <style>
-div.resource {
+.rgsummary div.resource {
 background-color: inherit;
 border: none;
 }
-.content a {
+
+.rgsummary .content a {
 text-decoration: underline;
 }
-.table,
-pre {
+
+.rgsummary .table,
+.rgsummary pre {
 margin-bottom: 0;
 }
-.table th,
-.table td {
+
+.rgsummary .table th,
+.rgsummary .table td {
 padding: 4px;
 }
-tr.noborder > th,
-tr.noborder > td {
+
+.rgsummary tr.noborder > th,
+.rgsummary tr.noborder > td {
 border-top: none;
 }
-table th {
+
+.rgsummary table th {
 margin: 0px;
 }
-.label {
+
+.rgsummary .label {
 font-weight: normal;
 }
-.service {
+
+.rgsummary .service {
 background-color: gray;
 display: inline-block;
 color: white;
@@ -33,11 +40,14 @@ padding: 1px 6px;
 font-weight: bold;
 margin-left: 3px;
 }
-th.main_th {
+
+.rgsummary th.main_th {
 width: 25%;
 }
 </style>
 <?
+echo "<div class=\"rgsummary\">";
+echo "<h2>".$this->page_title."</h2>";
 echo "<table class=\"table\">";
 foreach($this->rgs as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
@@ -447,4 +457,4 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
 echo "</table>";
 
 
-
+echo "</div>";
