@@ -45,21 +45,23 @@ class RgarmetricController extends RgController
                 $resource_ids[] = $rid;
             }
         }
-        $params["resource_ids"] = $resource_ids;
-        $ar = $model->get($params);
 
         //group by resource/service_id
         $ar_resource_service = array();
-        foreach($ar as $a) {
-            $r_id = (int)$a->resource_id;
-            if(!isset($ar_resource_service[$r_id])) {
-                $ar_resource_service[$r_id] = array();
+        if(!empty($resource_ids)) {
+            $params["resource_ids"] = $resource_ids;
+            $ar = $model->get($params);
+            foreach($ar as $a) {
+                $r_id = (int)$a->resource_id;
+                if(!isset($ar_resource_service[$r_id])) {
+                    $ar_resource_service[$r_id] = array();
+                }
+                $service_id = (int)$a->service_id;
+                if(!isset($ar_resource_service[$r_id][$service_id])) {
+                    $ar_resource_service[$r_id][$service_id] = array();
+                }
+                $ar_resource_service[$r_id][$service_id][] = $a;
             }
-            $service_id = (int)$a->service_id;
-            if(!isset($ar_resource_service[$r_id][$service_id])) {
-                $ar_resource_service[$r_id][$service_id] = array();
-            }
-            $ar_resource_service[$r_id][$service_id][] = $a;
         }
 
         $data = array();
