@@ -2,7 +2,7 @@
 <ResourceServiceCount xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/misccount.xsd">
 <GridTypes>
 <?
-foreach($this->resources_by_gridtype as $grid_type_id => $resources) {
+foreach($this->resource_groups_by_gridtype as $grid_type_id => $resource_groups) {
     $counts = $this->counts[$grid_type_id];
 
     $gridtype_info = $this->grid_types[$grid_type_id][0];
