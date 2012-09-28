@@ -109,16 +109,27 @@ function cert_authenticate()
             _setguest();
         }
     } else {
-        if(isset($_SERVER["SSL_CLIENT_S_DN"])) {
+        if(isset($_SERVER["SSL_CLIENT_S_DN"]) && $_SERVER["SSL_CLIENT_VERIFY"] == "SUCCESS") {
             $dn = $_SERVER["SSL_CLIENT_S_DN"];
-            $user = new User($dn);
-            if($user->getPersonID() && $_SERVER["SSL_CLIENT_VERIFY"] == "SUCCESS") {
-                Zend_Registry::set("user", $user);
-            } else {
-                //unknown, non-active, or expired cert?
-                _setguest();
+
+            //apply dn override (for debugging)
+            if(isset(config()->dn_override[$dn])) {
+                $override = config()->dn_override[$dn];
+                $dn = $override;
+                slog("Overriding DN to $dn");
             }
-            slog($user->getPersonName()."($dn)". " from ".$_SERVER["REMOTE_ADDR"]);
+
+            $user = new User($dn);
+            if(is_null($user->getPersonID())) {
+                //not yet registered?
+                Zend_Registry::set("unregistered_dn", $dn);
+                _setguest();
+            } else {
+                //TODO - see if DN / contact is enabled
+                //all good
+                Zend_Registry::set("user", $user);
+                slog("authenticate: ".$user->getPersonName()."($dn)". " from ".$_SERVER["REMOTE_ADDR"]);
+            }
         } else {
             //no client cert provided
             _setguest();

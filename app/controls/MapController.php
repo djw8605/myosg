@@ -67,7 +67,7 @@ class MapController extends ControllerBase
         //get campus grid icons
         if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
             $model = new CampusGrid();
-            $this->view->campusgrid_icons = $model->getIcons();
+            $this->view->campusgrids = $model->get();
         }
 
         $this->setpagetitle(self::default_title());

@@ -25,9 +25,6 @@ color: #D98719;
 .thumbnail {
 background-color: white;
 }
-.others .thumbnail {
-height: 180px;
-}
 </style>
 
 <div class="container-fluid">
@@ -42,24 +39,24 @@ height: 180px;
         <?$url = "rgsummary/index?datasource=summary&summary_attrs_showgipstatus=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>Resource Group Summary</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/summary.jpg">
+            <img class="thumbnail" src="images/screenshots/rgsummary.png">
         </li>
 
         <?$url = "rgstatushistory/index?datasource=statushistory&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_1=on&service_5=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>RSV Status History</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/statushistory.jpg">
+            <img class="thumbnail" src="images/screenshots/rgstatushistory.png">
         </li>
 
         <?$url = "rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&current_status_attrs_shownc=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>Current RSV Status</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/current.jpg">
+            <img class="thumbnail" src="images/screenshots/rgcurrentstatus.png">
         </li>
         <?$url = "rgbdii/index?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&datasource=bdii&bdii_server=is-osg&bdii_object=cluster";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>BDII Information Browser</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/rgbdii_small.jpg">
+            <img class="thumbnail" src="images/screenshots/rgbdii.png">
         </li>
     </ul>
     </div>
@@ -68,60 +65,94 @@ height: 180px;
     <ul class="thumbnails">
         <li class="span3" onclick="document.location='map<?php echo config()->default_url("map")?>'">
             <h5>Status Map</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/statusmap.jpg">
+            <img class="thumbnail" src="images/screenshots/map.png">
         </li>
 
         <?$url = "rgaccount/index?datasource=account&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=daily_hours_byvo&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>Gratia Accounting</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/gratia_accounting.jpg">
+            <img class="thumbnail" src="images/screenshots/rgaccount.png">
         </li>
 
         <?$url = "rggipstatus/index?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>GIP Validation Results</h5>
-            <img class="thumbnail" src="<?=fullbase()?>/images/screenshots/gipvalidate.jpg">
+            <img class="thumbnail" src="images/screenshots/rggipstatus.png">
+        </li>
+
+        <?$url = "rgarhistory?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";?>
+        <li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>Availability History</h5>
+            <img class="thumbnail" src="images/screenshots/arhistory.png">
         </li>
     </ul><!--thumbnails-->
     </div><!--row-fluid-->
+
+    <div class="row-fluid">
+    <ul class="thumbnails">
+        <?$url = "voactivation?all_vos=on&active=on&active_value=1";?>
+        <li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>VO Activation Status</h5>
+            <img class="thumbnail" src="images/screenshots/voactivation.png">
+        </li>
+
+        <?$url = "vovomsstatus?all_vos=on&active=on&active_value=1";?>
+        <li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>VOMS Status</h5>
+            <img class="thumbnail" src="images/screenshots/vovomsstatus.png">
+        </li>
+
+        <?$url = "misccount?count_sg_1&count_active=on&count_enabled=on&count_sg_1=on&count_active=on&count_enabled=on";?>
+        <li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>Resource Service Counts</h5>
+            <img class="thumbnail" src="images/screenshots/misccount.png">
+        </li>
+
+        <?$url = "miscstatus?count_sg_1&count_active=on&count_enabled=on";?>
+        <li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>Operations Status</h5>
+            <img class="thumbnail" src="images/screenshots/miscstatus.png">
+        </li>
+    </ul><!--thumbnails-->
+    </div><!--row-fluid-->
+
 
     <div class="well others">
         <h2>Other OSG Services <small>hosted outside of MyOSG</small></h2>
 
         <div class="row-fluid">
         <ul class="thumbnails">
-            <li class="span3 thumbnail">
+            <li class="span3">
                 <a target="_blank" href="https://ticket.grid.iu.edu/goc">
-                <img src="<?=fullbase()?>/images/screenshots/gocticket.jpg">
+                <h5>GOC Ticket</h5>
+                <img src="images/screenshots/ticket.png">
                 <div class="caption">
-                    <h5>GOC Ticket</h5>
                     Submit a problem or assistance request regarding OSG.
-                </div>
                 </a>
             </li>
-            <li class="span3 thumbnail">
+            <li class="span3">
                 <a target="_blank" href="https://oim.grid.iu.edu">
-                <img src="<?=fullbase()?>/images/screenshots/oim.jpg">
+                <h5>OIM</h5>
+                <img src="images/screenshots/oim.png">
                 <div class="caption">
-                    <h5>OIM</h5>
                     Register new resources, update your profile and various OSG topology information.
                 </div>
                 </a>
             </li>
-            <li class="span3 thumbnail">
+            <li class="span3">
                 <a target="_blank" href="http://twiki.grid.iu.edu/bin/view">
-                <img src="<?=fullbase()?>/images/screenshots/twiki.jpg">
+                <h5>TWiki</h5>
+                <img src="images/screenshots/twiki.png">
                 <div class="caption">
-                    <h5>TWiki</h5>
                     Online document management system for OSG.
                 </div>
                 </a>
             </li>
-             <li class="span3 thumbnail">
+             <li class="span3">
                 <a target="_blank" href="http://gratiaweb.grid.iu.edu">
-                <img src="<?=fullbase()?>/images/screenshots/gratiaweb.jpg">
+                <h5>GratiaWeb</h5>
+                <img src="images/screenshots/gratiaweb.png">
                 <div class="caption">
-                    <h5>GratiaWeb</h5>
                     External access to the current OSG activity statistics / graphs.
                 </div>
                 </a>
@@ -131,39 +162,38 @@ height: 180px;
 
         <div class="row-fluid">
         <ul class="thumbnails">
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://display.grid.iu.edu">
-                <img src="<?=fullbase()?>/images/screenshots/display.jpg">
+                <h5>OSG Display</h5>
+                <img src="images/screenshots/display.png">
                 <div class="caption">
-                    <h5>OSG Display</h5>
                     Bird's eye view of current OSG statistics.
                 </div>
                 </a>
             </li>
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://blogs.grid.iu.edu">
-                <img src="<?=fullbase()?>/images/screenshots/blogs.jpg">
+                <h5>OSG Blogs</h5>
+                <img src="images/screenshots/planet.png">
                 <div class="caption">
-                    <h5>OSG Blogs</h5>
                     Blog Aggregator for blogs written by people from the OSG community
                 </div>
                 </a>
             </li>
-
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://osggoc.blogspot.com">
-                <img src="<?=fullbase()?>/images/screenshots/news.jpg">
+                <h5>Operations News</h5>
+                <img src="images/screenshots/opsnews.png">
                 <div class="caption">
-                    <h5>Operations News</h5>
                     The latest public GOC news and announcements.
                 </div>
                 </a>
             </li>
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://osgsec.blogspot.com">
-                <img src="<?=fullbase()?>/images/screenshots/news.jpg">
+                <h5>Security News</h5>
+                <img src="images/screenshots/secnews.png">
                 <div class="caption">
-                    <h5>Security News</h5>
                     The latest OSG security news and announcements.
                 </div>
                 </a>
@@ -173,19 +203,20 @@ height: 180px;
 
         <div class="row-fluid">
         <ul class="thumbnails">
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://repo.grid.iu.edu">
+                <h5>RPM Repository</h5>
+                <img src="images/screenshots/repo.png">
                 <div class="caption">
-                    <h5>RPM Repository</h5>
                     Provides OSG's primary RPM repository. Please see <a href="https://twiki.grid.iu.edu/bin/view/Documentation/Release3/YumRepositories">Documentation</a> for more detail.
                 </div>
                 </a>
             </li>
-            <li class="span3 thumbnail">
+            <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
                 <a target="_blank" href="http://jira.opensciencegrid.org">
-                <img src="<?=fullbase()?>/images/screenshots/jira.png">
+                <h5>OSG Jira</h5>
+                <img src="images/screenshots/jira.png">
                 <div class="caption">
-                    <h5>OSG Jira</h5>
                     OSG's internal issue tracking tools used by OSG internal staff members.
                 </div>
                 </a>
@@ -211,7 +242,7 @@ height: 180px;
     <div class="indent">
         <p><a target="_blank" href="https://spreadsheets.google.com/viewform?hl=en&formkey=dEd1bnlINzJVYmc4VGNjSVZkdXNVU3c6MQ#gid=0">
         <b>Feedback Form</b><br/>
-        <img class="screenshot" src="<?=fullbase()?>/images/screenshots/feedback.jpg" align="right"/>
+        <img class="screenshot" src="images/screenshots/feedback.jpg" align="right"/>
         </a>
         We'd like to hear from you about how we can improve MyOSG. Please submit your feedback.
         <br clear="all"/> 

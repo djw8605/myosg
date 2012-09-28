@@ -198,6 +198,7 @@ class common_config
         //$this->gratiaweb = "http://t2.unl.edu/gratia";
 
         $this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
+        $this->dn_override = array(); //use this in site config to temporarily override dn for testing
     }
     function getCacheDir() {
         return "/tmp";

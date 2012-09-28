@@ -120,7 +120,7 @@ function init(scrollwheel) {
         }
 
         //if there are no resource to show..
-        $wrap_html = "<h2>Site: $site->name</h2><div style=\"overflow: auto; max-height: 300px; width: 300px;\">$html</div>";
+        $wrap_html = "<h2>$site->name</h2><div style=\"overflow: auto; max-height: 300px; width: 300px;\">$html</div>";
         $show = false;
         if(!$site_has_status) {
             if(isset($_REQUEST["map_attrs_shownr"])) {
@@ -179,15 +179,15 @@ function init(scrollwheel) {
     <?php
     if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
         //add campus grid icons
-        foreach($this->campusgrid_icons as $icon) {
+        foreach($this->campusgrids as $cg) {
             ?>
             var campus_marker = new google.maps.Marker({
-                position: new google.maps.LatLng(<?php echo $icon["lat"]?>, <?php echo $icon["lon"]?>),
+                position: new google.maps.LatLng(<?php echo $cg->latitude?>, <?php echo $cg->longitude?>),
                 map: map,
-                icon: '<?php echo fullbase()."/images/smallpin.png";?>',
-                title: '<?php echo addslashes($icon["name"])?>'
+                icon: '<?php echo "images/smallpin.png";?>',
+                title: '<?php echo addslashes($cg->name)?>'
             });
-            setInfoWindow(null, campus_marker, "<h2><?php echo $icon["name"]?> Campus Grid</h2><p><?php echo $icon["desc"]?></p><img style=\"float: right; padding-right: 10px;\" src=\"<?php echo fullbase()."/".$icon["icon"];?>\">");
+            setInfoWindow(null, campus_marker, "<h2><?php echo $cg->name?></h2><p><?php echo $cg->description;?></p>");
             <?php
         }
     }

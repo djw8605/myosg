@@ -22,6 +22,11 @@ class RgbdiiController extends RgController
     public static function default_url($query) { return ""; }
 
     public function processQuery() {
+        if(!isset($_REQUEST["bdii_server"]) || !isset($_REQUEST["bdii_object"])) {
+            echo "parameters not set";
+            die();
+        }
+        
         $server_dirty = $_REQUEST["bdii_server"];
         $object_dirty = $_REQUEST["bdii_object"];
 

@@ -15,8 +15,16 @@ License.
 
 **************************************************************************************************/
 
-class CampusGrid
+class CampusGrid extends CachedModel
 {
+    public function ds() { return "oim"; }
+    public function key() { return "id"; }
+    public function sql($params) {
+        $sql = "SELECT * FROM campusgrid order by name";
+        return $sql;
+    } 
+
+    /*
     public function getIcons() {
         return array(
             array("name"=>"UF", "lat"=>29.681312, "lon"=>-82.5, "icon"=>"images/campus/uf.png", 
@@ -41,6 +49,7 @@ class CampusGrid
                 "desc"=>"The Grid Laboratory of Wisconsin is a campus-wide distributed computing environment designed to meet the scientific computing needs of the University of Wisconsin, Madison.")
         );
     }
+    */
 }
 
 ?>

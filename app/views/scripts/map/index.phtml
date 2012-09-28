@@ -9,6 +9,24 @@
     <div class="span3">
         <?=$this->render("map/wizard.phtml");?>
         <?=$this->render("legend_rsvstatus.phtml")?>
+        <style>
+        .campusgrid_legend {
+        margin-bottom: 5px;
+        }
+        .campusgrid_legend img {
+        padding: 5px;
+        margin: 0px 7px;
+        vertical-align: middle;
+        }
+        .campusgrid_legend span {
+        margin-left: 5px;
+        display: inline-block;
+        }
+        </style>
+        <div class="campusgrid_legend">
+            <h4>Misc.</h4>
+            <img src="images/smallpin.png"/><span>Campus Grid</span>
+        </div>
         <?=$this->render("feedback.phtml", true)?>
     </div>
 </div>
