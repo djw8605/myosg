@@ -27,6 +27,7 @@ class User
         $this->person_phone = "";
         $this->timezone = "UTC";
         $this->dn = $dn;
+        $this->disable = true;
 
         $this->guest = true;
         if($dn !== null) {
@@ -41,10 +42,8 @@ class User
     private function lookupUserID($dn)
     {
         //make sure user DN exists and active
-        $sql = "select p.* from dn c left join contact p on
-                        (c.contact_id = p.id)
-                    where
-                        p.disable = 0 and dn_string = \"$dn\"";
+        $sql = "select p.*,c.disable as dn_disable from dn c left join contact p on (c.contact_id = p.id)
+                    where dn_string = \"$dn\"";
         $row = db("oim")->fetchRow($sql);
         if($row) {
             $this->person_id = $row->id;
@@ -52,6 +51,7 @@ class User
             $this->person_email = $row->primary_email;
             $this->person_phone = $row->primary_phone;
             $this->timezone = $row->timezone;
+            $this->disable = ($row->dn_disable || $row->disable);
         }
     }
 
@@ -59,11 +59,8 @@ class User
     {
         //lookup auth_types that are associated with this person
         $sql = "select d.authorization_type_id as auth_type_id
-            from
-                dn c left join dn_authorization_type d on
-                    (c.id = d.dn_id)
-            where
-                c.contact_id = $person_id";
+            from dn c left join dn_authorization_type d on (c.id = d.dn_id)
+            where c.disable = 0 and c.contact_id = $person_id";
         $auth_types = db("oim")->fetchAll($sql);
         //and add roles to roles list
         foreach($auth_types as $auth_type) {
@@ -88,6 +85,7 @@ class User
         return in_array($role, $this->roles);
     }
     public function isGuest() { return $this->guest; }
+    public function isDisabled() { return $this->disable; }
     public function getPersonID() { return $this->person_id; }
     public function getPersonName() { return $this->person_name; }
     public function getPersonEmail() { return $this->person_email; }

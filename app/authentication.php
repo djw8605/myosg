@@ -124,6 +124,9 @@ function cert_authenticate()
                 //not yet registered?
                 Zend_Registry::set("unregistered_dn", $dn);
                 _setguest();
+            } if($user->isDisabled()) {
+                Zend_Registry::set("disabled_dn", $dn);
+                _setguest();
             } else {
                 //TODO - see if DN / contact is enabled
                 //all good
