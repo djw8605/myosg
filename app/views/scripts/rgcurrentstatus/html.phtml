@@ -205,7 +205,7 @@ function outputMetricInfo($metric, $expired)
                 $gathered_at_domain = "unknown";
             }
             if($service_uri_domain != $gathered_at_domain) {
-                $detail .= " <span class=\"warning\">Not on the same domain</span>";
+                $detail .= " <span class=\"label label-warning\">Not on the same domain</span>";
             }
 
             $detail .= "<br/>";
