@@ -117,10 +117,11 @@ margin-bottom: 5px;
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, ""); //$item->description
+                $name = $item->name;
+                if($item->disable == 1) {
+                    $name .= " (Removed)";
                 }
+                $kv[$item->id] = array($name, ""); //$item->description
             }
             echo fblist("facility", "Resource Groups in Facility ".helpbutton("Facility"), $kv);
 
@@ -128,10 +129,11 @@ margin-bottom: 5px;
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, ""); //$item->long_name
+                $name = $item->name;
+                if($item->disable == 1) {
+                    $name .= " (Removed)";
                 }
+                $kv[$item->id] = array($name, ""); //$item->long_name
             }
             echo fblist("site", "Resource Groups in Sites ".helpbutton("Site"), $kv);
 
@@ -139,10 +141,11 @@ margin-bottom: 5px;
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab non-disabled records
-                if($item->disable == 0) {
-                    $kv[$item->id] = array($item->name, ""); //$item->grid_type_description
+                $name = $item->name;
+                if($item->disable == 1) {
+                    $name .= " (Removed)";
                 }
+                $kv[$item->id] = array($name, ""); 
             }
             echo fblist("rg", "Specific Resource Groups ".helpbutton("Resource_Group"), $kv);
 
@@ -150,10 +153,11 @@ margin-bottom: 5px;
             $list = $model->get();
             $kv = array();
             foreach($list as $item) { 
-                //grab active, non-disabled records
-                if($item->active == 1 and $item->disable == 0) {
-                    $kv[$item->id] = array($item->name, $item->long_name);
+                $name = $item->name;
+                if($item->disable == 1) {
+                    $name .= " (Removed)";
                 }
+                $kv[$item->id] = array($name, $item->long_name);
             }
             echo fblist("sc", "Resources Supported by following SC".helpbutton("Support_Center"), $kv);
             ?>
