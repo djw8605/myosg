@@ -24,7 +24,7 @@ span.disabled_span
         <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     </div>
     <h3>Information to display</h3>
-    <div class="indent" id="datasource_area">
+    <div id="datasource_area">
         <select id="datasource">
             <option value="">(Please Select)</option>
             <option value="miscmetric">RSV Metrics</option>
@@ -38,24 +38,24 @@ span.disabled_span
         </select>
 
         <p>
-            <div id="miscmetric_attrs" class="attrs indent hidden">
+            <div id="miscmetric_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_metric.phtml")?>
             </div>
-            <div id="misccpuinfo_attrs" class="attrs indent hidden">
+            <div id="misccpuinfo_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_cpuinfo.phtml")?>
             </div>
-            <div id="misccount_attrs" class="attrs indent hidden">
+            <div id="misccount_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_count.phtml")?>
             </div>
-            <div id="miscstatus_attrs" class="attrs indent hidden">
+            <div id="miscstatus_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_status.phtml")?>
             </div>
             <?if(!user()->isGuest()) {?>
-                <div id="miscuser_attrs" class="attrs indent hidden">
+                <div id="miscuser_attrs" class="attrs hidden">
                     <?=$this->render("misc/wizard_user.phtml")?>
                 </div>
             <?}?>
-            <div id="miscevent_attrs" class="attrs indent hidden">
+            <div id="miscevent_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_event.phtml")?>
             </div>
         </p>

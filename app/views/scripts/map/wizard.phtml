@@ -20,16 +20,14 @@
     </div>
 
     <h3>Information to display</h3>
-    <div class="indent">
-        <?$checked = ""; if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
-        <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
+    <?$checked = ""; if(isset($_REQUEST["map_attrs_shownr"])) { $checked = "checked=checked"; }?>
+    <input type="checkbox" name="map_attrs_shownr" <?=$checked?>/> Show non-reporting sites<br>
 
-        <?$checked = ""; if(isset($_REQUEST["map_attrs_showcampusgrid"])) { $checked = "checked=checked"; }?>
-        <input type="checkbox" name="map_attrs_showcampusgrid" <?=$checked?>/> Show Campus Grid<br>
-    </div>
+    <?$checked = ""; if(isset($_REQUEST["map_attrs_showcampusgrid"])) { $checked = "checked=checked"; }?>
+    <input type="checkbox" name="map_attrs_showcampusgrid" <?=$checked?>/> Show Campus Grid<br>
 
     <h3>Sites to display</h3>
-    <div class="indent" id="site_area">
+    <div id="site_area">
 <?
         $checked = "";
         if(isset($_REQUEST["all_sites"])) { $checked = "checked=checked"; }
@@ -61,8 +59,7 @@
     </div>
 
     <h3>Filter</h3>
-    <div class="indent">
-            <p>Only show sites that matches following criteria (conditions are and-ed).</p>
+    <p>Only show sites that matches following criteria (conditions are and-ed).</p>
     <?
         $model = new GridTypes();
         $list = $model->get();
@@ -81,7 +78,7 @@
         echo radiolist("disable", "Disable (Removed) Status", $kv, 1); //1 by default
 
     ?>
-    </div>
+
     <div class="form-actions">
     <input type="submit" class="btn btn-primary" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     </div>

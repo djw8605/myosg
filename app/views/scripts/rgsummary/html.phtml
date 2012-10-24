@@ -14,10 +14,12 @@ text-decoration: underline;
 margin-bottom: 0;
 }
 
+/*
 .rgsummary .table th,
 .rgsummary .table td {
 padding: 4px;
 }
+*/
 
 .rgsummary tr.noborder > th,
 .rgsummary tr.noborder > td {
@@ -197,7 +199,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         //Optional Information
         echo "<td>";
         //display ticket open link if it's active
-        echo "<table class='table table-bordered $disabled'>";
+        echo "<table class='table table-bordered table-condensed $disabled'>";
 
         //fqdn
         echo "<tr><th width=\"110px\">FQDN</th><td><code>$resource->fqdn</code></td></th></tr>";

@@ -20,62 +20,57 @@
         <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     </div>
     <h3>Information to display</h3>
-    <div class="indent" id="datasource_area">
+    <div id="datasource_area">
         <select id="datasource">
         <option value="">(Please Select)</option>
         <option value="scsummary">Support Center Summary</option>
         </select>
         <p>
-            <div id="scsummary_attrs" class="attrs indent hidden">
+            <div id="scsummary_attrs" class="attrs hidden">
                 <?=$this->render("sc/wizard_summary.phtml")?>
             </div>
         </p>
     </div>
 
     <h3>Support Centers to display</h3>
-    <div class="indent">
-        <div id="sc_area_standby">
-            <p>Please select the information to display first.</p>
-        </div>
-        <div id="sc_area" class="hidden">
-            <?
+    <div id="sc_area_standby">
+        <p>Please select the information to display first.</p>
+    </div>
+    <div id="sc_area" class="hidden">
+    <?
 
-            $checked = "";
-            if(isset($_REQUEST["all_scs"])) { $checked = "checked=checked"; }
-            echo "<input type=\"checkbox\" name=\"all_scs\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Support Centers<br/>";
+    $checked = "";
+    if(isset($_REQUEST["all_scs"])) { $checked = "checked=checked"; }
+    echo "<input type=\"checkbox\" name=\"all_scs\" $checked onclick=\"if(this.checked) { disable(this);} else {enable(this);}\"/> All Support Centers<br/>";
 
-            echo "<div class=\"hidden list\" id=\"all_scs_attrs\">";
-                $checked = "";
-                if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
-                echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Support Centers<br/>";
-            echo "</div>";
+    echo "<div class=\"hidden list\" id=\"all_scs_attrs\">";
+        $checked = "";
+        if(isset($_REQUEST["show_disabled"])) { $checked = "checked=checked"; }
+        echo "<input type=\"checkbox\" name=\"show_disabled\" $checked/> Show Removed Support Centers<br/>";
+    echo "</div>";
 
-            $model = new SupportCenters();
-            $scs = $model->get();
-            $kv = array();
-            foreach($scs as $sc) { $kv[$sc->id] = array($sc->name, $sc->long_name); }
-            echo fblist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
-            
-            ?>
-        </div>
+    $model = new SupportCenters();
+    $scs = $model->get();
+    $kv = array();
+    foreach($scs as $sc) { $kv[$sc->id] = array($sc->name, $sc->long_name); }
+    echo fblist("sc", "Specific Support Centers".helpbutton("Support_Center"), $kv);
+    
+    ?>
     </div>
 
     <h3>Filter By</h3>
-    <div class="indent">
-        <div id="filter_area_standby">
-            <p>Please select the information to display first.</p>
-        </div>
-        <div id="filter_area" class="hidden">
-            <?
-            $kv = array();
-            $kv[0] = "Inactive";
-            $kv[1] = "Active";
-            echo radiolist("active", "Active Status", $kv, 1); //1 by default
-            ?>
-        </div>
+    <div id="filter_area_standby">
+        <p>Please select the information to display first.</p>
+    </div>
+    <div id="filter_area" class="hidden">
+        <?
+        $kv = array();
+        $kv[0] = "Inactive";
+        $kv[1] = "Active";
+        echo radiolist("active", "Active Status", $kv, 1); //1 by default
+        ?>
     </div>
 
-    <br/>
     <div class="form-actions">
         <input type="button" class="btn btn-primary" onclick="wizard_submit('index');" value="&nbsp;&nbsp;&nbsp;Update Page&nbsp;&nbsp;&nbsp;"/>
     </div>
