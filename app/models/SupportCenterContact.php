@@ -20,7 +20,7 @@ class SupportCenterContact extends CachedIndexedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        $where = "where 1 = 1 ";
+        $where = "";
         if(isset($params["sc_id"])) {
             $where .= " and sc_id = ".$params["sc_id"];
         }
@@ -35,7 +35,7 @@ class SupportCenterContact extends CachedIndexedModel
                 "LEFT join dn on dn.contact_id = p.id ".
                 "join contact_type t on sc.contact_type_id = t.id ".
                 "join contact_rank r on sc.contact_rank_id = r.id ".
-                "$where order by sc.contact_type_id";
+                "WHERE dn.disable = 0 $where order by sc.contact_type_id";
     }
     public function key() { return "sc_id"; }
 }

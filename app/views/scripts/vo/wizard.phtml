@@ -93,6 +93,12 @@
                 }
             }
             echo fblist("sc", "VO Applications supported by following SCs".helpbutton("Support_Center"), $kv);
+
+            $kv = array();
+            $kv[1] = "Enabled";
+            $kv[0] = "Disabled";
+            echo radiolist("oasis", "OASIS Enabled", $kv, 1); //1 by default
+
             ?>
         </div>
 

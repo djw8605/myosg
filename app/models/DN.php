@@ -20,7 +20,7 @@ class DN extends CachedIndexedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        return "select dn.*, contact.name from dn join contact on dn.contact_id = contact.id";
+        return "select dn.*, contact.name from dn join contact on dn.contact_id = contact.id and dn.disable = 0";
     }
     public function key() { return "id"; }
 }

@@ -22,7 +22,7 @@ class ResourceContact extends CachedIndexedModel
     {
         $where = "";
         if(isset($params["resource_id"])) {
-            $where = "WHERE resource_id = ".$params["resource_id"];
+            $where = "AND resource_id = ".$params["resource_id"];
         }
         
         //WARNING - if there are multiple DNs for a contact_id, it will list duplicate records for each DN
@@ -32,8 +32,7 @@ class ResourceContact extends CachedIndexedModel
                 "JOIN contact_type t ON rc.contact_type_id = t.id ".
                 "JOIN contact_rank r ON rc.contact_rank_id = r.id ".
                 "LEFT JOIN dn ON dn.contact_id = c.id ".
-                $where;
-        slog($sql);
+                "WHERE dn.disable = 0 $where";
         return $sql;
     }
     public function key() { return "resource_id"; }

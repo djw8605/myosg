@@ -171,5 +171,38 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</td></tr>";
     }
 
+    if(isset($_REQUEST["summary_attrs_showoasis"])) {
+        echo "<tr><th>Oasis</th><td>";
+        echo "<table class=\"table table-bordered table-striped\">";
+
+        //use oasis flag
+        echo "<tr><th>Use Oasis</th>";
+        if($vo->use_oasis == 1) {
+            echo "<td colspan=\"2\">True</td>";
+        } else {
+            echo "<td colspan=\"2\">False</td>";
+        }
+        echo "</tr>";
+
+        //managers
+        $oasis_managers = @$this->oasis_managers[$vo_id];
+        echo "<tr><th rowspan=\"".(count($oasis_managers)+1)."\">Managers</th>";
+        if($oasis_managers !== null) {
+            echo "<th>Name</th><th>DN</th></tr>";
+            foreach($oasis_managers as $manager) {
+                echo "<tr>";
+                echo "<td>".$manager->name."</td>";
+                echo "<td>".$manager->dn."</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<td colspan=\"2\">None</td>";
+        }
+        echo "</tr>";
+        echo "</table>";//end of striped table
+
+        echo "</td></tr>";
+    }
+
     echo "</table>";
 }

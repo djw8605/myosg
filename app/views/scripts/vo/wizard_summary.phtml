@@ -22,3 +22,9 @@ if(isset($_REQUEST["summary_attrs_showparent_vo"])) { $checked = "checked=checke
 if(isset($_REQUEST["summary_attrs_showcontact"])) { $checked = "checked=checked"; }?>
 <input type="checkbox" name="summary_attrs_showcontact" <?=$checked?>/> Show Contact Information<br/>
 
+<?$checked = "";
+if(isset($_REQUEST["summary_attrs_showoasis"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="summary_attrs_showoasis" <?=$checked?>/> Show OASIS Information<br/>
+
+
+

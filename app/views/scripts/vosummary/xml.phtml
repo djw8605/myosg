@@ -125,6 +125,34 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</ContactTypes>";
     }
 
+    if(isset($_REQUEST["summary_attrs_showoasis"])) {
+        echo "<OASIS>";
+
+        //use oasis flag
+        echo "<UseOASIS>";
+        if($vo->use_oasis == 1) {
+            echo "True";
+        } else {
+            echo "False";
+        }
+        echo "</UseOASIS>";
+
+        //managers
+        $oasis_managers = @$this->oasis_managers[$vo_id];
+        echo "<Managers>";
+        if($oasis_managers !== null) {
+            foreach($oasis_managers as $manager) {
+                echo "<Manager>";
+                echo "<Name>".$manager->name."</Name>";
+                echo "<DN>".$manager->dn."</DN>";
+                echo "</Manager>";
+            }
+        }
+        echo "</Managers>";
+        echo "</OASIS>";
+
+    }
+
     echo "</VO>";
 }
 ?>

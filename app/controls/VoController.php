@@ -128,6 +128,11 @@ class VoController extends ControllerBase
             $keep = $this->process_vo_filter_sc();
             $vos = array_intersect($vos, $keep);
         }
+        if(isset($_REQUEST["oasis"])) {
+            $keep = $this->process_vo_filter_oasis();
+            $vos = array_intersect($vos, $keep);
+        }
+
         return $vos;
     }
 
@@ -137,15 +142,32 @@ class VoController extends ControllerBase
         $model = new VirtualOrganization();
         $vos = $model->getindex();
         $active_value = $_REQUEST["active_value"];
-        foreach($vos as $rid=>$r) {
+        foreach($vos as $vo_id=>$r) {
             if($r[0]->active == $active_value) {
-                if(!in_array($rid, $vos_to_keep)) {
-                    $vos_to_keep[] = (string)$rid;
+                if(!in_array($vo_id, $vos_to_keep)) {
+                    $vos_to_keep[] = (string)$vo_id;
                 }
             }
         }
         return $vos_to_keep;
-     }
+    }
+
+    private function process_vo_filter_oasis()
+    {
+        $vos_to_keep = array();
+        $model = new VirtualOrganization();
+        $vos = $model->getindex();
+        $oasis_value = $_REQUEST["oasis_value"];
+        foreach($vos as $vo_id=>$r) {
+            if($r[0]->use_oasis == $oasis_value) {
+                if(!in_array($vo_id, $vos_to_keep)) {
+                    $vos_to_keep[] = (string)$vo_id;
+                }
+            }
+        }
+        return $vos_to_keep;
+    }
+
     private function process_vo_filter_sc()
     {
         $vos_to_keep = array();
