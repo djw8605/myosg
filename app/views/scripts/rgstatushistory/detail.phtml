@@ -89,9 +89,13 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
     $reported = isset($metric["detail_id"]);
     if(isset($metric["timestamp"])) {
         $expired = !MetricData::isFresh((int)$metric["timestamp"], (int)$freshfor, $timestamp);
-        $detail = $metric["detail"]->detail;
-        $gathered_at = $metric["detail"]->gathered_at;
-        $service_uri = $metric["detail"]->service_uri;
+        if(isset($metric["detail"])) {
+            $detail = $metric["detail"]->detail;
+            $gathered_at = $metric["detail"]->gathered_at;
+            $service_uri = $metric["detail"]->service_uri;
+        } else {
+            $detail = $gathered_at = $service_uri = null;
+        }
     } else {
         //detail not available..
         $expired = null;
