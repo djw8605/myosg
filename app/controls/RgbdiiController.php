@@ -1,4 +1,4 @@
-                                     <?php
+<?php
 /*#################################################################################################
 
 Copyright 2011 The Trustees of Indiana University
@@ -48,7 +48,7 @@ class RgbdiiController extends RgController
             break;
         }
         switch($object_dirty) {
-        case "site": $aggregator = new site_aggregator(); break;
+        //case "site": $aggregator = new site_aggregator(); break;
         case "service": $aggregator = new service_aggregator(); break;
         case "ce": $aggregator = new ce_aggregator(); break;
         case "se": $aggregator = new se_aggregator(); break;
@@ -159,6 +159,7 @@ array(6) {
 }
 */
 
+/*
 class site_aggregator {
     function filter() { return "(objectClass=GlueSite)"; }
     function newobject($rgname) { return new site_object($rgname); }
@@ -196,14 +197,10 @@ class site_aggregator {
             $out .= "<td>$others</td></tr>";
         }
         $out .= "</table>";
-/*
-        $info_url = "http://soichi.grid.iu.edu/myosg/rgsummary/mobile?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&bdii_object=site&bdii_server=is-osg&start_type=7daysago&start_date=07%2F08%2F2011&end_type=now&end_date=07%2F08%2F2011&facility_10009=on&rg=on&rg_1=on&gridtype=on&gridtype_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1&__anchor=";
-
-        $info = "<iframe frameborder=\"0\" height=\"300\" width=\"100%\" src=\"$info_url\"/>";
-*/
         return array("status"=>"OK", "subrecord"=>null, "info"=>$out);
     }
 }
+*/
 
 class site_object {
     var $entry = null;
@@ -417,25 +414,6 @@ class ce_aggregator {
             $vos .= "<div class=\"dot\">$vo</div>";
         }
 
-/*
-        //sort values
-        foreach($entry as $key=>$data) {
-            if(strpos($key, "glueceinfo") !== false) {
-                $key = substr($key, strlen("glueceinfo"));
-                $info[$key] = $data;
-            } else if(strpos($key, "gluecepolicy") !== false) {
-                $key = substr($key, strlen("gluecepolicy"));
-                $policy[$key] = $data;
-            } else if(strpos($key, "gluecestate") !== false) {
-                $key = substr($key, strlen("gluecestate"));
-                $state[$key] = $data;
-            } else {
-                if(is_array($data)) {
-                    $other[$key] = $data;
-                }
-            }
-        }
-*/
         $ses = "";
         $results = ldap_search($conn, "GlueCESEBindGroupCEUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueCESEBindGroup)");
         $entries = ldap_get_entries($conn, $results);

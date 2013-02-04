@@ -10,6 +10,10 @@ Type:<br>
 <option <?php echo $selected?> value="sa">Storage Element/Areas</option>
 <?php $selected = ""; if(@$_REQUEST["bdii_object"] == "cluster") $selected = "selected=\"selected\"";?>
 <option <?php echo $selected?> value="cluster">Cluster</option>
+<!-- site is now deprecated - encourage user to use oim instead
+<?php $selected = ""; if(@$_REQUEST["bdii_object"] == "site") $selected = "selected=\"selected\"";?>
+<option <?php echo $selected?> value="site">Site</option>
+-->
 </select>
 <br>
 

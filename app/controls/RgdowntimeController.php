@@ -89,7 +89,7 @@ class RgdowntimeController extends RgController
         $downtime_severity = $model->getindex();
 
         $model = new DN();
-        $dns = $model->getindex();
+        $dns = $model->getindex();//include disabled
 
         $model = new Contact();
         $contacts = $model->getindex();
@@ -131,9 +131,13 @@ class RgdowntimeController extends RgController
 
                     $severity = $downtime_severity[$downtime->downtime_severity_id][0]->name;
                     $class = $downtime_class[$downtime->downtime_class_id][0]->name;
-                    $dn = $dns[$downtime->dn_id][0]->dn_string;
-                    $contact_id  = $dns[$downtime->dn_id][0]->contact_id;
-                    $contact_name = $contacts[$contact_id][0]->name;
+                    if(isset($dns[$downtime->dn_id])) {
+                        $dn = $dns[$downtime->dn_id][0]->dn_string;
+                        $contact_id  = $dns[$downtime->dn_id][0]->contact_id;
+                        $contact_name = $contacts[$contact_id][0]->name;
+                    } else {
+                        error_log("can't find dn with id ".$downtime->dn_id." on dns list");
+                    }
 
                     $downtimes[] = array("id"=>$downtime->id, 
                         "name"=>$resource_name,
