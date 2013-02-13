@@ -395,7 +395,6 @@ Search result
 */
 span.tag {
 padding: 5px;
-float: right;
 -moz-border-radius: 2px;
 -webkit-border-top-left: 2px;
 border-top-left: 2px;
@@ -403,12 +402,14 @@ text-transform:capitalize;
 color: #333;
 white-space: nowrap;
 }
-.entry span.tag {
+li span.tag {
 float: right;
-margin-right: 10px;
+}
+.entry span.tag {
+/*float: right;*/
 }
 .entry img.avatar {
-width: 150px;
+max-width: 80px;
 }
 span.resource {
     background-color: #ddd;
