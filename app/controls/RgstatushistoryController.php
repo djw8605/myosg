@@ -24,7 +24,7 @@ class RgstatushistoryController extends RgController
     {
         parent::load();
 
-        $this->view->ruler = $this->generateRuler($this->view->start_time, $this->view->end_time);
+        //$this->view->ruler = $this->generateRuler($this->view->start_time, $this->view->end_time);
         $this->view->rgs = $this->rgs;
 
         //message("success", "Hello there");
@@ -160,6 +160,7 @@ class RgstatushistoryController extends RgController
         return $a_detail;
     }
 
+    /*
     private function generateRuler($start_time, $end_time)
     {
         $period = $end_time - $start_time;
@@ -194,4 +195,5 @@ class RgstatushistoryController extends RgController
 
         return $out;
     }
+    */
 }

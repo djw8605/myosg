@@ -1,20 +1,26 @@
 <?if(!uwa()) {?>
 
 <style>
-.time-tooltip
+#time-tooltip
 {
     position: absolute;
     padding-bottom: 8px;
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
+    opacity: 0.8;
 }
 .graph
 {
     cursor: pointer;
 }
-.time-tooltip-content
+#time-tooltip time
 {
-    background-color: #ccc;
+    font-size: 80%;
+    color: white;
+    background-color: black;
     padding: 5px;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
 }
 .mark
 {
@@ -99,6 +105,7 @@ $(function() {
                 mark(rid,sid,time);
                 window.scroll(0, $(this).parent().position().top);
                 $("span[rel='tooltip']").tooltip();
+                convert_time_to_local();
             }
         );
     }
@@ -124,6 +131,7 @@ $(function() {
         .load("<?=fullbase()."/".pagename()?>/"+anchor, function() {
             $(this).slideDown();
             $("span[rel='tooltip']").tooltip();
+            convert_time_to_local();
         });
     });
 
@@ -154,7 +162,7 @@ $(function() {
 
         //convert timestamp to human readable time
         var d = new Date(convertXtoUnixTime(this, x)* 1000);
-        $(tool).children("span").html(d.toGMTString());
+        $(tool).html("<time>"+d+"</time>");
         tool.show();
     });
     $(".graph").mouseout(function(event) {
@@ -206,10 +214,17 @@ function isScrolledIntoView(jthis, docViewTop, docViewBottom)
     return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom));
 }
 
+function convert_time_to_local() {
+    $("time").each(function() {
+        var d = new Date($(this).attr("datetime"));
+        //$(this).html(d.toLocaleDateString() + " " + d.toLocaleTimeString());
+        $(this).html(d.toString());
+    });
+}
+
 </script>
 <div id="mark" class="hidden mark">&nbsp;</div>
 <div id="time-tooltip" class="hidden time-tooltip">
-<span class="time-tooltip-content">to be loaded..</span>
 </div>
 
 <h2><?php echo $this->page_title?> 

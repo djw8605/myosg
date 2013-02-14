@@ -14,11 +14,11 @@ if(isset($this->downtime)) {
     echo "<div class=\"well downtime\">";
     echo "<b>Maintenance Summary:</b><div>".$this->downtime->downtime_summary."</div>";
     echo "<table width=\"100%\"><tr>";
-    $start = date(config()->date_format_full, $this->downtime->unix_start_time);
-    $end = date(config()->date_format_full, $this->downtime->unix_end_time);
+    $start = date(DATE_W3C, $this->downtime->unix_start_time);
+    $end = date(DATE_W3C, $this->downtime->unix_end_time);
 
-    echo "<td><b>From:</b><div>$start</div></td>";
-    echo "<td><b>To:</b><div>$end</div></td>";
+    echo "<td><b>From:</b> <time datetime=\"$start\"/></td>";
+    echo "<td><b>To:</b> <time datetime=\"$end\"/></td>";
     echo "</tr></table>";
     if($this->detail_service_status !== null) {
         $status = Status::getStatus($this->detail_service_status->status_id);
@@ -33,7 +33,8 @@ if(isset($this->downtime)) {
         $status = Status::getStatus($this->detail_service_status->status_id);
         echo "<div class=\"well status_".$status."\">";
         $status_time = $this->detail_service_status->timestamp;
-        echo "<p>Status changed to $status at ".date(config()->date_format_full, $status_time)."<br/>";
+        $status_time_str = date(DATE_W3C, $status_time);
+        echo "<p>Status changed to $status at <time datetime=\"$status_time_str\"/><br/>";
         echo $this->detail_service_status->detail."</p>";
         echo "</div>";
 
@@ -115,7 +116,8 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         $css = "";
         if($expired) $css = "expired";
         $out .= "<div class=\"status_".$metric["status"]." $css\">";
-        $out .= "<div class=\"sidenote\">Reported at ".date(config()->date_format_full, (int)$metric["timestamp"])."</div>";
+        $time = date(DATE_W3C, (int)$metric["timestamp"]);
+        $out .= "<div class=\"sidenote\">Reported at <time datetime=\"$time\"/></div>";
         if($expired) $name .= " (Expired)";
     } else {
         return "";
