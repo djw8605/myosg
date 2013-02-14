@@ -45,11 +45,6 @@ border-top: none;
 .table tr.graph_row:hover {
 background-color: #eee;
 }
-/*
-.hover {
-background-color: #ccc;
-}
-*/
 </style>
 <?}?>
 
@@ -78,7 +73,7 @@ function mark(rid, sid,time) {
     var graph = $("img[data-sid="+sid+"][data-rid="+rid+"]");
     var pos = graph.position();
     var x = pos.left + convertUnixTimeToX(graph, time)-8;
-    var y = pos.top-16;
+    var y = pos.top-20;
 
     var mark = $("#mark");
     mark.css("left", x);
@@ -105,7 +100,7 @@ $(function() {
                 mark(rid,sid,time);
                 window.scroll(0, $(this).parent().position().top);
                 $("span[rel='tooltip']").tooltip();
-                convert_time_to_local();
+                convert_time_to_local(this);
             }
         );
     }
@@ -131,25 +126,9 @@ $(function() {
         .load("<?=fullbase()."/".pagename()?>/"+anchor, function() {
             $(this).slideDown();
             $("span[rel='tooltip']").tooltip();
-            convert_time_to_local();
+            convert_time_to_local(this);
         });
     });
-
-    /*
-    $(".graph").hover(function() {
-        //mousein
-        var rid = $(this).data("rid");
-        var sid = $(this).data("sid");
-        $("#r"+rid).addClass("hover");
-        $("#r"+rid+"_s"+sid).addClass("hover");
-    }, function() {
-        //mouseout
-        var rid = $(this).data("rid");
-        var sid = $(this).data("sid");
-        $("#r_"+rid).removeClass("hover");
-        $("#r"+rid+"_s"+sid).addClass("hover");
-    });
-    */
 
     $(".graph").mousemove(function(event) {
         var imgpos = $(this).position();
@@ -214,8 +193,8 @@ function isScrolledIntoView(jthis, docViewTop, docViewBottom)
     return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom));
 }
 
-function convert_time_to_local() {
-    $("time").each(function() {
+function convert_time_to_local(target) {
+    $(target).find("time").each(function() {
         var d = new Date($(this).attr("datetime"));
         //$(this).html(d.toLocaleDateString() + " " + d.toLocaleTimeString());
         $(this).html(d.toString());
