@@ -17,8 +17,8 @@ if(isset($this->downtime)) {
     $start = date(DATE_W3C, $this->downtime->unix_start_time);
     $end = date(DATE_W3C, $this->downtime->unix_end_time);
 
-    echo "<td><b>From:</b> <time datetime=\"$start\"/></td>";
-    echo "<td><b>To:</b> <time datetime=\"$end\"/></td>";
+    echo "<td><b>From:</b><br><time datetime=\"$start\"/></td>";
+    echo "<td><b>To:</b><br><time datetime=\"$end\"/></td>";
     echo "</tr></table>";
     if($this->detail_service_status !== null) {
         $status = Status::getStatus($this->detail_service_status->status_id);
@@ -117,7 +117,7 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         if($expired) $css = "expired";
         $out .= "<div class=\"status_".$metric["status"]." $css\">";
         $time = date(DATE_W3C, (int)$metric["timestamp"]);
-        $out .= "<div class=\"sidenote\">Reported at <time datetime=\"$time\"/></div>";
+        $out .= "<div class=\"sidenote\">At <time datetime=\"$time\"/></div>";
         if($expired) $name .= " (Expired)";
     } else {
         return "";
