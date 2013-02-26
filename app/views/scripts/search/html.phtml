@@ -87,7 +87,7 @@ function show_contacts($contacts) {
 function show_resource($rec) {
     echo "<p class=\"btn-group pull-right\">";
     echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/resourceedit?id=".$rec->id."\">Edit OIM Detail</a>"; 
-    echo "<a class=\"btn btn-small\" href=\"https://ticket.grid.iu.edu/goc/resource?resource_id=".$rec->id."\">Submit Ticket</a>"; 
+    echo "<a class=\"btn btn-small\" href=\"https://ticket.grid.iu.edu/goc/submit?resource_issue_check=on&resource[".$rec->id."]=on\">Submit Ticket</a>"; 
     echo "</p>";
 
     echo "<p><span class=\"tag resource\">Resource</span> ".$rec->v1." <code>".$rec->fqdn."</code></p>";
