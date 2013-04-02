@@ -699,7 +699,7 @@ class cluster_aggregator {
         if($entries[0] > 0) {
             foreach($entries as $entry) {
                 if(is_array($entry)) {
-                    error_log(print_r($entry["gluehostapplicationsoftwareruntimeenvironment"], true));
+                    #error_log(print_r($entry["gluehostapplicationsoftwareruntimeenvironment"], true));
                     //create env list
                     $env = "<div style=\"max-height: 150px; overflow-y: scroll;\"><ul>";
                     foreach($entry["gluehostapplicationsoftwareruntimeenvironment"] as $id=>$value) {
@@ -730,7 +730,7 @@ class cluster_aggregator {
 
         //cluster detail
         $results = ldap_search($conn, "GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueCluster)");
-        error_log("ldap: GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base);
+        #error_log("ldap: GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base);
         $entries = ldap_get_entries($conn, $results);
         $entry = $entries[0];
         $detail = "";
