@@ -132,76 +132,6 @@ class RgbdiiController extends RgController
     }
 }
 
-/*
-array(6) {
-  ["glueceinfodatadir"]=>
-  array(2) {
-    ["count"]=>
-    int(1)
-    [0]=>
-    string(15) "/lustre/hep/osg"
-  }
-  [0]=>
-  string(17) "glueceinfodatadir"
-  ["glueceinfohostname"]=>
-  array(2) {
-    ["count"]=>
-    int(1)
-    [0]=>
-    string(20) "antaeus.hpcc.ttu.edu"
-  }
-  [1]=>
-  string(18) "glueceinfohostname"
-  ["count"]=>
-  int(2)
-  ["dn"]=>
-  string(110) "GlueCEUniqueID=antaeus.hpcc.ttu.edu:2119/jobmanager-sge-tigre,Mds-Vo-name=TTU-ANTAEUS,Mds-Vo-name=local,o=grid"
-}
-*/
-
-/*
-class site_aggregator {
-    function filter() { return "(objectClass=GlueSite)"; }
-    function newobject($rgname) { return new site_object($rgname); }
-    function headers() {
-        return array(
-            array("name"=>"Resource Group Name", "type"=>"string", "width"=>150),
-            array("name"=>"Sponsors", "type"=>"string"),
-            array("name"=>"Latitude", "type"=>"numeric"),
-            array("name"=>"Longitude", "type"=>"numeric"),
-            array("name"=>"Location", "type"=>"string")
-            );
-    }
-
-    function detail($rec_id, $host, $port, $base) {
-        $conn = ldap_connect($host, $port);
-        $results = ldap_search($conn, "Mds-Vo-name=".$rec_id.",".$base, "(objectClass=GlueSite)");
-        $entries = ldap_get_entries($conn, $results);
-        $entry = $entries[0];
-
-        //create table
-        $out = "<table class=\"subtable\">";
-        $out .= "<tr><th width='30%'>Policy Web Page</th><td><a href=\"".$entry["gluesiteweb"][0]."\">".$entry["gluesiteweb"][0]."</a></td></tr>";
-        $out .= "<tr><th>Security Contact</th><td><a href=\"".$entry["gluesitesecuritycontact"]."\">".substr($entry["gluesitesecuritycontact"][0], 7)."</a></td></tr>";
-        $out .= "<tr><th>System Administrator</th><td><a href=\"".$entry["gluesitesysadmincontact"]."\">".substr($entry["gluesitesysadmincontact"][0], 7)."</a></td></tr>";
-        $out .= "<tr><th>User Support Contact</th><td><a href=\"".$entry["gluesiteusersupportcontact"]."\">".substr($entry["gluesiteusersupportcontact"][0], 7)."</a></td></tr>";
-
-        //otherinfo
-        if(isset($entry["gluesiteotherinfo"])) {
-            $out .= "<tr><th>Other Information</th>";
-            $others = "";
-            for($i = 0;$i < $entry["gluesiteotherinfo"]["count"];$i++) {
-                if($i != 0) $others .= "<br>";
-                $others .= $entry["gluesiteotherinfo"][$i];
-            }
-            $out .= "<td>$others</td></tr>";
-        }
-        $out .= "</table>";
-        return array("status"=>"OK", "subrecord"=>null, "info"=>$out);
-    }
-}
-*/
-
 class site_object {
     var $entry = null;
     function __construct($rgname) {
@@ -749,7 +679,9 @@ class cluster_aggregator {
             array("name"=>"Memory Size", "type"=>"numeric", "width"=>70),
             array("name"=>"OS", "type"=>"string"),
             array("name"=>"Processor", "type"=>"string"),
-            );
+            array("name"=>"Available Software", "type"=>"string", "width"=>200),
+            //array("name"=>"Env.", "type"=>"list")
+        );
     }
     //show more cluster info & sub cluster list
     function detail($rec_id, $host, $port, $base) {
@@ -767,6 +699,15 @@ class cluster_aggregator {
         if($entries[0] > 0) {
             foreach($entries as $entry) {
                 if(is_array($entry)) {
+                    error_log(print_r($entry["gluehostapplicationsoftwareruntimeenvironment"], true));
+                    //create env list
+                    $env = "<div style=\"max-height: 150px; overflow-y: scroll;\"><ul>";
+                    foreach($entry["gluehostapplicationsoftwareruntimeenvironment"] as $id=>$value) {
+                        if($id == "count") continue;
+                        $env .= "<li>$value</li>";
+                    }
+                    $env .= "</ul></div>";
+
                     $subrecs[] = array(
                         null,
                         "<div class=\"dot\">".$entry["gluesubclusteruniqueid"][0]."</div>",
@@ -776,7 +717,9 @@ class cluster_aggregator {
                         (int)$entry["gluesubclusterphysicalcpus"][0],
                         (int)$entry["gluehostmainmemoryramsize"][0],
                         $entry["gluehostoperatingsystemname"][0]." ".$entry["gluehostoperatingsystemrelease"][0],
-                        $entry["gluehostprocessormodel"][0]
+                        $entry["gluehostprocessormodel"][0],
+                        $env
+                        //$entry["gluehostapplicationsoftwareruntimeenvironment"],
                     );
                 } else {
                     //why wouldn't it be an array?
@@ -787,14 +730,14 @@ class cluster_aggregator {
 
         //cluster detail
         $results = ldap_search($conn, "GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueCluster)");
+        error_log("ldap: GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base);
         $entries = ldap_get_entries($conn, $results);
         $entry = $entries[0];
         $detail = "";
         $detail .= "<b>Cluster Temp Directory</b> ".$entry["glueclustertmpdir"][0]."<br>"; 
         $detail .= "<b>Cluster Worker Node Temp Directory</b> ".$entry["glueclusterwntmpdir"][0]."<br>"; 
 
-
-        $assoc = "<div class=\"div300\">";
+        $assoc = "";
         $token = "GlueCEUniqueID=";
         for($id = 0; $id < $entry["glueforeignkey"]["count"]; ++$id) {
             $key = $entry["glueforeignkey"][$id];
@@ -802,12 +745,11 @@ class cluster_aggregator {
                 $assoc .= "<div class=\"dot\">".substr($key, strlen($token))."</div>";
             }
         }
-        $assoc .= "</div>";
- 
-        $out = "<table class=\"subtable\"><tr>";
-        $out .= "<td width=\"50%\"><h3>Detail</h3>".$detail."</td>";
-        $out .= "<td><h3>Associated CEs</h3>".$assoc."</td>";
-        $out .= "</tr></table>";
+
+        $out = "<div class=\"row-fluid\">";
+        $out .= "<div class=\"span6\"><h3>Detail</h3>".$detail."</div>";
+        $out .= "<div class=\"span6\"><h3>Associated CEs</h3>".$assoc."</div>";
+        $out .= "</div>";
         return array("status"=>"OK", "subrecords"=>$subrecs, "info"=>$out);
     }
 }
@@ -893,6 +835,7 @@ class cluster_object {
                     $memory_size,
                     $os,
                     $processors,
+                    "(see subcluster)",//subcluster only
 
                     $id.",".$this->rgname //last column is record id
                 );

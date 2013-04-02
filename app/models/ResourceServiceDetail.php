@@ -32,4 +32,21 @@ class ResourceServiceDetail extends CachedModel
 */
         return "SELECT * from resource_service_detail";
     }
+
+    //return multidimentional array containing rec[$rid][$sid]
+    public function getindex() {
+        $recs = array();
+        foreach($this->get() as $rec) {
+            $rid = $rec->resource_id;
+            $sid = $rec->service_id;
+            if(!isset($recs[$rid])) {    
+                $recs[$rid] = array(); 
+            }
+            if(!isset($recs[$rid][$sid])) {    
+                $recs[$rid][$sid] = array(); 
+            }
+            $recs[$rid][$sid][$rec->key] = $rec->value;
+        }
+        return $recs;
+    }
 }
