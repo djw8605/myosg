@@ -1,3 +1,9 @@
+<style>
+.voactivation h4 {
+color: #444;
+}
+</style>
+<div class="voactivation">
 <?
 function showvolist($list) {
     if(count($list) == 0) {
@@ -29,22 +35,24 @@ function showvolist($list) {
 }
 
 echo "<div class=\"row-fluid\">";
-echo "<div class=\"span4 well\">";
+echo "<div class=\"span4\">";
 echo "<h4>Been active at some point</h4>";
 echo "<p class=\"muted\">Following VOs have been active at least once during the specified date range.</p>";
 showvolist($this->active_once_vos);
 echo "</div>";
 
-echo "<div class=\"span4 well\">";
+echo "<div class=\"span4\">";
 echo "<h4>Never been active but enabled at some point</h4>";
 echo "<p class=\"muted\">Following VOs have never been active and have been flaged as enabled at least once during the specified date range.</p>";
 showvolist($this->never_active_enabled_vos);
 echo "</div>";
 
-echo "<div class=\"span4 well\">";
+echo "<div class=\"span4\">";
 echo "<h4>Never been active nor enabled</h4>";
 echo "<p class=\"muted\">Following VOs have never been active and never been enabled during the specified date range.</p>";
 showvolist($this->never_never_vos);
 echo "</div>";
 echo "</div>";//row-fluid
 
+?>
+</div><!--voactivation-->

@@ -28,4 +28,9 @@ class MisceventController extends MiscController
         $model = new DN();
         $this->view->dns = $model->get();
     }
+
+    public function indexAction() {
+        parent::indexAction();
+        message("warning", "This is an experimental feature");        
+    }
 }

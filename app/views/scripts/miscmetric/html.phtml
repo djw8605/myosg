@@ -19,7 +19,14 @@ padding: 1px 6px;
 font-weight: bold;
 margin-left: 3px;
 }
+.miscmetric h2 {
+padding-bottom: 0px;
+margin-bottom: 0px;
+border: none;
+}
 </style>
+<div class="miscmetric">
+
 <table class="table">
 <thead>
 <tr><td><h2><?php echo $this->page_title?></h2></td><th>Common Name</th><th width="100px">Abbr.</th><th width="100px">Time Interval</th><th width="100px">Fresh For</th><th width="100px">Metric Type</th></tr>
@@ -79,6 +86,7 @@ foreach($this->metrics as $id=>$info)
 ?>
 </tbody>
 </table>
+</div><!--miscmetric-->
 <script>
 $(function() {
     $("span.h3").tooltip();

@@ -83,8 +83,8 @@ class LDIF
 
     public function getBdii()
     {
-        //try only for 2 seconds to pull this data
-        $ctx = stream_context_create(array('http' => array('timeout' => 2)));
+        //try only for N seconds to pull this data
+        $ctx = stream_context_create(array('http' => array('timeout' => 8)));
 
         //cache these xml for little bit
         $seconds = 60;
@@ -96,7 +96,14 @@ class LDIF
             //cemon raw file listing for production
             slog("loading ".config()->cemonbdii_url);
             $cemonbdii_content = file_get_contents(config()->cemonbdii_url, 0, $ctx);
-            $c->set($cemonbdii_content);
+            if($cemonbdii_content !== false) {
+                $c->set($cemonbdii_content);
+            } else {
+                error_log("failed to download xml from ".config()->cemonbdii_url. " -- using previous cache");
+                error_log(print_r($ctx, true));
+                //use previous cache
+                $cemonbdii_content = $c->get();
+            }
         }
         $cemonbdii = new SimpleXMLElement($cemonbdii_content);
 

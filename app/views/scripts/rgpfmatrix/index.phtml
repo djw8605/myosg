@@ -1,0 +1,67 @@
+<?php $this->include_timeago = true; ?>
+<?php $this->headStyle()->appendStyle("
+.rgpf .debug-detail {
+display: none;
+}
+.rgpf .debug-toggle {
+text-decoration: underline;
+float: right;
+}
+.rgpf .debug-toggle:hover {
+cursor: pointer;
+}
+.rgpf .param-detail {
+display: none;
+}
+.rgpf .param-toggle {
+text-decoration: underline;
+}
+.rgpf .param-toggle:hover {
+cursor: pointer;
+}
+.rgpf .row-fluid [class*=\"span\"] {
+min-height: inherit !important;
+}
+.rgpf .resource code.fqdn {
+position: relative;
+top: -3px;
+}
+.rgpf tr.matrix_header {
+background-color: #ccc;
+}
+.rgpf td.cell {
+cursor: pointer;
+}
+.rgpf td.cell:hover {
+background-color: #eee;
+}
+.rgpf td.cell-active {
+background-color: orange !important;
+}
+.result-content {
+height: 250px;
+overflow-y: auto;
+}
+.popover-inner {
+width: 600px;
+}
+.modal-body .table {
+margin-bottom: 0px;
+}
+");?>
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+<div class="row-fluid content">
+    <div class="span9">
+        <?=$this->render("banner.phtml", true)?>
+        <?=$this->info?>
+        <?=$this->render(pagename()."/html.phtml")?>
+    </div>
+    <div class="span3">
+        <?=$this->render("rg/wizard.phtml")?>
+        <?=$this->render("feedback.phtml", true)?>
+    </div>
+</div>
+<?=$this->render("footer.phtml", true)?>
+</div><!--container-fluid-->
+<?=$this->render("bootfooter.phtml", true)?>

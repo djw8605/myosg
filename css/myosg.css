@@ -39,9 +39,19 @@ padding: 6px 0px 0px 6px !important;
 a {
 color: #D98719;
 }
+hr {
+margin: 5px 0px;
+}
 /*/////////////////////////////////////////////////////////////////////////////////////////
 common myosg styles
 */
+h2 {
+font-size: 20px;
+border-bottom: 1px solid #eee;
+color: #888;
+margin-top: 5px;
+margin-bottom: 10px;
+}
 span.h3 {
 font-size: 13px;
 }

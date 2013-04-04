@@ -1,0 +1,167 @@
+
+<?php
+echo "<div class=\"rgpf\">";
+echo "<h2>".$this->page_title."</h2>";
+
+if(
+    !isset($_REQUEST["summary_attrs_showpflatematrix"]) && 
+    !isset($_REQUEST["summary_attrs_showpfbandmatrix"])
+) {
+    echo "<p>Please select at least one matrix to display.</p>";
+} else {
+
+    foreach($this->rgs as $resource_group_id=>$resource_list) {
+        $resource_group = $this->resource_groups[$resource_group_id][0];
+        $group_name = $resource_group->name;
+        if($resource_group->disable == 1) {
+            $group_name .= " (Removed)";
+        }
+        echo "<div class=\"group_header\">";
+        echo "<span class='h3'>$group_name</span>";
+        $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->name;
+        echo " <small>$gridtype_name</small>";
+        echo "</div>";
+        echo "<hr>";
+
+        foreach($resource_list as $rid=>$resource) {
+            $disabled = "";
+            if($resource->disable == 1) {
+                $disabled = "disabled";
+            }
+
+            //show resource name & desc
+            echo "<div class=\"resource $disabled\">";
+            echo "<code class=\"fqdn pull-right\">".$resource->fqdn."</code>";
+            echo "<span class=\"h4\">".$resource->name."</span>";
+            if($resource->disable == 1) {
+                echo " (Removed)";
+            }
+            if($resource->active == 0) {
+                echo " (Inactive)";
+            }
+            echo "</div>";//resource name
+
+            if(isset($_REQUEST["summary_attrs_showpflatematrix"])) {
+                //latency matrix
+                if(isset($resource->service_detail[config()->perfsonar_late_service_id])) {
+                    //show service information
+                    $service_info = $resource->service_detail[config()->perfsonar_late_service_id];
+                    $endpoint = $resource->fqdn;
+                    if(isset($service_info->details)) {
+                        $endpoint = $service_info->details["endpoint"];
+                    }
+                    $header = "Latency <code>$endpoint</code>";
+
+                    //matrix column
+                    if(isset($this->late_matrix[$rid])) {
+                        $cols = $this->late_matrix[$rid];
+                        echo $this->perfmatrix($header, $this->late_service_names, $cols);
+                    } else {
+                        echo "<p class=\"muted\">No perfsonar latency information posted on OSG datastore</p>";
+                    }
+                } else {
+                    echo "<p class=\"muted\">No perfsonar latency service is registered in OIM for this resource</p>";
+                    //var_dump($resource->service_detail);
+                }
+            }
+
+            if(isset($_REQUEST["summary_attrs_showpfbandmatrix"])) {
+                //bandwidth matrix
+                if(isset($resource->service_detail[config()->perfsonar_band_service_id])) {
+                    //show service information
+                    $service_info = $resource->service_detail[config()->perfsonar_band_service_id];
+                    $endpoint = $resource->fqdn;
+                    if(isset($service_info->details)) {
+                        $endpoint = $service_info->details["endpoint"];
+                    }
+                    $header = "Bandwidth <code>$endpoint</code>";
+
+                    //matrix column
+                    if(isset($this->band_matrix[$rid])) {
+                        $cols = $this->band_matrix[$rid];
+                        echo $this->perfmatrix($header, $this->band_service_names, $cols);
+                    } else {
+                        echo "<p class=\"muted\">No perfsonar bandwidth information posted on OSG datastore</p>";
+                        //echo "<pre>".print_r(array_keys($this->band_matrix), true)."</pre>";
+                    }
+                } else {
+                    echo "<p class=\"muted\">No perfsonar bandwidth service is registered in OIM for this resource</p>";
+                    //var_dump($resource->service_detail);
+                }
+
+            }
+        }
+    }
+}
+
+
+echo "</div>";//rgpf
+
+?>
+
+<div id="cell-detail" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Detail</h3>
+  </div>
+  <div class="modal-body">
+  </div>
+</div>
+
+<script>
+$(function() {
+    $("time").timeago();
+
+    //update timeago markers periodically
+    function updateTimeago() {
+        $("time").timeago();
+        setTimeout(updateTimeago, 30*1000);
+    }
+    updateTimeago();
+
+    $(".debug-toggle").click(function() {
+        $(this).siblings(".debug-detail").show("slow");
+        $(this).hide();
+    });
+    $(".param-toggle").click(function() {
+        $(this).siblings(".param-detail").slideDown();
+        $(this).hide();
+    });
+/*
+    $("td.cell").popover({
+        html: true,
+        content: function() { 
+            var content = $("<div class=\"result-content\">Loading ...</div>");
+            content.load("rgpfmatrix/popover?cid="+$(this).data("cellid"));
+            return content;
+        },
+        title: "Detail",
+        delay: 500,
+        trigger: "manual",
+        placement: "top"
+    });
+    $("td.cell").click(function() {
+        $("td.cell").popover("hide");//hide all other
+        $(this).popover("show");
+    });
+    $(".popover-inner").mouseleave(function() {
+        console.log("left");
+        $("td.cell").popover("hide");//hide all
+    });
+*/
+    $("td.cell").click(function() {
+        $('.cell-active').removeClass('cell-active');
+        $(this).addClass("cell-active");
+        $("#cell-detail .modal-body").html("Loading ...");
+        $("#cell-detail").modal("show");
+        $("#cell-detail .modal-body").load("rgpfmatrix/popover?cid="+$(this).data("cellid"));
+    });
+    $("#cell-detail").modal({
+        show: false,
+        backdrop: false
+    });
+    $("#cell-detail").bind("hide", function() {
+        $('.cell-active').removeClass('cell-active');
+    });
+});
+</script>

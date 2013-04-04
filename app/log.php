@@ -115,6 +115,7 @@ function slog($obj)
     Zend_Registry::get("logger")->log($obj, Zend_Log::INFO);
 }
 
+/*
 //session message (in HTML format)
 function message($type, $content)
 {
@@ -133,6 +134,16 @@ function flushMessages() {
     }
     return array();
 }
+*/
 
-
+//set $html to true if you want to pass html message
+//type could be one of : error, success, info, block(use html), or warning
+function message($type, $content, $html=false) {
+    $message = new Zend_Session_Namespace('message');
+    if(!$html) {
+        $content = htmlentities($content);
+    }
+    //index by content to prevent dup
+    $message->alerts[$content] = array("type"=>$type, "html"=>$content);
+}
 

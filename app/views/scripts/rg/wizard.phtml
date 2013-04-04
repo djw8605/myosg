@@ -37,7 +37,10 @@ margin-bottom: 5px;
         <option value="rgce">Gratia Accounting (CE Specific)</option>
         <option value="rgse">Gratia Accounting (SE Specific)</option>
         <option value="rgbdii">BDII Information</option>
-        <!--<option value="rgpf">Perfosonar</option>-->
+        <?php if(config()->debug) {?>
+        <option value="rgpfhost">Perfosonar Status</option>
+        <option value="rgpfmatrix">Perfosonar Matrix</option>
+        <?php } ?>
         </select>
         
         <div id="rgsummary_attrs" class="attrs hidden">
@@ -90,6 +93,14 @@ margin-bottom: 5px;
 
         <div id="rgevent_attrs" class="attrs hidden">
             <?=$this->render("rg/wizard_event.phtml")?>
+        </div>
+
+        <div id="rgpfmatrix_attrs" class="attrs hidden">
+            <?=$this->render("rg/wizard_pfmatrix.phtml")?>
+        </div>
+
+        <div id="rgpfhost_attrs" class="attrs hidden">
+            <?=$this->render("rg/wizard_pfhost.phtml")?>
         </div>
 
         <div id="_daterange_attrs" class="attrs hidden">
@@ -204,17 +215,6 @@ margin-bottom: 5px;
             }
             echo fblist("service", "Provides following Services", $kv);
 
-/*
-            $kv = array();
-            $kv[0] = "Non-Central Service";
-            $kv[1] = "Central Service";
-            echo radiolist("service_central", "Provides Service with central flag of", $kv, 0);
-            $kv = array();
-            $kv[0] = "Non-Hidden Service";
-            $kv[1] = "Hidden Service";
-            echo radiolist("service_hidden", "Provides Service with hidden flag of", $kv, 0);
-*/ 
-
             $model = new VirtualOrganization();
             $list = $model->get();
             $kv = array();
@@ -278,8 +278,7 @@ function showhide_attrs(v, show_speed)
         $("#filter_area_standby").hide();
 
         //pages that uses date range contoller
-        if(
-            v == "rgstatushistory" ||
+        if( v == "rgstatushistory" ||
             v == "rgarhistory" ||
             v == "rgarmetric" ||
             v == "rgaccount" ||
@@ -287,6 +286,7 @@ function showhide_attrs(v, show_speed)
             v == "rgce") {
             $("#_daterange_attrs").show(show_speed);
         }
+        //pages that uses gratia notes
         if( v == "rgaccount" ||
             v == "rgse" ||
             v == "rgce" ) {
@@ -316,13 +316,6 @@ $(document).ready(function() {
 
     <?php
     //select currently selected datasouce
-    /*
-    if(isset($_REQUEST["datasource"])) {
-        $datasource = $_REQUEST["datasource"];
-        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
-        echo "showhide_attrs();\n";
-    }
-    */
     $front = Zend_Controller_Front::getInstance();
     $controllerName = $front->getRequest()->getControllerName();
     echo "$('#datasource option[value=$controllerName]').attr('selected', 'selected');\n";
