@@ -25,19 +25,6 @@ class Zend_View_Helper_Perfmatrix extends Zend_View_Helper_Abstract {
                 $cellid = $detail->cellid;
                 echo "<td width=\"40%\" class=\"cell\" data-cellid=\"$cellid:$service_idx\">";
 
-    /*
-                //params
-                echo "<div class=\"param pull-right\"><i class=\"param-toggle icon icon-cog\"></i>";
-                echo "<div class=\"param-detail well well-small\">";
-                echo "<table class=\"table table-condensed\">";
-                foreach($detail->parameters as $key=>$value) {
-                    echo "<tr><th>$key</th><td>$value</td></tr>";
-                }
-                echo "</table>";
-                echo "</div>";//param-detail
-                echo "</div>";//params
-    */
-
                 echo "<div class=\"row-fluid\">";
 
                 switch($detail->result->status) {

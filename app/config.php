@@ -201,6 +201,7 @@ class common_config
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
         $this->perfsonar_matrix_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/matrices";
+        $this->perfsonar_host_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/hosts";
         $this->perfsonar_band_service_id = 130;
         $this->perfsonar_late_service_id = 131;
     }
@@ -215,6 +216,8 @@ class common_config
             return "?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";
         case "rgpfmatrix":
             return "rgpfmatrix/index?summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&bdii_object=service&bdii_server=is-osg&summary_attrs_showpflatematrix=on&summary_attrs_showpfbandmatrix=on&start_type=7daysago&start_date=04%2F03%2F2013&end_type=now&end_date=04%2F03%2F2013&all_resources=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_130=on&service_131=on&active=on&active_value=1&disable_value=1";
+        case "rgpfstatus":
+            return "rgpfstatus/index?summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&bdii_object=service&bdii_server=is-osg&start_type=7daysago&start_date=04%2F03%2F2013&end_type=now&end_date=04%2F03%2F2013&all_resources=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_130=on&service_131=on&active=on&active_value=1&disable_value=1";
         case 'sc':
             return "?all_scs=on&active=on&active_value=1";
         case 'vo':

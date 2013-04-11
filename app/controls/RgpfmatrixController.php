@@ -15,7 +15,7 @@ License.
 
 #################################################################################################*/
 
-class RgpfmatrixController extends RgController
+class RgpfmatrixController extends RgpfController
 {
     public static function default_title() { return "Perfsonar Matrix"; }
     public static function default_url($query) { return ""; }
@@ -23,11 +23,7 @@ class RgpfmatrixController extends RgController
     public function indexAction() {
         parent::indexAction();
         message("warning", "This is an experimental feature");        
-    }
 
-    public function load()
-    {
-        parent::load();
         $this->view->rgs = $this->rgs;
 
         $gridtype_model = new GridTypes();
@@ -35,9 +31,7 @@ class RgpfmatrixController extends RgController
         $model = new ResourceGroup();
         $this->view->resource_groups = $model->getgroupby("id");
 
-        //load latency matrix (TODO - cache every minute?)
         $pfmodel = new Perfsonar();
-
         if(isset($_REQUEST["summary_attrs_showpflatematrix"])) {
             $matrix = $pfmodel->getMatrix(1);
             $this->view->late_service_names = $matrix->serviceNames;
@@ -50,16 +44,6 @@ class RgpfmatrixController extends RgController
             $this->view->band_status_labels = $matrix->statusLabels; //massage detail a bit
             $this->view->band_matrix = $this->process_matrix(2, $matrix, config()->perfsonar_band_service_id);
         } 
-
-        //load service details (all of them for now..) and attach it to resource_services
-        //$servicetype_model = new Service();
-        //$this->view->servicetypes = $servicetype_model->getindex();
-        //$resourceservice_model = new ServiceByResourceID();
-        //$this->view->resource_services = $resourceservice_model->getindex();
-
-        //var_dump($this->view->late_matrix);
-        //exit;
-        
     }
 
     function process_matrix($matrix_id, $matrix, $pf_service_id) {
@@ -68,66 +52,46 @@ class RgpfmatrixController extends RgController
         $resourceservice_model = new ServiceByResourceID();
         $resource_services = $resourceservice_model->getindex();
 
+        //construct rows
+        $matrix_rows = array();
+        foreach($matrix->rows as $item) {
+            $matrix_rows[] = $item->hostname;
+        }
+
         $matrix_view = array();
+        $this->load_perfsonar_fqdn($this->view->rgs, array($pf_service_id));
         foreach($this->view->rgs as $rgid=>$resources) {
             foreach($resources as $rid=>$resource) {
-                //get fqdn info
-                $resource_fqdn = $resource->fqdn;
+                foreach($resource->services as $service) {
+                    if(isset($service->perfsonar_fqdn)) {
+                        $pffqdn = $service->perfsonar_fqdn;
 
-                //find resource services
-                $services = $resource_services[$rid];
-                $found = false;
-                foreach($services as $service) {
-                    if($service->service_id == $pf_service_id) {
-                        $found = true;
-                        //override with service detail (if given)
-                        if(isset($resource_service_details[$rid][$pf_service_id])) {
-                            $details = $resource_service_details[$rid][$pf_service_id];
-                            if($details["endpoint"] != "") {
-                                $resource_fqdn = $details["endpoint"];
+                        //lookup matrix row index
+                        $row_idx = array_search($pffqdn, $matrix_rows);
+                        if($row_idx !== false) {
+                            //pull colunmn from matrix
+                            $cols = array();
+                            foreach($matrix->matrix[$row_idx] as $col_idx=>$col) {
+                                $col_fqdn = $matrix_rows[$col_idx];//TODO - should I create matrix_column?
+                    
+                                $cols[$col_fqdn] = array();
+                                foreach($col as $service_id => $detail) {
+                                    if(!isset($detail->result)) continue;
+                                    $status = $detail->result->status;
+                                    $label = $matrix->statusLabels[$status];
+                                    $detail->result->status_label = $label;
+                                    $detail->cellid = "$matrix_id:$row_idx:$col_idx";
+
+                                    $cols[$col_fqdn][] = $detail;
+                                }
                             }
-                            $service->details = $details;
-                        }
-                        $resource->service_detail[$pf_service_id] = $service;
-                        break;
-                    }
-                }
-                if(!$found) continue;//no such service for this resource
-
-                //clean up the fqdn (strip https:// and /toolkit people adds.)
-                $pos = strpos($resource_fqdn, "//");
-                if($pos !== false) {
-                    $resource_fqdn = substr($resource_fqdn, $pos+2);
-                }
-                $pos = strpos($resource_fqdn, "/");
-                if($pos !== false) {
-                    $resource_fqdn = substr($resource_fqdn, 0, $pos);
-                }
-
-                //lookup matrix row index
-                $row_idx = array_search($resource_fqdn, $matrix->rows);
-                if($row_idx !== false) {
-                    //pull colunmn from matrix
-                    $cols = array();
-                    foreach($matrix->matrix[$row_idx] as $col_idx=>$col) {
-                        $col_fqdn = $matrix->columns[$col_idx];
-            
-                        $cols[$col_fqdn] = array();
-                        foreach($col as $service_id => $detail) {
-                            if(!isset($detail->result)) continue;
-                            $status = $detail->result->status;
-                            $label = $matrix->statusLabels[$status];
-                            $detail->result->status_label = $label;
-                            $detail->cellid = "$matrix_id:$row_idx:$col_idx";
-
-                            $cols[$col_fqdn][] = $detail;
+                            $matrix_view[$resource->id] = $cols; //I am guessing this won't override other service info since we create different matrix_view for each service?
+                        } else {
+                            //no perfsonar info for this resource
+                            error_log("no perfsonar data found in matrix:$matrix_id for service: $pf_service_id on resource:".$resource->id." [".$pffqdn."]");
+                            //error_log(print_r($matrix->rows, true));
                         }
                     }
-                    $matrix_view[$resource->id] = $cols;
-                } else {
-                    //no perfsonar info for this resource
-                    error_log("no perfsonar data found in matrix for service: $pf_service_id on resource:".$resource->id." [".$resource_fqdn."]");
-                    error_log(print_r($matrix->rows, true));
                 }
             }
         }

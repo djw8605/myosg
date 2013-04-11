@@ -1,0 +1,183 @@
+<?php
+echo "<div class=\"rgpfstatus\">";
+echo "<h2>".$this->page_title."</h2>";
+
+foreach($this->rgs as $resource_group_id=>$resource_list) {
+    $resource_group = $this->resource_groups[$resource_group_id][0];
+    $group_name = $resource_group->name;
+    if($resource_group->disable == 1) {
+        $group_name .= " (Removed)";
+    }
+    echo "<div class=\"group_header\">";
+    echo "<span class='h3'>$group_name</span>";
+    $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->name;
+    echo " <small>$gridtype_name</small>";
+    echo "</div>";
+    echo "<hr>";
+
+    foreach($resource_list as $rid=>$resource) {
+        $disabled = "";
+        if($resource->disable == 1) {
+            $disabled = "disabled";
+        }
+
+        //show resource name & desc
+        echo "<div class=\"resource $disabled\">";
+        echo "<code class=\"fqdn pull-right\">".$resource->fqdn."</code>";
+        echo "<span class=\"h4\">".$resource->name."</span>";
+        if($resource->disable == 1) {
+            echo " (Removed)";
+        }
+        if($resource->active == 0) {
+            echo " (Inactive)";
+        }
+        echo "</div>";//resource name
+
+        echo "<table class=\"table table-bordered table-condensed\">";
+        foreach($resource->services as $service) {
+            $service_name = $service->name;
+            if(count($service->perfsonar->services) > 0) {
+                $pffqdn = $service->perfsonar_fqdn;
+                echo "<tr class=\"service-head\"><th colspan=\"2\">$service_name <code>$pffqdn</code></th></tr>";
+                foreach($service->perfsonar->services as $detail) {
+                    renderDetail($this, $detail);
+                }
+            } else {
+                echo "<tr><th colspan=\"2\">$service_name</th></tr>";
+                echo "<p class=\"muted\">No perfsonar data posted for this service</p>";
+            }
+        }
+        echo "</table>";
+    }
+}
+
+echo "</div>";//rgpf
+
+function renderDetail($it, $detail) {
+
+    switch($detail->result->status) {
+    case 0: 
+        $type = "success"; 
+        $label = "OK";
+        break;//OK
+    case 1: 
+        $type = "warning";
+        $label = "Warning";
+        $msg = $detail->result->message; 
+        break;//OK
+    case 2: 
+        $type = "important"; 
+        $label = "Critical";
+        break;//OK
+    default: 
+        $type = ""; //default - gray
+        $label = "N/A";
+        //TODO - what should I do with message?
+    }
+
+    echo "<tr>";
+    echo "<td width=\"230px\">";
+    echo $detail->description;
+    echo "</td>";
+    //echo "<td rel=\"tooltip\" title=\"$tooltip\">";
+    echo "<td class=\"canshow-detail\">";
+    echo "<span class=\"label label-$type\">$label</span> ";
+    echo $detail->result->message; 
+    $time = $detail->result->time;
+    echo "<time datetime=\"$time\" class=\"muted pull-right\" title=\"$time\"></time>";
+
+    //show command line used
+    if(isset($detail->result->parameters->command)) {
+        $cmd = "<span class=\"label\">command</span> ".$detail->result->parameters->command;
+    } else if(isset($detail->parameters->url)) {
+        $cmd = "<span class=\"label\">URL</span> ".$detail->parameters->url;
+    } else {
+        $cmd = "Next check: ".$detail->nextCheckTime;;
+    }
+    
+    echo "<pre class=\"cmd-detail\">$cmd</pre>";
+
+/*
+    echo "<h4>Parameters</h4>";
+    echo "<table class=\"table table-condensed\">";
+    foreach($detail->parameters as $key=>$value) {
+        echo "<tr><th>$key</th><td>$value</td></tr>";
+    }
+    if(isset($detail->result->parameters->command)) {
+        $cmd = $detail->result->parameters->command;
+        echo "<tr><th>Command line</th>";
+        echo "<td><pre>$cmd</pre></td>";
+    }
+    echo "</table>";
+*/
+
+/*
+    if(isset($detail->result->parameters->time)) {
+        $cmd = $detail->result->parameters->time;
+        echo "<pre>$cmd</pre>";
+    }
+
+/*
+    //show hidden detail
+    echo "<div class=\"row-fluid\">";
+
+    echo "<div class=\"span4\">";
+    echo "<h4>Service Detail</h4>";
+    echo "<table class=\"table table-condensed\">";
+    echo "<tr><th>Type</th><td>".$detail->type."</td></tr>";
+    echo "<tr><th>Timeout</th><td>".$detail->timeout."</td></tr>";
+    //echo "<tr><th>Running</th><td>".$detail->running."</td></tr>";
+    echo "<tr><th>Running Since</th><td>".$detail->runningSince."</td></tr>";
+    echo "<tr><th>Next Check Time</th><td>".$detail->nextCheckTime."</td></tr>";
+    echo "<tr><th>Previous Check Time</th><td>".$detail->prevCheckTime."</td></tr>";
+    echo "<tr><th>Check Interval</th><td>".$detail->checkInterval."</td></tr>";
+    echo "</table>";
+    echo "</div>";//span
+
+    echo "<div class=\"span4\">";
+    echo "<h4>Parameters</h4>";
+    echo "<table class=\"table table-condensed\">";
+    foreach($detail->result->parameters as $key=>$value) {
+        echo "<tr><th>$key</th><td>$value</td></tr>";
+    }
+    echo "</table>";
+    echo "</div>";//span
+*/
+
+
+    echo "</div>";//row
+
+    echo "</td>";
+    echo "</tr>";
+}
+
+
+?>
+
+<div id="cell-detail" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Detail</h3>
+  </div>
+  <div class="modal-body">
+  </div>
+</div>
+
+<script>
+$(function() {
+    $("time").timeago();
+    $("*[rel='tooltip']").tooltip();
+
+    //update timeago markers periodically
+    function updateTimeago() {
+        $("time").timeago();
+        setTimeout(updateTimeago, 30*1000);
+    }
+    updateTimeago();
+
+    $("td.canshow-detail").click(function() {
+        $(this).find(".cmd-detail").slideDown("fast");
+        $(this).removeClass("canshow-detail");
+    });
+});
+</script>
