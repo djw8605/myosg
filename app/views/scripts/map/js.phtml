@@ -64,13 +64,17 @@ function init(scrollwheel) {
         if(count($rgs) == 0) continue; //don't show site with no resource group
         if($site->active == 0 || $site->disable == 1) continue; //don't show sites that are not active
 
+
         $html = "";
         $site_has_status = false;
+        $resource_count = 0;
         foreach($rgs as $rg) {
             $rgname = $rg->name;
 
             //this is now done by the controller
             //if($rg->active == 0 || $rg->disable == 1) continue;
+
+            //count number of resources
 
             $target = "target=\"_blank\"";
             $gid = $rg->id;
@@ -79,6 +83,7 @@ function init(scrollwheel) {
             $rhtml = "";
             if(isset($this->resources_bygid[$rg->id])) {
                 $rs = $this->resources_bygid[$rg->id];
+                $resource_count += count($rs);
                 foreach($rs as $r) {
                     if($r->active == 0 || $r->disable == 1) continue;
                     $name = $r->name;
@@ -118,7 +123,7 @@ function init(scrollwheel) {
                 $html .= $rhtml;
             }
         }
-
+    
         //if there are no resource to show..
         $wrap_html = "<h2>$site->name</h2><div style=\"overflow: auto; max-height: 300px; width: 300px;\">$html</div>";
         $show = false;
@@ -143,13 +148,19 @@ function init(scrollwheel) {
             $show = true;
         }
         if($show) {
+            //place site with more resources in front
+            $zindex = $resource_count;
+
+            //place site with preferrable status in front (request from OSG management)
             switch($status) {
-            case "nr": $zindex = 0;break;
-            case "warning": $zindex = 1;break;
-            case "ok": $zindex = 2;break;
-            case "unknown": $zindex = 3;break;
-            default: $zindex = 4;
+            case "nr": $zindex += 0;break;
+            case "warning": $zindex += 10;break;
+            case "ok": $zindex += 20;break;
+            case "unknown": $zindex += 30;break;
+            default: $zindex = 40;
             }
+
+            
             ?>
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(<?php echo $site->latitude?>, <?php echo $site->longitude?>),
