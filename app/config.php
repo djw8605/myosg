@@ -61,7 +61,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "2.9"; #.
+        $this->version = "2.10";
 
         //application to display or used in email
         $this->app_name = "MyOSG";
@@ -200,6 +200,7 @@ class common_config
         $this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
+        //override this in site config to point to production if necessary
         $this->perfsonar_matrix_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/matrices";
         $this->perfsonar_host_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/hosts";
         $this->perfsonar_band_service_id = 130;
