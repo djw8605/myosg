@@ -36,15 +36,16 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<table class=\"table table-bordered table-condensed\">";
         foreach($resource->services as $service) {
             $service_name = $service->name;
+            $pffqdn = $service->perfsonar_fqdn;
+            echo "<tr class=\"service-head\"><th colspan=\"2\">$service_name <code>$pffqdn</code></th></tr>";
             if(count($service->perfsonar->services) > 0) {
-                $pffqdn = $service->perfsonar_fqdn;
-                echo "<tr class=\"service-head\"><th colspan=\"2\">$service_name <code>$pffqdn</code></th></tr>";
                 foreach($service->perfsonar->services as $detail) {
                     renderDetail($this, $detail);
                 }
             } else {
-                echo "<tr><th colspan=\"2\">$service_name</th></tr>";
-                echo "<p class=\"muted\">No perfsonar data posted for this service</p>";
+                echo "<tr><td colspan=\"2\">";
+                echo "<span class=\"muted\">No perfsonar data posted for this service</span>";
+                echo "</td></tr>";
             }
         }
         echo "</table>";
