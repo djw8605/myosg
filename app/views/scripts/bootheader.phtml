@@ -173,11 +173,9 @@
                         <li id="menu_rgaccount"><a href="rgaccount<?php echo config()->default_url("rg")?>&account_type=cumulative_hours">Gratia Accounting Graphs</a></li>
                         <li id="menu_rgce"><a href="rgce<?php echo config()->default_url("rg")?>&ce_account_type=gip_vo">Gratia Accounting Graphs (for CE)</a></li>
                         <li id="menu_rgse"><a href="rgse<?php echo config()->default_url("rg")?>&se_account_type=vo_transfer_volume">Gratia Accounting Graphs (for SE)</a></li>
-                        <?php if(config()->debug) {?>
                         <li class="divider"></li>
                         <li id="menu_rgpfstatus"><a href="<?php echo config()->default_url("rgpfstatus")?>">Perfsonar Status</a></li>
                         <li id="menu_rgpfmatrix"><a href="<?php echo config()->default_url("rgpfmatrix")?>">Perfsonar Matrix</a></li>
-                        <?php } ?>
                         </ul>
                     </li>
                     <li id="menu_vo" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Virtual Organization<b class="caret"></b></a>

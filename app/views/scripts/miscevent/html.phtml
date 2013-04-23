@@ -89,16 +89,21 @@ function renderOIMEvent(event) {
     }
 
     var html = "";
-    var logurl = "<a href=\"https://oim.grid.iu.edu/oim/log?type=3&id="+logid+"\">Log "+logid+"</a>";
+    var logurl = "<a href=\"https://oim.grid.iu.edu/oim/log?type=3&id="+logid+"\">OIM Log "+logid+"</a>";
     var contact_name = "N/A";
     if(contact != null) contact_name = contact.name;
 
     if(action == "update") {
         html += "<div>"+logurl+" "+contact_name+" updated "+model+"</div>";
 
+        if(comment) {
+            html += "<p class=\"help-block\">"+comment+"</p>";
+        }
+//don't want to make oim update detail  public
+/*
         //output old/new values
         html += "<table class=\"table table-bordered\">";
-        html += "<tr><th width=\"20%\">Parameter Name</th><th width=\"40%\">Old Value</th><th width=\"40%\">New Value</th></tr>";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"40%\">Old Value</th><th width=\"40%\">New Value</th></tr>";
         for(var id in fields_n) {
             var field = fields_n[id];
             key = field.Name;
@@ -107,18 +112,52 @@ function renderOIMEvent(event) {
             html += "<tr><td>"+key+"</td><td>"+oldval+"</td><td>"+newval+"</td></tr>";
         }
         html += "</table>";
+*/
 
     } else if(action == "insert") {
         html += "<div>"+logurl +" "+contact_name+" inserted "+model+"</div>";
+
+        if(comment) {
+            html += "<p class=\"help-block\">"+comment+"</p>";
+        }
+
+//don't want to make oim update detail  public
+/*
+        html += "<table class=\"table table-bordered\">";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"80%\">Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            key = field.Name;
+            val = field.Value;
+            html += "<tr><td>"+key+"</td><td>"+val+"</td></tr>";
+        }
+        html += "</table>";
+*/
+
     } else if(action == "remove") {
         html += "<div>"+logurl +" "+contact_name+" removed "+model+"</div>";
+
+        if(comment) {
+            html += "<p class=\"help-block\">"+comment+"</p>";
+        }
+
+//don't want to make oim update detail  public
+/*
+        //TODO - will this work?
+        html += "<table class=\"table table-bordered\">";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"80%\">Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            key = field.Name;
+            val = field.Value;
+            html += "<tr><td>"+key+"</td><td>"+val+"</td></tr>";
+        }
+        html += "</table>";
+*/
     } else {
         console.log("unknown action:"+action);
     }
 
-    if(comment) {
-        html += "<p class=\"comment\">"+comment+"</p>";
-    }
     return html;
 }
 function renderRSVEvent(event) {
@@ -144,14 +183,15 @@ function renderTicketEvent(event) {
     var html = "";
     var key = event.key.split(".");
     var submitter_id = event.content.ticket.submitter;
+    var title = event.content.ticket.title;
     var desc = event.content.ticket.description;
     var ticket_id = key[0];
     var action = key[1];
     if(action == "update") {
-        html += "<div>"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">Ticket "+ticket_id+"</a></div>";
+        html += "<div>"+submitter_id+" updated <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+": "+title+"</a></div>";
         html += "<pre>"+desc+"</pre>";
     } else if(action == "create") {
-        html += "<div>"+submitter_id+" opened ticket ID <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+"</a></div>";
+        html += "<div>"+submitter_id+" opened ticket <a href=\"<?php echo config()->gocticket_url?>/"+ticket_id+"\">"+ticket_id+": "+title+"</a></div>";
         html += "<pre>"+desc+"</pre>";
     }
     return html;
