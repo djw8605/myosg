@@ -36,4 +36,19 @@ class ResourceGroup extends CachedIndexedModel
         return $sql;
     }
     public function key() { return "id"; }
+
+
+    //return resource gruops IDS that user is listed in the resource_contact
+    public function getMyResourceGroupIDS() {
+        $uid = user()->getPersonID();
+        $rows = db("oim")->query("SELECT resource_group_id FROM resource JOIN resource_contact rc ON rc.resource_id = resource.id WHERE rc.contact_id = $uid");
+        $ids = array();
+        foreach($rows as $row) {
+            $rgid = (int)$row->resource_group_id;
+            if(!in_array($rgid, $ids)) {
+                $ids[] = $rgid;
+            }
+        }
+        return $ids;
+    }
 }

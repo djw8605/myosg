@@ -49,7 +49,6 @@ width: 25%;
 </style>
 <?
 echo "<div class=\"rgsummary\">";
-echo "<h2>".$this->page_title."</h2>";
 echo "<table class=\"table\">";
 foreach($this->rgs as $resource_group_id=>$resource_list) {
     $resource_group = $this->resourcegroups[$resource_group_id][0];
@@ -291,7 +290,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     $vo_name = $vo;
                     $attrs = $vo->attributes();
                     $vo_id = $attrs["id"];
-                    $vonames .= "<span class=\"round tag\" style=\"background-color: gray\" onclick=\"document.location='".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_$vo_id=on';\">$vo_name</span> ";
+                    $vonames .= "<span class=\"label\" style=\"background-color: gray\" onclick=\"document.location='".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_$vo_id=on';\">$vo_name</span> ";
                 }                
                 echo $vonames;
                 if(isset($this->vos_errors[$rid])) {

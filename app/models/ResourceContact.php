@@ -24,6 +24,9 @@ class ResourceContact extends CachedIndexedModel
         if(isset($params["resource_id"])) {
             $where = "AND resource_id = ".$params["resource_id"];
         }
+        if(isset($params["contact_id"])) {
+            $where = "AND rc.contact_id = ".$params["contact_id"];
+        }
         
         //WARNING - if there are multiple DNs for a contact_id, it will list duplicate records for each DN
         $sql = "SELECT dn.dn_string as dn,  rc.*, c.*, t.name as contact_type, r.name as rank_type ".

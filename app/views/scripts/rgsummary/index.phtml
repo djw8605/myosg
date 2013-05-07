@@ -4,6 +4,7 @@
     <div class="span9">
         <?=$this->render("banner.phtml", true)?>
         <?=$this->info?>
+        <h2><?php echo $this->page_title;?></h2>
         <?=$this->render(pagename()."/html.phtml")?>
     </div>
     <div class="span3">
