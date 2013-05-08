@@ -32,7 +32,9 @@ class MiscstatusController extends MiscController
         $this->view->statuses = array(
             "Critical"=>array(
                 $this->getStatus(247, "https://twiki.grid.iu.edu/bin/view/Operations/BDIIServiceLevelAgreement"), //BDII
-                $this->getStatus(246, "https://twiki.grid.iu.edu/bin/view/Operations/MyOSGServiceLevelAgreement")  //MyOSG
+                $this->getStatus(246, "https://twiki.grid.iu.edu/bin/view/Operations/MyOSGServiceLevelAgreement"),  //MyOSG
+                $this->getStatus(366, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //Oasis stratum 1
+
             ),
             "High"=>array(
 
