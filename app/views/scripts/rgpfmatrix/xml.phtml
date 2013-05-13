@@ -1,40 +1,11 @@
 <?=$this->header?>
-<StatusHistory>
 <?
-echo "<StartTime>$this->start_time</StartTime>";
-echo "<EndTime>$this->end_time</EndTime>";
-foreach($this->rgs as $rgid=>$rg) {
-    echo "<ResourceGroup>";
-
-    $resource_group = $this->resource_groups[$rgid][0];
-
-    echo "<GridType>".htmlsafe($resource_group->grid_type_description)."</GridType>";
-    echo "<GroupID>".$resource_group->id."</GroupID>";
-    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
-
-    foreach($rg as $rid=>$resource) {
-        echo "<Resource>";
-        echo "<Name>".htmlsafe($resource->name)."</Name>";
-        echo "<ID>$rid</ID>";
-        
-        foreach($this->services[$rid] as $service) {
-            echo "<Service>";
-            echo "<Name>".htmlsafe($service->name)."</Name>";
-            echo "<Description>".htmlsafe($service->description)."</Description>";
-            echo "<ID>$service->service_id</ID>";
-            echo "<StatusChangeXML>";
-            $url = fullbase()."/history/graphxml?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time";
-            echo htmlsafe($url);
-            echo "</StatusChangeXML>";
-            echo "<GraphURL>";
-            $url = fullbase()."/history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time";
-            echo htmlsafe($url);
-            echo "</GraphURL>";
-            echo "</Service>";
-        }
-        echo "</Resource>";
-    }
-    echo "</ResourceGroup>";
+if(user()->isGuest()) {
+    echo "<!--";
+    echo "NOTE: Email address and phone number of contacts are displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
 }
 ?>
-</StatusHistory>
+<PerfsonarMatrix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgpfstatus.xsd">
+<!-- TODO -->
+</PerfsonarMatrix>
