@@ -46,22 +46,24 @@ class RgpfController extends RgController
                             $service->details = $details;
                         }
                         $resource->service_detail[$service->service_id] = $service;
-
-                        //clean up the fqdn (strip https:// and /toolkit people adds.)
-                        $pos = strpos($resource_fqdn, "//");
-                        if($pos !== false) {
-                            $resource_fqdn = substr($resource_fqdn, $pos+2);
-                        }
-                        $pos = strpos($resource_fqdn, "/");
-                        if($pos !== false) {
-                            $resource_fqdn = substr($resource_fqdn, 0, $pos);
-                        }
-
-                        $service->perfsonar_fqdn = $resource_fqdn;
+                        $service->perfsonar_fqdn = clean_perfsonar_fqdn($resource_fqdn);
                         //break;
                     }
                 }
             }
         }
+    }
+
+    public function clean_perfsonar_fqdn($fqdn) {
+        //clean up the fqdn (strip https:// and /toolkit people adds.)
+        $pos = strpos($fqdn, "//");
+        if($pos !== false) {
+            $fqdn = substr($fqdn, $pos+2);
+        }
+        $pos = strpos($fqdn, "/");
+        if($pos !== false) {
+            $fqdn = substr($fqdn, 0, $pos);
+        }
+        return $fqdn;
     }
 }
