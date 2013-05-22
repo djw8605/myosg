@@ -95,6 +95,11 @@ class RgController extends ControllerBase
                 }
             }
         }
+        return $this->process_load_rglist($rg_ids);
+    }
+
+    protected function process_load_rglist($rg_ids)
+    {
 
         if(count($rg_ids) == 0) {
             $this->view->info = "<p class=\"warning\">Please select at least one resource group.</p>";
@@ -174,7 +179,7 @@ class RgController extends ControllerBase
         }
     }
 
-    private function process_rglist_addrg(&$rg_ids, $rg_id)
+    protected function process_rglist_addrg(&$rg_ids, $rg_id)
     {
         if(!in_array($rg_id, $rg_ids)) {
             $rg_ids[] = (int)$rg_id;
