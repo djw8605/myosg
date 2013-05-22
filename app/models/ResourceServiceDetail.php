@@ -20,23 +20,28 @@ class ResourceServiceDetail extends CachedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-/*
         $where = "where 1 = 1";
         if(isset($params["resource_id"])) {
-            $where .= " and rs.resource_id = ".$params["resource_id"];
+            $where .= " and resource_id = ".$params["resource_id"];
         }
+        if(isset($params["resource_ids"])) {
+            $where .= " and resource_id in (".implode(",", $params["resource_ids"]).")";
+        }
+/*
         if(isset($params["service_id"])) {
             $where .= " and rs.service_id = ".$params["service_id"];
         }
         $sql = "SELECT rs.*, s.* FROM resource_service rs join service s on rs.service_id = s.id $where";
 */
-        return "SELECT * from resource_service_detail";
+        
+        $sql = "SELECT * from resource_service_detail $where";
+        return $sql;
     }
 
     //return multidimentional array containing rec[$rid][$sid]
-    public function getindex() {
+    public function getindex($params) {
         $recs = array();
-        foreach($this->get() as $rec) {
+        foreach($this->get($params) as $rec) {
             $rid = $rec->resource_id;
             $sid = $rec->service_id;
             if(!isset($recs[$rid])) {    

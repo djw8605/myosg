@@ -24,6 +24,9 @@ class VirtualOrganization extends CachedIndexedModel
         if(isset($params["sc_id"])) {
             $where .= " and sc_id = ".$params["sc_id"];
         }
+        if(isset($params["vo_id"])) {
+            $where .= " and id = ".$params["vo_id"];
+        }
         $sql = "SELECT * FROM vo $where order by name";
         return $sql;
     }

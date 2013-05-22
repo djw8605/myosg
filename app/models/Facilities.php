@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************************************
 
-Copyright 2009 The Trustees of Indiana University
+Copyright 2013 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ License.
 
 **************************************************************************************************/
 
-class Facilities extends CachedModel
+class Facilities extends CachedIndexedModel
 {
     public function ds() { return "oim"; }
     public function sql($params)
@@ -24,11 +24,20 @@ class Facilities extends CachedModel
         if(isset($params["filter_disabled"])) {
             $filter_disabled = $params["filter_disabled"];
         }
+        $where = "where 1=1 ";
         if($filter_disabled) {
-            $where = "where active = 1 and disable = 0";
-        } else {
-            $where = "where 1 = 1";
+            $where .= " and active = 1 and disable = 0";
         }
-        return "select * from facility $where order by name";
+        if(isset($params["facility_ids"])) {
+            if(count($params["facility_ids"]) == 0) {
+                $where .= " and 1 = 2";
+            } else {
+                $where .= " and id in (".implode(",", $params["facility_ids"]).")";
+            }
+        }
+        $sql = "select * from facility $where order by name";
+        //error_log($sql);
+        return $sql;
     }
+    public function key() { return "id"; }
 }

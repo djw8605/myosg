@@ -24,10 +24,14 @@ class ResourceServices extends CachedModel
         if(isset($params["resource_id"])) {
             $where .= " and rs.resource_id = ".$params["resource_id"];
         }
+        if(isset($params["resource_ids"])) {
+            $where .= " and rs.resource_id in (".implode(",", $params["resource_ids"]).")";
+        }
         if(isset($params["service_id"])) {
             $where .= " and rs.service_id = ".$params["service_id"];
         }
         $sql = "SELECT rs.*, s.* FROM resource_service rs join service s on rs.service_id = s.id $where";
+        //error_log($sql);
         return $sql;
     }
 }

@@ -24,6 +24,13 @@ class ResourceContact extends CachedIndexedModel
         if(isset($params["resource_id"])) {
             $where = "AND resource_id = ".$params["resource_id"];
         }
+        if(isset($params["resource_ids"])) {
+            if(count($params["resource_ids"]) == 0) {
+                $where .= " and 1 = 2";
+            } else {
+                $where .= " AND resource_id in (".implode(",", $params["resource_ids"]).")";
+            }
+        }
         if(isset($params["contact_id"])) {
             $where = "AND rc.contact_id = ".$params["contact_id"];
         }

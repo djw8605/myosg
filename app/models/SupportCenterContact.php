@@ -24,6 +24,13 @@ class SupportCenterContact extends CachedIndexedModel
         if(isset($params["sc_id"])) {
             $where .= " and sc_id = ".$params["sc_id"];
         }
+        if(isset($params["sc_ids"])) {
+            if(count($params["sc_ids"]) == 0) {
+                $where .= " and 1 = 2";
+            } else {
+                $where .= " and sc_id in (".implode(",", $params["sc_ids"]).")";
+            }
+        }
         if(isset($params["contact_type_id"])) {
             $where .= " and sc.contact_type_id = ".$params["contact_type_id"];
         }

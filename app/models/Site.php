@@ -15,7 +15,7 @@ License.
 
 **************************************************************************************************/
 
-class Site extends CachedModel
+class Site extends CachedIndexedModel
 {
     public function ds() { return "oim"; }
     public function sql($params)
@@ -30,6 +30,13 @@ class Site extends CachedModel
             $where = "where 1 = 1";
         }
 
+        if(isset($params["site_ids"])) {
+            if(count($params["site_ids"]) == 0) {
+                $where .= " and 1 = 2";
+            } else {
+                $where .= " and id in (".implode(",", $params["site_ids"]).")";
+            }
+        }
         if(isset($params["facility_id"])) {
             $where .= " and facility_id = ".$params["facility_id"];
         }
@@ -38,4 +45,5 @@ class Site extends CachedModel
         }
         return "SELECT * FROM site $where order by name";
     }
+    public function key() { return "id"; }
 }

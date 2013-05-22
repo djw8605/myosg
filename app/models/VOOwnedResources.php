@@ -22,10 +22,10 @@ class VOOwnedResources extends CachedIndexedModel
     {
         $where = "";
         if(isset($params["vo_id"])) {
-            $vo_id = $params["vo_id"];
-            $where = " where vo_id = $vo_id";
+            $where = " where vo_id = ".(int)$params["vo_id"];
         }
         $sql = "SELECT * FROM vo_resource_ownership $where";
+        error_log($sql);
         return $sql;
     }
     public function key() { return "vo_id"; }

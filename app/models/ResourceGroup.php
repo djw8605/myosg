@@ -23,6 +23,13 @@ class ResourceGroup extends CachedIndexedModel
         //select resource group that is used by at least one resource (TODO.. really?? why?)
         $where = "where rg.id IN (select resource_group_id from resource group by resource_group_id)"; 
 
+        if(isset($params["resource_group_ids"])) {
+            if(count($params["resource_group_ids"]) == 0) {
+                $where .= "and 1 = 2";
+            } else {
+                $where .= " and rg.id in (".implode(",", $params["resource_group_ids"]).")";
+            }
+        }
         if(isset($params["osg_grid_type_id"])) {
             $where .= " and osg_grid_type_id = ".$params["osg_grid_type_id"];
         }

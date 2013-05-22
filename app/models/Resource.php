@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************************************
 
-Copyright 2009 The Trustees of Indiana University
+Copyright 2013 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,13 @@ class Resource extends CachedIndexedModel
         $where = "where 1=1 ";
         if(isset($params["resource_id"])) {
             $where .= " and id = ".$params["resource_id"];
+        }
+        if(isset($params["resource_ids"])) {
+            if(count($params["resource_ids"]) == 0) {
+                $where .= "and 1 = 2";
+            } else {
+                $where .= " and id in (".implode(",", $params["resource_ids"]).")";
+            }
         }
         if(isset($params["active"])) {
             $where .= " and active = ".$params["active"];
