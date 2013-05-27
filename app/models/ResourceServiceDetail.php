@@ -39,7 +39,7 @@ class ResourceServiceDetail extends CachedModel
     }
 
     //return multidimentional array containing rec[$rid][$sid]
-    public function getindex($params) {
+    public function getindex($params = array()) {
         $recs = array();
         foreach($this->get($params) as $rec) {
             $rid = $rec->resource_id;
