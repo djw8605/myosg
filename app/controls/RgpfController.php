@@ -46,7 +46,7 @@ class RgpfController extends RgController
                             $service->details = $details;
                         }
                         $resource->service_detail[$service->service_id] = $service;
-                        $service->perfsonar_fqdn = clean_perfsonar_fqdn($resource_fqdn);
+                        $service->perfsonar_fqdn = $this->clean_perfsonar_fqdn($resource_fqdn);
                         //break;
                     }
                 }
