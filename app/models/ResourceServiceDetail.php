@@ -25,7 +25,11 @@ class ResourceServiceDetail extends CachedModel
             $where .= " and resource_id = ".$params["resource_id"];
         }
         if(isset($params["resource_ids"])) {
-            $where .= " and resource_id in (".implode(",", $params["resource_ids"]).")";
+            if(empty($params["resource_ids"])) {
+                $where .= " and 1 = 2";
+            } else {
+                $where .= " and resource_id in (".implode(",", $params["resource_ids"]).")";
+            }
         }
 /*
         if(isset($params["service_id"])) {

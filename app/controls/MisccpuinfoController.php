@@ -26,13 +26,6 @@ class MisccpuinfoController extends MiscController
 
         $model = new CPUInfo();
         $this->view->cpuinfos = $model->get();
-    
-/*
-        //additional info
-        if(isset($_REQUEST["summary_attrs_showsomething"])) {
-            //LOAD information for something..
-        }
-*/
 
         $this->setpagetitle(self::default_title());
     }

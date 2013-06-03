@@ -1,7 +1,8 @@
-<?php
-echo "<div class=\"rgpf\">";
-echo "<h2>".$this->page_title."</h2>";
+<div class="rgpf">
+<h2><?php echo $this->page_title?></h2>
+<p>This page shows results collected by OSG central perfsonar collector / datastore. Please <a href="https://confluence.grid.iu.edu/display/CENTRAL/Perfsonar+Mesh+Configs">read here</a> on how to make your tookit instance to run tests on OSG full matrix.</p>
 
+<?php
 if(
     !isset($_REQUEST["summary_attrs_showpflatematrix"]) && 
     !isset($_REQUEST["summary_attrs_showpfbandmatrix"])

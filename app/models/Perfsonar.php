@@ -2,20 +2,57 @@
 
 class Perfsonar
 {
-    public function getMatrix($id) {
+    public function getMatrix($matrix_id) {
+        //try only for N seconds to pull this data
+        $ctx = stream_context_create(array('http' => array('timeout' => 8)));
+
+        //load list of all matrices
+        $c = new Cache("/tmp/myosg.personar.matrices");
+        if($c->isFresh(60*10)) {//seconds
+            $matrices = $c->get();
+        } else {
+            $url = config()->perfsonar_matrix_url;
+            $json = file_get_contents($url, 0, $ctx);
+            if($json !== false) {
+                $matrices = json_decode($json);
+                $c->set($matrices);
+            } else {
+                error_log("failed to download xml from $url -- using previous cache");
+                error_log(print_r($ctx, true));
+                $matrices = $c->get();
+            }
+        }
+
+        //convert matrix id to datastore matrix id
+        $id = null;
+        foreach($matrices as $matrix) {
+            if(strpos($matrix->name, "#".$matrix_id) !== false) {
+                $id = $matrix->id;
+                break;
+            }
+        }
+        if(is_null($id)) {
+            error_log("failed to find matrix with id: $matrix_id");
+            return null;
+        }
+        return $this->getMatrixByDatastoreID($id);
+    }
+
+    public function getMatrixByDatastoreID($id) {
+        
+        //now load the matrix using datastore id
+        //error_log("using cache : /tmp/myosg.personar.matrix.$id");
         $c = new Cache("/tmp/myosg.personar.matrix.$id");
         if($c->isFresh(60*10)) {//seconds
             return $c->get();
         } else {
-            //try only for N seconds to pull this data
-            $ctx = stream_context_create(array('http' => array('timeout' => 8)));
-
             $url = config()->perfsonar_matrix_url."/$id";
             slog("refreshing cache for $url");
             $json = file_get_contents($url, 0, $ctx);
             slog("done");
             if($json !== false) {
                 $matrix = json_decode($json);
+                $matrix->id = $id;//inject the matrix id part of matrix itself for later reference
                 $c->set($matrix);
                 return $matrix;
             } else {

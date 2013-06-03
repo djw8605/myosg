@@ -22,7 +22,11 @@ class ServiceByResourceID extends CachedIndexedModel
     {
         $where = "";
         if(isset($params["resource_ids"])) {
-            $where .= " and rs.resource_id in (".implode(",", $params["resource_ids"]).")";
+            if(empty($params["resource_ids"])) {
+                $where .= " and 1 = 2";//exclude all..
+            } else {
+                $where .= " and rs.resource_id in (".implode(",", $params["resource_ids"]).")";
+            }
         }
         $sql = "SELECT rs.*, s.* FROM resource_service rs join service s on rs.service_id = s.id WHERE service_id IN (SELECT id FROM service) $where";
         return $sql;

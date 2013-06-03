@@ -56,34 +56,41 @@ echo "</div>";//rgpf
 
 function renderDetail($it, $detail) {
 
-    switch($detail->result->status) {
-    case 0: 
-        $type = "success"; 
-        $label = "OK";
-        break;//OK
-    case 1: 
-        $type = "warning";
-        $label = "Warning";
-        $msg = $detail->result->message; 
-        break;//OK
-    case 2: 
-        $type = "important"; 
-        $label = "Critical";
-        break;//OK
-    default: 
+    if(isset($detail->result->status)) {
+        switch($detail->result->status) {
+        case 0: 
+            $type = "success"; 
+            $label = "OK";
+            break;//OK
+        case 1: 
+            $type = "warning";
+            $label = "Warning";
+            $msg = $detail->result->message; 
+            break;//OK
+        case 2: 
+            $type = "important"; 
+            $label = "Critical";
+            break;//OK
+        default: 
+            $type = ""; //default - gray
+            $label = "Invalid";
+            //TODO - what should I do with message?
+        }
+        $message = $detail->result->message;
+    } else {
         $type = ""; //default - gray
         $label = "N/A";
-        //TODO - what should I do with message?
+        $message = "No result stored in datastore.";
     }
 
     echo "<tr>";
     echo "<td width=\"230px\">";
     echo $detail->description;
     echo "</td>";
-    //echo "<td rel=\"tooltip\" title=\"$tooltip\">";
+
     echo "<td class=\"canshow-detail\">";
     echo "<span class=\"label label-$type\">$label</span> ";
-    echo $detail->result->message; 
+    echo $message; 
     $time = $detail->result->time;
     echo "<time datetime=\"$time\" class=\"muted pull-right\" title=\"$time\"></time>";
 
@@ -98,57 +105,7 @@ function renderDetail($it, $detail) {
     
     echo "<pre class=\"cmd-detail\">$cmd</pre>";
 
-/*
-    echo "<h4>Parameters</h4>";
-    echo "<table class=\"table table-condensed\">";
-    foreach($detail->parameters as $key=>$value) {
-        echo "<tr><th>$key</th><td>$value</td></tr>";
-    }
-    if(isset($detail->result->parameters->command)) {
-        $cmd = $detail->result->parameters->command;
-        echo "<tr><th>Command line</th>";
-        echo "<td><pre>$cmd</pre></td>";
-    }
-    echo "</table>";
-*/
-
-/*
-    if(isset($detail->result->parameters->time)) {
-        $cmd = $detail->result->parameters->time;
-        echo "<pre>$cmd</pre>";
-    }
-
-/*
-    //show hidden detail
-    echo "<div class=\"row-fluid\">";
-
-    echo "<div class=\"span4\">";
-    echo "<h4>Service Detail</h4>";
-    echo "<table class=\"table table-condensed\">";
-    echo "<tr><th>Type</th><td>".$detail->type."</td></tr>";
-    echo "<tr><th>Timeout</th><td>".$detail->timeout."</td></tr>";
-    //echo "<tr><th>Running</th><td>".$detail->running."</td></tr>";
-    echo "<tr><th>Running Since</th><td>".$detail->runningSince."</td></tr>";
-    echo "<tr><th>Next Check Time</th><td>".$detail->nextCheckTime."</td></tr>";
-    echo "<tr><th>Previous Check Time</th><td>".$detail->prevCheckTime."</td></tr>";
-    echo "<tr><th>Check Interval</th><td>".$detail->checkInterval."</td></tr>";
-    echo "</table>";
-    echo "</div>";//span
-
-    echo "<div class=\"span4\">";
-    echo "<h4>Parameters</h4>";
-    echo "<table class=\"table table-condensed\">";
-    foreach($detail->result->parameters as $key=>$value) {
-        echo "<tr><th>$key</th><td>$value</td></tr>";
-    }
-    echo "</table>";
-    echo "</div>";//span
-*/
-
-
-    echo "</div>";//row
-
-    echo "</td>";
+    echo "</td>";//canshow-detail
     echo "</tr>";
 }
 

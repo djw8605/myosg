@@ -35,8 +35,12 @@ class ServiceAR extends CachedModel
         if(isset($params["end_time"])) {
             $where .=  " and timestamp < ".$params["end_time"];
         }
-        if(isset($params["resource_ids"]) && !empty($params["resource_ids"])) {
-            $where .=  " and resource_id in (".implode(",", $params["resource_ids"]).")";
+        if(isset($params["resource_ids"])) {
+            if(empty($params["resource_ids"])) {
+                $where .=  " and 1 = 2";
+            } else {
+                $where .=  " and resource_id in (".implode(",", $params["resource_ids"]).")";
+            }
         }
         $sql = "select * from service_ar where 1 = 1 $where order by timestamp";
         return $sql;

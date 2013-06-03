@@ -27,6 +27,7 @@ class Zend_View_Helper_Perfmatrix extends Zend_View_Helper_Abstract {
 
                 echo "<div class=\"row-fluid\">";
 
+                //if(isset($detail->result->status)) {
                 switch($detail->result->status) {
                 case 0: 
                     $type = "success"; 
@@ -49,6 +50,13 @@ class Zend_View_Helper_Perfmatrix extends Zend_View_Helper_Abstract {
                     $msg = $detail->result->status_label;
                     //TODO - what should I do with message?
                 }
+/*
+                } else {
+                    $type = "";
+                    $label = "N/A";
+                    $msg = "No data posted in datastore";
+                }
+*/
                 echo "<div class=\"span2\"><span class=\"label label-$type\">$label</span></div>";
                 echo "<div class=\"span6\">$msg</div>";
 

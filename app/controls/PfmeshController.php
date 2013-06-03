@@ -22,6 +22,8 @@ class PfmeshController extends RgpfController
 
     public function load()
     {
+        $this->setpagetitle($this->default_title());
+        $this->selectmenu("misc");
     }
 
     public function jsonAction()
@@ -39,6 +41,7 @@ class PfmeshController extends RgpfController
             $vo = $vo[0];
 
             $mesh_desc = $vo->name;
+            $mesh_id = "vo_$vo_id";
 
             //load all resources owned by specified vo
             $model = new VOOwnedResources();
@@ -50,6 +53,7 @@ class PfmeshController extends RgpfController
         } else {
             $mesh_desc = "All OSG";
             $rids = null;
+            $mesh_id = "vo_all";
         }
         //error_log(print_r($rids, true));
 
@@ -246,7 +250,7 @@ class PfmeshController extends RgpfController
                         }
                         $_hosts[] = array(
                             "administrators"=>array_values($host_admins),
-                            "measurements_archives"=>$services, 
+                            "measurement_archives"=>$services, 
                             //"_debug"=>$service, 
                             "addresses"=>$addresses, 
                             "description"=>$resource->name);
@@ -284,7 +288,7 @@ class PfmeshController extends RgpfController
                 "test_interval"=>"600",
             ),
             "members"=>array("members"=>$late_hostnames, "type"=>"mesh"),
-            "description"=>"Traceroute Test Between $mesh_desc Latency Hosts"
+            "description"=>"Traceroute Test Between $mesh_desc Latency Hosts#$mesh_id/traceroute"
         );
 
         //tcp bwctl 
@@ -297,7 +301,7 @@ class PfmeshController extends RgpfController
                 "type"=>"perfsonarbuoy/bwctl",
             ),
             "members"=>array("members"=>$band_hostnames, "type"=>"mesh"),
-            "description"=>"TCP BWCTL Test Between $mesh_desc Bandwidth Hosts"
+            "description"=>"TCP BWCTL Test Between $mesh_desc Bandwidth Hosts#$mesh_id/perfsonarbuoy/bwctl"
         );
     
         //latency Traceroute Test
@@ -312,7 +316,7 @@ class PfmeshController extends RgpfController
                 "session_count"=>"18000",
             ),
             "members"=>array("members"=>$late_hostnames, "type"=>"mesh"),
-            "description"=>"OWAMP Test Between $mesh_desc Latency Hosts"
+            "description"=>"OWAMP Test Between $mesh_desc Latency Hosts#$mesh_id/perfsonarbuoy/owamp"
         );
 
 

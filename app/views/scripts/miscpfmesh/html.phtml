@@ -1,0 +1,33 @@
+<div class="miscpfmesh">
+<h2><?php echo $this->page_title?></h2>
+<p class="muted">Showing VOS that own at least 1 resource that provides perfsonar services</p>
+
+<table class="table">
+<?php
+echo "<tr>";
+echo "<th colspan='2'>OSG Full Matrix</th>";
+echo "<td>";
+$url = fullbase()."/pfmesh/json";
+echo "<a href=\"$url\">$url</a>";
+echo "</td>";
+echo "</tr>";
+
+$first = true;
+$vocount = count($this->vos);
+foreach($this->vos as $void=>$vo)
+{
+    echo "<tr>";
+    if($first) {
+        $first = false;
+        echo "<th rowspan='$vocount'>";
+        echo "VO Specific Matrix";
+        echo "</th>";
+    }
+    echo "<td>$vo->name</td>";
+    $url = fullbase()."/pfmesh/json?vo_id=$void";
+    echo "<td><a href=\"$url\">$url</a></td>";
+    echo "</tr>";
+}
+?>
+</table>
+</div><!-- miscpfmesh -->
