@@ -1,0 +1,9 @@
+<?=$this->header?>
+<?
+if(user()->isGuest()) {
+    echo "<!--";
+    echo "NOTE: Email address and phone number of contacts are not displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
+}
+?>
+<TODO></TODO>

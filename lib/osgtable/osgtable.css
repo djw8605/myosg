@@ -1,8 +1,9 @@
-table.osgtable {
+.osgtable {
+overflow-x: auto;
+}
+.osgtable table {
 border-collapse: collapse;
-width: 100%;
 font-size: 8pt;
-table-layout:fixed;
 }
 .osgtable th {
 font-weight: normal;

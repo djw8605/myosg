@@ -1,0 +1,18 @@
+<?=$this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+<div class="row-fluid content">
+    <div class="span9">
+        <?=$this->render("banner.phtml", true)?>
+        <h2><?=$this->page_title?></h2>
+        <?=$this->info?>
+        <?=$this->render(pagename()."/html.phtml")?>
+    </div>
+    <div class="span3">
+        <?=$this->render("vo/wizard.phtml")?>
+        <?=$this->render("feedback.phtml", true)?>
+    </div>
+</div>
+<?=$this->render("footer.phtml", true)?>
+</div><!--container-fluid-->
+<?=$this->render("bootfooter.phtml", true)?>
+

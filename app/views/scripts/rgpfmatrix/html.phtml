@@ -102,10 +102,9 @@ echo "</div>";//rgpf
 <div id="cell-detail" class="modal hide fade">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Detail</h3>
+    <h3 class="modal-title"></h3>
   </div>
-  <div class="modal-body">
-  </div>
+  <div class="modal-body"></div>
 </div>
 
 <script>
@@ -154,7 +153,10 @@ $(function() {
         $(this).addClass("cell-active");
         $("#cell-detail .modal-body").html("Loading ...");
         $("#cell-detail").modal("show");
-        $("#cell-detail .modal-body").load("rgpfmatrix/popover?cid="+$(this).data("cellid"));
+        $("#cell-detail .modal-body").load("rgpfmatrix/popover?cid="+$(this).data("cellid"), {}, function(data) {
+            $("#cell-detail .modal-title").empty();
+            $("#cell-detail .modal-body").find("p").appendTo("#cell-detail .modal-title");
+        });
     });
     $("#cell-detail").modal({
         show: false,

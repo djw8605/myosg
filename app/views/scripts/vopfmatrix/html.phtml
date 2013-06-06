@@ -1,0 +1,32 @@
+<style>
+</style>
+
+<link href="lib/jquery.perfsonar_matrix.css" rel="stylesheet">
+<script src="lib/jquery.perfsonar_matrix.js"></script>
+
+<div class="pfmatrix">
+<?php
+foreach($this->vos as $vo_id=>$vo) {
+    $name = htmlsafe($vo->header);
+    echo "<h3>$name</h3>";
+    if(count($vo->matrices) == 0) {
+        echo "<p class=\"muted\">No matrix exist for this Virtual Organization. There are no perfsonar toolkit instance running on resource owned by this VO.</p>";
+    }
+
+    foreach($vo->matrices as $mid=>$matrixinfo) {
+        $divid = "matrix_$mid";
+        $matrix_src = fullbase()."/vopfmatrix/matrix?id=".$mid;
+        echo "<div id=\"$divid\" data-name=\"".$matrixinfo["name"]."\">Loading...</div>";
+        ?>
+<script>
+$("#<?php echo $divid?>").perfsonar_matrix({
+    src: "<?php echo $matrix_src?>"
+});
+</script>
+        <?php
+        //return;
+    }
+}
+
+?>
+</div><!--pfmatrix-->

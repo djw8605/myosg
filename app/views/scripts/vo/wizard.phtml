@@ -26,6 +26,7 @@
         <option value="vosummary">Virtual Organization Summary</option>
         <option value="voactivation">Activation Status</option>
         <option value="vovomsstatus">VOMS Status</option>
+        <option value="vopfmatrix">Perfsonar VO Matrix</option>
         </select>
 
         <p>
@@ -41,7 +42,9 @@
             <div id="vovomsstatus_attrs" class="attrs hidden">
                 <?=$this->render("vo/wizard_vomsstatus.phtml")?>
             </div>
-
+            <div id="vopfmatrix_attrs" class="attrs hidden">
+                <?=$this->render("vo/wizard_vopfmatrix.phtml")?>
+            </div>
         </p>
     </div>
 

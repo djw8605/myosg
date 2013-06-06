@@ -8,7 +8,7 @@ if($this->error !== null) {
     require_once("app/json.php");
     $json = new Services_JSON();
     ?> 
-    <div id="osgtable"></div>
+    <div id="osgtable-inst" class="osgtable"></div>
     <script> 
     var headers =
     <?
@@ -39,7 +39,7 @@ if($this->error !== null) {
         }
     ?> 
     ];
-    $("#osgtable").osgtable({
+    $("#osgtable-inst").osgtable({
         headers: headers,
         recs: recs,
         fetch_detail : function(rec_id, callback) {
