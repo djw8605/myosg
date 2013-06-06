@@ -90,7 +90,7 @@ class PfmeshController extends RgpfController
 
         //lookup all relevant resources
         $model = new Resource();
-        $rs = $model->getIndex(array("resource_ids"=>$all_rids));
+        $rs = $model->getIndex(array("resource_ids"=>$all_rids, "active"=>1, "disable"=>0));
 
         //lookup all relevant resource groups
         $rgids = array();
@@ -127,8 +127,8 @@ class PfmeshController extends RgpfController
         $model = new ResourceContact();
         $r_contacts = $model->getIndex(array("resource_ids"=>$all_rids));
 
-        $model = new ResourceAlias();
-        $resource_aliases = $model->getIndex();
+        //$model = new ResourceAlias();
+        //$resource_aliases = $model->getIndex();
 
         //mapping between oim and mesh config
         //oim/facility == organizations
@@ -143,6 +143,7 @@ class PfmeshController extends RgpfController
         //
         $data = array();
         foreach($all_rids as $rid) {
+            if(!isset($rs[$rid])) continue; //probably disabled
             $resource = $rs[$rid][0];
             $resource_group = $rgs[$resource->resource_group_id][0];
             $site = $sites[$resource_group->site_id][0];
@@ -192,8 +193,9 @@ class PfmeshController extends RgpfController
                 $_hosts = array();
                 foreach($rg as $rg_id=>$resources) {
                     foreach($resources as $rid=>$resource) {
-                        $services = array();
-                        $addresses = array($resource->fqdn);
+                        //$addresses = array($resource->fqdn);
+
+                        /*
                         if(isset($resource_aliases[$rid])) {
                             foreach($resource_aliases[$rid] as $alias) {
                                 if(!in_array($hostname, $addresses)) {
@@ -201,38 +203,52 @@ class PfmeshController extends RgpfController
                                 }
                             }
                         }
+                        */
+
+                        $host_admins = array();
+                        foreach($r_contacts[$rid] as $rc) {
+                            if($rc->contact_type_id == 3) {
+                                $host_admins[$rc->primary_email] = array("email"=>$rc->primary_email, "name"=>$rc->name);
+                            }
+                        }
+                        //we need to split 1 resource with 2 services into 2 separate hosts
                         foreach($resource->services as $service_id=>$service) {
                             $hostname = $resource->fqdn;
                             if($service["details"][$service_id]["endpoint"] != "") {
-                                $resource_fqdn = $service["details"][$service_id]["endpoint"];
+                                $hostname = $service["details"][$service_id]["endpoint"];
                             }
                             $hostname = $this->clean_perfsonar_fqdn($hostname);
+                            /*
                             if(!in_array($hostname, $addresses)) {
                                 $addresses[] = $hostname;
                             }
+                            */
 
                             switch($service_id) {
                             case config()->perfsonar_late_service_id:
-                                $services[] = array(
-                                    "read_url"=>"http://$hostname:8086/perfSONAR_PS/services/traceroute_ma",
-                                    "write_url"=>"http://$hostname:8086/perfSONAR_PS/services/tracerouteCollector",
-                                    "type"=>"traceroute"
+                                $services = array(
+                                    array(
+                                        "read_url"=>"http://$hostname:8086/perfSONAR_PS/services/traceroute_ma",
+                                        "write_url"=>"http://$hostname:8086/perfSONAR_PS/services/tracerouteCollector",
+                                        "type"=>"traceroute"
+                                    ),
+                                    array(
+                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
+                                        "write_url"=>"$hostname:8569",
+                                        "type"=>"perfsonarbuoy/owamp"
+                                    )
                                 );
-                                $services[] = array(
-                                    "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
-                                    "write_url"=>"$hostname:8569",
-                                    "type"=>"perfsonarbuoy/owamp"
-                                );
-                            
                                 if(!in_array($hostname, $late_hostnames)) {
                                     $late_hostnames[] = $hostname;
                                 }
                                 break;
                             case config()->perfsonar_band_service_id:
-                                $services[] = array(
-                                    "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
-                                    "write_url"=>"$hostname:8570",
-                                    "type"=>"perfsonarbuoy/bwctl"
+                                $services = array(
+                                    array(
+                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
+                                        "write_url"=>"$hostname:8570",
+                                        "type"=>"perfsonarbuoy/bwctl"
+                                    )
                                 );
                                 if(!in_array($hostname, $band_hostnames)) {
                                     $band_hostnames[] = $hostname;
@@ -240,20 +256,17 @@ class PfmeshController extends RgpfController
                                 break;
                             default:
                                 error_log("unexpected service_id $service_id while generating json content for rid:$rid");
+                                continue; //don't store this in host list
                             }
-                        }
-                        $host_admins = array();
-                        foreach($r_contacts[$rid] as $rc) {
-                            if($rc->contact_type_id == 3) {
-                                $host_admins[$rc->primary_email] = array("email"=>$rc->primary_email, "name"=>$rc->name);
+
+                            //create host per service
+                            $_hosts[] = array(
+                                "administrators"=>array_values($host_admins),
+                                "measurement_archives"=>$services, 
+                                //"_debug"=>$service, 
+                                "addresses"=>array($hostname),
+                                "description"=>$resource->name);
                             }
-                        }
-                        $_hosts[] = array(
-                            "administrators"=>array_values($host_admins),
-                            "measurement_archives"=>$services, 
-                            //"_debug"=>$service, 
-                            "addresses"=>$addresses, 
-                            "description"=>$resource->name);
                     }
                 }
 

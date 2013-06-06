@@ -2,7 +2,7 @@
 
 class Perfsonar
 {
-    public function getMatrix($matrix_id) {
+    public function getMatrixlist() {
         //try only for N seconds to pull this data
         $ctx = stream_context_create(array('http' => array('timeout' => 8)));
 
@@ -22,6 +22,13 @@ class Perfsonar
                 $matrices = $c->get();
             }
         }
+        return $matrices;
+    }
+
+    //get by matrix "name" like "vo_all/perfsonarbuoy/owamp"
+    //if you know the datastore matrix id, use getMatrixByDatastoreID instead
+    public function getMatrix($matrix_id) {
+        $matrices = $this->getMatrixList();
 
         //convert matrix id to datastore matrix id
         $id = null;
@@ -39,6 +46,8 @@ class Perfsonar
     }
 
     public function getMatrixByDatastoreID($id) {
+        //try only for N seconds to pull this data
+        $ctx = stream_context_create(array('http' => array('timeout' => 8)));
         
         //now load the matrix using datastore id
         //error_log("using cache : /tmp/myosg.personar.matrix.$id");
