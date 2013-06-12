@@ -38,6 +38,16 @@ foreach($this->vos as $vo_id=>$vo) {
     }
     echo "<table class=\"table $ex_class\">";
     echo "<tr><th>Name / Long Name</th><td>".htmlsafe($vo->name)." / ".htmlsafe($vo->long_name)."</td></tr>";
+
+    //cert only flag
+    echo "<tr><th>Certificate Only</th>";
+    if($vo->cert_only == 1) {
+        echo "<td colspan=\"2\">True</td>";
+    } else {
+        echo "<td colspan=\"2\">False</td>";
+    }
+    echo "</tr>";
+
     echo "<tr><th>Primary URL</th><td>".externalurl($vo->primary_url)."</td></tr>";
     echo "<tr><th>Membership Services URL</th><td>".externalurl($vo->membership_services_url)."</td></tr>";
     echo "<tr><th>Purpose URL</th><td>".externalurl($vo->purpose_url)."</td></tr>";

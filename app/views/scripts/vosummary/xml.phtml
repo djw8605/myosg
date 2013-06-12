@@ -14,6 +14,16 @@ foreach($this->vos as $vo_id=>$vo) {
     echo "<Name>".htmlsafe($vo->name)."</Name>";
 
     echo "<LongName>".htmlsafe($vo->long_name)."</LongName>";
+
+    //cert only flag
+    echo "<CertificateOnly>";
+    if($vo->cert_only == 1) {
+        echo "True";
+    } else {
+        echo "False";
+    }
+    echo "</CertificateOnly>";
+
     echo "<PrimaryURL>".htmlsafe($vo->primary_url)."</PrimaryURL>";
     echo "<MembershipServicesURL>".htmlsafe($vo->membership_services_url)."</MembershipServicesURL>";
     echo "<PurposeURL>".htmlsafe($vo->purpose_url)."</PurposeURL>";
