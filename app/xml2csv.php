@@ -146,6 +146,7 @@ class path
             for($i = 0;$i < $colnum;$i++) {
                 if(isset($row[$i])) {
                     $value = "\"".str_replace("\"", "\\\"", $row[$i])."\"";
+                    $value = str_replace("\n", "\\n", $value);
                     echo $value;
                 }
                 echo ",";
