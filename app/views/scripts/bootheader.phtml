@@ -131,9 +131,10 @@
                 if(!user()->isGuest()) {
                     //user
                     echo "<div class=\"btn-group\">";
-                    echo "<a href=\"#\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\"><i class=\"icon-user\"></i> ".user()->getPersonName()." <span class=\"caret\"></span></a>";
+                    echo "<a href=\"#\" onclick=\"return false;\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\"><i class=\"icon-user\"></i> ".user()->getPersonName()." <span class=\"caret\"></span></a>";
                     echo "<ul class=\"dropdown-menu\">";
                     echo "<li><a href=\"miscuser".config()->default_url("misc")."\">OSG Users</a></li>";
+                    //echo "<li><a href=\"notification\">Notification Settings</a></li>";
                     echo "<li class=\"divider\"></li>";
                     echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">Logoff</a></li>";
                     echo "</ul>";
@@ -183,7 +184,7 @@
                         <li class="divider"></li>
                         <li id="menu_voactivation"><a href="voactivation<?php echo config()->default_url("vo")?>">Activation Status</a></li>
                         <li id="menu_vovomsstatus"><a href="vovomsstatus<?php echo config()->default_url("vo")?>">VOMS Status</a></li>
-                        <li id="menu_vopfmatrix"><a href="vopfmatrix<?php echo config()->default_url("vo")?>">Perfsonar VO Matrix</a></li>
+                        <li id="menu_vopfmatrix"><a href="vopfmatrix?vo=on&vo_35=on&vo_3=on&active_value=1&oasis_value=1&sort_key=name">Perfsonar VO Matrix</a></li>
                         </ul>
                     </li>
                     <li id="menu_map"><a href="map<?php echo config()->default_url("map");?>">Status Map</a></li>

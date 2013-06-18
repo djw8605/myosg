@@ -6,8 +6,8 @@ class MetricDetail extends Model
     public function sql($params)
     {
         $id = $params["id"];
-        //slog("fetching detail for $id");
-        return "SELECT dbid as id, DetailsData as detail, GatheredAt as gathered_at, ServiceUri as service_uri from MetricRecord where dbid = $id";
+        $sql = "SELECT dbid as id, DetailsData as detail, GatheredAt as gathered_at, ServiceUri as service_uri from MetricRecord where dbid = $id";
+        return $sql;
     }
 
     public function getXmlDetail($id) {

@@ -27,12 +27,18 @@ echo "<pre>".$this->escape($this->detail->result->message)."</pre>";
 
 <?php
 //show result message
-
-foreach($this->detail->parameters as $key=>$value) {
-    echo "<tr><th>$key</th>";
-    echo "<td>$value</td>";
-    echo "</tr>";
+if(isset($this->detail->result->parameters->average)) {
+    foreach($this->detail->result->parameters as $key=>$value) {
+        echo "<tr><th>$key</th>";
+        echo "<td>$value</td>";
+        echo "</tr>";
+    }
+} else {
+    foreach($this->detail->parameters as $key=>$value) {
+        echo "<tr><th>$key</th>";
+        echo "<td>$value</td>";
+        echo "</tr>";
+    }
 }
-
 ?>
 </table>
