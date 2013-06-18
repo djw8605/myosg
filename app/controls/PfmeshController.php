@@ -131,12 +131,11 @@ class PfmeshController extends RgpfController
         //$resource_aliases = $model->getIndex();
 
         //mapping between oim and mesh config
-        //oim/facility == organizations
-        //oim/site == sites
+        //oim/facility == organizations (description, admin is always goc)
+        //oim/site == site (location, description)
         //oim/sc admin == site admin
-        //oim/resource_groups == hosts
-        //oim/resource/resource_service == measurement_archives
-        //oim/resource admin == host/administrator
+        //oim/resource/service == host
+        //oim/resource/admin == host_administrator
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // Step2. Create skelton structure and put some key components
