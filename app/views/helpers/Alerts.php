@@ -14,7 +14,7 @@ class Zend_View_Helper_Alerts extends Zend_View_Helper_Abstract {
                 $type = $alert["type"];
 
                 $out .= "<div class=\"alert alert-$type\">";
-                $out .= "<a class=\"close\" href=\"#\" data-dismiss=\"alert\">x</a>";
+                $out .= "<a class=\"close\" href=\"#\" data-dismiss=\"alert\">&times;</a>";
                 $out .= $alert["html"]."</div>";
             }
         }
