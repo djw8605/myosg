@@ -56,8 +56,8 @@ class MiscstatusController extends MiscController
                 $this->getStatus(364, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Oasis stratum 0
                 //array("name"=>"WLCG Comparison Reports", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/RSVReportsServiceLevelAgreement"),
                 //$this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
-                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement") //Twiki 
-                //$this->getStatus(336, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //OSG-XSEDE
+                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki 
+                $this->getStatus(336, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //OSG-XSEDE
             )
         );
         $this->setpagetitle(self::default_title());
