@@ -58,8 +58,9 @@ class PfmeshController extends RgpfController
         //error_log(print_r($rids, true));
 
         $mesh_admins = array(   
-            array("email"=>"hayashis@iu.edu", "name"=>"Soichi Hayashi"), 
-            array("email"=>"goc@opensciencegrid.org", "name"=>"OSG Grid Operations")
+            array("email"=>"hayashis@iu.edu", "name"=>"Soichi Hayashi"),
+            array("email"=>"steige@iu.edu", "name"=>"Scott Teige")
+            //array("email"=>"goc@opensciencegrid.org", "name"=>"OSG Grid Operations")
         );
 
         //for each resource, look for perfsonar services
@@ -150,7 +151,9 @@ class PfmeshController extends RgpfController
             if(!isset($data[$facility->id])) {
                 //we don't store admin for facility, so let' use GOC
                 $org_admins = array(   
-                    array("email"=>"goc@opensciencegrid.org", "name"=>"OSG Grid Operations")
+                    //array("email"=>"goc@opensciencegrid.org", "name"=>"OSG Grid Operations"),
+                    array("email"=>"hayashis@iu.edu", "name"=>"Soichi Hayashi"),
+                    array("email"=>"steige@iu.edu", "name"=>"Scott Teige")
                 );
                 $data[$facility->id] = array("administrators"=>$org_admins, "sites"=>array(), "description"=>$facility->name);
             }
