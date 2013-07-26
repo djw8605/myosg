@@ -1,4 +1,4 @@
-<?
+<?php
 
 class MetricDetail extends Model
 {
@@ -11,6 +11,7 @@ class MetricDetail extends Model
     }
 
     public function getXmlDetail($id) {
+        //slog("SELECT extraxml AS detail from MetricRecord_Xml WHERE dbid = $id");
         return db($this->ds())->fetchOne("SELECT extraxml AS detail from MetricRecord_Xml WHERE dbid = $id");
     }
 }

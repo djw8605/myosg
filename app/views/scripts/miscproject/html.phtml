@@ -1,0 +1,48 @@
+<div class="miscproject">
+
+<?php
+foreach($this->projects as $project)
+{
+    echo "<div class=\"group_header\"><span class=\"h3\">".htmlsafe($project->name)."</span></div>";
+    echo "<p>".htmlsafe($project->desc)."</p>";
+    echo "<table class=\"table table-bordered\">";
+    echo "<tr><th width=\"150px\">PI</th><td>".htmlsafe($project->pi_name)."</td></tr>";
+    echo "<tr><th>Dept./ Org.</th><td>".htmlsafe($project->organization)." / ".htmlsafe($project->department)."</td></tr>";
+    echo "<tr><th>Field of Scicne</th><td>".htmlsafe($project->fos_name)."</td></td>";
+
+    echo "<tr><th>Sponsor</th>";
+    if(!is_null($project->vo_name)) {
+        echo "<td><span class=\"label label-warning\">VO</span> ".htmlsafe($project->vo_name)."</td>";
+    }
+    if(!is_null($project->cg_name)) {
+        echo "<td><span class=\"label label-info\">CG</span> ".htmlsafe($project->cg_name)."</td>";
+    }
+    echo "</tr>";
+
+    $stime = strtotime($project->submit_time);
+    echo "<tr><th>Submit Time</th><td>".date("m/d/Y", $stime)."</td></tr>";
+    
+    if(isset($_REQUEST["project_attrs_showpublication"])) {
+        echo "<tr><th>Publications</th>";
+        //echo "<tr><th style=\"text-align: right\">Publications</th><td colspan='5'>";
+        $publications = $this->publications[$project->id];
+        if(is_null($publications)) {
+            echo "<td><span class=\"muted\">No Publications</span></td>";
+        } else {
+            echo "<td><table class=\"table table-bordered table-condensed\">";
+            foreach($publications as $publication) {
+                echo "<tr>";
+                echo "<td>".htmlsafe($publication->date)."</td>";
+                echo "<td>".htmlsafe($publication->name)."</td>";
+                echo "<td>".htmlsafe($publication->desc)."</td>";
+                echo "</tr>";
+            }
+            echo "</table></td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+?>
+
+</div><!--miscproject-->

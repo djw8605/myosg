@@ -1,0 +1,39 @@
+<?php echo $this->header?>
+<Projects xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/miscproject.xsd">
+<?php
+foreach($this->projects as $project) {
+    echo "<Project>";
+    echo "<ID>".htmlsafe($project->id)."</ID>";
+    echo "<Name>".htmlsafe($project->name)."</Name>";
+    echo "<Description>".htmlsafe($project->desc)."</Description>";
+    echo "<PIName>".htmlsafe($project->pi_name)."</PIName>";
+    echo "<Organization>".htmlsafe($project->organization)."</Organization>";
+    echo "<Department>".htmlsafe($project->department)."</Department>";
+    echo "<FieldOfScience>".htmlsafe($project->fos_name)."</FieldOfScience>";
+    echo "<Sponsor>";
+    if(!is_null($project->vo_name)) {
+        echo "<VirtualOrganization><ID>$project->vo_id</ID><Name>".htmlsafe($project->vo_name)."</Name></VirtualOrganization>";
+    }
+    if(!is_null($project->cg_name)) {
+        echo "<CampusGrid><ID>$project->cg_id</ID><Name>".htmlsafe($project->cg_name)."</Name></CampusGrid>";
+    }
+    echo "</Sponsor>";
+
+    if(isset($_REQUEST["project_attrs_showpublication"])) {
+        echo "<Publications>";
+        $publications = $this->publications[$project->id];
+        if(!is_null($publications)) {
+            foreach($publications as $publication) {
+                echo "<Publication>";
+                echo "<Name>".htmlsafe($publication->name)."</Name>";
+                echo "<Desc>".htmlsafe($publication->desc)."</Desc>";
+                echo "<Date>".htmlsafe($publication->date)."</Date>";
+                echo "</Publication>";
+            }
+        }
+        echo "</Publications>";
+    }
+
+    echo "</Project>";
+}?>
+</Projects>

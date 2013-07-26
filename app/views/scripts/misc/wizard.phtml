@@ -29,6 +29,7 @@ span.disabled_span
             <option value="">(Please Select)</option>
             <option value="miscmetric">RSV Metrics</option>
             <option value="misccpuinfo">CPU Information</option>
+            <option value="miscproject">Projects</option>
             <option value="misccount">Resource Service Counts</option>
             <option value="miscstatus">Operations Status Overview</option>
             <option value="miscevent">GOC Realtime Events</option>
@@ -43,6 +44,9 @@ span.disabled_span
             </div>
             <div id="misccpuinfo_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_cpuinfo.phtml")?>
+            </div>
+            <div id="miscproject_attrs" class="attrs hidden">
+                <?=$this->render("misc/wizard_project.phtml")?>
             </div>
             <div id="misccount_attrs" class="attrs hidden">
                 <?=$this->render("misc/wizard_count.phtml")?>
@@ -83,13 +87,6 @@ $(document).ready(function() {
 
     <?
     //select currently selected datasouce
-    /*
-    if(isset($_REQUEST["datasource"])) {
-        $datasource = $_REQUEST["datasource"];
-        echo "$('select[name=datasource] option[value=$datasource]').attr('selected', 'selected');\n";
-        echo "showhide_attrs();\n";
-    }
-    */
     $front = Zend_Controller_Front::getInstance();
     $controllerName = $front->getRequest()->getControllerName();
     echo "$('#datasource option[value=$controllerName]').attr('selected', 'selected');\n";
@@ -98,7 +95,8 @@ $(document).ready(function() {
     if(isset($_REQUEST["all_vos"])) {
         echo "disable($('input[name=all_vos]'));";
     }
-    ?>});
+    ?>
+});
 
 function wizard_submit(format)
 {
