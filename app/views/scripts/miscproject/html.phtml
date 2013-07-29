@@ -20,12 +20,12 @@ foreach($this->projects as $project)
     echo "</tr>";
 
     $stime = strtotime($project->submit_time);
-    echo "<tr><th>Submit Time</th><td>".date("m/d/Y", $stime)."</td></tr>";
+    echo "<tr><th>Date Registered</th><td>".date("m/d/Y", $stime)."</td></tr>";
     echo "<tr><th>Abstract of work</th><td>".htmlsafe($project->desc)."</td></tr>";
     if(isset($_REQUEST["project_attrs_showpublication"])) {
         echo "<tr><th>Publications</th>";
         //echo "<tr><th style=\"text-align: right\">Publications</th><td colspan='5'>";
-        $publications = $this->publications[$project->id];
+        $publications = @$this->publications[$project->id];
         if(is_null($publications)) {
             echo "<td><span class=\"muted\">No Publications</span></td>";
         } else {
