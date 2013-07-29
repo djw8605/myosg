@@ -4,11 +4,11 @@
 foreach($this->projects as $project)
 {
     echo "<div class=\"group_header\"><span class=\"h3\">".htmlsafe($project->name)."</span></div>";
-    echo "<p>".htmlsafe($project->desc)."</p>";
     echo "<table class=\"table table-bordered\">";
     echo "<tr><th width=\"150px\">PI</th><td>".htmlsafe($project->pi_name)."</td></tr>";
-    echo "<tr><th>Dept./ Org.</th><td>".htmlsafe($project->organization)." / ".htmlsafe($project->department)."</td></tr>";
-    echo "<tr><th>Field of Scicne</th><td>".htmlsafe($project->fos_name)."</td></td>";
+    echo "<tr><th>Organization</th><td>".htmlsafe($project->organization)."</td></tr>";
+    echo "<tr><th>Department</th><td>".htmlsafe($project->department)."</td></tr>";
+    echo "<tr><th>Field of Science</th><td>".htmlsafe($project->fos_name)."</td></td>";
 
     echo "<tr><th>Sponsor</th>";
     if(!is_null($project->vo_name)) {
@@ -21,7 +21,7 @@ foreach($this->projects as $project)
 
     $stime = strtotime($project->submit_time);
     echo "<tr><th>Submit Time</th><td>".date("m/d/Y", $stime)."</td></tr>";
-    
+    echo "<tr><th>Abstract of work</th><td>".htmlsafe($project->desc)."</td></tr>";
     if(isset($_REQUEST["project_attrs_showpublication"])) {
         echo "<tr><th>Publications</th>";
         //echo "<tr><th style=\"text-align: right\">Publications</th><td colspan='5'>";
