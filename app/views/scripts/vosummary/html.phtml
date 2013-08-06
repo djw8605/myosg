@@ -36,7 +36,7 @@ foreach($this->vos as $vo_id=>$vo) {
     if(isset($_REQUEST["summary_attrs_showdesc"])) {
         echo htmlsafe($vo->description);
     }
-    echo "<table class=\"table $ex_class\">";
+    echo "<table class=\"table table-bordered $ex_class\">";
     echo "<tr><th>Name / Long Name</th><td>".htmlsafe($vo->name)." / ".htmlsafe($vo->long_name)."</td></tr>";
 
     //cert only flag
@@ -79,7 +79,7 @@ foreach($this->vos as $vo_id=>$vo) {
         $resource_ownerships = $this->resource_ownerships[$vo_id];
         usort($resource_ownerships, "resource_ownership_cmp");
         if(count($resource_ownerships) != 0) {
-            echo "<table class=\"table table-condensed\">";
+            echo "<table class=\"table table-bordered table-condensed\">";
             foreach($resource_ownerships as $resource_ownership) {
                 $rid = $resource_ownership->id;
                 echo "<tr>";
