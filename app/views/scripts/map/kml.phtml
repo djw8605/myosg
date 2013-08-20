@@ -31,7 +31,7 @@ foreach($model->get() as $facility) {
         //create acronym
         $name = $facility->name;
         $name2 = str_replace("_", " ", $name);
-        $tokens = split(" ", $name2);
+        $tokens = explode(" ", $name2);
         $acro = "";
         foreach($tokens as $token) {
             if($token == "The") continue;

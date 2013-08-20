@@ -205,6 +205,39 @@ class common_config
         $this->perfsonar_host_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/hosts";
         $this->perfsonar_band_service_id = 130;
         $this->perfsonar_late_service_id = 131;
+
+        $this->perfsonar_mesh_config = array(
+            "traceroute" => array( 
+                "protocol"=>"udp",
+                "max_ttl"=>"64",
+                "waittime"=>"5",
+                "pause"=>"0",
+                "first_ttl"=>"0",
+                "timeout"=>"30",
+                "type"=>"traceroute",
+                "packet_size"=>"40",
+                "test_interval"=>"3600",//per shawn mckee
+            ),
+            "perfsonarbuoy/bwctl" => array( 
+                "protocol"=>"tcp",
+                "duration"=>"30",//per shawn macke
+                "interval"=>"14400",
+                "force_bidirectional"=>"1",
+                "tool"=>"bwctl/iperf",
+                "type"=>"perfsonarbuoy/bwctl",
+            ),
+            "perfsonarbuoy/owamp" => array( 
+                "loss_threshold"=>"10",
+                "bucket_width"=>"0.001",
+                "packet_interval"=>"0.1",
+                "sample_count"=>"300",
+                "force_bidirectional"=>"1",
+                "packet_padding"=>"0",
+                "type"=>"perfsonarbuoy/owamp",
+                "session_count"=>"18000",
+            )
+        );
+       
     }
     function getCacheDir() {
         return "/tmp";
