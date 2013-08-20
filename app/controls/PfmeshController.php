@@ -300,7 +300,7 @@ class PfmeshController extends RgpfController
                 "timeout"=>"30",
                 "type"=>"traceroute",
                 "packet_size"=>"40",
-                "test_interval"=>"600",
+                "test_interval"=>"3600",//per shawn mckee
             ),
             "members"=>array("members"=>$late_hostnames, "type"=>"mesh"),
             "description"=>"Traceroute Test Between $mesh_desc Latency Hosts#$mesh_id/traceroute"
@@ -309,7 +309,7 @@ class PfmeshController extends RgpfController
         //tcp bwctl 
         $tests[] = array("parameters"=>array( //TODO - move this config
                 "protocol"=>"tcp",
-                "duration"=>"20",
+                "duration"=>"30",//per shawn macke
                 "interval"=>"14400",
                 "force_bidirectional"=>"1",
                 "tool"=>"bwctl/iperf",
