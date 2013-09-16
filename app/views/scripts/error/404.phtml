@@ -1,10 +1,11 @@
-<?=$this->render("bootheader.phtml", true)?>
+<?php echo $this->render("bootheader.phtml", true)?>
 <div class="container-fluid">
 <?php
 if(isset($this->detail)) {
     echo "<p>".$this->detail."</p>";
 } else { ?>
-    <h2>Page Not Found <small>Requested page does not exist.</small></h2>
+    <h2>Page Not Found</h2>
+    <p>If you reached here via broken link, please let us know by contacting <a href="http://ticket.opensciencegrid.org">GOC</a></p>
 <?php } ?>
 </div>
-<?=$this->render("bootfooter.phtml", true)?>
+<?php echo $this->render("bootfooter.phtml", true)?>

@@ -1,16 +1,9 @@
-<?=$this->render("full_header.phtml", true)?>
-    <div id="primaryContentContainer">
-        <div id="primaryContent">
-            <?=$this->render("breadcrumb.phtml", true)?>
-            <h2><?=$this->page_title?></h2>
-            <p>Sorry! XML is not supported for this page yet.</p>
-            <p>Please submit a feature request.</p>
-            <a href="<?=fullbase()?>/<?=pagename()?>?<?=$_SERVER["QUERY_STRING"]?>">View HTML version</a>
-        </div>
-    </div>
-    <div id="sideContent">
-        <?=$this->render("rg/wizard.phtml")?>
-        <?=$this->render("feedback.phtml", true)?>
-    </div>
-<?=$this->render("full_footer.phtml", true)?>
+<?php echo $this->render("bootheader.phtml", true)?>
+<div class="container-fluid">
+    <h2><?=$this->page_title?></h2>
+    <p>Sorry! XML is not supported for this page yet.</p>
+    <p>If you'd like to see XML output of this page, please let us know by contacting <a href="http://ticket.opensciencegrid.org">GOC</a></p>
+    <a href="<?=fullbase()?>/<?=pagename()?>?<?=$_SERVER["QUERY_STRING"]?>">View HTML version</a>
+</div>
+<?php echo $this->render("bootfooter.phtml", true)?>
 
