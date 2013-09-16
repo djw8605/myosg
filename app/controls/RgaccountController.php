@@ -28,24 +28,24 @@ class RgaccountController extends RgGratiaController
         {
         case "cumulative_hours":
             $urlbase = config()->gratiaweb."/cumulative_graphs/vo_success_cumulative_smry";
-            $sub_title = "Cumulative Hours";
+            $sub_title = "Cumulative Wall Hours (by VO)";
             $ylabel = "Hours";
             break;
         case "daily_hours_byvo":
             $urlbase = config()->gratiaweb."/bar_graphs/vo_hours_bar_smry";
-            $sub_title = "Daily Hours (Grouped by VO)";
+            $sub_title = "Daily Wall Hours (by VO)";
             $legend = true;
             $ylabel = "Hours";
             break;
         case "daily_hours_byusername":
             $urlbase = config()->gratiaweb."/bar_graphs/dn_hours_bar";
-            $sub_title = "Daily Hours (Grouped by Username)";
+            $sub_title = "Daily Wall Hours (by Username)";
             $legend = true;
             $ylabel = "Hours";
             break;
         case "job_count_byvo":
             $urlbase = config()->gratiaweb."/bar_graphs/vo_job_cnt";
-            $sub_title = "Job Count (Grouped by VO)";
+            $sub_title = "Job Count (by VO)";
             $legend = true;
             $ylabel = "Number of Jobs";
             break;
