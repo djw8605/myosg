@@ -9,11 +9,8 @@ cursor: pointer;
 color: #999;
 }
 .event {
-margin: 3px;
-margin-bottom: 5px;
+border-bottom: 1px solid #eee;
 padding: 3px;
-padding-left: 8px;
-box-shadow: 2px 2px 4px #ccc;
 }
 .rsv .tag {
 display: inline-block;
@@ -28,15 +25,23 @@ color: #999;
 .event_ticket pre {
     background-color: inherit;
 }
+.event_oim table.fields {
+width: 95%;
+text-align: left;
+border-collapse: collapse;
+}
 .event_oim .resource {
     background: url("../images/potato.png") no-repeat scroll 2px 3px #CCCCCC;
     padding: 2px 2px 2px 25px;
 }
-div.transparent {
-opacity: 0.5;
+.event_oim table.fields td {
+border-top: 1px solid #ddd;
+width: 33%;
+padding: 5px;
 }
 </style>
 <script>
+
 function ISODateString(d){
      function pad(n){return n<10 ? '0'+n : n}
      return d.getUTCFullYear()+'-'
@@ -50,8 +55,9 @@ function ISODateString(d){
 function renderEvent(event, c) {
     var html = "";
     html += "<div class=\""+c+" event_"+event.exchange+"\">";
-    var strt = event.time
-    var dt = new Date(strt);
+    var t = parseInt(event.time); //just to be sure.. anti-CSS..
+    var dt = new Date(t);
+    var strt = ISODateString(dt);
     html += "<time class=\"sidenote\" datetime=\""+strt+"\">"+dt.toLocaleString()+"</time>"; 
 
     switch(event.exchange) {
@@ -68,11 +74,11 @@ function renderOIMEvent(event) {
     var model = key[0];
     var action = key[1];
 
-    var dnid = event.content.OIMEvent.DNID[0];
-    var comment = event.content.OIMEvent.Comment[0];
-    var fields = event.content.OIMEvent.Log[0].Fields[0].Field;
-    var record_keys = event.content.OIMEvent.Log[0].Keys;
-    var logid = event.content.OIMEvent.LogID[0];
+    var dnid = event.content.OIMEvent.DNID;
+    var comment = event.content.OIMEvent.Comment;
+    var fields = event.content.OIMEvent.Log.Fields.Field;
+    var record_keys = event.content.OIMEvent.Log.Keys;
+    var logid = event.content.OIMEvent.LogID;
 
     var contact = getContactFromDNID(dnid);
 
@@ -90,21 +96,64 @@ function renderOIMEvent(event) {
     if(action == "update") {
         html += "<div>"+logurl+" "+contact_name+" updated "+model+"</div>";
 
-        if(comment != undefined && comment != "null") {
+        if(comment) {
             html += "<p class=\"help-block\">"+comment+"</p>";
         }
+//don't want to make oim update detail  public
+/*
+        //output old/new values
+        html += "<table class=\"table table-bordered\">";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"40%\">Old Value</th><th width=\"40%\">New Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            key = field.Name;
+            oldval = field.OldValue;
+            newval = field.NewValue;
+            html += "<tr><td>"+key+"</td><td>"+oldval+"</td><td>"+newval+"</td></tr>";
+        }
+        html += "</table>";
+*/
+
     } else if(action == "insert") {
         html += "<div>"+logurl +" "+contact_name+" inserted "+model+"</div>";
 
         if(comment) {
             html += "<p class=\"help-block\">"+comment+"</p>";
         }
+
+//don't want to make oim update detail  public
+/*
+        html += "<table class=\"table table-bordered\">";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"80%\">Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            key = field.Name;
+            val = field.Value;
+            html += "<tr><td>"+key+"</td><td>"+val+"</td></tr>";
+        }
+        html += "</table>";
+*/
+
     } else if(action == "remove") {
         html += "<div>"+logurl +" "+contact_name+" removed "+model+"</div>";
 
         if(comment) {
             html += "<p class=\"help-block\">"+comment+"</p>";
         }
+
+//don't want to make oim update detail  public
+/*
+        //TODO - will this work?
+        html += "<table class=\"table table-bordered\">";
+        html += "<tr><th width=\"20%\">Field Name</th><th width=\"80%\">Value</th></tr>";
+        for(var id in fields_n) {
+            var field = fields_n[id];
+            key = field.Name;
+            val = field.Value;
+            html += "<tr><td>"+key+"</td><td>"+val+"</td></tr>";
+        }
+        html += "</table>";
+*/
     } else {
         console.log("unknown action:"+action);
     }
@@ -122,11 +171,11 @@ function renderRSVEvent(event) {
 
     html += "<div>Resource <a href=\"<?php echo fullbase()?>/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_"+resource_group_id+"=on\">"+resource_name+"</a> status changed</div>";
 
-    html += "<div class=\"row-fluid\">";
-    html += "<div class=\"span2 transparent status_"+old_status+"\">"+old_status+"</div>";
-    html += "<div class=\"span1\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></div>";
-    html += "<div class=\"span9 status_"+new_status+"\"><p>"+new_status+"<br><span class=\"help-block\">"+note+"</span></div>";
-    html += "</div>";
+    html += "<table class=\"layout\"><tr>";
+    html += "<td width=\"150px\"><div class=\"status_"+old_status+"\">"+old_status+"</div></td>";
+    html += "<td width=\"50px\" style=\"padding-top: 5px;\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></td>";
+    html += "<td><div class=\"status_"+new_status+"\"><p>"+new_status+"<br><span class=\"help-block\">"+note+"</span></div></td>";
+    html += "</tr></table>";
 
     return html;
 }
@@ -166,29 +215,55 @@ function getContactFromDNID(dnid) {
     return null;
 }
 
-var event = io.connect('<?php echo config()->eventjs_url?>');
-event.on('events', function (events) {
-    //console.dir(events);
-    var html = "";
-    events.forEach(function(event) {
-        html = renderEvent(event, "event") + html;
-    });
-    $("#events").html(html);
-    $("time").timeago();
-});
-event.on('event', function(event) {
-    //console.dir(event);
-    html = renderEvent(event, "event eventnew");
-    $("#events").prepend(html);
-    $(".eventnew").slideDown();
-    $("time").timeago();
-});
-
 $(function() {
+    var _connected = false;
+    $.cometd.init('<?php echo config()->cometd_url?>');
+    $.cometd.addListener("/meta/connect", function(message) {
+        if ($.cometd.isDisconnected()) {
+            return;
+        }
+        var wasConnected = _connected;
+        _connected = message.successful;
+        if (!wasConnected && _connected)
+        {
+            // reconnected 
+            //console.log("requesting all recent event");
+            $.cometd.publish('/service/event/allrecent', {});
+        }
+
+    });
+
+    //request all recent events
+    $.cometd.subscribe("/event/allrecent", function(events) { 
+        var html = "";
+        for(var i = 0;i < events.data.length; ++i) {
+            var event = events.data[i];
+            html = renderEvent(event, "event") + html;
+        }
+        $("#events").html(html);
+        updateTimeago();
+    });
+    $.cometd.addListener('/meta/disconnect', function(message) {
+        if (message.successful)
+        {
+            _connected = false;
+        }
+    });
+    $.cometd.subscribe("/event/latest", function(event) { 
+        html = renderEvent(event.data, "event eventnew");
+        $("#events").prepend(html);
+        $(".eventnew").slideDown();
+        updateTimeago();
+    });
+   
     //update timeago markers periodically
-    setInterval(function() {
+    function updateTimeago() {
         $("time").timeago();
-    }, 30*60);
+        setTimeout(updateTimeago, 30*1000);
+    }
+    updateTimeago();
 });
 </script>
 <div id="events">Loading ...</div>
+
+

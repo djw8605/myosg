@@ -23,11 +23,6 @@ echo config()->app_name;
 <link href="<?php echo base()?>/lib/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
 <script src="<?php echo base()?>/lib/jquery.autocomplete.min.js" type="text/javascript"></script>
 
-<?php if(isset($this->include_cometd)) { ?>
-<script type='text/javascript' src='<?php echo base()?>/lib/cometd-2.3.1/cometd.js'></script>
-<script type='text/javascript' src='<?php echo base()?>/lib/cometd-2.3.1/jquery/jquery.cometd.js'></script>
-<?php } ?>
-
 <?php if(isset($this->include_timeago)) { ?>
 <script type='text/javascript' src='<?php echo base()?>/lib/jquery.timeago.js'></script>
 <?php } ?>

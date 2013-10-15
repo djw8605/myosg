@@ -197,7 +197,8 @@ class common_config
         $this->gratiaweb = "http://gratiaweb.grid.iu.edu/gratia";
         //$this->gratiaweb = "http://t2.unl.edu/gratia";
 
-        $this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
+        //$this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
+        $this->eventjs_url = "https://".gethostname().":12345";//assume running locally to the server host
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
         //override this in site config to point to production if necessary

@@ -29,6 +29,10 @@ class MisceventController extends MiscController
         $this->view->dns = $model->get();
     }
 
+    public function oldAction() {
+        parent::indexAction();
+        message("warning", "This page is deprecated");        
+    }
     public function indexAction() {
         parent::indexAction();
         message("warning", "This is an experimental feature");        
