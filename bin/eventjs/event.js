@@ -9,6 +9,7 @@ var options = {
 };
 var app = https.createServer(options, handler).listen(12345);
 var io = require('socket.io').listen(app)
+io.set('log level', 2); //info
 
 function handler(req, res) {
   fs.readFile(__dirname + '/event.html',
