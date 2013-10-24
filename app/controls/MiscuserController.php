@@ -30,7 +30,7 @@ class MiscuserController extends MiscController
         parent::load();
 
         $model = new Contact();
-        $param = array("person"=>1);
+        $param = array("person"=>1, "disable"=>0);
         if(isset($_REQUEST["contacts"])) {
             $ids = array();
             foreach($_REQUEST as $key=>$value) {

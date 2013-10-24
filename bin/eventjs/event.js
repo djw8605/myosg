@@ -8,7 +8,8 @@ var options = {
   cert: fs.readFileSync('/etc/grid-security/http/cert.pem')
 };
 var app = https.createServer(options, handler).listen(12345);
-var io = require('socket.io').listen(app)
+var io = require('socket.io').listen(app);
+io.set('log level', 2); //info
 
 function handler(req, res) {
   fs.readFile(__dirname + '/event.html',
@@ -45,11 +46,11 @@ function open_exchanges(callback) {
 }
 
 function open_queue(oim_ex, rsv_ex, ticket_ex, callback) {
-    connection.queue('event_js', { durable: false, autoDelete: false}, function(queue) {
+    connection.queue('', { durable: false, autoDelete: false}, function(queue) {
         queue.bind(oim_ex, '#', function() {
             queue.bind(rsv_ex, '#', function() {
                 queue.bind(ticket_ex, '#', function() {
-                    console.log("connected to event_js and bound exchanges");
+                    console.log("connected to queue and bound exchanges");
                     callback(queue);
                 });
             });
@@ -95,6 +96,13 @@ io.sockets.on('connection', function (socket) {
     clients.push(socket);
 
     socket.on('disconnect', function() {
+        console.log("client disconnected"+socket);
+        for(i = 0;i < clients.length; i++) {
+            if(clients[i] == socket) {
+                clients.splice(i,1);
+                break;
+            }
+        }
         //TODO - remove disconnected client from sockets list
         /*
         var idx = clients.indexOf(socket);

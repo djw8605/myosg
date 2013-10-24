@@ -30,7 +30,7 @@ width: 200px;
 echo "<table class=\"table\">";
 foreach($this->contacts as $cid => $contact) {
     $contact = $contact[0];
-    if($contact->disable == 1) continue;
+    //if($contact->disable == 1) continue;//now filtered via controller
 
     //name header
     echo "<tr class=\"noborder\"><th colspan=\"3\">";

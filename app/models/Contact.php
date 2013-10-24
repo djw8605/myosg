@@ -26,6 +26,9 @@ class Contact extends CachedIndexedModel
         if(isset($params["person"])) {
             $where .= " and person = ".$params["person"];
         }
+        if(isset($params["disable"])) {
+            $where .= " and contact.disable = ".$params["disable"];
+        }
         if(isset($params["ids"])) {
             if(count($params["ids"]) > 0) {
                 $where .= " and contact.id in (";
