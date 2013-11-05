@@ -151,7 +151,7 @@ function renderTicketEvent(event) {
 var contacts = [
 <?php 
 $first = true;
-slog(print_r($this->dns, true));
+//slog(print_r($this->dns, true));
 foreach($this->dns as $dn) {
 if($first) $first = false; else echo ",\n";
     echo "{\"dn_id\": ".$dn->id.", \"contact_id\": ".$dn->contact_id.", \"name\": \"".$dn->name."\"}";

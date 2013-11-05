@@ -83,7 +83,7 @@ open_exchanges(function(oim_ex, rsv_ex, ticket_ex) {
                 });
                 events.push(event);
                 if(events.length > 100) {
-                    events.unshift(); //push at the top
+                    events.shift(); //push at the top
                 }
             }); 
         });
