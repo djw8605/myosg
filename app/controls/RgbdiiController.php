@@ -694,6 +694,8 @@ class cluster_aggregator {
 
         //access protocols
         $results = ldap_search($conn, "GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base, "(objectClass=GlueSubCluster)");
+
+        //slog("ldap_search for cluster aggregator:"."GlueClusterUniqueID=".$rec_id[0].","."Mds-Vo-name=".$rec_id[1].",".$base);
         $entries = ldap_get_entries($conn, $results);
         $subrecs = array();
         if($entries[0] > 0) {

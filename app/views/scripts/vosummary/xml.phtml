@@ -45,9 +45,17 @@ foreach($this->vos as $vo_id=>$vo) {
     }
     if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
         echo "<FieldsOfScience>";
-        $fss = $this->field_of_science[$vo_id];
-        foreach($fss as $fs) {
-            echo "<Field>".htmlsafe($fs->name)."</Field>";
+        $ranks = $this->field_of_science[$vo_id];
+        foreach($ranks as $rank_id=>$fss) {
+            switch($rank_id) {
+            case 1: $elem = "Primary";break;
+            case 2: $elem = "Secondary";break;
+            }
+            echo "<${elem}Fields>";
+            foreach($fss as $name=>$fs) {
+                echo "<Field>".htmlsafe($name)."</Field>";
+            }
+            echo "</${elem}Fields>";
         }
         echo "</FieldsOfScience>";
     }

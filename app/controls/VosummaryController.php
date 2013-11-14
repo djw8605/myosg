@@ -50,22 +50,24 @@ class VosummaryController extends VoController
         }
     
         if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
-            $fsmodel = new FieldOfScience();
-            $fss = $fsmodel->getindex();
-            
             $vofsmodel = new VOFieldOfScience();
             $vofss = $vofsmodel->getindex();
-
             $this->view->field_of_science = array();
             foreach($this->vo_ids as $vo_id) {
-                $list = array();
                 $fs_for_vo = @$vofss[$vo_id];
                 if($fs_for_vo !== null) {
+                    $ranks = array();
                     foreach($fs_for_vo as $fs) {
-                        $list[] = $fss[$fs->field_of_science_id][0];
+                        $name = $fs->name;
+                        $rank_id = $fs->rank_id;
+                        if(!isset($ranks[$rank_id])) {
+                            $ranks[$rank_id] = array();
+                        }
+                        $ranks[$rank_id][$name] = $fs;
                     }
+                    ksort($ranks);
+                    $this->view->field_of_science[$vo_id] = $ranks;
                 }
-                $this->view->field_of_science[$vo_id] = $list;
             }
         }
 

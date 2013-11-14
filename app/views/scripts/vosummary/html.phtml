@@ -95,9 +95,18 @@ foreach($this->vos as $vo_id=>$vo) {
 
     if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
         echo "<tr><th>Field Of Science</th><td>";
-        $fss = $this->field_of_science[$vo_id];
-        foreach($fss as $fs) {
-            echo "<span class=\"label\">".htmlsafe($fs->name)."</span> ";
+        $ranks = $this->field_of_science[$vo_id];
+        foreach($ranks as $rank_id=>$fss) {
+            switch($rank_id) {
+            case 1: $rank = "primary";break;
+            case 2: $rank = "secondary";break;
+            case 3: $rank = "tertiary";break;
+            default: echo "unknown rank $rank";
+            }
+            ksort($fss);
+            foreach($fss as $name=>$fs) {
+                echo "<div class=\"rank rank-$rank\">".htmlsafe($name)."</div> ";
+            }
         }
         echo "</td></tr>";
     }
@@ -126,6 +135,13 @@ foreach($this->vos as $vo_id=>$vo) {
                 foreach($report->contacts as $contact) {
                     if(!isset($group[$contact->id])) {
                         $group[$contact->id] = 1;
+                        switch($contact->contact_rank_id) {
+                        case 1: $rank = "primary";break;
+                        case 2: $rank = "secondary";break;
+                        case 3: $rank = "tertiary";break;
+                        default: echo "unknown rank $rank";
+                        }
+                        echo "<div class=\"rank rank-$rank\">";
                         if(user()->isGuest()) {
                             echo htmlsafe($contact->name)."<br/>";
                         } else {
@@ -136,6 +152,7 @@ foreach($this->vos as $vo_id=>$vo) {
                                 echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
                             }
                         }
+                        echo "</div>";
                     } else {
                             $group[$contact->id]++;//just count number of records for this person (not used right now..)
                     }
@@ -160,16 +177,24 @@ foreach($this->vos as $vo_id=>$vo) {
                 foreach($contacts as $contact) {
                     if(!isset($group[$contact->id])) {
                         $group[$contact->id] = 1;
+                        switch($contact->contact_rank_id) {
+                        case 1: $rank = "primary";break;
+                        case 2: $rank = "secondary";break;
+                        case 3: $rank = "tertiary";break;
+                        default: echo "unknown rank $rank";
+                        }
+                        echo "<div class=\"rank rank-$rank\">";
                         if(user()->isGuest()) {
-                            echo htmlsafe($contact->name)."<br/>";
+                            echo htmlsafe($contact->name)."<br>";
                         } else {
-                            echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a><br>";
-                            echo "Telephone: ".htmlsafe($contact->primary_phone)."<br>";
+                            echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a> ";
+                            echo "<span class=\"muted\">".htmlsafe($contact->primary_phone)."</span><br>";
                             //echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
                             if($contact->sms_address != null) {
                                 echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
                             }
                         }
+                        echo "</div>";
                     } else {
                         $group[$contact->id]++;//just count number of records for this person (not used right now..)
                     }

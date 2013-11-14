@@ -481,3 +481,23 @@ color: #666;
 span[rel='tooltip'] {
 cursor: pointer;
 }
+
+div.rank
+{
+background-position: 3px 0px;
+background-repeat:no-repeat;
+padding-left:23px;
+min-height: 20px;
+}
+div.rank-primary
+{
+background-image:url(../images/star_red.png);
+}
+div.rank-secondary
+{
+background-image:url(../images/star_blue.png);
+}
+div.rank-tertiary
+{
+background-image:url(../images/star_green.png);
+}

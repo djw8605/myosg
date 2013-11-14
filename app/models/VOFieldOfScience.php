@@ -24,7 +24,7 @@ class VOFieldOfScience extends CachedIndexedModel
         if(isset($params["vo_id"])) {
             $where = " where vo_id = ".$params["vo_id"];
         }
-        return "SELECT * FROM vo_field_of_science $where";
+        return "SELECT * from vo_field_of_science vo_fos JOIN field_of_science fos ON vo_fos.field_of_science_id = fos.id $where ORDER by rank_id, name";
     }
     public function key() { return "vo_id"; }
 }
