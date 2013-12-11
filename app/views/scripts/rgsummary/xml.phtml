@@ -17,7 +17,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     echo htmlsafe($gridtype_name);
     echo "</GridType>";
     echo "<GroupID>".$resource_group->id."</GroupID>";
-    echo "<GroupName>".$resource_group->name."</GroupName>";
+    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
 
     echo "<Disable>";
     if($resource_group->disable == 1) { 
@@ -80,7 +80,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     foreach($resource_list as $rid=>$resource) {
         echo "<Resource>";
         echo "<ID>".$resource->id."</ID>";
-        echo "<Name>".$resource->name."</Name>";
+        echo "<Name>".htmlsafe($resource->name)."</Name>";
 
         echo "<Active>";
         if($resource->active == 1) { 
@@ -108,7 +108,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     if(isset($this->servicetypes[$service->service_id])) {
                         echo "<Service>".
                           "<ID>".$service->service_id."</ID>".
-                          "<Name>".$this->servicetypes[$service->service_id][0]->name."</Name>".
+                          "<Name>".htmlsafe($this->servicetypes[$service->service_id][0]->name)."</Name>".
                           "<Description>".htmlsafe($this->servicetypes[$service->service_id][0]->description)."</Description>";
 
                         //I really don't want user to use this (why do we even have this?)
@@ -285,7 +285,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 if($info->interop_accounting == 1) { $value = "True"; }
                 echo "<InteropAccounting>$value</InteropAccounting>";
 
-                echo "<AccountingName>$info->accounting_name</AccountingName>";
+                echo "<AccountingName>".htmlsafe($info->accounting_name)."</AccountingName>";
                 echo "<KSI2KMin>$info->ksi2k_minimum</KSI2KMin>";
                 echo "<KSI2KMax>$info->ksi2k_maximum</KSI2KMax>";
                 echo "<!-- in TB -->";
