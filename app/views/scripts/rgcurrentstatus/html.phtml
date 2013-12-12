@@ -93,6 +93,14 @@ foreach($this->rgs as $rgid=>$rg) {
                 //critical metrics
                 $critical_outs = array();
                 foreach($service->CriticalMetrics[0] as $metric) {
+
+                    if(isset($_REQUEST["current_status_attrs_spe"])) {
+                        //need to filter out metrics that are not specified
+                        if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                            continue;
+                        }
+                    }
+
                     $freshfor = $metric->MetricFreshFor;
                     $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
                     $critical_outs[(string)$metric->MetricCommonName] = outputMetricInfo($metric, $expired);
@@ -107,12 +115,20 @@ foreach($this->rgs as $rgid=>$rg) {
                 }
 
                 //non-critical metrics
-                if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                if(/*!isset($_REQUEST["uwa"]) and*/ isset($_REQUEST["current_status_attrs_shownc"]) || isset($_REQUEST["current_status_attrs_spe"])) {
                     $non_critical_metrics = $service->NonCriticalMetrics[0];
                     $non_critical_outs = array();
                     $non_critical_expired_outs = array();
                     foreach($non_critical_metrics as $metric) {
-                        if($metric->Detail != "") {
+
+                        if(isset($_REQUEST["current_status_attrs_spe"])) {
+                            //need to filter out metrics that are not specified
+                            if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                                continue;
+                            }
+                        }
+
+                      if($metric->Detail != "") {
                             $freshfor = $metric->MetricFreshFor;
                             $expired = !MetricData::isFresh($metric->Timestamp, $freshfor, $timestamp);
                             if($expired) {

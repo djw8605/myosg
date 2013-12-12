@@ -1,6 +1,46 @@
-<?$checked = "";
-if(isset($_REQUEST["current_status_attrs_shownc"])) { $checked = "checked=checked"; }?>
-<input type="checkbox" name="current_status_attrs_shownc" <?=$checked?>/>
-Show non-critical metrics<br/>
+<?php
+$checked = "";
+//assume show-critical if spe is not set (for backward compatibility)
+if(!isset($_REQUEST["current_status_attrs_spe"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="current_status_attrs_showc" disabled=disabled <?php echo $checked?>/>
+Show Critical Metrics<br/>
 
+<?php
+$checked = "";
+if(isset($_REQUEST["current_status_attrs_shownc"])) { $checked = "checked=checked"; }?>
+<input type="checkbox" name="current_status_attrs_shownc" <?php echo $checked?>/>
+Show Non-Critical Metrics<br/>
+
+<?php
+$mmodel = new Metric();
+$list = $mmodel->get();
+$kv = array();
+foreach($list as $item) { 
+    $kv[$item->id] = array($item->common_name." (".$item->abbrev.")", "");
+}
+echo fblist("current_status_attrs_spe", "Specific Metrics", $kv);
+?>
+<script>
+$(function() {
+    $("input[name='current_status_attrs_spe']").click(function() {
+        if($(this).is(':checked')) {
+            $("input[name='current_status_attrs_showc']").prop('checked', false);
+            $("input[name='current_status_attrs_shownc']").prop('checked', false);
+        } else {
+            $("input[name='current_status_attrs_showc']").prop('checked', true);
+        }
+    });
+    $("input[name='current_status_attrs_showc']").click(function() {
+        if($(this).is(':checked')) {
+            $("input[name='current_status_attrs_spe']").prop('checked', false);
+        }
+    });
+    $("input[name='current_status_attrs_shownc']").click(function() {
+        if($(this).is(':checked')) {
+            $("input[name='current_status_attrs_spe']").prop('checked', false);
+            $("input[name='current_status_attrs_showc']").prop('checked', true);
+        }
+    });
+});
+</script>
 

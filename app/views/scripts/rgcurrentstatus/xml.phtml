@@ -8,7 +8,7 @@ foreach($this->rgs as $rgid=>$rg) {
     echo "<ResourceGroup>";
     echo "<GroupType>".$resource_group->grid_type_description."</GroupType>";
     echo "<GroupID>$rgid</GroupID>";
-    echo "<GroupName>".$resource_group->name."</GroupName>";
+    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
 
     foreach($rg as $rid=>$resource) {
         $resource_name = $resource->name;
@@ -20,14 +20,11 @@ foreach($this->rgs as $rgid=>$rg) {
             $status = $cache->Status[0];
             $note = $cache->Note[0];
 
-            ?>
-            <Status><?=$status?></Status>
-            <ResourceName><?=$resource_name?></ResourceName>
-            <ID><?=$rid?></ID>
-            <Fqdn><?=$resource_fqdn?></Fqdn>
-            <Note><?=htmlsafe($note)?></Note>
-            <?
-
+            echo "<Status>$status</Status>";
+            echo "<ResourceName>".htmlsafe($resource_name)."</ResourceName>";
+            echo "<ID>$rid</ID>";
+            echo "<Fqdn>$resource_fqdn</Fqdn>";
+            echo "<Note>".htmlsafe($note)."</Note>";
             if(isset($cache->Services[0])) {
                 $services = $cache->Services[0];
                 $timestamp = (int)$cache->Timestamp[0];
@@ -36,25 +33,35 @@ foreach($this->rgs as $rgid=>$rg) {
                     $service_status = $service->Status;
                     $note = $service->Note;
 
-                    echo "<Name>".$service->ServiceName."</Name>";
-                    echo "<Description>".$service->ServiceDescription." Service Status</Description>";
+                    echo "<Name>".htmlsafe($service->ServiceName)."</Name>";
+                    echo "<Description>".htmlsafe($service->ServiceDescription)." Service Status</Description>";
                     echo "<Status>$service_status</Status>";
                     echo "<Note>".htmlsafe($note)."</Note>";
 
                     //critical metrics
                     $out = "";
                     foreach($service->CriticalMetrics[0] as $metric) {
+                        if(isset($_REQUEST["current_status_attrs_spe"])) {
+                            //need to filter out metrics that are not specified
+                            if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                                continue;
+                            }
+                        }
                         $out .= outputMetricInfo($metric, $timestamp);
                     }
-                    echo "<CriticalMetrics>";
-                    echo $out;
-                    echo "</CriticalMetrics>";
+                    echo "<CriticalMetrics>$out</CriticalMetrics>";
 
                     //non-critical metrics
-                    if(!isset($_REQUEST["uwa"]) and isset($_REQUEST["current_status_attrs_shownc"])) {
+                    if(/*!isset($_REQUEST["uwa"]) and*/ isset($_REQUEST["current_status_attrs_shownc"]) || isset($_REQUEST["current_status_attrs_spe"])) {
                         $non_critical_metrics = $service->NonCriticalMetrics[0];
                         $out = "";
                         foreach($non_critical_metrics as $metric) {
+                            if(isset($_REQUEST["current_status_attrs_spe"])) {
+                                //need to filter out metrics that are not specified
+                                if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                                    continue;
+                                }
+                            }
                             if($metric->Detail != "") {
                                 $out .= outputMetricInfo($metric, $timestamp);
                             }
@@ -93,7 +100,7 @@ function outputMetricInfo($metric, $timestamp)
         $help_url = config()->rsvforum[(int)$metric->MetricID];
     }
     if($expired) $name .= " (Expired)";
-    $out .= "<Description>".htmlsafe($desc)."</Description><HelpURL>".htmlsafe($help_url)."</HelpURL><Name>$name</Name>";
+    $out .= "<Description>".htmlsafe($desc)."</Description><HelpURL>".htmlsafe($help_url)."</HelpURL><Name>".htmlsafe($name)."</Name>";
     if(!isset($_REQUEST["uwa"])) {
         if(trim($detail) == "") {
             $detail = "<Detail>(No detail provided)</Detail>";
@@ -109,7 +116,6 @@ function outputMetricInfo($metric, $timestamp)
         $out .= "<GatheredAt>$gathered_at</GatheredAt>";
     }
     $out .= "</Metric>";
-
     return $out;
 }
 
