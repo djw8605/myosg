@@ -12,6 +12,7 @@ width: 50px;
 </style>
 
 <?
+$rcount = 0;
 foreach($this->rgs as $rgid=>$rg) {
     
     //show resource group header
@@ -22,6 +23,7 @@ foreach($this->rgs as $rgid=>$rg) {
     echo "</div>";
  
     foreach($rg as $rid=>$resource) {
+        $rcount++;
         $resource_name = $resource->name;
 
         $disabled = "";
@@ -165,6 +167,9 @@ foreach($this->rgs as $rgid=>$rg) {
     }
 }
 
+if($rcount > 0) {
+    echo "<p class=\"muted\">Displaying ".count($this->rgs)." resource groups / $rcount resources</p>";
+}
 
 function outputMetricInfo($metric, $expired)
 {
