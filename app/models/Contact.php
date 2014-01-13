@@ -24,10 +24,10 @@ class Contact extends CachedIndexedModel
 
         //filter by personal contact
         if(isset($params["person"])) {
-            $where .= " and person = ".$params["person"];
+            $where .= " AND person = ".$params["person"];
         }
         if(isset($params["disable"])) {
-            $where .= " and contact.disable = ".$params["disable"];
+            $where .= " AND contact.disable = ".$params["disable"];
         }
         if(isset($params["ids"])) {
             if(count($params["ids"]) > 0) {
@@ -46,7 +46,7 @@ class Contact extends CachedIndexedModel
                 $where .= " and 1 = 0"; //hide everything..
             }
         }
-        return "select contact.*,dn.dn_string as dn from contact left join dn on dn.contact_id = contact.id $where ORDER BY name";
+        return "select contact.* from contact $where ORDER BY name";
     }
     public function key() { return "id"; }
 }

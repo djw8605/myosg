@@ -16,7 +16,15 @@ foreach($this->contacts as $cid => $contact) {
         echo "<PrimaryPhone>".htmlsafe($contact->primary_phone)."</PrimaryPhone>";
         echo "<SecondaryPhone>".htmlsafe($contact->secondary_phone)."</SecondaryPhone>";
         echo "<IM>".htmlsafe($contact->im)."</IM>";
-        echo "<DN>".htmlsafe($contact->dn)."</DN>";
+        echo "<DN>";
+        $dns = $this->contacts_dns[$contact->id];
+        $first = true;
+        foreach($dns as $dn) {
+            if($first) $first = false;
+            else echo ",";
+            echo htmlsafe($dn->dn_string);
+        }
+        echo "</DN>";
         echo "<ContactPreference>".htmlsafe($contact->contact_preference)."</ContactPreference>";
         echo "</ContactInformation>";
     }

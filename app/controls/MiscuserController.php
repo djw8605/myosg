@@ -1,7 +1,7 @@
 <?php
 /*#################################################################################################
 
-Copyright 2009 The Trustees of Indiana University
+Copyright 2013 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -41,7 +41,9 @@ class MiscuserController extends MiscController
             $param["ids"] = $ids;
         }
         $this->view->contacts = $model->getindex($param);
-        //TODO - sort
+
+        $model = new DN();
+        $this->view->contacts_dns = $model->getgroupby("contact_id", array("disable"=>0));
 
         $this->setpagetitle(self::default_title());
     }

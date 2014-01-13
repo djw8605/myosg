@@ -25,12 +25,11 @@ width: 200px;
 }
 </style>
 
-<?
+<?php
 
 echo "<table class=\"table\">";
 foreach($this->contacts as $cid => $contact) {
     $contact = $contact[0];
-    //if($contact->disable == 1) continue;//now filtered via controller
 
     //name header
     echo "<tr class=\"noborder\"><th colspan=\"3\">";
@@ -70,11 +69,15 @@ foreach($this->contacts as $cid => $contact) {
         echo formatEmail($contact->primary_email);
         echo formatEmail($contact->secondary_email);
         echo formatPhone($contact->primary_phone, $contact->primary_phone_ext);
-        //echo formatPhone($contact->secondary_phone, $contact->secondary_phone_ext);
         if(trim($contact->im) != "") {
             echo "<b>IM</b> ".htmlsafe($contact->im)."<br>";
         }
-        echo "<i class=\"icon-certificate\"></i> ".htmlsafe($contact->dn)."<br>";
+        $dns = $this->contacts_dns[$contact->id];
+        echo "<ul>";
+        foreach($dns as $dn) {
+            echo "<li>".htmlsafe($dn->dn_string)."</li>";
+        }
+        echo "</ul>";
         echo "</td>";
     }
     echo "</tr>";
