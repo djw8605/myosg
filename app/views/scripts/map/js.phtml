@@ -191,14 +191,18 @@ function init(scrollwheel) {
     if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
         //add campus grid icons
         foreach($this->campusgrids as $cg) {
+	    $name = addslashes($cg->name);
+	    $name = str_replace("\n", "<br>", $name);
+	    $desc = addslashes($cg->description);
+	    $desc = str_replace("\n", "<br>", $desc);
             ?>
             var campus_marker = new google.maps.Marker({
                 position: new google.maps.LatLng(<?php echo $cg->latitude?>, <?php echo $cg->longitude?>),
                 map: map,
                 icon: '<?php echo fullbase()."/images/smallpin.png";?>',
-                title: '<?php echo addslashes($cg->name)?>'
+                title: '<?php echo $name?>'
             });
-            setInfoWindow(null, campus_marker, "<h2><?php echo $cg->name?></h2><p><?php echo $cg->description;?></p>");
+            setInfoWindow(null, campus_marker, "<h2><?php echo $name?></h2><p><?php echo $desc?></p>");
             <?php
         }
     }
