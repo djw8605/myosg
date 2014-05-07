@@ -1,6 +1,29 @@
 /*/////////////////////////////////////////////////////////////////////////////////////////
 boostrap fixer
 */
+body {
+font-size: 13px;
+padding-top: 50px;
+}
+p {
+margin: 0 0 9px;
+}
+h3 {
+font-size: 18px;
+line-height: 27px;
+margin: 0px;
+color: #333;
+}
+h4 {
+font-size: 14px;
+line-height: 18px;
+margin: 0px;
+}
+h5 {
+font-size: 12px;
+line-height: 18px;
+margin: 0px;
+}
 .hidden {
 visibility: inherit; /*boostrap-responsive.css sets this.. which breaks jquery's show/hide*/
 }
@@ -8,8 +31,8 @@ select,input {
 margin-bottom: inherit;
 }
 .page-header {
-padding-bottom: 5px;
-margin: 0px 0px 5px 0px;
+margin-top: 0px;
+margin-bottom: 0px;
 }
 img {
 max-width: inherit;
@@ -42,6 +65,10 @@ color: #D98719;
 hr {
 margin: 5px 0px;
 }
+.alert {
+margin-bottom: 10px;
+}
+
 /*/////////////////////////////////////////////////////////////////////////////////////////
 common myosg styles
 */

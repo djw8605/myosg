@@ -1,7 +1,7 @@
 <?php
 /*#################################################################################################
 
-Copyright 2009 The Trustees of Indiana University
+Copyright 2014 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -26,9 +26,7 @@ class RgController extends ControllerBase
         $this->selectmenu("rg");
 
         $this->rgs = array();
-        #if(isset($_REQUEST["datasource"])) {
         $this->rgs = $this->process_rglist();
-        #}
         $this->load_daterangequery();
     }
 
@@ -64,7 +62,6 @@ class RgController extends ControllerBase
     protected function process_rglist()
     {
         $rg_ids = array();
-
         if(isset($_REQUEST["all_resources"])) {
             $model = new ResourceGroup();
             $rgs = $model->get();
@@ -74,23 +71,43 @@ class RgController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
+                    /*
                     if(preg_match("/^sc_(\d+)/", $key, $matches)) {
                         $this->process_rglist_addsc($rg_ids, $matches[1]);
                     }
+                    */
+                    foreach($this->getids("sc", $key, $value) as $id) {
+                        $this->process_rglist_addsc($rg_ids, $id);
+                    }
                 }
                 if(isset($_REQUEST["facility"])) {
+                    /*
                     if(preg_match("/^facility_(\d+)/", $key, $matches)) {
                         $this->process_rglist_addfacility($rg_ids, $matches[1]);
                     }
+                    */
+                    foreach($this->getids("facility", $key, $value) as $id) {
+                        $this->process_rglist_addfacility($rg_ids, $id);
+                    }
                 }
                 if(isset($_REQUEST["site"])) {
+                    /*
                     if(preg_match("/^site_(\d+)/", $key, $matches)) {
                         $this->process_rglist_addsite($rg_ids, $matches[1]);
                     }
+                    */
+                    foreach($this->getids("site", $key, $value) as $id) {
+                        $this->process_rglist_addsite($rg_ids, $id);
+                    }
                 }
                 if(isset($_REQUEST["rg"])) {
+                    /*
                     if(preg_match("/^rg_(\d+)/", $key, $matches)) {
                         $this->process_rglist_addrg($rg_ids, $matches[1]);
+                    }
+                    */
+                    foreach($this->getids("rg", $key, $value) as $id) {
+                        $this->process_rglist_addrg($rg_ids, $id);
                     }
                 }
             }
@@ -203,16 +220,6 @@ class RgController extends ControllerBase
             $keep = $this->process_resource_filter_service();
             $resources = array_intersect($resources, $keep);
         }
-/*
-        if(isset($_REQUEST["service_central"])) {
-            $keep = $this->process_resource_filter_service_central();
-            $resources = array_intersect($resources, $keep);
-        }
-        if(isset($_REQUEST["service_hidden"])) {
-            $keep = $this->process_resource_filter_service_hidden();
-            $resources = array_intersect($resources, $keep);
-        }
-*/
         if(isset($_REQUEST["vosup"])) {
             $keep = $this->process_resource_filter_vosup();
             $resources = array_intersect($resources, $keep);
@@ -250,7 +257,8 @@ class RgController extends ControllerBase
         $model = new Service();
         $list = $model->get();
         foreach($list as $item) {
-            if(isset($_REQUEST["service_".$item->id])) {
+            if($this->ison("service", $item->id)) {
+            //if(isset($_REQUEST["service_".$item->id])) {
                 $model = new ResourceServices();
                 $rs = $model->get(array("service_id"=>$item->id));
                 foreach($rs as $r) {
@@ -263,37 +271,6 @@ class RgController extends ControllerBase
         return $resources_to_keep;
     }
 
-/*
-    private function process_resource_filter_service_central()
-    {
-        $resources_to_keep = array();
-        $model = new ResourceServices();
-        $rs = $model->get();
-        foreach($rs as $r) {
-            if($_REQUEST["service_central_value"] == $r->central) {
-                if(!in_array($r->resource_id, $resources_to_keep)) {
-                    $resources_to_keep[] = $r->resource_id;
-                }
-            }
-        }
-        return $resources_to_keep;
-    }
-
-    private function process_resource_filter_service_hidden()
-    {
-        $resources_to_keep = array();
-        $model = new ResourceServices();
-        $rs = $model->get();
-        foreach($rs as $r) {
-            if($_REQUEST["service_hidden_value"] == $r->hidden) {
-                if(!in_array($r->resource_id, $resources_to_keep)) {
-                    $resources_to_keep[] = $r->resource_id;
-                }
-            }
-        }
-        return $resources_to_keep;
-    }
-*/
     private function process_resource_filter_vosup()
     {
         $resources_to_keep = array();
@@ -305,7 +282,8 @@ class RgController extends ControllerBase
         //find supported vos
         foreach($vogrouped as $vo) {
             $attr = $vo->attributes();
-            if(isset($_REQUEST["vosup_".$attr->id])) {
+            if($this->ison("vosup", $attr->id)) {
+            //if(isset($_REQUEST["vosup_".$attr->id])) {
                 $rs = $vo->Members[0];
                 foreach($rs as $r) {
                     if(!in_array((string)$r->ResourceID, $resources_to_keep)) {
@@ -423,7 +401,8 @@ class RgController extends ControllerBase
                 $status_id = 99;
             }
 
-            if(isset($_REQUEST["status_".$status_id])) {
+            if($this->ison("status", $status_id)) {
+            //if(isset($_REQUEST["status_".$status_id])) {
                 if(!in_array($rid, $resources_to_keep)) {
                     $resources_to_keep[] = $rid;
                 }
@@ -439,7 +418,8 @@ class RgController extends ControllerBase
         $list = $model->get();
 
         foreach($list as $vo_id=>$item) {
-            if(isset($_REQUEST["voown_".$vo_id])) {
+            if($this->ison("voown", $vo_id)) {
+            //if(isset($_REQUEST["voown_".$vo_id])) {
                 $model = new VOOwnedResources();
                 $rs = $model->get(array("vo_id"=>$vo_id));
                 foreach($rs as $r) {
@@ -476,7 +456,8 @@ class RgController extends ControllerBase
                 }
             }
             //has user selected this resource status?
-            if(isset($_REQUEST["gipstatus_".$overallstatus])) {
+            if($this->ison("gipstatus", $overallstatus)) {
+            //if(isset($_REQUEST["gipstatus_".$overallstatus])) {
                 if(!in_array($rg_id, $rgs_to_keep)) {
                     $rgs_to_keep[] = $rg_id;
                 }
@@ -491,7 +472,8 @@ class RgController extends ControllerBase
         $model = new GridTypes();
         $list = $model->get();
         foreach($list as $item) {
-            if(isset($_REQUEST["gridtype_".$item->id])) {
+            if($this->ison("gridtype", $item->id)) {
+            //if(isset($_REQUEST["gridtype_".$item->id])) {
                 //pull resource groups
                 $model = new ResourceGroup();
                 $rgs = $model->get(array("osg_grid_type_id"=>$item->id));

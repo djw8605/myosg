@@ -39,14 +39,37 @@ $(function() {
     $("#menu_<?php echo $controllerName?>").addClass("active"); 
 
     //enable autocomplete for search box
-    $("#search").autocomplete("<?=fullbase()?>/search/autocomplete", {
-        width: 320,
-        minChars: 3,
-        scrollHeight: 400,
-        delay: 100,
-        selectFirst: false,
-        //autoFill: true,
-        max: 300,
+    $("#search").autocomplete({
+        source: function( request, response ) {
+            $.ajax({
+                url: "<?php echo fullbase()?>/search/autocomplete",
+                dataType: "text",
+                data: {
+                    //featureClass: "P",
+                    //style: "full",
+                    //maxRows: 12,
+                    //name_startsWith: request.term
+                    q: request.term
+                },
+                success: function( data ) {
+                    response( $.map( data.split("\n"), function( item ) {
+                        if(item == "") return null;
+                        var tokens = item.split("\t");
+                        return {
+                            value: tokens[0],
+                            label: tokens[0] + " - " + tokens[1] + " (" + tokens[2] + ")"
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(event, ui) {
+            document.location = "search?q="+ui.item.value;
+        }
+    });
+
+    /*
+
         formatItem: function(data, i, n, value) {
             var obj = parseValue(value);
             return obj.name + "<span class=\"tag "+obj.type+"\">"+obj.type_name+"</span><br>"+obj.sub;
@@ -61,6 +84,7 @@ $(function() {
         var obj = parseValue(value);
         document.location = "<?=fullbase()?>/search?q="+escape(obj.name)+"&type="+obj.type;
     });
+    */
 });
 </script>
 

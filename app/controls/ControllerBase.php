@@ -209,6 +209,53 @@ abstract class ControllerBase extends Zend_Controller_Action
         }
     }
 
+    //pull ? from key/value in the format facility[]=?
+    //if the values are set in old format (facility_?=on), then converts it to the new format.
+    protected function getids($field, $key, $value) {
+        //old format
+        if(preg_match("/^${field}_(\d+)/", $key, $matches)) {
+            $_REQUEST["${field}_sel"][] = $matches[1]; //convert to new format (for view)
+            return array($matches[1]);
+        }
+
+        //new format
+        if($key == "${field}_sel") {
+            return $value;
+        }
+        return array();
+    }
+
+    protected function ison($field, $value) {
+        //is field used in query?
+        if(!isset($_REQUEST["$field"])) {
+            return false;
+        }
+
+        //old format
+        if(isset($_REQUEST["${field}_$value"])) {
+
+            if($_REQUEST["${field}_$value"] == "on") {
+                //convert to new format (for view)
+                $_REQUEST["${field}_sel"][] = $value;
+
+                return true;
+            } else {
+                //anything other than "on" is considered off
+                return false;
+            }
+        }
+
+        //new format
+        if(isset($_REQUEST["${field}_sel"])) {
+            $values = $_REQUEST["${field}_sel"];
+            if(in_array($value, $values)) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
 
     //abstract public function breads(); //return array containing pagename leading to this page
     abstract public function load();

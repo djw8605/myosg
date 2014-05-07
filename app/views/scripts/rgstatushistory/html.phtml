@@ -1,5 +1,3 @@
-<?if(!uwa()) {?>
-
 <style>
 #time-tooltip
 {
@@ -46,9 +44,8 @@ border-top: none;
 background-color: #eee;
 }
 </style>
-<?}?>
 
-<script language='javascript' src='<?=base()?>/lib/jquery.scrollstop.js'></script>
+<script language='javascript' src='<?=base()?>/lib/jquery-scrollstop/jquery.scrollstop.js'></script>
 <script type="text/javascript">
 function convertXtoUnixTime(graph, x)
 {
@@ -165,7 +162,7 @@ $(function() {
 
     //Do Lazyloading of the history graph
     //$(window).scroll(function() {
-    jQuery(window).bind('scrollstop', function(){
+    $(window).on('scrollstop', function(){
         processGraphScroll();
     });
     processGraphScroll(); //initial processing

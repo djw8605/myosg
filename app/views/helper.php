@@ -259,6 +259,53 @@ function checklist($id, $title, $kv)
     return "<div id=\"$id\">".$title.$list."</div>";
 }
 
+//should be renamed to select2
+function fblist($id, $title, $kv)
+{
+    $out = "";
+
+    //output select2 toggler
+    $checked = "";
+    if(isset($_REQUEST[$id])) { 
+        $checked = "checked=checked"; 
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#<?php echo $id?>__list").show();
+        });
+        </script>
+        <?php
+    }
+    $out .= "<input type=\"checkbox\" name=\"$id\" $checked onclick=\"if(this.checked) {\$('#${id}__list').show('normal');} else {\$('#${id}__list').hide();}\"/> <span>$title</span><br/>";
+
+    //output select2
+    $out .= "<div class=\"hidden fblist_container\" id=\"${id}__list\">\n";
+    $out .= "<select multiple id=\"${id}__select2\" name=\"${id}_sel[]\">\n";
+    /*
+    if(isset($_REQUEST[$id])) {
+        error_log("################################################################################# $id");
+        error_log(print_r($_REQUEST[$id], true));
+    }
+    */
+    foreach($kv as $key=>$value) {
+        $itemid = "${id}_$key";
+        $selected = "";
+        if(isset($_REQUEST[$id."_sel"]) && in_array($key, $_REQUEST[$id."_sel"])) {
+            $selected = "selected";
+        }
+        $name = str_replace(array("\n", "\r"), "", htmlsafe($value[0]));
+        //$desc = str_replace(array("\n", "\r"), "", htmlsafe($value[1]));
+        $first = false;
+        $out .= "<option $selected value=\"$key\">$name</option>\n";
+    }
+    $out .= "</select>\n";
+    $out .= "<script>$(function() { $(\"#${id}__select2\").select2({width: '100%', placeholder: 'Select Items'}); });</script>";
+    $out .= "</div>\n";//fblist_container
+
+    return $out;
+}
+
+/* just a quick backup 
 function fblist($id, $title, $kv)
 {
     $out = "";
@@ -332,6 +379,7 @@ BLOCK;
 
     return $out;
 }
+*/
 
 function radiolist($id, $title, $kv, $default)
 {

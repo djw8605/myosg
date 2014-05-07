@@ -1,7 +1,7 @@
 <?php
 /*#################################################################################################
 
-Copyright 2009 The Trustees of Indiana University
+Copyright 2014 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -26,9 +26,7 @@ class VoController extends ControllerBase
         $this->selectmenu("vo");
 
         $this->vo_ids = array();
-        #if(isset($_REQUEST["datasource"])) {
         $this->vo_ids = $this->process_volist();
-        #}
     
         //why am I not using SQL order by statement? because our filter logic is not written to respect the ordering from SQL
         //also, I like to sort it so that we can extend the functionality of sorting more easily. it's also inline with NOSQL phylosophy
@@ -59,21 +57,6 @@ class VoController extends ControllerBase
 
         if(isset($_REQUEST["all_vos"])) {
             $model = new VirtualOrganization();
-/*
-            $orderby = "name";
-            if(isset($_REQUEST["sort_key"])) {
-                switch($_REQUEST["sort_key"]) {
-                case "name": $orderby = "name";
-                case "long_name": $orderby = "long_name";
-                default:
-                    elog("Unknown sort key given for process_volist(): ".$_REQUEST["sort_key"]);
-                }
-            }
-            if(isset($_REQUEST["sort_reverse"])) {
-                $orderby .= " DESC";
-            }
-            $vos = $model->get(array("orderby"=>$orderby));
-*/
             $vos = $model->get();
             foreach($vos as $vo) {
                 if(isset($_REQUEST["show_disabled"])) {
@@ -88,8 +71,13 @@ class VoController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["vo"])) {
+                    /*
                     if(preg_match("/^vo_(\d+)/", $key, $matches)) {
                         $this->process_volist_addvo($vo_ids, $matches[1]);
+                    }
+                    */
+                    foreach($this->getids("vo", $key, $value) as $id) {
+                        $this->process_volist_addvo($vo_ids, $id);
                     }
                 }
             }
@@ -175,7 +163,8 @@ class VoController extends ControllerBase
         $list = $model->get();
 
         foreach($list as $sc_id=>$item) {
-            if(isset($_REQUEST["sc_".$sc_id])) {
+            if($this->ison("sc", $sc_id)) {
+            //if(isset($_REQUEST["sc_".$sc_id])) {
                 $model = new VirtualOrganization();
                 $vos = $model->get(array("sc_id"=>$sc_id));
                 foreach($vos as $vo) {

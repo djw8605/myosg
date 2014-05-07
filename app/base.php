@@ -28,7 +28,7 @@ function greet()
         $method = "http/";
     }
     slog(config()->app_name. ' session starting.. '.$method.$_SERVER["REQUEST_URI"]);
-    slog("POST: ".print_r($_POST, true));
+    slog("REQUEST: ".print_r($_REQUEST, true));
 }
 
 function remove_quotes()

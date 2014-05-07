@@ -1,5 +1,8 @@
 <?=$this->render("bootheader.phtml", true)?>
 <style>
+body {
+padding-top: 25px;
+}
 .page-header {
 padding: 20px;
 padding-bottom: 17px;
@@ -10,6 +13,8 @@ border-bottom: 1px solid #e5e5e5;
 }
 .page-header h1 {
 display: block;
+font-size: 30px;
+margin-bottom: 0px;
 }
 .thumbnails a[target="_blank"] {
 background: none;
@@ -27,10 +32,12 @@ background-color: white;
 }
 </style>
 
+<div class="page-header">
+    <h1>MyOSG</h1>
+    <p class="lead">One-Stop location for various OSG information</p>
+</div><!--page-header-->
+
 <div class="container-fluid">
-
-<h1>MyOSG <small>One-Stop location for various OSG information</small></h1>
-
 <div class="row-fluid content">
 <div class="span9">
     <h2>Sample Pages</h2>
@@ -123,7 +130,7 @@ background-color: white;
         <div class="row-fluid">
         <ul class="thumbnails">
             <li class="span3">
-                <a target="_blank" href="https://ticket.grid.iu.edu/goc">
+                <a target="_blank" href="https://ticket.opensciencegrid.org">
                 <h5>GOC Ticket</h5>
                 <img src="images/screenshots/ticket.png">
                 <div class="caption">
@@ -131,7 +138,7 @@ background-color: white;
                 </a>
             </li>
             <li class="span3">
-                <a target="_blank" href="https://oim.grid.iu.edu">
+                <a target="_blank" href="https://oim.opensciencegrid.org">
                 <h5>OIM</h5>
                 <img src="images/screenshots/oim.png">
                 <div class="caption">
@@ -140,7 +147,7 @@ background-color: white;
                 </a>
             </li>
             <li class="span3">
-                <a target="_blank" href="http://twiki.grid.iu.edu/bin/view">
+                <a target="_blank" href="http://twiki.opensciencegrid.org">
                 <h5>TWiki</h5>
                 <img src="images/screenshots/twiki.png">
                 <div class="caption">
@@ -149,7 +156,7 @@ background-color: white;
                 </a>
             </li>
              <li class="span3">
-                <a target="_blank" href="http://gratiaweb.grid.iu.edu">
+                <a target="_blank" href="http://gratiaweb.opensciencegrid.org">
                 <h5>GratiaWeb</h5>
                 <img src="images/screenshots/gratiaweb.png">
                 <div class="caption">
@@ -163,7 +170,7 @@ background-color: white;
         <div class="row-fluid">
         <ul class="thumbnails">
             <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
-                <a target="_blank" href="http://display.grid.iu.edu">
+                <a target="_blank" href="http://display.opensciencegrid.org">
                 <h5>OSG Display</h5>
                 <img src="images/screenshots/display.png">
                 <div class="caption">
@@ -172,7 +179,7 @@ background-color: white;
                 </a>
             </li>
             <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
-                <a target="_blank" href="http://blogs.grid.iu.edu">
+                <a target="_blank" href="http://blogs.opensciencegrid.org">
                 <h5>OSG Blogs</h5>
                 <img src="images/screenshots/planet.png">
                 <div class="caption">
@@ -204,11 +211,11 @@ background-color: white;
         <div class="row-fluid">
         <ul class="thumbnails">
             <li class="span3" data-delay="500" data-placement="bottom" rel="tooltip" title="">
-                <a target="_blank" href="http://repo.grid.iu.edu">
+                <a target="_blank" href="http://repo.opensciencegrid.org">
                 <h5>RPM Repository</h5>
                 <img src="images/screenshots/repo.png">
                 <div class="caption">
-                    Provides OSG's primary RPM repository. Please see <a href="https://twiki.grid.iu.edu/bin/view/Documentation/Release3/YumRepositories">Documentation</a> for more detail.
+                    Provides OSG's primary RPM repository. Please see <a href="https://twiki.opensciencegrid.org/bin/view/Documentation/Release3/YumRepositories">Documentation</a> for more detail.
                 </div>
                 </a>
             </li>
@@ -236,7 +243,7 @@ background-color: white;
         echo "<p class=\"muted\">by ".htmlsafe($ucv[4])." (".htmlsafe(trim($ucv[3])).")</p>";
     }
     ?>
-    <span class="sidenote">Edit at <a target="_blank" href="https://twiki.grid.iu.edu/bin/view/Operations/UserContributedViews">TWiki</a></span>
+    <span class="sidenote">Edit at <a target="_blank" href="https://twiki.opensciencegrid.org/bin/view/Operations/UserContributedViews">TWiki</a></span>
     <br clear="all">
     <!---
     <div class="indent">
