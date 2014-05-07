@@ -17,6 +17,10 @@ vertical-align: top;
 cursor: pointer;
 background-color: #eee;
 }
+.osgtable tr.record:hover[name] {
+cursor: pointer;
+background-color: #ddd;
+}
 .osgtable th.sorted {
 background-color: #aaa;
 color: white;
@@ -24,10 +28,7 @@ background-position: 100% 50%;
 background-repeat: no-repeat;
 }
 .osgtable td.sorted {
-background-color: #eee;
-}
-.osgtable tr.record[name]:hover td.sorted {
-background-color: #ddd;
+/*background-color: #eee;*/
 }
 .osgtable th.sort_up {
 background-image: url(sort_up.png);
@@ -47,15 +48,11 @@ border-top: 1px solid #eee;
 padding-left: 5px;
 word-wrap:break-word;
 }
-.osgtable tr.record[name]:hover {
-cursor: pointer;
-background-color: #ddd;
-}
 .osgtable tr.record_expanded td.sorted {
-background-color: #ddd;
+/* background-color: #ddd;*/
 }
 .osgtable tr.record_expanded {
-background-color: #ddd;
+background-color: #eee;
 }
 .osgtable tr.info,
 .osgtable tr.subrecord {

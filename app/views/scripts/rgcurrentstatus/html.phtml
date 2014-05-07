@@ -97,10 +97,22 @@ foreach($this->rgs as $rgid=>$rg) {
                 foreach($service->CriticalMetrics[0] as $metric) {
 
                     if(isset($_REQUEST["current_status_attrs_spe"])) {
-                        //need to filter out metrics that are not specified
-                        if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                        if(!in_array($metric->MetricID, $_REQUEST["current_status_attrs_spe_sel"])) {
                             continue;
                         }
+                        /*
+                        if(isset($_REQUEST["current_status_attrs_spe_sel"])) {
+                            if(!in_array($metric->MetricID, $_REQUEST["current_status_attrs_spe_sel"])) {
+                                continue;
+                            }
+                        } else {
+                            //try old format
+                            //need to filter out metrics that are not specified
+                            if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
+                                continue;
+                            }
+                        }
+                        */
                     }
 
                     $freshfor = $metric->MetricFreshFor;
@@ -125,9 +137,14 @@ foreach($this->rgs as $rgid=>$rg) {
 
                         if(isset($_REQUEST["current_status_attrs_spe"])) {
                             //need to filter out metrics that are not specified
+                            if(!in_array($metric->MetricID, $_REQUEST["current_status_attrs_spe_sel"])) {
+                                continue;
+                            }
+                            /*
                             if(!isset($_REQUEST["current_status_attrs_spe_".$metric->MetricID])) {
                                 continue;
                             }
+                            */
                         }
 
                       if($metric->Detail != "") {
