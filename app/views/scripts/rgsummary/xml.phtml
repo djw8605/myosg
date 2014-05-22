@@ -350,7 +350,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                     echo "<Ticket>";
                     echo "<ID>".$ticket->ID."</ID>";
                     echo "<URL>".$ticket->URL."</URL>";
-                    echo "<Title>".$ticket->Title."</Title>";
+                    echo "<Title>".$this->escape($ticket->Title)."</Title>";
                     echo "</Ticket>";
                 }
             }
