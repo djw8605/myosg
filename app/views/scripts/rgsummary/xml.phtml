@@ -349,8 +349,8 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 foreach($this->tickets[$rid] as $ticket) {
                     echo "<Ticket>";
                     echo "<ID>".$ticket->ID."</ID>";
-                    echo "<URL>".$ticket->URL."</URL>";
-                    echo "<Title>".$ticket->Title."</Title>";
+                    echo "<URL>".$this->escape($ticket->URL)."</URL>";
+                    echo "<Title>".$this->escape($ticket->Title)."</Title>";
                     echo "</Ticket>";
                 }
             }
