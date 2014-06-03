@@ -235,7 +235,7 @@ class PfmeshController extends RgpfController
                                         "type"=>"traceroute"
                                     ),
                                     array(
-                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
+                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/pSB",
                                         "write_url"=>"$hostname:8569",
                                         "type"=>"perfsonarbuoy/owamp"
                                     )
@@ -247,7 +247,7 @@ class PfmeshController extends RgpfController
                             case config()->perfsonar_band_service_id:
                                 $services = array(
                                     array(
-                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/services/pSB",
+                                        "read_url"=>"http://$hostname:8085/perfSONAR_PS/services/pSB",
                                         "write_url"=>"$hostname:8570",
                                         "type"=>"perfsonarbuoy/bwctl"
                                     )
@@ -293,19 +293,22 @@ class PfmeshController extends RgpfController
         //latency / traceroute
         $tests[] = array("parameters"=> config()->perfsonar_mesh_config["traceroute"],
             "members"=>array("members"=>$late_hostnames, "type"=>"mesh"),
-            "description"=>"Traceroute Test Between $mesh_desc Latency Hosts#$mesh_id/traceroute"
+            //"description"=>"Traceroute Test Between $mesh_desc Latency Hosts#$mesh_id/traceroute"
+            "description"=>"$mesh_id traceroute"
         );
 
         //bandwidth / bwctl
         $tests[] = array("parameters"=> config()->perfsonar_mesh_config["perfsonarbuoy/bwctl"],
             "members"=>array("members"=>$band_hostnames, "type"=>"mesh"),
-            "description"=>"TCP BWCTL Test Between $mesh_desc Bandwidth Hosts#$mesh_id/perfsonarbuoy/bwctl"
+            //"description"=>"TCP BWCTL Test Between $mesh_desc Bandwidth Hosts#$mesh_id/perfsonarbuoy/bwctl"
+            "description"=>"$mesh_id perfsonarbuoy - bwctl"
         );
     
         //latency / owamp
         $tests[] = array("parameters"=> config()->perfsonar_mesh_config["perfsonarbuoy/owamp"],
             "members"=>array("members"=>$late_hostnames, "type"=>"mesh"),
-            "description"=>"OWAMP Test Between $mesh_desc Latency Hosts#$mesh_id/perfsonarbuoy/owamp"
+            //"description"=>"OWAMP Test Between $mesh_desc Latency Hosts#$mesh_id/perfsonarbuoy/owamp"
+            "description"=>"$mesh_id perfsonarbuoy - owamp"
         );
 
         $this->view->data = array(

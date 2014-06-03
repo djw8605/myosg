@@ -191,6 +191,7 @@ class common_config
         $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
 
         $this->gocticket_url = "https://ticket.grid.iu.edu/goc";
+        $this->oim_url = "https://oim.grid.iu.edu/oim";
 
         $this->status_expires_days = 30;
 
@@ -202,8 +203,8 @@ class common_config
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
         //override this in site config to point to production if necessary
-        $this->perfsonar_matrix_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/matrices";
-        $this->perfsonar_host_url = "http://perfsonar-itb.grid.iu.edu:8080/dashboard2-1.0-SNAPSHOT/hosts";
+        $this->perfsonar_matrix_url = "http://perfsonar1.goc:8080/dashboard2-1.0-SNAPSHOT/matrices";
+        $this->perfsonar_host_url = "http://perfsonar1.goc:8080/dashboard2-1.0-SNAPSHOT/hosts";
         $this->perfsonar_band_service_id = 130;
         $this->perfsonar_late_service_id = 131;
 
