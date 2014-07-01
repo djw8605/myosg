@@ -1,16 +1,16 @@
-date=`date +%Y%m%d.%H`_$RANDOM
+#!/bin/bash
 
-trunk='https://osg-svn.rtinfo.indiana.edu/goc-internal/dashboard/trunk/'
-SVN_BRANCHES=https://osg-svn.rtinfo.indiana.edu/goc-internal/dashboard/branches
-echo "-------------------------------------------------------"
-echo "Existing branches"
-svn --non-interactive --trust-server-cert list $SVN_BRANCHES
-echo "-------------------------------------------------------"
-echo -n "Please name your new branch (you can override if you want)> "
-read -e BRANCH
+echo "existing branches"
+git branch -v
 
-echo "removing old branch (if exist)"
-svn rm -m "removing old branch (if exist)" ${SVN_BRANCHES}/${BRANCH}
-echo "creating new branch"
-svn cp -m "creating new branch via branch script" $trunk ${SVN_BRANCHES}/${BRANCH}
+echo "software version says"
+grep ">version" ../app/config.php | grep version
 
+echo -n "enter new branch name> "
+read -e NAME
+
+git branch -f $NAME
+git push --all origin
+
+#update latest tag - only do this on production
+#git tag -f -a latest
