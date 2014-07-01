@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule !\.(css\.php|txt|js|ico|gif|jpg|png|css|xsd)$ index.php
