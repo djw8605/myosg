@@ -1,3 +1,4 @@
 config.php
 app/logs/*
 barn
+bin/eventjs/node_modules
