@@ -190,7 +190,7 @@ class common_config
         //if specific metric_id is not found, use following
         $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
 
-        $this->gocticket_url = "https://ticket.grid.iu.edu/goc";
+        $this->gocticket_url = "https://ticket.grid.iu.edu";
         $this->oim_url = "https://oim.grid.iu.edu/oim";
 
         $this->status_expires_days = 30;

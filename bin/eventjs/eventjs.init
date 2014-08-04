@@ -9,7 +9,7 @@
  
 USER="root"
  
-DAEMON="/usr/local/node-v0.10.20-linux-x64/bin/node"
+DAEMON="/usr/bin/node"
 ROOT_DIR="/usr/local/myosg/bin/eventjs"
  
 SERVER="$ROOT_DIR/event.js"
