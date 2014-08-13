@@ -23,12 +23,10 @@ class ScController extends ControllerBase
     public function load()
     {
         $this->setpagetitle($this->default_title());
-        $this->selectmenu("sc");
-        $this->sc_ids = array();
+        $this->selectmenu("misc");
 
-        #if(isset($_REQUEST["datasource"])) {
         $this->sc_ids = $this->process_sclist();
-        #}
+
         $this->load_daterangequery();
     }
 
@@ -68,8 +66,13 @@ class ScController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
+                    /*
                     if(preg_match("/^sc_(\d+)/", $key, $matches)) {
                         $this->process_sclist_addsc($sc_ids, $matches[1]);
+                    }
+                    */
+                    foreach($this->getids("sc", $key, $value) as $id) {
+                        $this->process_sclist_addsc($sc_ids, $id);
                     }
                 }
             }
@@ -97,14 +100,18 @@ class ScController extends ControllerBase
 
     private function process_sc_filter($scs)
     {
+        //no filter at the moment..
+        /*
         //setup filter
         if(isset($_REQUEST["active"])) {
             $keep = $this->process_sc_filter_active();
             $scs = array_intersect($scs, $keep);
         }
+        */
         return $scs;
     }
 
+    /*
     private function process_sc_filter_active()
     {
         $scs_to_keep = array();
@@ -119,5 +126,6 @@ class ScController extends ControllerBase
             }
         }
         return $scs_to_keep;
-     }
+    }
+    */
 }

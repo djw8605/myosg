@@ -259,7 +259,7 @@ class common_config
         case 'vo':
             return "?all_vos=on&active=on&active_value=1";
         case 'scsummary':
-            return "?datasource=summary&summary_attrs_showdesc=on&all_scs=on&active=on&active_value=1";
+            return "?datasource=summary&summary_attrs_showdesc=on&all_scs=on";
         case 'vosummary':
             return "?datasource=summary&all_vos=on&active_value=1";
         case 'map':

@@ -54,10 +54,9 @@ class ScsummaryController extends ScController
             $model = new Site();
             $this->view->sites = $model->getgroupby("sc_id");
         }
-
-        $this->setpagetitle(self::default_title());
     }
 
+    /* this page no longer exist. therefore, we are deprecating page
     // View for http://www.opensciencegrid.org/Support_Centers
     public function legacyosgwebsiteviewAction()
     {
@@ -98,4 +97,5 @@ class ScsummaryController extends ScController
         echo "</table>\n\n</body>";
         $this->render("none", null, true);
     }
+    */
 }

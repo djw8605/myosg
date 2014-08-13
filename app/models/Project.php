@@ -20,7 +20,13 @@ class Project extends CachedIndexedModel
     public function ds() { return "oim"; }
     public function sql($params)
     {
-        return "SELECT p.*, c.name as pi_name, c.primary_email as pi_email, vo.name as vo_name, campusgrid.name as cg_name, fos.name as fos_name FROM project p JOIN contact c ON c.id = p.pi_contact_id LEFT JOIN vo ON vo.id = p.vo_id LEFT JOIN campusgrid ON campusgrid.id = p.cg_id JOIN field_of_science fos ON fos.id = p.fos_id ORDER BY p.name";
+        return "SELECT p.*, c.name as pi_name, c.primary_email as pi_email, vo.name as vo_name, campusgrid.name as cg_name, fos.name as fos_name ".
+        "FROM project p JOIN contact c ON c.id = p.pi_contact_id ".
+        "LEFT JOIN vo ON vo.id = p.vo_id ".
+        "LEFT JOIN campusgrid ON campusgrid.id = p.cg_id ".
+        "JOIN field_of_science fos ON fos.id = p.fos_id ".
+        "WHERE p.disable = 0 ".
+        "ORDER BY p.name";
     }
     public function key() { return "id"; }
 }

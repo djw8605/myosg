@@ -71,6 +71,7 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
+
         if($type == "all" || $type == "resource_group") {
             foreach($model->search_resourcegroup($q) as $rec) {
                 $rec->type = "resource_group";
@@ -78,6 +79,7 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
+
         if($type == "all" || $type == "site") {
             foreach($model->search_site($q) as $rec) {
                 $rec->type = "site";
@@ -85,6 +87,7 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
+
         if($type == "all" || $type == "facility") {
             foreach($model->search_facility($q) as $rec) {
                 $rec->type = "facility";
@@ -92,6 +95,7 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
+
         if($type == "all" || $type == "vo") {
             foreach($model->search_vo($q) as $rec) {
                 $rec->type = "vo";
@@ -111,6 +115,7 @@ class SearchController extends ControllerBase
             }
         }
         if(count($recs) > $max) return $recs;
+
         if($type == "all" || $type == "sc") {
             foreach($model->search_sc($q) as $rec) {
                 $rec->type = "sc";
@@ -125,6 +130,14 @@ class SearchController extends ControllerBase
                         $rec->contacts[$contact->contact_type][] = $contact;
                     }
                 }
+                $recs[] = $rec;
+            }
+        }
+        if(count($recs) > $max) return $recs;
+
+        if($type == "all" || $type == "project") {
+            foreach($model->search_project($q) as $rec) {
+                $rec->type = "project";
                 $recs[] = $rec;
             }
         }

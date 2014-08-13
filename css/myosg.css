@@ -459,6 +459,9 @@ span.resource_fqdn{
 span.facility {
     background-color: #9c9;
 }
+span.project {
+    background-color: #9c0;
+}
 span.vo {
     background-color: #99c;
 }

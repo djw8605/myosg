@@ -33,7 +33,7 @@ float: right;
 </style>
 <h2>Search Result</h2>
 <div id="result">
-<?
+<?php
 if(count($this->recs) == 0) {
     echo "<p>No matching result.</p>";
 } else {
@@ -45,6 +45,7 @@ if(count($this->recs) == 0) {
         case "sc": show_sc($rec);break;
         case "vo": show_vo($rec);break;
         case "facility": show_facility($rec);break;
+        case "project": show_project($rec);break;
         case "site": show_site($rec);break;
         case "contact": show_contact($rec);break;
         case "gocticket": show_gocticket($rec);break;
@@ -57,32 +58,6 @@ if(count($this->recs) == 0) {
 
 //search OSG link
 echo "<br><p><a class=\"btn\" href=\"http://www.google.com/cse?cx=016752695275174109936:697frha0tfi&q=".urlencode($this->query)."\">Search Entire OSG</a></p>";
-
-//NOTE -- there is also show_contact() function
-/*
-function show_contacts($contacts) {
-    $shown_names = array();//used to group names for guest access
-    foreach($contacts as $contact) {
-        if(user()->isGuest()) {
-            //TODO -- need to group by name since user only see a list of names
-            if(!in_array($contact->name, $shown_names)) {
-                echo htmlsafe($contact->name)."<br/>";
-                $shown_names[] = $contact->name;
-            }
-        } else {
-            echo "<b>".htmlsafe($contact->name)."</b>";
-            echo "<table class=\"table table-condensed\">"; 
-            echo "<tr><th>Email</th><td>".emailaddress($contact->primary_email)."</td></tr>";
-            echo "<tr><th>Phone</th><td>".htmlsafe($contact->primary_phone)."</td></tr>";
-            echo "<tr><th>DN</th><td>".htmlsafe($contact->dn)."</td></tr>";
-            if($contact->sms_address != null) {
-                echo "<tr><th>SMS Address</th><td>".htmlsafe($contact->sms_address)."</td></tr>";
-            }
-            echo "</table>";
-        }
-    }
-}
-*/
 
 function show_resource($rec) {
     echo "<p class=\"btn-group pull-right\">";
@@ -99,19 +74,11 @@ function show_resource($rec) {
     echo "</div>";//span
 
     echo "<div class=\"span4\">";
-    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Summary (Resource Group)</a><br>";
-    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->resource_group_id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a><br>";
+    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_sel[]=".$rec->resource_group_id."&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Summary (Resource Group)</a><br>";
+    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_sel[]=".$rec->resource_group_id."&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a><br>";
     echo "</div>";//span
 
     echo "</div>";//row
-
-    /*
-    echo "<br clear=\"all\">";
-    foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4 class=\"muted\">$type_name</h4>";
-        show_contacts($contacts);
-    }
-    */
 }
 
 function show_resourcegroup($rec) {
@@ -128,8 +95,8 @@ function show_resourcegroup($rec) {
     echo "</div>";//span
 
     echo "<div class=\"span4\">";
-    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Summary</a><br>";
-    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_".$rec->id."=on&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
+    echo "<a href=\"".fullbase()."/rgsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_sel[]=".$rec->id."&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Summary</a><br>";
+    echo "<a href=\"".fullbase()."/rgcurrentstatus/index?datasource=currentstatus&summary_attrs_showdesc=on&summary_attrs_showgipstatus=on&summary_attrs_showhierarchy=on&summary_attrs_showwlcg=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&summary_attrs_showvomembership=on&summary_attrs_showvoownership=on&summary_attrs_showenv=on&summary_attrs_showcontact=on&summary_attrs_showticket=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&bdiitree_type=total_jobs&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&facility_10009=on&rg=on&rg_sel[]=".$rec->id."&gridtype_1=on&service_1=on&service_5=on&service_2=on&service_3=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1/\">Current RSV Status</a>";
     echo "</div>";//span
     echo "</div>";//row
 }
@@ -147,25 +114,11 @@ function show_sc($rec) {
 
     echo "<div class=\"span8\">";
     echo "<p class=\"help-block\">".$rec->description."</p>";
-/*
-    echo "<table class=\"table table-condensed\">";
-    echo "<tr><th>Description</th><td>".$rec->description."</td></tr>";
-    echo "<tr><th>Long Name</th><td>".$rec->long_name."</td></tr>";
-    echo "<tr><th>Community</th><td>".$rec->community."</td></tr>";
-    echo "</table>";
-*/
     echo "</div>";//span
 
     echo "<div class=\"span4\">";
-    echo "<a href=\"".fullbase()."/scsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&summary_attrs_showsites=on&sc=on&sc_".$rec->id."=on&active_value=1\">Summary</a>";
+    echo "<a href=\"".fullbase()."/scsummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showcontact=on&summary_attrs_showsites=on&sc=on&sc_sel[]=".$rec->id."\">Summary</a>";
     echo "</div>";//span
-    
-/*
-    foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4 class=\"muted\">$type_name</h4>";
-        show_contacts($contacts);
-    }
-*/
     echo "</div>";//row
 }
 
@@ -189,12 +142,6 @@ function show_vo($rec) {
     echo "<div class=\"span4\">";
     echo "<a href=\"".fullbase()."/vosummary/index?datasource=summary&summary_attrs_showdesc=on&summary_attrs_showmember_resource=on&summary_attrs_showfield_of_science=on&summary_attrs_showreporting_group=on&summary_attrs_showparent_vo=on&summary_attrs_showcontact=on&start_type=7daysago&start_date=02%2F11%2F2011&end_type=now&end_date=02%2F11%2F2011&vo=on&vo_".$rec->id."=on&active=on&active_value=1&sort_key=name\">Summary</a>";
     echo "</div>";
-    /*
-    foreach($rec->contacts as $type_name=>$contacts) {
-        echo "<h4 class=\"muted\">$type_name</h4>";
-        show_contacts($contacts);
-    }
-    */
     echo "</div>";//row
 }
 
@@ -219,6 +166,25 @@ function show_facility($rec) {
     echo "<a href=\"https://oim.grid.iu.edu/oim/topology?facility_id=".$rec->id."\">OIM Hierarchy</a>"; 
     echo "</div>";//span
 
+    echo "</div>";//row
+}
+
+function show_project($rec) {
+    echo "<p class=\"btn-group pull-right\">";
+    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/projectedit?id=".$rec->id."\">Edit</a>";
+    echo "</p>";
+    echo "<p><span class=\"tag project\">Project</span> ".$rec->v1."</p>";
+
+    echo "<div class=\"row-fluid detail\">";
+
+    echo "<div class=\"span8\">";
+    echo "<p class=\"help-block\">".$rec->desc."</p>";
+    echo "</div>";//span
+
+    echo "<div class=\"span4\">";
+    //TODO project doesn't yet support id specific view
+    //echo "<a href=\"".fullbase()."/miscproject?project=on&project_sel[]=".$rec->id."\">Summary</a>";
+    echo "</div>";//span
     echo "</div>";//row
 }
 
@@ -307,23 +273,12 @@ function show_contact($rec) {
 function show_gocticket($rec) {
     echo "<p><span class=\"tag gocticket\">GOC Ticket</span>";
     echo " <a href=\"".config()->gocticket_url."/".$rec->ID."\">".$rec->ID.": ".$rec->Title."</a></p>";
-
-/*
-    if(isset($rec->Metadatas)) {
-        echo "<table class=\"table table-condensed\">"; 
-        foreach($rec->Metadatas->Metadata as $metadata) {
-            echo "<tr><th>".htmlsafe($metadata->Key)."</th><td>".htmlsafe($metadata->Value)."</td></tr>";
-        }
-        echo "</table>";
-    }
-*/
 }
 function formatEmail($email) {
     if(trim($email) == "") return "";
     $out = "<img align=\"top\" src=\"".fullbase()."/images/email.png\"/> <a href=\"mailto: $email\">".htmlsafe($email)."</a><br>";
     return $out;
 }
-
 function formatPhone($phone, $ext) {
     if(trim($phone) == "") return "";
     $out = "<img align=\"top\" src=\"".fullbase()."/images/telephone.png\"/> ".htmlsafe($phone)." ";
@@ -333,8 +288,6 @@ function formatPhone($phone, $ext) {
     $out .= "<br>";
     return $out;
 }
-
-
 ?>
 </div>
 

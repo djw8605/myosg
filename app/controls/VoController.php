@@ -25,7 +25,6 @@ class VoController extends ControllerBase
         $this->setpagetitle($this->default_title());
         $this->selectmenu("vo");
 
-        $this->vo_ids = array();
         $this->vo_ids = $this->process_volist();
     
         //why am I not using SQL order by statement? because our filter logic is not written to respect the ordering from SQL
