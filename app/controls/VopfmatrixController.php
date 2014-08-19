@@ -22,6 +22,7 @@ class VopfmatrixController extends VoController
 
     public function indexAction() {
         parent::load();
+        message("warning", "This page will soon be deprecated by maddash.");
 
         $model = new VirtualOrganization();
         $vos = $model->getindex();//TODO - load everthing!?

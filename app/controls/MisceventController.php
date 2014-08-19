@@ -35,6 +35,6 @@ class MisceventController extends MiscController
     }
     public function indexAction() {
         parent::indexAction();
-        message("warning", "This is an experimental feature");        
+        //message("warning", "This is an experimental feature");        
     }
 }

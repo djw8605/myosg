@@ -39,7 +39,7 @@ class RgpfstatusController extends RgpfController
 
     public function indexAction() {
         parent::indexAction();
-        message("warning", "This is an experimental feature");        
+        message("warning", "This page will soon be deprecated by maddash.");        
 
         $this->view->rgs = $this->rgs;
 
