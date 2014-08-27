@@ -51,13 +51,17 @@ function log_format($str)
 }
 
 //debug log
-function dlog($obj)
+function dlog($obj, $key="default")
 {
     if(config()->debug) {
+        /*
         if(is_string($obj)) {
             $obj = log_format($obj);
         } 
         Zend_Registry::get("fb_logger")->log($obj, Zend_Log::DEBUG);
+        */
+        $txt = print_r($obj, true);
+        file_put_contents(config()->logdir."/dlog.$key", $txt);
     }
 }
 

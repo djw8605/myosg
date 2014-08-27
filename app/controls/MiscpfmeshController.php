@@ -1,7 +1,7 @@
 <?php
 /*#################################################################################################
 
-Copyright 2013 The Trustees of Indiana University
+Copyright 2014 The Trustees of Indiana University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at
@@ -18,10 +18,10 @@ License.
 class MiscpfmeshController extends MiscController
 {
     public static function default_title() { return "Perfsonar Mesh Configurations"; }
-    public static function default_url($query) { return ""; }
 
     public function indexAction() {
         parent::indexAction();
+        /*
         $model = new VirtualOrganization();
         $vos = $model->getindex();
 
@@ -55,5 +55,9 @@ class MiscpfmeshController extends MiscController
                 $this->view->vos[$void] = $vos[$void][0];
             }
         }
+        */
+
+        $model = new MeshConfig();
+        $this->view->configs = $model->getConfigs();
     }
 }
