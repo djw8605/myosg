@@ -48,6 +48,7 @@ class MeshConfig
         }
         return $contacts;
     }
+
     public function getGroupMembers($group_id) {
         if(is_null($group_id)) return null;
         static $cache = array();
@@ -60,7 +61,7 @@ class MeshConfig
             $resource_ids = array();
             foreach($oim->fetchAll($sql) as $member) {
                 $resource_services[] = array("rid"=>$member->resource_id, "sid"=>$member->service_id, "fqdn"=>null);
-                $resource_ids[$member->resource_id] = $member->resource_id;
+                $resource_ids[] = $member->resource_id;
             }
             if(!empty($resource_services)) {
                 //load overrides
@@ -83,10 +84,8 @@ class MeshConfig
                     $sid = $resource_service["sid"];
                     $key = "$rid:$sid";
                     if(isset($oim_overrides[$key])) {
-                        //array_push($fqdns, $oim_overrides[$key]);
                         $resource_service["fqdn"] = $oim_overrides[$key]; //use override endpoint
                     } else {
-                        //array_push($fqdns, $resource_fqdns[$rs_id[0]]);
                         $resource_service["fqdn"] = $resource_fqdns[$rid]; //use resource fqdn
                     }
                 }
@@ -98,14 +97,11 @@ class MeshConfig
             foreach($oim->fetchAll($sql) as $member) {
                 $id = $oim->quote($member->primary_key);
                 $wlcg_ids[] = $id;
-                //array_push($wlcg_ids, $oim->quote($member->primary_key));
             }
-            //dlog($wlcg_ids, "wlcg");
             $wlcg = array();
             if(!empty($wlcg_ids)) {
                 $sql = "SELECT primary_key,hostname FROM wlcg_endpoint WHERE primary_key IN (".implode($wlcg_ids, ",").")";
                 foreach($oim->fetchAll($sql) as $resource) {
-                    //array_push($fqdns, $resource->hostname);
                     $key = $oim->quote($resource->primary_key);
                     $wlcg[] = array("primary_key"=>$key, "fqdn"=>$resource->hostname);
                 }
@@ -113,7 +109,6 @@ class MeshConfig
 
             //load wlcg members
             $cache[$group_id] = array("oim"=>$resource_services, "wlcg"=>$wlcg);
-            //dlog($cache[$group_id], "cache");
         }
         return $cache[$group_id];
     }
@@ -205,6 +200,25 @@ class MeshConfig
         }
 
         return $org;
+    }
+    
+    public function getMAs($hostnames) {
+        if(empty($hostnames)) return array();
+        $oim = db("oim");
+
+        $quoted_hostnames = array();
+        foreach($hostnames as $hostname) {
+            $quoted_hostnames[] = $oim->quote($hostname);
+        }
+        $mas = array();
+        $sql = "SELECT * FROM perfsonar_mas WHERE hostname in (".implode($quoted_hostnames, ",").")";
+        $recs = $oim->fetchAll($sql);
+        foreach($recs as $rec) {
+            $mas[$rec->hostname] = json_decode($rec->ma);
+        }
+        dlog($mas, "mas");
+        return $mas;
+
     }
 
     public function getWLCGSites($key_fqdns) {

@@ -56,10 +56,12 @@ class PfmeshController extends RgpfController
             }
         }
 
-        //pull data we need
-        $oim_ids = array();
-        $wlcg_ids = array();
+        $oim_all = array();
+        $wlcg_all = array();
         $mesh_tests = array();
+        $all_hostnames = array();
+
+        //pull group details / parameters for all tests
         $tests = $model->getTestsByConfigID($mc->id);
         foreach($tests as $test) {
             $a = $model->getGroupMembers($test->groupa_id);
@@ -68,23 +70,29 @@ class PfmeshController extends RgpfController
             $a_fqdns = $this->pullfqdns($a);
             $b_fqdns = $this->pullfqdns($b);
 
-            $oim_ids = array_merge($oim_ids, $a["oim"]);
-            $wlcg_ids = array_merge($wlcg_ids, $a["wlcg"]);
+            $oim_all = array_merge($oim_all, $a["oim"]);
+            $wlcg_all = array_merge($wlcg_all, $a["wlcg"]);
             if($b == null) {
                 $mesh_members = array("members"=>$a_fqdns, "type"=>$test->type);
+                $all_hostnames = array_merge($all_hostnames, $a_fqdns);
             } else {
                 $mesh_members = array("a_members"=>$a_fqdns, "b_members"=>$b_fqdns, "type"=>$test->type);
-                $oim_ids = array_merge($oim_ids, $b["oim"]);
-                $wlcg_ids = array_merge($wlcg_ids, $b["wlcg"]);
+                $all_hostnames = array_merge($all_hostnames, $b_fqdns);
+                $oim_all = array_merge($oim_all, $b["oim"]);
+                $wlcg_all = array_merge($wlcg_all, $b["wlcg"]);
             }
             $mesh_parameters = $model->getParameters($test->param_id);
             $mesh_tests[] = array("members"=>$mesh_members, "parameters"=>$mesh_parameters, "description"=>$test->name);
         }
 
         ///////////////////////////////////////////////////////////
+        // load meshconfig mas
+        $mas = $model->getMAs($all_hostnames);
+
+        ///////////////////////////////////////////////////////////
         // generate meshconfig (site groups) for osg sites
         $mesh_orgs = array();
-        $oim_sites = $model->getOIMSites($oim_ids);
+        $oim_sites = $model->getOIMSites($oim_all);
         foreach($oim_sites as $oimsite) {
             $services = array();
             $rgnames = array();
@@ -98,11 +106,17 @@ class PfmeshController extends RgpfController
                 foreach($resource["admins"] as $admin) {
                     $resource_admins[] = array("name"=>$admin->name, "email"=>$admin->primary_email);
                 }
-                $mas = $this->guessMAs($resource["fqdn"], $resource["sids"]);
+
+                //$ma = $this->guessMAs($resource["fqdn"], $resource["sids"]);
+                $ma = array();
+                if(isset($mas[$resource["fqdn"]])) {
+                    $ma = $mas[$resource["fqdn"]];
+                }
+
                 $services[] = array(
                     "administrators"=>$resource_admins, 
                     "addresses"=>array($resource["fqdn"]),
-                    "measurement_archives"=>$mas,
+                    "measurement_archives"=>$ma,
                     "description"=>$resource["name"]);
             }
             $mesh_orgs[] = array(
@@ -126,16 +140,21 @@ class PfmeshController extends RgpfController
 
         ///////////////////////////////////////////////////////////
         // generate meshconfig (site groups) for WLCG sites
-        $wlcg_sites = $model->getWLCGSites($wlcg_ids);
+        $wlcg_sites = $model->getWLCGSites($wlcg_all);
         foreach($wlcg_sites as $wlcgsite) {
             $endpoints = array();
             foreach($wlcgsite["endpoints"] as $end) {
-                $mas = $this->guessMAs($end->hostname, array($end->service_id));
+
+                //$mas = $this->guessMAs($end->hostname, array($end->service_id));
+                $ma = array();
+                if(isset($mas[$end->hostname])) {
+                    $ma = $mas[$end->hostname];
+                }
+
                 $endpoints[] = array(
                     "administrators"=>array(), //no contact for endpoint
                     "addresses"=>array($end->hostname),
-                    "measurement_archive"=>$mas,
-                    //"description"=>$end->primary_key." ROC:".$end->roc_name //??
+                    "measurement_archive"=>$ma,
                     "description"=>$wlcgsite["detail"]->short_name." ".$end->service_type
                 );
             }
@@ -168,6 +187,7 @@ class PfmeshController extends RgpfController
         $this->render("json");
     }
 
+    /*
     private function guessMAs($hostname, $sids) {
         $mas = array();
         foreach($sids as $sid) {
@@ -205,6 +225,7 @@ class PfmeshController extends RgpfController
         }
         return $mas;
     }
+    */
 
     /*
     public function jsonAction()
