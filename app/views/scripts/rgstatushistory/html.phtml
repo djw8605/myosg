@@ -5,6 +5,7 @@
     padding-bottom: 8px;
     background: transparent url(<?=fullbase();?>/images/tooltip_arrow.gif) no-repeat 0px 20px;
     opacity: 0.8;
+    z-index: 20;
 }
 .graph
 {
@@ -22,6 +23,7 @@
 }
 .mark
 {
+    z-index: 10;
     position: absolute;
     width: 30px;
     height: 25px;
@@ -31,17 +33,22 @@
 {
     line-height: 100%;
 }
+.servicename {
+    pointer-events:none;
+    position: absolute;
+    margin-left: 3px;
+    margin-top: 3px;
+    color: #fff;
+    opacity: 0.8;
+}
 .history_graph img.graph
 {
+    border-radius: 3px;
     width: 100%;
     height: 17px; 
 }
-.table td,
-.table th {
-border-top: none;
-}
-.table tr.graph_row:hover {
-background-color: #eee;
+.row-short [class*="span"] {
+min-height: 20px;
 }
 </style>
 
@@ -95,9 +102,13 @@ $(function() {
         $("#history_detail_"+rid+"_"+sid).html("<img src='<?=fullbase()?>/images/loading_animation_small.gif'/> Loading...").load("<?=fullbase()."/".pagename()?>/"+anchor, 
             function() {
                 mark(rid,sid,time);
-                window.scroll(0, $(this).parent().position().top);
+
+                //this doesn't work anymore
+                //window.scroll(0, $(this).parents(".history_detail").position().top);
+
                 $("span[rel='tooltip']").tooltip();
                 convert_time_to_local(this);
+                $(this).parents(".history_detail").slideDown();
             }
         );
     }
@@ -121,7 +132,7 @@ $(function() {
         $("#history_detail_"+rid+"_"+sid)
         .html("<img src='images/loading_animation_small.gif'/> Loading...")
         .load("<?=fullbase()."/".pagename()?>/"+anchor, function() {
-            $(this).slideDown();
+            $(this).parents(".history_detail").slideDown();
             $("span[rel='tooltip']").tooltip();
             convert_time_to_local(this);
         });
@@ -223,36 +234,44 @@ foreach($this->rgs as $rgid=>$rg) {
     echo "</div>";
     //echo $this->ruler;
 
-    echo "<table class=\"table table-rsvhistory\">";
     foreach($rg as $rid=>$resource)
     {
         if(count($this->services[$rid]) == 0) {
-            echo "<tr>";
-            echo "<th width=\"190px\"><div class=\"resource round\">".$resource->name."</div></th><td colspan=2>(No Service)</td>";
-            echo "</tr>";
+            echo "<div class=\"row-fluid row-short\">";
+            echo "<div class=\"span3\">";
+            echo "<div class=\"resource round\">".$resource->name."</div>";
+            echo "</div>";
+            echo "<div class=\"span9\">(No Service)</div>";
+            echo "</div>";//row-fluid
         } else {
             $first = true;
             foreach($this->services[$rid] as $service) {
-                if($first) {
-                    echo "<tr class=\"graph_row\"><th width=\"190px\"><div class=\"resource\">".$resource->name."</div></th>";
-                    $first = false;
-                } else {
-                    echo "<tr class=\"graph_row\"><th></th>";//already shown resource name
-                }
-                echo "<td width=\"130px\">$service->name</td>";
-                echo "<td class=\"history_graph\">";
-                echo "<img data-sid=\"".$service->service_id."\" data-rid=\"$rid\" class=\"graph\" src=\"images/graph_notloaded.png\" data-url=\"history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
-                echo "</td>";
-                echo "</tr>";//close each lines at this point
+                echo "<div class=\"row-fluid row-short\">";
 
+                echo "<div class=\"span3\">";
+                if($first) {
+                    echo "<div class=\"resource\">".$resource->name."</div>";
+                    $first = false;
+                }
+                echo "</div>";
+
+                echo "<div class=\"span9\">";
+                echo "<div class=\"history_graph\">";
+                echo "<span class=\"servicename\">".$service->name."</span>";
+                echo "<img data-sid=\"".$service->service_id."\" data-rid=\"$rid\" class=\"graph\" src=\"images/graph_notloaded.png\" data-url=\"history/graph?resource_id=$rid&amp;&service_id=$service->service_id&amp;start=$this->start_time&amp;end=$this->end_time\"/>";
+                echo "</div>";//history_graph
+                echo "</div>";//span9
+                echo "</div>";//row-fluikd
+
+                echo "<div class=\"row-fluid history_detail hidden\">";
                 //row to store history_detail
-                echo "<tr>";
-                echo "<td colspan=2></td><td><div class=\"history_detail\" id=\"history_detail_".$rid."_".$service->service_id."\"></div></td>"; 
-                echo "</tr>";
+                echo "<div class=\"span9 offset3\">";
+                echo "<div class=\"\" id=\"history_detail_".$rid."_".$service->service_id."\"></div>"; 
+                echo "</div>";//span9
+                echo "</div>";//row-fluid
             }
         }
     }
-    echo "</table>";
 
     echo "</div>";
 }
