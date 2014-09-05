@@ -3,13 +3,11 @@ var fs = require('fs');
 var amqp = require('amqp');
 var xml2js = require('xml2js');
 
-var options = {
-  key: fs.readFileSync('/etc/grid-security/http/key.pem'),
-  cert: fs.readFileSync('/etc/grid-security/http/cert.pem')
-};
-var app = https.createServer(options, handler).listen(12345);
+var config = require('./secrets').config;
+
+var app = https.createServer(config.https_options, handler).listen(config.port);
 var io = require('socket.io').listen(app);
-io.set('log level', 2); //info
+//io.set('log level', 2); //info
 
 function handler(req, res) {
   fs.readFile(__dirname + '/event.html',
@@ -23,13 +21,7 @@ function handler(req, res) {
   });
 }
 
-//connect to amqp
-var connection = amqp.createConnection({ 
-    host: 'event-itb.goc',
-    login: 'myosg',
-    password: 'myosg#checkApple',
-    vhost: '/osg'
-});
+var connection = amqp.createConnection(config.amqp);
 
 function open_exchanges(callback) {
     connection.on('ready', function () {
@@ -103,15 +95,9 @@ io.sockets.on('connection', function (socket) {
                 break;
             }
         }
-        //TODO - remove disconnected client from sockets list
-        /*
-        var idx = clients.indexOf(socket);
-        console.log(idx + " has disconnected");
-        clients.splice(idx, 1);
-        */
+        //TODO - remove disconnected client from sockets list?
     });
 });
 
-
-//TODO - remove client when disconnect
+//TODO - remove client when disconnect?
 
