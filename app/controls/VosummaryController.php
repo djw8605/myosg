@@ -130,6 +130,11 @@ class VosummaryController extends VoController
             //lookup support center
             $vo->sc = $scs[$vo->sc_id][0];
             $this->view->vos[$vo_id] = $vo;
+
+            //parse oasis_repo_urls
+            if(!is_null($vo->oasis_repo_urls)) {
+                $vo->oasis_repo_urls = explode("|", $vo->oasis_repo_urls, -1);
+            }
         }
 
         $this->setpagetitle(self::default_title());

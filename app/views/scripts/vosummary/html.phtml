@@ -207,7 +207,7 @@ foreach($this->vos as $vo_id=>$vo) {
     }
 
     if(isset($_REQUEST["summary_attrs_showoasis"])) {
-        echo "<tr><th>Oasis</th><td>";
+        echo "<tr><th>Oasis Managers</th><td>";
         echo "<table class=\"table table-bordered table-striped\">";
 
         //use oasis flag
@@ -226,16 +226,30 @@ foreach($this->vos as $vo_id=>$vo) {
             echo "<th>Name</th><th>DN</th></tr>";
             foreach($oasis_managers as $manager) {
                 echo "<tr>";
-                echo "<td>".$manager->name."</td>";
-                echo "<td>".$manager->dn."</td>";
+                echo "<td>".htmlsafe($manager->name)."</td>";
+                echo "<td>".htmlsafe($manager->dn)."</td>";
                 echo "</tr>";
             }
         } else {
             echo "<td colspan=\"2\">None</td>";
         }
         echo "</tr>";
-        echo "</table>";//end of striped table
 
+        echo "</table>";//end of striped table
+        echo "</td></tr>";
+
+        //repo urls
+        echo "<tr><th>OASIS Repository URLs</th><td>";
+        $repo_urls = $vo->oasis_repo_urls;
+        if(count($repo_urls) == 0) {
+            echo "<span class=\"muted\">None registered</span>";
+        } else {
+            echo "<ul>";
+            foreach($repo_urls as $url) {
+                echo "<li><a target=\"_blank\" href=\"$url\">".htmlsafe($url)."</a></li>";
+            }
+            echo "</ul>";
+        }
         echo "</td></tr>";
     }
 
