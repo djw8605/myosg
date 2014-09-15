@@ -49,7 +49,26 @@ class MeshConfig
         return $contacts;
     }
 
-    public function getGroupMembers($group_id) {
+    public function getGroupMembers($group_ids) {
+        $ids = explode(",", $group_ids);
+        $all = null;
+        foreach($ids as $id) {
+            if($id == "") continue;
+            //$cache[$group_id] = array("oim"=>$resource_services, "wlcg"=>$wlcg);
+            if(is_null($all)) {
+                $all = $this->getAGroupMembers($id);
+            } else {
+                $new = $this->getAGroupMembers($id);
+                $all = array(
+                    "oim"=>array_merge($all["oim"], $new["oim"]),
+                    "wlcg"=>array_merge($all["wlcg"], $new["wlcg"])
+                );
+            }
+        }
+        return $all;
+    }
+
+    public function getAGroupMembers($group_id) {
         if(is_null($group_id)) return null;
         static $cache = array();
         if(!isset($cache[$group_id])) {
