@@ -64,8 +64,8 @@ class PfmeshController extends RgpfController
         //pull group details / parameters for all tests
         $tests = $model->getTestsByConfigID($mc->id);
         foreach($tests as $test) {
-            $a = $model->getGroupMembers($test->groupa_id);
-            $b = $model->getGroupMembers($test->groupb_id);
+            $a = $model->getGroupMembers($test->groupa_ids);
+            $b = $model->getGroupMembers($test->groupb_ids);
 
             $a_fqdns = $this->pullfqdns($a);
             $b_fqdns = $this->pullfqdns($b);
