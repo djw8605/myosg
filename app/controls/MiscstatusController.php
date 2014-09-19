@@ -30,33 +30,41 @@ class MiscstatusController extends MiscController
         $this->downtimes = $downtime_model->getindex(array("start_time"=>time(), "end_time"=>time()));
 
         $this->view->statuses = array(
-            "Critical"=>array(
-                $this->getStatus(247, "https://twiki.grid.iu.edu/bin/view/Operations/BDIIServiceLevelAgreement"), //BDII
+            "Operational"=>array(
                 $this->getStatus(246, "https://twiki.grid.iu.edu/bin/view/Operations/MyOSGServiceLevelAgreement"),  //MyOSG
-                $this->getStatus(366, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //Oasis stratum 1
-
-            ),
-            "High"=>array(
-
-                $this->getStatus(250, "https://twiki.grid.iu.edu/bin/view/Operations/RSVServiceLevelAgreement"), //RSV collector
-                $this->getStatus(270, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement") //GOC_Software Cache
-            ),
-            "Normal"=>array(
-                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement"), //GOC Glidein                                                                                         
                 $this->getStatus(266, "https://twiki.grid.iu.edu/bin/view/Operations/OIMServiceLevelAgreement"), //OIM
-                $this->getStatus(325, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareRepoServiceLevelAgreement"), //RPM repo                                                                                          
-                $this->getStatus(265, "https://twiki.grid.iu.edu/bin/view/Operations/GOCTicketServiceLevelAgreement"), //GOC Ticket
-                $this->getStatus(344, "https://twiki.grid.iu.edu/bin/view/Operations/VOMSServiceLevelAgreement"), //VOMS                                                                                                      
-                $this->getStatus(255, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Gratia collector
-                $this->getStatus(261, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDisplayServiceLevelAgreement"), //display.grid
-                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //OSG DocDb                                                                                        
-                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage   
-                $this->getStatus(334, "https://twiki.grid.iu.edu/bin/view/Operations/JIRAServiceLevelAgreement"), //JIRA                                                                                                      
+                $this->getStatus(325, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareRepoServiceLevelAgreement"), //RPM repo
+                $this->getStatus(250, "https://twiki.grid.iu.edu/bin/view/Operations/RSVServiceLevelAgreement") //RSV collector
+            ),
+            "Accounting"=>array(
+                $this->getStatus(255, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //Gratia collector
+            ),
+            "Submission"=>array(
+                $this->getStatus(336, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //OSG-XSEDE
+                $this->getStatus(308, "https://twiki.grid.iu.edu/bin/view/Operations/GlideInWMSServiceLevelAgreement") //GOC Glidein
+                //osg-connect goes here
+            ),
+            "File Distribution"=>array(
                 $this->getStatus(364, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //Oasis stratum 0
-                //array("name"=>"WLCG Comparison Reports", "status"=>"UNKNOWN", "url"=>"https://twiki.grid.iu.edu/bin/view/Operations/RSVReportsServiceLevelAgreement"),
-                //$this->getStatus(256, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements"), //BDII ITB
-                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement"), //Twiki 
-                $this->getStatus(336, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //OSG-XSEDE
+                $this->getStatus(366, "https://twiki.grid.iu.edu/bin/view/Operations/ServiceLevelAgreements") //Oasis stratum 1
+                //oasis login goes here
+            ),
+            "User Interface"=>array(
+                $this->getStatus(261, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDisplayServiceLevelAgreement"), //display.grid
+                $this->getStatus(265, "https://twiki.grid.iu.edu/bin/view/Operations/GOCTicketServiceLevelAgreement"), //GOC Ticket
+                $this->getStatus(401, "https://twiki.grid.iu.edu/bin/view/Operations/GOCTicketServiceLevelAgreement") //GratiaWeb
+                //tx goes here
+                //goc FP goes here
+	     ),
+            "Documentation"=>array(
+                $this->getStatus(281, "https://twiki.grid.iu.edu/bin/view/Operations/OSGDocRepoServiceLevelAgreement"), //OSG DocDb         
+                $this->getStatus(280, "https://twiki.grid.iu.edu/bin/view/Operations/OSGWebPageServiceLevelAgreement"), //OSG Homepage   
+                $this->getStatus(334, "https://twiki.grid.iu.edu/bin/view/Operations/JIRAServiceLevelAgreement"), //JIRA             
+                $this->getStatus(197, "https://twiki.grid.iu.edu/bin/view/Operations/TWikiServiceLevelAgreement") //Twiki 
+	    ),
+            "Best Effort"=>array(
+                $this->getStatus(247, "https://twiki.grid.iu.edu/bin/view/Operations/BDIIServiceLevelAgreement"), //BDII
+                $this->getStatus(270, "https://twiki.grid.iu.edu/bin/view/Operations/SoftwareCacheServiceLevelAgreement") //CADist ??
             )
         );
         $this->setpagetitle(self::default_title());
