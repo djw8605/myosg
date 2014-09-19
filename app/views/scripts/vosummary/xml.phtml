@@ -167,11 +167,11 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</Managers>";
     
         echo "<OASISRepoURLs>";
-	if(isset($vo->oasis_repo_urls)) {
-		foreach($vo->oasis_repo_urls as $url) {
-		    echo "<URL>".htmlsafe($url)."</URL>";
-		}
-	}
+        if(isset($vo->oasis_repo_urls)) {
+                foreach($vo->oasis_repo_urls as $url) {
+                    echo "<URL>".htmlsafe($url)."</URL>";
+                }
+        }
         echo "</OASISRepoURLs>";
 
         echo "</OASIS>";
