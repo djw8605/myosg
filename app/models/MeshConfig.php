@@ -235,7 +235,7 @@ class MeshConfig
         foreach($recs as $rec) {
             $mas[$rec->hostname] = json_decode($rec->ma);
         }
-        dlog($mas, "mas");
+        //dlog($mas, "mas");
         return $mas;
 
     }
@@ -245,7 +245,7 @@ class MeshConfig
 
         $oim = db("oim");
         $pkeys = array();
-        dlog($key_fqdns, "key");
+        //dlog($key_fqdns, "key");
         foreach($key_fqdns as $key_fqdn) {
             $pkeys[] = $key_fqdn["primary_key"];
         }
@@ -253,6 +253,9 @@ class MeshConfig
         $sql = "SELECT * FROM wlcg_endpoint WHERE primary_key in (".implode($pkeys, ",").")";
         $endpoints = $oim->fetchAll($sql);
         if(empty($endpoints)) return array();
+
+        //slog($sql);
+        //slog(print_r($endpoints, true));
 
         //get all sites we need
         $site_ids = array();
@@ -263,6 +266,7 @@ class MeshConfig
         $sites = $oim->fetchAll($sql);
         if(empty($sites)) return array();
     
+        //slog($sql);
         //slog(print_r($sites, true));
 
         //now, put everything together site/resource
@@ -273,12 +277,14 @@ class MeshConfig
             foreach($endpoints as $endpoint) {
                 //slog(print_r($endpoint, true));
                 if($endpoint->site_id == $site->primary_key) {
-                    $site_endpoints[$endpoint->site_id] = $endpoint;
+                    $site_endpoints[] = $endpoint;
                 }
             }
             $site_admin = array("email"=>$site->contact_email);
             $org[$site->primary_key] = array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin);
         }
+        
+        slog(print_r($org, true));
 
         return $org;
     }
