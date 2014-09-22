@@ -273,7 +273,7 @@ class MeshConfig
             foreach($endpoints as $endpoint) {
                 //slog(print_r($endpoint, true));
                 if($endpoint->site_id == $site->primary_key) {
-                    $site_endpoints[$endpoint->site_id] = $endpoint;
+                    $site_endpoints[] = $endpoint;
                 }
             }
             $site_admin = array("email"=>$site->contact_email);
