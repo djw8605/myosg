@@ -1,0 +1,16 @@
+<div class="pfmesh">
+<h2><?php echo $this->page_title?></h2>
+<table class="table table-bordered">
+<?php
+foreach($this->configs as $config) {
+    echo "<tr>";
+    echo "<th colspan='2'>".$this->escape($config->desc)."</th>";
+    echo "<td>";
+    $url = fullbase()."/pfmesh/json/name/".$config->name;
+    echo "<a href=\"$url\">$url</a>";
+    echo "</td>";
+    echo "</tr>";
+}
+?>
+</table>
+</div><!-- pfmesh -->

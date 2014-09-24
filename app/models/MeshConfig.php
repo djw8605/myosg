@@ -284,7 +284,7 @@ class MeshConfig
             $org[$site->primary_key] = array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin);
         }
         
-        slog(print_r($org, true));
+        //slog(print_r($org, true));
 
         return $org;
     }

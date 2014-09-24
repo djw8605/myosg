@@ -17,7 +17,7 @@ License.
 
 class PfmeshController extends RgpfController
 {
-    public static function default_title() { return "Perfsonar Mesh Config"; }
+    public static function default_title() { return "Perfsonar Mesh Configurations"; }
     public static function default_url($query) { return ""; }
 
     public function load()
@@ -39,18 +39,27 @@ class PfmeshController extends RgpfController
     }
 
     public function indexAction() {
+        parent::indexAction();
         $model = new MeshConfig();
-        $mc = null;
-        if(isset($_REQUEST["name"])) {
-            $mc = $model->getConfigByName($_REQUEST["name"]);
-        } else {
+        $this->view->configs = $model->getConfigs();
+    }
+
+    public function jsonAction() {
+        $name = $this->getParam("name");
+        if(is_null($name) && isset($_REQUEST["name"])) {
+            $name = $_REQUEST["name"];
+        }
+        if(is_null($name)) {
             message('warning', 'please specify name parameter');
-            $this->_helper->redirector('', 'miscpfmesh');
+            $this->_helper->redirector('', 'pfmesh');
             return;
         }
+
+        $model = new MeshConfig();
+        $mc = $model->getConfigByName($name);
         if(!$mc) { 
             message('warning', 'no such mesh config');
-            $this->_helper->redirector('', 'miscpfmesh');
+            $this->_helper->redirector('', 'pfmesh');
             return;
         }
 

@@ -15,49 +15,17 @@ License.
 
 #################################################################################################*/
 
+//deprecated
+
 class MiscpfmeshController extends MiscController
 {
     public static function default_title() { return "Perfsonar Mesh Configurations"; }
 
     public function indexAction() {
         parent::indexAction();
-        /*
-        $model = new VirtualOrganization();
-        $vos = $model->getindex();
-
-        $model = new VOOwnedResources();
-        $voowners = $model->getindex();
-
-        $resourceservice_model = new ServiceByResourceID();
-        $resource_services = $resourceservice_model->getindex();
-
-        $perfsonar_service_ids = array(
-            config()->perfsonar_band_service_id,
-            config()->perfsonar_late_service_id);
-
-        //pass list of VOs that owns at least 1 resource with pf toolkit
-        $this->view->vos = array();
-        foreach($voowners as $void=>$voowner) {
-            $found = false;
-            foreach($voowner as $voorec) {
-                if(isset($resource_services[$voorec->resource_id])) {
-                    $services = $resource_services[$voorec->resource_id];
-                    foreach($services as $service) {
-                        if(in_array($service->service_id, $perfsonar_service_ids)) {
-                            $found = true;
-                            break;
-                        }
-                    }
-                    if($found) break;
-                }
-            }
-            if($found) {
-                $this->view->vos[$void] = $vos[$void][0];
-            }
-        }
-        */
-
         $model = new MeshConfig();
         $this->view->configs = $model->getConfigs();
+
+        message("this page is depreacted - please use /pfmesh instead");
     }
 }
