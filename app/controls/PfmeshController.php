@@ -44,7 +44,14 @@ class PfmeshController extends RgpfController
         if(isset($_REQUEST["name"])) {
             $mc = $model->getConfigByName($_REQUEST["name"]);
         } else {
-            throw new exception("please set name");
+            message('warning', 'please specify name parameter');
+            $this->_helper->redirector('', 'miscpfmesh');
+            return;
+        }
+        if(!$mc) { 
+            message('warning', 'no such mesh config');
+            $this->_helper->redirector('', 'miscpfmesh');
+            return;
         }
 
         //find mesh config admins
