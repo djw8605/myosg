@@ -199,18 +199,26 @@ class MeshConfig
                     foreach($resources as $resource) {
                         if($resource->resource_group_id == $rg->id) {
                             //finally, iterate through the input rs_ids and enumerate perfonar services under this resource
-                            $sids = array();
-                            $fqdn = null;
+                            //$sids = array();
+                            $admins = $resource_admins[$resource->id];
                             foreach($resource_services as $resource_service) {
                                 if($resource_service["rid"] == $resource->id) {
                                     $fqdn = $resource_service["fqdn"];
+                                    //slog($fqdn);
+                                    //dedupe by $fqdn (not resource id - similar reason for wlcg)
+                                    $site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name);
+                                    /*
                                     if(!in_array($resource_service["sid"], $sids)) {
+                                        slog(print_r($resource_service, true));
                                         $sids[] = $resource_service["sid"];
                                     }
+                                    */
                                 }
                             }
-                            $admins = $resource_admins[$resource->id];
-                            $site_resources[$resource->id] = array("name"=>$resource->name, "fqdn"=>$fqdn, "sids"=>$sids, "admins"=>$admins, "group_name"=>$rg->name);
+                            
+                            //slog($fqdn);
+                            //slog(print_r($sids, true)); 
+                            
                         }
                     }
                 }
@@ -277,10 +285,15 @@ class MeshConfig
             foreach($endpoints as $endpoint) {
                 //slog(print_r($endpoint, true));
                 if($endpoint->site_id == $site->primary_key) {
-                    $site_endpoints[] = $endpoint;
+                    //even though there could be multiple endpoint (with different primary_key)
+                    //with the same hostname with different service type, I need to dedupe by 
+                    //hostname instead of primary key because mesh config are keyed by hostname
+                    //and we can only list each hostname once under /site. 
+                    $site_endpoints[$endpoint->hostname] = $endpoint;
                 }
             }
             $site_admin = array("email"=>$site->contact_email);
+            //slog(print_r(array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin), true));
             $org[$site->primary_key] = array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin);
         }
         

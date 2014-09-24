@@ -85,14 +85,15 @@ class PfmeshController extends RgpfController
 
             $a_fqdns = $this->pullfqdns($a);
             $b_fqdns = $this->pullfqdns($b);
+            $type = strtolower($test->type);
 
             $oim_all = array_merge($oim_all, $a["oim"]);
             $wlcg_all = array_merge($wlcg_all, $a["wlcg"]);
             if($b == null) {
-                $mesh_members = array("members"=>$a_fqdns, "type"=>$test->type);
+                $mesh_members = array("members"=>$a_fqdns, "type"=>$type);
                 $all_hostnames = array_merge($all_hostnames, $a_fqdns);
             } else {
-                $mesh_members = array("a_members"=>$a_fqdns, "b_members"=>$b_fqdns, "type"=>$test->type);
+                $mesh_members = array("a_members"=>$a_fqdns, "b_members"=>$b_fqdns, "type"=>$type);
                 $all_hostnames = array_merge($all_hostnames, $b_fqdns);
                 $oim_all = array_merge($oim_all, $b["oim"]);
                 $wlcg_all = array_merge($wlcg_all, $b["wlcg"]);
@@ -123,7 +124,6 @@ class PfmeshController extends RgpfController
                     $resource_admins[] = array("name"=>$admin->name, "email"=>$admin->primary_email);
                 }
 
-                //$ma = $this->guessMAs($resource["fqdn"], $resource["sids"]);
                 $ma = array();
                 if(isset($mas[$resource["fqdn"]])) {
                     $ma = $mas[$resource["fqdn"]];
@@ -170,7 +170,7 @@ class PfmeshController extends RgpfController
                 $endpoints[] = array(
                     "administrators"=>array(), //no contact for endpoint
                     "addresses"=>array($end->hostname),
-                    "measurement_archive"=>$ma,
+                    "measurement_archives"=>$ma,
                     "description"=>$wlcgsite["detail"]->short_name." ".$end->service_type
                 );
             }
@@ -179,7 +179,7 @@ class PfmeshController extends RgpfController
                 "sites"=>array( //we always have 1 hosts group under each site
                     array(
                         "hosts"=>$endpoints,
-                        "administrators"=>$wlcgsite["admin"], 
+                        "administrators"=>array($wlcgsite["admin"]), 
                         "location"=>array(
                             "longitude"=>$wlcgsite["detail"]->longitude,
                             "latitude"=>$wlcgsite["detail"]->latitude,

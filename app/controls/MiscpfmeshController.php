@@ -22,10 +22,7 @@ class MiscpfmeshController extends MiscController
     public static function default_title() { return "Perfsonar Mesh Configurations"; }
 
     public function indexAction() {
-        parent::indexAction();
-        $model = new MeshConfig();
-        $this->view->configs = $model->getConfigs();
-
         message("this page is depreacted - please use /pfmesh instead");
+        $this->_helper->redirector('', 'pfmesh');
     }
 }
