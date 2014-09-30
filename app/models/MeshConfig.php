@@ -248,6 +248,7 @@ class MeshConfig
 
     }
 
+
     public function getWLCGSites($key_fqdns) {
         if(empty($key_fqdns)) return array();
 
@@ -301,4 +302,66 @@ class MeshConfig
 
         return $org;
     }
+
+    public function getTestsByHost($hostname) {
+        $oim = db("oim");
+        //$sql = "SELECT primary_key FROM wlcg_endpoint WHERE hostname = ".$oim->quote($hostname);
+
+        /*
+        //load by oim resources
+        $gids = array();
+        $sql = "select group_id from mesh_config_oim_member join resource r on r.id = resource_id where r.fqdn = ".$oim->quote($hostname);
+        slog($sql);
+        $recs = $oim->fetchAll($sql);
+        foreach($recs as $rec) {
+            $gids[] = $rec->group_id;
+        }
+
+        //load oim by resource/service[endpoint[]
+        $sql = "select group_id from mesh_config_oim_member m join resource r on r.id = m.resource_id join resource_service_detail d on d.resource_id = m.resource_id and d.service_id = m.service_id where d.`key` = 'endpoint' and d.value = ".$oim->quote($hostname);
+        slog($sql);
+        $recs = $oim->fetchAll($sql);
+        foreach($recs as $rec) {
+            $gid = $rec->group_id;
+            if(!in_array($gid, $gids)) {
+                $gids[] = $gid;
+            }
+        }
+        */
+        //$sql = "CREATE TEMPORARY TABLE oim_hostname (select id,d.service_id,ifnull(d.value,fqdn) as hostname from resource left join resource_service_detail d on d.resource_id = id and d.`key`='endpoint')";
+
+        $sql = "select * from mesh_config_oim_member m join view_oim_hostname h on h.id = resource_id and h.service_id = m.service_id where hostname = ".$oim->quote($hostname);
+        //slog($sql);
+        $recs = $oim->fetchAll($sql);
+        foreach($recs as $rec) {
+            $gids[] = $rec->group_id;
+        }
+
+        //load by wlcg hostname
+        $sql = "select group_id from mesh_config_wlcg_member where primary_key in (select primary_key from wlcg_endpoint where hostname = ".$oim->quote($hostname).");";
+        $recs = $oim->fetchAll($sql);
+        foreach($recs as $rec) {
+            $gid = $rec->group_id;
+            if(!in_array($gid, $gids)) {
+                $gids[] = $gid;
+            }
+        }
+
+        //load tests for each groups
+        if(count($gids) == 0) {
+            return array();
+        }
+        $in = "";
+        //slog(print_r($gids, true));
+        foreach($gids as $gid) {
+            if($in != "") $in .= " or ";
+            $pattern = "regexp ('(,$gid|^$gid),')";
+            $in .= "groupa_ids $pattern or groupb_ids $pattern";
+        }
+        $sql = "select * from mesh_config_test where $in";
+        slog($sql);
+        return $oim->fetchAll($sql);
+    }
 }
+
+

@@ -530,3 +530,7 @@ div.rank-tertiary
 {
 background-image:url(../images/star_green.png);
 }
+
+.pfmesh .all {
+background-color: #eee;
+}

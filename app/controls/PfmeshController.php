@@ -72,13 +72,24 @@ class PfmeshController extends RgpfController
             }
         }
 
+        $tests = $model->getTestsByConfigID($mc->id);
+        $data = $this->generateMeshConfig($tests);
+        $data["administrators"] = $mesh_admins;
+        $data["description"] = $mc->desc;
+        $this->view->data = $data;
+        $this->render("json");
+    }
+
+    function generateMeshConfig($tests) {
+
+        $model = new MeshConfig();
+
         $oim_all = array();
         $wlcg_all = array();
         $mesh_tests = array();
         $all_hostnames = array();
 
         //pull group details / parameters for all tests
-        $tests = $model->getTestsByConfigID($mc->id);
         foreach($tests as $test) {
             $a = $model->getGroupMembers($test->groupa_ids);
             $b = $model->getGroupMembers($test->groupb_ids);
@@ -194,12 +205,41 @@ class PfmeshController extends RgpfController
             );
         }
 
-        $this->view->data = array(
-            "administrators"=>$mesh_admins, 
+        return array(
             "organizations"=>$mesh_orgs, 
-            "tests"=>$mesh_tests,
-            "description"=>$mc->desc
+            "tests"=>$mesh_tests
         );
+    }
+
+    public function mineAction() {
+        $hostname = $this->getParam("hostname");
+        if(is_null($hostname)) {
+            //REMOTE_HOST doesn't get set for somereason..
+            //$hostname = $_SERVER["REMOTE_HOST"];
+
+            message('warning', 'please specify hostname /pfmesh/mine/hostname/<yourhostname>');
+            $this->_helper->redirector('', 'pfmesh');
+            return;
+        }
+
+        //find all host groups that specified hostname is in
+        $model = new MeshConfig();
+        $tests = $model->getTestsByHost($hostname);
+        $data = $this->generateMeshConfig($tests);
+        //$data["administrators"] = $mesh_admins;
+        $data["description"] = "Mesh config with all test pertaining to $hostname";
+        $this->view->data = $data;
+        $this->render("json");
+    }
+
+    public function allAction() {
+        $includes = array();
+        $model = new MeshConfig();
+        $configs = $model->getConfigs();
+        foreach($configs as $config) {
+            $includes[] = fullbase()."/pfmesh/json/name/".$config->name;
+        }
+        $this->view->data = array("include"=>$includes);
         $this->render("json");
     }
 

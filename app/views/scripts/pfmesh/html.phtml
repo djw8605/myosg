@@ -1,10 +1,20 @@
 <div class="pfmesh">
 <h2><?php echo $this->page_title?></h2>
+
+<div class="well">
+    <legend>Host Specific Config</legend>
+    <p>Please use following URL to generate mesh config with all tests with your host as endpoints.</p>
+    <?php 
+    $url = fullbase()."/pfmesh/mine"; 
+    echo "<a href=\"$url\">$url</a>";
+    ?>
+</div>
+
 <table class="table table-bordered">
 <?php
 foreach($this->configs as $config) {
     echo "<tr>";
-    echo "<th colspan='2'>".$this->escape($config->desc)."</th>";
+    echo "<th>".$this->escape($config->desc)."</th>";
     echo "<td>";
     $url = fullbase()."/pfmesh/json/name/".$config->name;
     echo "<a href=\"$url\">$url</a>";
@@ -12,5 +22,14 @@ foreach($this->configs as $config) {
     echo "</tr>";
 }
 ?>
+
+<tr class="all">
+<?php 
+$url = fullbase()."/pfmesh/all"; 
+echo "<th>All Mesh config</th>";
+echo "<td><a href=\"$url\">$url</a></td>";
+?>
+</tr>
 </table>
+
 </div><!-- pfmesh -->
