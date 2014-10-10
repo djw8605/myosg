@@ -240,7 +240,44 @@ class common_config
                 "session_count"=>"18000",
             )
         );
-       
+
+        //mesh config redirection matrix
+        $this->mesh_redirects = array(
+            "v33"=>array(
+                "ca-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-ca-all.json",
+                "de-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-de-all.json",
+                "es-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-es-all.json",
+                "fr-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-fr-all.json",
+                "it-atlas"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-it-atlas.json",
+                "it-cms"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-it-cms.json",
+                "lhcone-all"=>  "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-lhcone-all.json",
+                "nd-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-nd-all.json",
+                "opn-all"=>     "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-opn-all.json",
+                "ru-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-ru-all.json",
+                "tw-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-tw-all.json",
+                "uk-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-uk-all.json",
+                "us-atlas"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-us-atlas.json",
+                "us-cms"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-us-cms.json",
+                "wlcg-all"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-wlcg-all.json"
+            ),
+            "v34"=>array(
+                "ca-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-ca-all.json.v34",
+                "de-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-de-all.json.v34",
+                "es-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-es-all.json.v34",
+                "fr-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-fr-all.json.v34",
+                "it-atlas"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-it-atlas.json.v34",
+                "it-cms"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-it-cms.json.v34",
+                "lhcone-all"=>  "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-lhcone-all.json.v34",
+                "nd-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-nd-all.json.v34",
+                "opn-all"=>     "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-opn-all.json.v34",
+                "ru-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-ru-all.json.v34",
+                "tw-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-tw-all.json.v34",
+                "uk-all"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-uk-all.json.v34",
+                "us-atlas"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-us-atlas.json.v34",
+                "us-cms"=>      "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-us-cms.json.v34",
+                "wlcg-all"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-wlcg-all.json.v34"
+             )
+        );
     }
     function getCacheDir() {
         return "/tmp";

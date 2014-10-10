@@ -1,23 +1,31 @@
 <div class="pfmesh">
 <h2><?php echo $this->page_title?></h2>
 
+<p class="alert">This page is still under development. Please contact GOC for more information.</p>
+
 <div class="well">
     <legend>Host Specific Config</legend>
     <p>Please use following URL to generate mesh config with all tests with your host as endpoints.</p>
     <?php 
-    $url = fullbase()."/pfmesh/mine"; 
+    $url = fullbase()."/pfmesh/mine/hostname/"; 
     echo "<a href=\"$url\">$url</a>";
     ?>
 </div>
 
 <table class="table table-bordered">
+<tr><th></th><th>v3.3</th><th>v3.4</th></tr>
 <?php
 foreach($this->configs as $config) {
     echo "<tr>";
     echo "<th>".$this->escape($config->desc)."</th>";
-    echo "<td>";
     $url = fullbase()."/pfmesh/json/name/".$config->name;
-    echo "<a href=\"$url\">$url</a>";
+    $url_33 = "$url/version/v33";
+    $url_34 = "$url/version/v34";
+    echo "<td>";
+    echo "<a href=\"$url_33\">$url_33</a>";
+    echo "</td>";
+    echo "<td>";
+    echo "<a href=\"$url_34\">$url_34</a>";
     echo "</td>";
     echo "</tr>";
 }
@@ -26,8 +34,11 @@ foreach($this->configs as $config) {
 <tr class="all">
 <?php 
 $url = fullbase()."/pfmesh/all"; 
+$url_33 = "$url/version/v33";
+$url_34 = "$url/version/v34";
 echo "<th>All Mesh config</th>";
-echo "<td><a href=\"$url\">$url</a></td>";
+echo "<td><a href=\"$url_33\">$url_33</a></td>";
+echo "<td><a href=\"$url_34\">$url_34</a></td>";
 ?>
 </tr>
 </table>

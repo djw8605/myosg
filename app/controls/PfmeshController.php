@@ -45,6 +45,8 @@ class PfmeshController extends RgpfController
     }
 
     public function jsonAction() {
+
+        //like "us-atas", "us-cms"
         $name = $this->getParam("name");
         if(is_null($name) && isset($_REQUEST["name"])) {
             $name = $_REQUEST["name"];
@@ -52,6 +54,35 @@ class PfmeshController extends RgpfController
         if(is_null($name)) {
             message('warning', 'please specify name parameter');
             $this->_helper->redirector('', 'pfmesh');
+            return;
+        }
+
+        //either v33 or v34 (default to v34)
+        $version = $this->getParam("version");
+        if(is_null($version) && isset($_REQUEST["version"])) {
+            $version = $_REQUEST["version"];
+        }
+        if(is_null($version)) {
+            $version = "v34";
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+        // temporary redirection to various cern hosted json until 
+        if(!isset($_REQUEST["new"])) { //this is for testing *new* auto generated host instead
+            if(!isset(config()->mesh_redirects[$version])) {
+                message('warning', 'unknown version!');
+                $this->_helper->redirector('', 'pfmesh');
+                return;
+            }
+            $redirects = config()->mesh_redirects[$version];
+            if(!isset($redirects[$name])) {
+                message('warning', 'unknown mesh config name for wlcg redirection.');
+                $this->_helper->redirector('', 'pfmesh');
+                return;
+            }
+            $url = $redirects[$name];
+            header("HTTP/1.1 307 Temporary Redirect");
+            header("Location: $url");
             return;
         }
 
@@ -235,9 +266,19 @@ class PfmeshController extends RgpfController
     public function allAction() {
         $includes = array();
         $model = new MeshConfig();
+
+        //either v33 or v34 (default to v34)
+        $version = $this->getParam("version");
+        if(is_null($version) && isset($_REQUEST["version"])) {
+            $version = $_REQUEST["version"];
+        }
+        if(is_null($version)) {
+            $version = "v34";
+        }
+
         $configs = $model->getConfigs();
         foreach($configs as $config) {
-            $includes[] = fullbase()."/pfmesh/json/name/".$config->name;
+            $includes[] = fullbase()."/pfmesh/json/name/".$config->name."/version/$version";
         }
         $this->view->data = array("include"=>$includes);
         $this->render("json");
