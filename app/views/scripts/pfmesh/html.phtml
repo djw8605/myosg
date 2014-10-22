@@ -20,7 +20,8 @@ foreach($this->configs as $config) {
     echo "<th>".$this->escape($config->desc)."</th>";
     $url = fullbase()."/pfmesh/json/name/".$config->name;
     $url_33 = "$url/version/v33";
-    $url_34 = "$url/version/v34";
+    //$url_34 = "$url/version/v34";
+    $url_34 = $url; //let 34 use default url
     echo "<td>";
     echo "<a href=\"$url_33\">$url_33</a>";
     echo "</td>";
