@@ -62,10 +62,25 @@ echo "<br><p><a class=\"btn\" href=\"http://www.google.com/cse?cx=01675269527517
 function show_resource($rec) {
     echo "<p class=\"btn-group pull-right\">";
     echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/resourceedit?id=".$rec->id."\">Edit OIM Detail</a>"; 
-    echo "<a class=\"btn btn-small\" href=\"https://ticket.grid.iu.edu/goc/submit?resource_issue_check=on&resource[".$rec->id."]=on\">Submit Ticket</a>";
+
+    $attr = "";
+    if($rec->disable || !$rec->active) {
+        $attr .= "disabled";
+    } else {
+        $url = "https://ticket.grid.iu.edu/goc/submit?resource_issue_check=on&resource[".$rec->id."]=on";
+        $onclick = "document.location='$url'";
+    }
+    echo "<button class=\"btn btn-small\" $attr onclick=\"$onclick\">Submit Ticket</button>";
     echo "</p>";
 
-    echo "<p><span class=\"tag resource\">Resource</span> ".$rec->v1." <code>".$rec->fqdn."</code></p>";
+    echo "<p><span class=\"tag resource\">Resource</span> ".$rec->v1." <code>".$rec->fqdn."</code>";
+    if($rec->disable) {
+        echo "&nbsp;<span class=\"label\">Disabled</span>";
+    }
+    if(!$rec->active) {
+        echo "&nbsp;<span class=\"label\">Inactive</span>";
+    }
+    echo "</p>";
 
     echo "<div class=\"row-fluid detail\">";
     echo "<div class=\"span8\">";
