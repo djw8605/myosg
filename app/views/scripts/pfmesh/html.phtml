@@ -4,29 +4,30 @@
 <p class="alert">This page is still under development. Please contact GOC for more information.</p>
 
 <div class="well">
-    <legend>Host Specific Config</legend>
-    <p>Please use following URL to generate mesh config with all tests with your host as endpoints.</p>
-    <?php 
-    $url = fullbase()."/pfmesh/mine/hostname/"; 
-    echo "<a href=\"$url\">$url</a>";
-    ?>
+    <legend>Auth Mesh Config</legend>
+    <p>Please enter the hostname of your perfsonar toolkit instance to generate a mesh config containing all tests that uses your host as endpoints.</p>
+    <div class="input-append">
+        <input type="text" id="auto-hostname" placeholder="perfsonar-bw.grid.iu.edu"/>
+        <button class="btn" id="auto-hostname-gen">Generate</button>
+    </div>
 </div>
 
+<script>
+$(function() {
+    $("#auto-hostname-gen").click(function() {
+        document.location = "<?php echo fullbase()?>/pfmesh/mine/hostname/"+$("#auto-hostname").val();
+    });
+});
+</script>
+
 <table class="table table-bordered">
-<tr><th></th><th>v3.3</th><th>v3.4</th></tr>
 <?php
 foreach($this->configs as $config) {
     echo "<tr>";
     echo "<th>".$this->escape($config->desc)."</th>";
     $url = fullbase()."/pfmesh/json/name/".$config->name;
-    $url_33 = "$url/version/v33";
-    //$url_34 = "$url/version/v34";
-    $url_34 = $url; //let 34 use default url
     echo "<td>";
-    echo "<a href=\"$url_33\">$url_33</a>";
-    echo "</td>";
-    echo "<td>";
-    echo "<a href=\"$url_34\">$url_34</a>";
+    echo "<a href=\"$url\">$url</a>";
     echo "</td>";
     echo "</tr>";
 }
@@ -35,11 +36,9 @@ foreach($this->configs as $config) {
 <tr class="all">
 <?php 
 $url = fullbase()."/pfmesh/all"; 
-$url_33 = "$url/version/v33";
-$url_34 = "$url/version/v34";
+//$url_33 = "$url/version/v33";
 echo "<th>All Mesh config</th>";
-echo "<td><a href=\"$url_33\">$url_33</a></td>";
-echo "<td><a href=\"$url_34\">$url_34</a></td>";
+echo "<td><a href=\"$url\">$url</a></td>";
 ?>
 </tr>
 </table>

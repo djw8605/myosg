@@ -125,6 +125,15 @@ class PfmeshController extends RgpfController
             $a = $model->getGroupMembers($test->groupa_ids);
             $b = $model->getGroupMembers($test->groupb_ids);
 
+            /*
+            slog("test------------------------------------------");
+            slog(print_r($test, true));
+            slog("a group---------------------------");
+            slog(print_r($a["oim"], true));
+            slog("b group---------------------------");
+            slog(print_r($b["oim"], true));
+            */
+
             $a_fqdns = $this->pullfqdns($a);
             $b_fqdns = $this->pullfqdns($b);
             $type = strtolower($test->type);
@@ -272,13 +281,14 @@ class PfmeshController extends RgpfController
         if(is_null($version) && isset($_REQUEST["version"])) {
             $version = $_REQUEST["version"];
         }
-        if(is_null($version)) {
-            $version = "v34";
-        }
 
         $configs = $model->getConfigs();
         foreach($configs as $config) {
-            $includes[] = fullbase()."/pfmesh/json/name/".$config->name."/version/$version";
+            $url = fullbase()."/pfmesh/json/name/".$config->name;
+            if(!is_null($version)) {
+                $url.="/version/$version";
+            }
+            $includes[] = $url;
         }
         $this->view->data = array("include"=>$includes);
         $this->render("json");
