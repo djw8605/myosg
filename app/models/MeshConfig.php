@@ -201,12 +201,16 @@ class MeshConfig
                             //finally, iterate through the input rs_ids and enumerate perfonar services under this resource
                             //$sids = array();
                             $admins = $resource_admins[$resource->id];
+                            $fqdn = null;
+                            $sids = array();
                             foreach($resource_services as $resource_service) {
                                 if($resource_service["rid"] == $resource->id) {
                                     $fqdn = $resource_service["fqdn"];
-                                    //slog($fqdn);
+                                    if(!in_array($resource_service["sid"], $sids)) {
+                                        $sids[] = $resource_service["sid"];
+                                    }
                                     //dedupe by $fqdn (not resource id - similar reason for wlcg)
-                                    $site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name);
+                                    //$site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name);
                                     /*
                                     if(!in_array($resource_service["sid"], $sids)) {
                                         slog(print_r($resource_service, true));
@@ -215,10 +219,12 @@ class MeshConfig
                                     */
                                 }
                             }
-                            
-                            //slog($fqdn);
-                            //slog(print_r($sids, true)); 
-                            
+                            //it should never be null (right?)
+                            //if(is_null($fqdn)) {
+                            //    slog("didn't find any fqdn for rgid:".$rg->id);
+                            //} else {
+                            $site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name, "services"=>$sids);
+                            //}
                         }
                     }
                 }
