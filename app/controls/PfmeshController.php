@@ -111,6 +111,26 @@ class PfmeshController extends RgpfController
         $this->render("json");
     }
 
+    function getDefaultMAUrls($fqdn, $sids) {
+        $mas = array();
+        slog("constructing default MA for $fqdn");
+        //slog(print_r($sids, true));
+        foreach($sids as $sid) {
+            switch($sid) {
+            case 130:
+                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/bwctl");
+                break;
+            case 131:
+                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/owamp");
+                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/traceroute");
+                break;
+            default:   
+                elog("unknown sid:$sid while constructing default ma for $fqdn");
+            }
+        }
+        return $mas;
+    }
+
     function generateMeshConfig($tests) {
 
         $model = new MeshConfig();
@@ -178,6 +198,8 @@ class PfmeshController extends RgpfController
                 $ma = array();
                 if(isset($mas[$resource["fqdn"]])) {
                     $ma = $mas[$resource["fqdn"]];
+                } else {
+                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["services"]);
                 }
 
                 $services[] = array(
@@ -216,6 +238,15 @@ class PfmeshController extends RgpfController
                 $ma = array();
                 if(isset($mas[$end->hostname])) {
                     $ma = $mas[$end->hostname];
+                } else {
+                    $sids = array();
+                    switch($end->service_type) {
+                    case "net.perfSONAR.Bandwidth": $sids[] = 130; break;
+                    case "net.perfSONAR.Latency": $sids[] = 131; break;
+                    default:
+                        elog("unknown wlcg service type:".$end->service_type." for ".$resource["fqdn"]);
+                    }
+                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $sids);
                 }
 
                 $endpoints[] = array(
