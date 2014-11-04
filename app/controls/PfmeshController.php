@@ -315,11 +315,14 @@ class PfmeshController extends RgpfController
 
         $configs = $model->getConfigs();
         foreach($configs as $config) {
-            if(isset($_REQUEST["new"])) { //this is for testing *new* auto generated host instead
-                $includes[] = fullbase()."/pfmesh/json/name/".$config->name."/version/$version?new";
-            } else {
-                $includes[] = fullbase()."/pfmesh/json/name/".$config->name."/version/$version";
+            $url = fullbase()."/pfmesh/json/name/".$config->name;
+            if(!is_null($version)) {
+                $url.="/version/$version";
             }
+            if(isset($_REQUEST["new"])) {
+                $url.="?new";
+            }
+            $includes[] = $url;
         }
         $this->view->data = array("include"=>$includes);
         $this->render("json");
