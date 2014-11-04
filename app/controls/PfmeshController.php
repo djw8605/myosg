@@ -319,6 +319,9 @@ class PfmeshController extends RgpfController
             if(!is_null($version)) {
                 $url.="/version/$version";
             }
+	    if(isset($_REQUEST["new"])) {
+                $url.="?new";
+	    }
             $includes[] = $url;
         }
         $this->view->data = array("include"=>$includes);
