@@ -82,4 +82,4 @@ $frontController = Zend_Controller_Front::getInstance();
 $frontController->setControllerDirectory('app/controls'); 
 $frontController->dispatch(); 
 
-slog("-- end  --------------------------------------------------------------");
+//slog("-- end  --------------------------------------------------------------");
