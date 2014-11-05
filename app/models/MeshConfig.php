@@ -33,7 +33,6 @@ class MeshConfig
     {
         $oim = db("oim");
         $sql = "SELECT * FROM mesh_config_test WHERE mesh_config_id = $config_id AND disable = 0";
-        //slog($sql);
         return $oim->fetchAll($sql);
     }
     public function getContacts($config_id)
@@ -54,7 +53,6 @@ class MeshConfig
         $all = null;
         foreach($ids as $id) {
             if($id == "") continue;
-            //$cache[$group_id] = array("oim"=>$resource_services, "wlcg"=>$wlcg);
             if(is_null($all)) {
                 $all = $this->getAGroupMembers($id);
             } else {
@@ -74,43 +72,30 @@ class MeshConfig
         if(!isset($cache[$group_id])) {
             $oim = db("oim");
 
-            //load oim members
+            /*
             $sql = "SELECT * FROM mesh_config_oim_member WHERE group_id = $group_id";
-            $resource_services = array();
             $resource_ids = array();
             foreach($oim->fetchAll($sql) as $member) {
-                $resource_services[] = array("rid"=>$member->resource_id, "sid"=>$member->service_id, "fqdn"=>null);
                 $resource_ids[] = $member->resource_id;
             }
-            if(!empty($resource_services)) {
-                //load overrides
-                $oim_overrides = array();
-                $sql = "SELECT *, r.fqdn FROM resource_service_detail JOIN resource r on resource_id = r.id WHERE resource_id IN (".implode($resource_ids, ",").") AND `key` = 'endpoint'";
-                foreach($oim->fetchAll($sql) as $rd) {
-                    $oim_overrides[$rd->resource_id.":".$rd->service_id] = $rd->value;
-                }
 
-                //load all resource fqdns
-                $sql = "SELECT id, fqdn FROM resource WHERE id IN (".implode($resource_ids, ",").")";
-                $resource_fqdns = array();
-                foreach($oim->fetchAll($sql) as $resource) {
-                    $resource_fqdns[$resource->id] = $resource->fqdn;
-                }
-
-                //store overridden fqdns to $resource_services 
-                foreach($resource_services as &$resource_service) {
-                    $rid = $resource_service["rid"];
-                    $sid = $resource_service["sid"];
-                    $key = "$rid:$sid";
-                    if(isset($oim_overrides[$key])) {
-                        $resource_service["fqdn"] = $oim_overrides[$key]; //use override endpoint
-                    } else {
-                        $resource_service["fqdn"] = $resource_fqdns[$rid]; //use resource fqdn
-                    }
+            //load resource_services from view_oim_hostname (override preapplied)
+            $resource_services = array();
+            if(!empty($resource_ids)) {
+                $sql = "SELECT id, service_id, hostname FROM view_oim_hostname WHERE id IN (".implode($resource_ids, ",").")";
+                foreach($oim->fetchAll($sql) as $rs) {
+                    $resource_services[] = array("rid"=>$rs->id, "sid"=>$rs->service_id, "fqdn"=>$rs->hostname);
                 }
             }
+            */
+            //load oim members (use join because I want to key by both rid and sid)
+            $sql = "select id,m.service_id,hostname,name from mesh_config_oim_member m join view_oim_hostname v on resource_id = v.id and m.service_id = v.service_id where group_id = $group_id";
+            $resource_services = array();
+            foreach($oim->fetchAll($sql) as $rs) {
+                $resource_services[] = array("rid"=>$rs->id, "sid"=>$rs->service_id, "fqdn"=>$rs->hostname);
+            }
 
-            //load wlcg members
+            //load wlcg members (use join like oim?)
             $sql = "SELECT * FROM mesh_config_wlcg_member WHERE group_id = $group_id";
             $wlcg_ids = array();
             foreach($oim->fetchAll($sql) as $member) {
@@ -121,12 +106,11 @@ class MeshConfig
             if(!empty($wlcg_ids)) {
                 $sql = "SELECT primary_key,hostname FROM wlcg_endpoint WHERE primary_key IN (".implode($wlcg_ids, ",").")";
                 foreach($oim->fetchAll($sql) as $resource) {
-                    $key = $oim->quote($resource->primary_key);
+                    $key = $oim->quote($resource->primary_key);//why did I do this?
                     $wlcg[] = array("primary_key"=>$key, "fqdn"=>$resource->hostname);
                 }
             }
 
-            //load wlcg members
             $cache[$group_id] = array("oim"=>$resource_services, "wlcg"=>$wlcg);
         }
         return $cache[$group_id];
@@ -158,7 +142,8 @@ class MeshConfig
                 $rids[] = $rid;
             }
         }
-        $sql = "SELECT id, name, resource_group_id FROM resource WHERE id in (".implode($rids, ",").")";
+        //$sql = "SELECT id, name, resource_group_id FROM resource WHERE id in (".implode($rids, ",").")";
+        $sql = "SELECT * FROM view_oim_hostname WHERE id in (".implode($rids, ",").")";
         $resources = $oim->fetchAll($sql);
         if(empty($resources)) return array();
 
@@ -198,33 +183,26 @@ class MeshConfig
                     //look for all resource under this rg
                     foreach($resources as $resource) {
                         if($resource->resource_group_id == $rg->id) {
-                            //finally, iterate through the input rs_ids and enumerate perfonar services under this resource
-                            //$sids = array();
-                            $admins = $resource_admins[$resource->id];
-                            $fqdn = null;
-                            $sids = array();
+                            //don't include if client didn't request this rid/sid pair
                             foreach($resource_services as $resource_service) {
-                                if($resource_service["rid"] == $resource->id) {
-                                    $fqdn = $resource_service["fqdn"];
-                                    if(!in_array($resource_service["sid"], $sids)) {
-                                        $sids[] = $resource_service["sid"];
+                                if($resource_service["rid"] == $resource->id && $resource_service["sid"] == $resource->service_id) {
+                                    //found..
+                                    if(isset($site_resources[$resource->hostname])) {
+                                        //TODO. this could(?) happen if there are 2 separate service registration for identical hostname.. 
+                                        //we should probably merge admins, and sid, but keep the name/group_name the same
+                                        elog($resource->hostname." already exists - need to merge");
+                                    } else {
+                                        $site_resources[$resource->hostname] = array(
+                                            "name"=>$resource->name, 
+                                            "fqdn"=>$resource->hostname, 
+                                            "sids"=>array($resource->service_id),
+                                            "admins"=>$resource_admins[$resource->id],
+                                            "group_name"=>$rg->name 
+                                        );
                                     }
-                                    //dedupe by $fqdn (not resource id - similar reason for wlcg)
-                                    //$site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name);
-                                    /*
-                                    if(!in_array($resource_service["sid"], $sids)) {
-                                        slog(print_r($resource_service, true));
-                                        $sids[] = $resource_service["sid"];
-                                    }
-                                    */
+                                    break;
                                 }
                             }
-                            //it should never be null (right?)
-                            //if(is_null($fqdn)) {
-                            //    slog("didn't find any fqdn for rgid:".$rg->id);
-                            //} else {
-                            $site_resources[$fqdn] = array("name"=>$resource->name, "fqdn"=>$fqdn, "admins"=>$admins, "group_name"=>$rg->name, "services"=>$sids);
-                            //}
                         }
                     }
                 }
@@ -254,7 +232,6 @@ class MeshConfig
 
     }
 
-
     public function getWLCGSites($key_fqdns) {
         if(empty($key_fqdns)) return array();
 
@@ -269,9 +246,6 @@ class MeshConfig
         $endpoints = $oim->fetchAll($sql);
         if(empty($endpoints)) return array();
 
-        //slog($sql);
-        //slog(print_r($endpoints, true));
-
         //get all sites we need
         $site_ids = array();
         foreach($endpoints as $endpoint) {
@@ -281,63 +255,49 @@ class MeshConfig
         $sites = $oim->fetchAll($sql);
         if(empty($sites)) return array();
     
-        //slog($sql);
-        //slog(print_r($sites, true));
-
         //now, put everything together site/resource
         $org = array();
         foreach($sites as $site) {
             //look for all resources under this site
             $site_endpoints = array();
             foreach($endpoints as $endpoint) {
-                //slog(print_r($endpoint, true));
                 if($endpoint->site_id == $site->primary_key) {
+
+                    //convert service_type to array of sid
+                    $sid = null;
+                    switch($endpoint->service_type) {
+                    case "net.perfSONAR.Bandwidth": $sid = 130; break;
+                    case "net.perfSONAR.Latency": $sid = 131; break;
+                    default:    
+                        elog("unknown wlcg endpoint service type :".$endpoint->service_type);
+                    }
+                    $endpoint->sids = array($sid);
+                    
                     //even though there could be multiple endpoint (with different primary_key)
                     //with the same hostname with different service type, I need to dedupe by 
                     //hostname instead of primary key because mesh config are keyed by hostname
                     //and we can only list each hostname once under /site. 
-                    $site_endpoints[$endpoint->hostname] = $endpoint;
+
+                    if(isset($site_endpoints[$endpoint->hostname])) {
+                        //merge sid
+                        $current = $site_endpoints[$endpoint->hostname];
+                        $current->sids = array_merge($current->sids, $endpoint->sids);
+                        $current->service_type .= " / ".$endpoint->service_type;
+                    } else {
+                        $site_endpoints[$endpoint->hostname] = $endpoint;
+                    }
                 }
             }
+
             $site_admin = array("email"=>$site->contact_email);
-            //slog(print_r(array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin), true));
             $org[$site->primary_key] = array("detail"=>$site, "endpoints"=>$site_endpoints, "admin"=>$site_admin);
         }
-        
-        //slog(print_r($org, true));
-
         return $org;
     }
 
     public function getTestsByHost($hostname) {
         $oim = db("oim");
-        //$sql = "SELECT primary_key FROM wlcg_endpoint WHERE hostname = ".$oim->quote($hostname);
-
-        /*
-        //load by oim resources
-        $gids = array();
-        $sql = "select group_id from mesh_config_oim_member join resource r on r.id = resource_id where r.fqdn = ".$oim->quote($hostname);
-        slog($sql);
-        $recs = $oim->fetchAll($sql);
-        foreach($recs as $rec) {
-            $gids[] = $rec->group_id;
-        }
-
-        //load oim by resource/service[endpoint[]
-        $sql = "select group_id from mesh_config_oim_member m join resource r on r.id = m.resource_id join resource_service_detail d on d.resource_id = m.resource_id and d.service_id = m.service_id where d.`key` = 'endpoint' and d.value = ".$oim->quote($hostname);
-        slog($sql);
-        $recs = $oim->fetchAll($sql);
-        foreach($recs as $rec) {
-            $gid = $rec->group_id;
-            if(!in_array($gid, $gids)) {
-                $gids[] = $gid;
-            }
-        }
-        */
-        //$sql = "CREATE TEMPORARY TABLE oim_hostname (select id,d.service_id,ifnull(d.value,fqdn) as hostname from resource left join resource_service_detail d on d.resource_id = id and d.`key`='endpoint')";
-
-        $sql = "select * from mesh_config_oim_member m join view_oim_hostname h on h.id = resource_id and h.service_id = m.service_id where hostname = ".$oim->quote($hostname);
-        //slog($sql);
+        $sql = "select group_id from mesh_config_oim_member m join view_oim_hostname h on h.id = resource_id and h.service_id = m.service_id where hostname = ".$oim->quote($hostname);
         $recs = $oim->fetchAll($sql);
         foreach($recs as $rec) {
             $gids[] = $rec->group_id;
@@ -358,14 +318,12 @@ class MeshConfig
             return array();
         }
         $in = "";
-        //slog(print_r($gids, true));
         foreach($gids as $gid) {
             if($in != "") $in .= " or ";
             $pattern = "regexp ('(,$gid|^$gid),')";
             $in .= "groupa_ids $pattern or groupb_ids $pattern";
         }
         $sql = "select * from mesh_config_test where $in";
-        slog($sql);
         return $oim->fetchAll($sql);
     }
 }

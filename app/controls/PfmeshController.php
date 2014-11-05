@@ -111,10 +111,9 @@ class PfmeshController extends RgpfController
         $this->render("json");
     }
 
+    //some endpoint doesn't allow us to crawl (firewall?) so we need to guess what their endpoints are.
     function getDefaultMAUrls($fqdn, $sids) {
         $mas = array();
-        slog("constructing default MA for $fqdn");
-        //slog(print_r($sids, true));
         foreach($sids as $sid) {
             switch($sid) {
             case 130:
@@ -144,15 +143,6 @@ class PfmeshController extends RgpfController
         foreach($tests as $test) {
             $a = $model->getGroupMembers($test->groupa_ids);
             $b = $model->getGroupMembers($test->groupb_ids);
-
-            /*
-            slog("test------------------------------------------");
-            slog(print_r($test, true));
-            slog("a group---------------------------");
-            slog(print_r($a["oim"], true));
-            slog("b group---------------------------");
-            slog(print_r($b["oim"], true));
-            */
 
             $a_fqdns = $this->pullfqdns($a);
             $b_fqdns = $this->pullfqdns($b);
@@ -195,12 +185,17 @@ class PfmeshController extends RgpfController
                     $resource_admins[] = array("name"=>$admin->name, "email"=>$admin->primary_email);
                 }
 
+                /*
                 $ma = array();
                 if(isset($mas[$resource["fqdn"]])) {
                     $ma = $mas[$resource["fqdn"]];
                 } else {
-                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["services"]);
+                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["sid"]);
                 }
+                */
+
+                //always use template for now..
+                $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["sids"]);
 
                 $services[] = array(
                     "administrators"=>$resource_admins, 
@@ -212,7 +207,7 @@ class PfmeshController extends RgpfController
                 "sites"=>array( //we always have 1 hosts group under each site
                     array(
                         "hosts"=>$services, 
-                        "administrators"=>array(),//not admin at the site level
+                        "administrators"=>array(), //left empty for now (no site admins)
                         "location"=>array(
                             "longitude"=>$oimsite["detail"]->longitude,
                             "latitude"=>$oimsite["detail"]->latitude,
@@ -233,21 +228,33 @@ class PfmeshController extends RgpfController
         foreach($wlcg_sites as $wlcgsite) {
             $endpoints = array();
             foreach($wlcgsite["endpoints"] as $end) {
-
-                //$mas = $this->guessMAs($end->hostname, array($end->service_id));
+ 
+                /*
                 $ma = array();
                 if(isset($mas[$end->hostname])) {
                     $ma = $mas[$end->hostname];
                 } else {
-                    $sids = array();
+                    $sid = null;
                     switch($end->service_type) {
-                    case "net.perfSONAR.Bandwidth": $sids[] = 130; break;
-                    case "net.perfSONAR.Latency": $sids[] = 131; break;
+                    case "net.perfSONAR.Bandwidth": $sid = 130; break;
+                    case "net.perfSONAR.Latency": $sid = 131; break;
                     default:
-                        elog("unknown wlcg service type:".$end->service_type." for ".$resource["fqdn"]);
+                        elog("unknown wlcg service type:".$end->service_type." for ".$end->hostname);
                     }
-                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $sids);
+                    $ma = $this->getDefaultMAUrls($end->hostname, $sid);
                 }
+                */
+                //always use template for now..
+                /*
+                $sid = null;
+                switch($end->service_type) {
+                case "net.perfSONAR.Bandwidth": $sid = 130; break;
+                case "net.perfSONAR.Latency": $sid = 131; break;
+                default:
+                    elog("unknown wlcg service type:".$end->service_type." for ".$end->hostname);
+                }
+                */
+                $ma = $this->getDefaultMAUrls($end->hostname, $end->sids);
 
                 $endpoints[] = array(
                     "administrators"=>array(), //no contact for endpoint
@@ -256,7 +263,6 @@ class PfmeshController extends RgpfController
                     "description"=>$wlcgsite["detail"]->short_name." ".$end->service_type
                 );
             }
-            //slog(print_r($endpoints, true));
             $mesh_orgs[] = array(
                 "sites"=>array( //we always have 1 hosts group under each site
                     array(
