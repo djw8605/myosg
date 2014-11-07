@@ -319,6 +319,7 @@ class PfmeshController extends RgpfController
             $version = $_REQUEST["version"];
         }
 
+        $this->view->data = array();
         $configs = $model->getConfigs();
         foreach($configs as $config) {
             $url = fullbase()."/pfmesh/json/name/".$config->name;
@@ -328,9 +329,8 @@ class PfmeshController extends RgpfController
             if(isset($_REQUEST["new"])) {
                 $url.="?new";
             }
-            $includes[] = $url;
+            $this->view->data[] = array("include"=>array($url));
         }
-        $this->view->data = array("include"=>$includes);
         $this->render("json");
     }
 
