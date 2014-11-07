@@ -266,8 +266,14 @@ class MeshConfig
                     //convert service_type to array of sid
                     $sid = null;
                     switch($endpoint->service_type) {
-                    case "net.perfSONAR.Bandwidth": $sid = 130; break;
-                    case "net.perfSONAR.Latency": $sid = 131; break;
+                    case "net.perfSONAR.Bandwidth": 
+                        $sid = 130; 
+                        $endpoint->service_type = "BW";
+                        break;
+                    case "net.perfSONAR.Latency": 
+                        $sid = 131; 
+                        $endpoint->service_type = "LAT";
+                        break;
                     default:    
                         elog("unknown wlcg endpoint service type :".$endpoint->service_type);
                     }
@@ -282,7 +288,7 @@ class MeshConfig
                         //merge sid
                         $current = $site_endpoints[$endpoint->hostname];
                         $current->sids = array_merge($current->sids, $endpoint->sids);
-                        $current->service_type .= " / ".$endpoint->service_type;
+                        $current->service_type .= " & ".$endpoint->service_type;
                     } else {
                         $site_endpoints[$endpoint->hostname] = $endpoint;
                     }
