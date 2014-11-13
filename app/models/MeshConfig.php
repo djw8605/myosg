@@ -191,7 +191,7 @@ class MeshConfig
                                         //this happens if there are 2 separate service registration for identical hostname.. 
                                         //merging sid, but keep the name/group_name the same (whichever comes the first?)
                                         //(TODO) we should also merge admin if it's from different resource
-                                        $current = $site_resources[$resource->hostname];
+                                        $current = &$site_resources[$resource->hostname];
                                         if(!in_array($resource->service_id, $current["sids"])) {
                                             $current["sids"][] = $resource->service_id;
                                         }
