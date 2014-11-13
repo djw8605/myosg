@@ -188,9 +188,13 @@ class MeshConfig
                                 if($resource_service["rid"] == $resource->id && $resource_service["sid"] == $resource->service_id) {
                                     //found..
                                     if(isset($site_resources[$resource->hostname])) {
-                                        //TODO. this could(?) happen if there are 2 separate service registration for identical hostname.. 
-                                        //we should probably merge admins, and sid, but keep the name/group_name the same
-                                        elog($resource->hostname." already exists - need to merge");
+                                        //this happens if there are 2 separate service registration for identical hostname.. 
+                                        //merging sid, but keep the name/group_name the same (whichever comes the first?)
+                                        //(TODO) we should also merge admin if it's from different resource
+                                        $current = $site_resources[$resource->hostname];
+                                        if(!in_array($resource->service_id, $current["sids"])) {
+                                            $current["sids"][] = $resource->service_id;
+                                        }
                                     } else {
                                         $site_resources[$resource->hostname] = array(
                                             "name"=>$resource->name, 
