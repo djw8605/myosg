@@ -223,11 +223,29 @@ foreach($this->vos as $vo_id=>$vo) {
         $oasis_managers = @$this->oasis_managers[$vo_id];
         echo "<tr><th rowspan=\"".(count($oasis_managers)+1)."\">Managers</th>";
         if($oasis_managers !== null) {
-            echo "<th>Name</th><th>DN</th></tr>";
-            foreach($oasis_managers as $manager) {
+            echo "<th>Name</th><th>DNs</th></tr>";
+            foreach($oasis_managers as $contact_id=>$manager) {
                 echo "<tr>";
-                echo "<td>".htmlsafe($manager->name)."</td>";
-                echo "<td>".htmlsafe($manager->dn)."</td>";
+                echo "<td>";
+                if(user()->isGuest()) {
+                    echo htmlsafe($manager["name"])."<br/>";
+                } else {
+                    echo "<a href=\"mailto:".htmlsafe($manager["primary_email"])."\">".htmlsafe($manager["name"])."</a><br>";
+                    echo "Telephone: ".htmlsafe($manager["primary_phone"])."<br>";
+                    /*
+                    if($contact->sms_address != null) {
+                        echo "SMS Address: ".htmlsafe($manager->sms_address)."<br>";
+                    }
+                    */
+                }
+                echo "</td>";
+
+                echo "<td><ul>";
+                foreach($manager["dns"] as $dn) {
+                    echo "<li>".htmlsafe($dn)."</li>";
+                }
+                echo "</ul></td>";
+
                 echo "</tr>";
             }
         } else {

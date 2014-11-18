@@ -159,8 +159,17 @@ foreach($this->vos as $vo_id=>$vo) {
         if($oasis_managers !== null) {
             foreach($oasis_managers as $manager) {
                 echo "<Manager>";
-                echo "<Name>".htmlsafe($manager->name)."</Name>";
-                echo "<DN>".htmlsafe($manager->dn)."</DN>";
+                echo "<ContactID>".htmlsafe($manager["contact_id"])."</ContactID>";
+                echo "<Name>".htmlsafe($manager["name"])."</Name>";
+                if(!user()->isGuest()) {
+                    echo "<Email>".htmlsafe($manager["primary_email"])."</Email>";
+                    echo "<Phone>".htmlsafe($manager["primary_phone"])."</Phone>";
+                }
+                echo "<DNs>";
+                foreach($manager["dns"] as $dn) {
+                    echo "<DN>".htmlsafe($dn)."</DN>";
+                }
+                echo "</DNs>";
                 echo "</Manager>";
             }
         }

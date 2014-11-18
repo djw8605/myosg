@@ -120,7 +120,25 @@ class VosummaryController extends VoController
 
         if(isset($_REQUEST["summary_attrs_showoasis"])) {
             $model = new VOOasisUser();
-            $this->view->oasis_managers = $model->getindex($this->vo_ids);
+            $oasis_managers = $model->getindex($this->vo_ids);
+            $grouped = array();
+            foreach($oasis_managers as $vo_id=>$managers) {
+                if(!isset($grouped[$vo_id])) {
+                    $grouped[$vo_id] = array();
+                }
+                //group by contact_id
+                foreach($managers as $manager) {
+                    $manager=(array)$manager;
+                    $contactid = $manager["contact_id"];
+                    if(!isset($grouped[$vo_id][$contactid])) {
+                        $manager["dns"] = array($manager["dn"]);
+                        $grouped[$vo_id][$contactid] = $manager;
+                    } else {
+                        $grouped[$vo_id][$contactid]["dns"][] = $manager["dn"];
+                    }
+                }
+            }
+            $this->view->oasis_managers = $grouped;
         }
 
         $this->view->vos = array();
