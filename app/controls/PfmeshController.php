@@ -113,6 +113,12 @@ class PfmeshController extends RgpfController
 
     //some endpoint doesn't allow us to crawl (firewall?) so we need to guess what their endpoints are.
     function getDefaultMAUrls($fqdn, $sids) {
+
+        //override all fqdn if pfds fqdn is set
+        if(isset($_REQUEST["pfds"])) {
+            $fqdn = $_REQUEST["pfds"];
+        }
+
         $mas = array();
         foreach($sids as $sid) {
             switch($sid) {
@@ -185,15 +191,6 @@ class PfmeshController extends RgpfController
                     $resource_admins[] = array("name"=>$admin->name, "email"=>$admin->primary_email);
                 }
 
-                /*
-                $ma = array();
-                if(isset($mas[$resource["fqdn"]])) {
-                    $ma = $mas[$resource["fqdn"]];
-                } else {
-                    $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["sid"]);
-                }
-                */
-
                 //always use template for now..
                 $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["sids"]);
 
@@ -228,34 +225,7 @@ class PfmeshController extends RgpfController
         foreach($wlcg_sites as $wlcgsite) {
             $endpoints = array();
             foreach($wlcgsite["endpoints"] as $end) {
- 
-                /*
-                $ma = array();
-                if(isset($mas[$end->hostname])) {
-                    $ma = $mas[$end->hostname];
-                } else {
-                    $sid = null;
-                    switch($end->service_type) {
-                    case "net.perfSONAR.Bandwidth": $sid = 130; break;
-                    case "net.perfSONAR.Latency": $sid = 131; break;
-                    default:
-                        elog("unknown wlcg service type:".$end->service_type." for ".$end->hostname);
-                    }
-                    $ma = $this->getDefaultMAUrls($end->hostname, $sid);
-                }
-                */
-                //always use template for now..
-                /*
-                $sid = null;
-                switch($end->service_type) {
-                case "net.perfSONAR.Bandwidth": $sid = 130; break;
-                case "net.perfSONAR.Latency": $sid = 131; break;
-                default:
-                    elog("unknown wlcg service type:".$end->service_type." for ".$end->hostname);
-                }
-                */
                 $ma = $this->getDefaultMAUrls($end->hostname, $end->sids);
-
                 $endpoints[] = array(
                     "administrators"=>array(), //no contact for endpoint
                     "addresses"=>array($end->hostname),
@@ -326,9 +296,19 @@ class PfmeshController extends RgpfController
             if(!is_null($version)) {
                 $url.="/version/$version";
             }
+
+            //insert additional params
+            $params = array();
             if(isset($_REQUEST["new"])) {
-                $url.="?new";
+                $params[] = "new";
             }
+            if(isset($_REQUEST["pfds"])) {
+                $params[] = "pfds=".$_REQUEST["pfds"];
+            }
+            if(count($params) > 0) {
+                $url.="?".implode($params, "&");
+            }
+
             $this->view->data[] = array("include"=>array($url));
         }
         $this->render("json");
