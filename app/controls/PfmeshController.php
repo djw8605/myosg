@@ -124,10 +124,10 @@ class PfmeshController extends RgpfController
             switch($sid) {
             case 130:
                 $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/bwctl");
+                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/traceroute");
                 break;
             case 131:
                 $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/owamp");
-                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/traceroute");
                 break;
             default:   
                 elog("unknown sid:$sid while constructing default ma for $fqdn");
