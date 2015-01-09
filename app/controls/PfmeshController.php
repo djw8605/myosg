@@ -137,7 +137,6 @@ class PfmeshController extends RgpfController
     }
 
     function generateMeshConfig($tests) {
-
         $model = new MeshConfig();
 
         $oim_all = array();
