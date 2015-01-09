@@ -333,7 +333,7 @@ class MeshConfig
             $pattern = "regexp ('(,$gid|^$gid),')";
             $in .= "groupa_ids $pattern or groupb_ids $pattern";
         }
-        $sql = "select * from mesh_config_test where $in";
+        $sql = "select * from mesh_config_test where $in and disable = 0";
         return $oim->fetchAll($sql);
     }
 }
