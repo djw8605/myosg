@@ -66,6 +66,7 @@ class PfmeshController extends RgpfController
             $version = "v34";
         }
 
+        /*
         /////////////////////////////////////////////////////////////////////////////////
         // temporary redirection to various cern hosted json until 
         if(!isset($_REQUEST["new"])) { //this is for testing *new* auto generated host instead
@@ -85,6 +86,7 @@ class PfmeshController extends RgpfController
             header("Location: $url");
             return;
         }
+        */
 
         $model = new MeshConfig();
         $mc = $model->getConfigByName($name);

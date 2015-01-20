@@ -241,6 +241,7 @@ class common_config
             )
         );
 
+        /*
         //mesh config redirection matrix
         $this->mesh_redirects = array(
             "v33"=>array(
@@ -278,6 +279,7 @@ class common_config
                 "wlcg-all"=>    "https://grid-deployment.web.cern.ch/grid-deployment/wlcg-ops/perfsonar/conf/central/testdefs/jsons/tests-wlcg-all.json.v34"
              )
         );
+        */
     }
     function getCacheDir() {
         return "/tmp";
