@@ -1,4 +1,4 @@
-<div class="pfmesh">
+<div class="psmesh">
 <h2><?php echo $this->page_title?></h2>
 
 <p class="alert">This page is still under development. Please contact GOC for more information.</p>
@@ -15,7 +15,7 @@
 <script>
 $(function() {
     $("#auto-hostname-gen").click(function() {
-        document.location = "<?php echo fullbase()?>/pfmesh/mine/hostname/"+$("#auto-hostname").val();
+        document.location = "<?php echo fullbase()?>/psmesh/mine/hostname/"+$("#auto-hostname").val();
     });
 });
 </script>
@@ -25,7 +25,7 @@ $(function() {
 foreach($this->configs as $config) {
     echo "<tr>";
     echo "<th>".$this->escape($config->desc)."</th>";
-    $url = fullbase()."/pfmesh/json/name/".$config->name;
+    $url = fullbase()."/psmesh/json/name/".$config->name;
     echo "<td>";
     echo "<a href=\"$url\">$url</a>";
     echo "</td>";
@@ -35,7 +35,7 @@ foreach($this->configs as $config) {
 
 <tr class="all">
 <?php 
-$url = fullbase()."/pfmesh/all"; 
+$url = fullbase()."/psmesh/all"; 
 //$url_33 = "$url/version/v33";
 echo "<th>All Mesh config</th>";
 echo "<td><a href=\"$url\">$url</a></td>";
@@ -43,4 +43,4 @@ echo "<td><a href=\"$url\">$url</a></td>";
 </tr>
 </table>
 
-</div><!-- pfmesh -->
+</div><!-- psmesh -->
