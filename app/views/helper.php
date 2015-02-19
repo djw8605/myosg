@@ -78,9 +78,9 @@ function outputToggle($show, $hide, $content, $open_by_default = false)
             $detail_style .= " hidden";
         }
         ?>
-        <div id='show_<?php echo $divid?>' class='<?php echo $showbutton_style?>'><img src='<?php echo fullbase()?>/images/plusbutton.gif'/> <?php echo $show?></div>
+        <div id='show_<?php echo $divid?>' class='my-toggler <?php echo $showbutton_style?>'><img src='<?php echo fullbase()?>/images/plusbutton.gif'/> <?php echo $show?></div>
         <?php if(!is_null($hide)) {?>
-            <div id='hide_<?php echo $divid?>' class='<?php echo $hidebutton_style?>'><img src='<?php echo fullbase()?>/images/minusbutton.gif'/> <?php echo $hide?></div>
+            <div id='hide_<?php echo $divid?>' class='my-toggler <?php echo $hidebutton_style?>'><img src='<?php echo fullbase()?>/images/minusbutton.gif'/> <?php echo $hide?></div>
         <?php } ?>
         <div class='<?php echo $detail_style?>' id='detail_<?php echo $divid?>'><?php echo $content?></div>
         <script type='text/javascript'>
