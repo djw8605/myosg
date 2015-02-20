@@ -181,7 +181,8 @@ class PsmeshController extends RgpfController
                     "administrators"=>$resource_admins, 
                     "addresses"=>array($resource["fqdn"]),
                     "measurement_archives"=>$ma,
-                    "description"=>$resource["name"]);
+                    "description"=>$resource["name"],
+                    "toolkit_url"=>"auto"); //for MadDash
             }
             $mesh_orgs[] = array(
                 "sites"=>array( //we always have 1 hosts group under each site
