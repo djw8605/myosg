@@ -179,6 +179,7 @@ $(function() {
     processGraphScroll(); //initial processing
 });
 
+
 function processGraphScroll() {
     var docViewTop = $(window).scrollTop();
     var docViewBottom = docViewTop + $(window).height();
@@ -204,9 +205,11 @@ function isScrolledIntoView(jthis, docViewTop, docViewBottom)
 function convert_time_to_local(target) {
     $(target).find("time").each(function() {
         var d = new Date($(this).attr("datetime"));
-        //$(this).html(d.toLocaleDateString() + " " + d.toLocaleTimeString());
-        $(this).html(d.toString());
+        $(this).html(d.toString()); //toLocaleString doesn't add timezone, and it's confusing..
     });
+
+    //I think user is more interested in exact date/time for history
+    //$("time").timeago();
 }
 
 </script>

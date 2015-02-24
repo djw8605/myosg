@@ -208,7 +208,10 @@ function outputMetricInfo($metric, $expired)
         $css = "";
         if($expired) $css = "expired";
         $out .= "<div class=\"status_".$metric->Status." $css\">";
-        $out .= "<div class=\"sidenote\">Reported ".agoCalculation((int)$metric->Timestamp)." ago</div>";
+        $time = (int)$metric->Timestamp;
+        $timestr = date(config()->date_format_full, $time);
+        $ago = agoCalculation($time);
+        $out .= "<div class=\"sidenote\" title=\"$timestr\">Reported $ago ago</div>";
         if($expired) $name .= " (Expired)";
     } else {
         $out .= "<div class=\"status_UNKNOWN notreported\">";
@@ -219,7 +222,8 @@ function outputMetricInfo($metric, $expired)
     if(!uwa()) {
         //$out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
         //$out .= "<br/><span class=\"note\">$desc</span>";
-        if(trim($detail) != "") {
+        $detail = trim($detail);
+        if($detail != "") {
             $detail = "<pre>$detail</pre>";
             $id = $metric->MetricDataID;
             $fresh_for = $metric->MetricFreshFor;

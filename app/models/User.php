@@ -25,7 +25,7 @@ class User
         $this->person_fullname = "Guest";
         $this->person_email = "";
         $this->person_phone = "";
-        $this->timezone = "UTC";
+        //$this->timezone = "UTC";
         $this->dn = $dn;
         $this->disable = true;
 
@@ -91,5 +91,5 @@ class User
     public function getPersonEmail() { return $this->person_email; }
     public function getPersonPhone() { return $this->person_phone; }
     public function getDN() { return $this->dn; }
-    public function getTimeZone() { return $this->timezone; }
+    //public function getTimeZone() { return $this->timezone; }
 }

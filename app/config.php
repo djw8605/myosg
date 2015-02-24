@@ -129,7 +129,7 @@ class common_config
         $this->gocticket_open_url = "http://ticket.grid.iu.edu/goc/rest/listopen";
 
         //locale
-        $this->date_format_full = "M j, Y H:i:s e";
+        $this->date_format_full = "M j, Y H:i A e";
         $this->date_format = "M j, Y";
 
         //number of records to show in one page

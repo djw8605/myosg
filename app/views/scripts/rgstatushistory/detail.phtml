@@ -33,8 +33,9 @@ if(isset($this->downtime)) {
         $status = Status::getStatus($this->detail_service_status->status_id);
         echo "<div class=\"well status_".$status."\">";
         $status_time = $this->detail_service_status->timestamp;
-        $status_time_str = date(DATE_W3C, $status_time);
-        echo "<p>Status changed to $status at <time datetime=\"$status_time_str\"/><br/>";
+        $iso = date(DATE_W3C, $status_time);
+        $timestr = date(config()->date_format_full, $time);
+        echo "<p>Status changed to $status at <time datetime=\"$iso\"/><br/>";
         echo $this->detail_service_status->detail."</p>";
         echo "</div>";
 
@@ -126,7 +127,8 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
     $out .= "<span class=\"h4\" rel=\"tooltip\" title=\"$desc\">$name</span>";
     if(!uwa()) {
         //$out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
-        if(trim($detail) != "") {
+        $detail = trim($detail);
+        if($detail != "") {
             $detail = "<pre>$detail</pre>";
             $detail .= "Fresh for: ".humanDuration($freshfor);
             $detail .= "&nbsp;&nbsp;&nbsp;Service URI: ".$service_uri;
