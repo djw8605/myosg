@@ -545,3 +545,7 @@ background-color: #eee;
 .my-toggler:hover, .hvr-fade:focus, .hvr-fade:active {
   opacity: inherit;
 }
+pre.status_detail {
+max-height: 400px;
+overflow: auto;
+}

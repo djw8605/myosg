@@ -224,7 +224,7 @@ function outputMetricInfo($metric, $expired)
         //$out .= "<br/><span class=\"note\">$desc</span>";
         $detail = trim($detail);
         if($detail != "") {
-            $detail = "<pre>$detail</pre>";
+            $detail = "<pre class='status_detail'>$detail</pre>";
             $id = $metric->MetricDataID;
             $fresh_for = $metric->MetricFreshFor;
             $detail .= "Fresh for: ".humanDuration($fresh_for);

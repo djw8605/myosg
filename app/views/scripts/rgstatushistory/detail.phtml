@@ -129,7 +129,7 @@ function showmetric($metric, $metric_details, $timestamp, $hide_empty)
         //$out .= " <a target=\"_help\" href=\"$help_url\"><img src=\"".fullbase()."/images/help.png\" style='align: bottom;'/></a>";
         $detail = trim($detail);
         if($detail != "") {
-            $detail = "<pre>$detail</pre>";
+            $detail = "<pre class='status_detail'>$detail</pre>";
             $detail .= "Fresh for: ".humanDuration($freshfor);
             $detail .= "&nbsp;&nbsp;&nbsp;Service URI: ".$service_uri;
 
