@@ -309,6 +309,7 @@ class MeshConfig
         $oim = db("oim");
         $sql = "select group_id from mesh_config_oim_member m join view_oim_hostname h on h.id = resource_id and h.service_id = m.service_id where hostname = ".$oim->quote($hostname);
         $recs = $oim->fetchAll($sql);
+        $gids = array();
         foreach($recs as $rec) {
             $gids[] = $rec->group_id;
         }
