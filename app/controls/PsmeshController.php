@@ -57,6 +57,7 @@ class PsmeshController extends RgpfController
             return;
         }
 
+        /*
         //either v33 or v34 (default to v34)
         $version = $this->getParam("version");
         if(is_null($version) && isset($_REQUEST["version"])) {
@@ -65,6 +66,7 @@ class PsmeshController extends RgpfController
         if(is_null($version)) {
             $version = "v34";
         }
+        */
 
         $model = new MeshConfig();
         $mc = $model->getConfigByName($name);
@@ -177,13 +179,29 @@ class PsmeshController extends RgpfController
                 //always use template for now..
                 $ma = $this->getDefaultMAUrls($resource["fqdn"], $resource["sids"]);
 
-                $services[] = array(
+                $service = array(
                     "administrators"=>$resource_admins, 
                     "addresses"=>array($resource["fqdn"]),
                     "measurement_archives"=>$ma,
                     "description"=>$resource["name"]
-                    /*"toolkit_url"=>"auto"*/
-                ); //for MadDash
+                ); 
+                
+                //add "toolkit_url"=>"auto" unless client specifies old toolkit version
+                $autourl = true;
+                if(isset($_REQUEST["version"])) {
+                    switch($_REQUEST["version"]) {
+                    //old version doesn't support toolkit_url (supported in 3.4.2)
+                    case "3.4.0":
+                    case "3.4.1":
+                        $autourl = false;
+                        break;
+                    }
+                }
+                if($autourl) {
+                    $service["toolkit_url"] = "auto";
+                }
+
+                $services[] = $service;
             }
             $mesh_orgs[] = array(
                 "sites"=>array( //we always have 1 hosts group under each site
@@ -268,19 +286,23 @@ class PsmeshController extends RgpfController
         $includes = array();
         $model = new MeshConfig();
 
+        /*
         //either v33 or v34 (default to v34)
         $version = $this->getParam("version");
         if(is_null($version) && isset($_REQUEST["version"])) {
             $version = $_REQUEST["version"];
         }
+        */
 
         $this->view->data = array();
         $configs = $model->getConfigs();
         foreach($configs as $config) {
             $url = fullbase()."/psmesh/json/name/".$config->name;
+            /*
             if(!is_null($version)) {
                 $url.="/version/$version";
             }
+            */
 
             //insert additional params
             $params = array();
