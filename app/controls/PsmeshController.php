@@ -186,6 +186,7 @@ class PsmeshController extends RgpfController
                     "description"=>$resource["name"]
                 ); 
                 
+                /*
                 //add "toolkit_url"=>"auto" unless client specifies old toolkit version
                 $autourl = true;
                 if(isset($_REQUEST["version"])) {
@@ -200,6 +201,7 @@ class PsmeshController extends RgpfController
                 if($autourl) {
                     $service["toolkit_url"] = "auto";
                 }
+                */
 
                 $services[] = $service;
             }
@@ -253,6 +255,27 @@ class PsmeshController extends RgpfController
                 "administrators"=>array(), //we don't have this stored anywhere?
                 "description"=>$wlcgsite["detail"]->short_name." Site Group" //$wlcgsite["detail"]->short_name
             );
+        }
+
+        //add "toolkit_url"=>"auto" unless client specifies old toolkit version
+        $autourl = true;
+        if(isset($_REQUEST["version"])) {
+            switch($_REQUEST["version"]) {
+            //old version doesn't support toolkit_url (supported in 3.4.2)
+            case "3.4.0":
+            case "3.4.1":
+                $autourl = false;
+                break;
+            }
+        }
+        if($autourl) {
+            foreach($mesh_orgs as &$mesh_org) {
+                foreach($mesh_org["sites"] as &$orgsite) {
+                    foreach($orgsite["hosts"] as &$host) {
+                        $host["toolkit_url"] = "auto";
+                    }
+                }
+            }
         }
 
         return array(
