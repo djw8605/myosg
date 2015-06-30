@@ -231,11 +231,14 @@ class PsmeshController extends RgpfController
             $endpoints = array();
             foreach($wlcgsite["endpoints"] as $end) {
                 $ma = $this->getDefaultMAUrls($end->hostname, $end->sids);
+                $hostname_tokens = explode(".", $end->hostname);
                 $endpoints[] = array(
                     "administrators"=>array(), //no contact for endpoint
                     "addresses"=>array($end->hostname),
                     "measurement_archives"=>$ma,
-                    "description"=>$wlcgsite["detail"]->short_name." ".$end->service_type
+                    //"description"=>$wlcgsite["detail"]->short_name." ".$end->service_type
+                    "description"=>$wlcgsite["detail"]->short_name." ".$hostname_tokens[0]
+
                 );
             }
             $mesh_orgs[] = array(
