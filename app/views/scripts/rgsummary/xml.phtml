@@ -293,6 +293,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
                 echo "<!-- in TB -->";
                 echo "<StorageCapacityMax>$info->storage_capacity_maximum</StorageCapacityMax>";
                 echo "<HEPSPEC>$info->hepspec</HEPSPEC>";
+                echo "<APELNormalFactor>$info->apel_normal_factor</APELNormalFactor>";
                 echo "<!-- in TB -->";
                 if($info->tape_capacity === null) {
                     echo "<TapeCapacity/>";
