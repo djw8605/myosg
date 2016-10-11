@@ -117,6 +117,15 @@ class RgdowntimeController extends RgController
                     $end = date(config()->date_format_full, $downtime->unix_end_time);
                     $timestamp = date(config()->date_format_full, $downtime->unix_timestamp);
 
+		    if($downtime->created<>"" && $downtime->created<>"0000-00-00" && $downtime->created<>"NULL" && $downtime->created<>"0000-00-00 00:00:00"){
+		      $created = date(config()->date_format_full, strtotime($downtime->created));
+		    }else{
+		      $created = "Not Available";
+
+		    }
+	
+
+
                     //get affected services
                     $affected_services = array();
                     foreach($downtime_services as $service) {
@@ -154,6 +163,7 @@ class RgdowntimeController extends RgController
                         "start_time"=>$start,
                         "dn"=>$dn,
                         "timestamp"=>$timestamp,
+			"created"=>$created,
                         "contact_name"=>$contact_name,
                         "end_time"=>$end
                     );
