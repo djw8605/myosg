@@ -109,8 +109,10 @@ class PsmeshController extends RgpfController
         foreach($sids as $sid) {
             switch($sid) {
             case 130:
-                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/bwctl");
-                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/traceroute");
+               # $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/bwctl");
+               # $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/traceroute");
+		$mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/bwctl");
+                $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"traceroute");
                 break;
             case 131:
                 $mas[] = array("read_url"=>"http://$fqdn/esmond/perfsonar/archive/", "type"=>"perfsonarbuoy/owamp");
