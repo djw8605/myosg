@@ -196,7 +196,8 @@ class common_config
 
         $this->status_expires_days = 30;
 
-        $this->gratiaweb = "http://gratiaweb.grid.iu.edu/gratia";
+        $this->gratiaweb = "https://gracc.opensciencegrid.org/render/dashboard-solo/db/";
+         //"http://gratiaweb.grid.iu.edu/gratia";
         //$this->gratiaweb = "http://t2.unl.edu/gratia";
 
         //$this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";

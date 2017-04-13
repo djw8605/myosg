@@ -27,22 +27,22 @@ class RgseController extends RgGratiaController
         switch($dirty_type) 
         {
         case "vo_transfer_volume":
-            $urlbase = config()->gratiaweb."/status_graphs/status_vo";
+	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=2&";//"/status_graphs/status_vo";
             $sub_title = "Transfer volume (Grouped by VO)";
             $ylabel = "Transfer Volume (GB)";
             break;
         case "user_transfer_volume":
-            $urlbase = config()->gratiaweb."/transfer_graphs/user_transfer_volume";
+	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=2&";//"/transfer_graphs/user_transfer_volume";
             $sub_title = "Transfer Volumn (Grouped by Username)";
             $ylabel = "Transfer Volume (GB)";
             break;
         case "se_space":
-            $urlbase = config()->gratiaweb."/status_graphs/status_se_bar";
+	  $urlbase = config()->gratiaweb."";//"/status_graphs/status_se_bar";
             $sub_title = "Total Space";
             $ylabel = "GB";
             break;
         case "se_space_free":
-            $urlbase = config()->gratiaweb."/status_graphs/status_se_free_bar";
+	  $urlbase = config()->gratiaweb."";//"/status_graphs/status_se_free_bar";
             $sub_title = "Total Free Space";
             $ylabel = "GB";
             break;
