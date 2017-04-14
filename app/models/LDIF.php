@@ -88,7 +88,7 @@ class LDIF
 
         //cache these xml for little bit
         $seconds = 60;
-
+	/*
         $c = new Cache("/tmp/myosg.bdii");
         if($c->isFresh($seconds)) { 
             $cemonbdii_content = $c->get();
@@ -106,6 +106,7 @@ class LDIF
             }
         }
         $cemonbdii = new SimpleXMLElement($cemonbdii_content);
+	*/
 
 /*
         $c = new Cache("/tmp/myosg.bdii-itb");
@@ -126,7 +127,7 @@ class LDIF
             elog("failed to parse for some reason... maybe itb is not available?");
         }
 */
-        return $cemonbdii;
+        //return $cemonbdii;
     }
 
     function merge(SimpleXMLElement &$xml1, SimpleXMLElement $xml2)
