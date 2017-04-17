@@ -55,7 +55,9 @@ abstract class RgGratiaController extends RgController
 	if(sizeof($resource_names)>0){
 		$this->view->url = $urlbase."?var-site=".implode("&var-site=",$resource_names)."&ylabel=$ylabel&from=$start_time&to=$end_time&orgId=1&panelId=7&var-interval=%24__auto_interval&var-type=All&width=1000&height=500&tz=UTC-04%3A00";                                
 	}else{
-	 $this->view->url = $urlbase."?var-site=All&ylabel=$ylabel&from=$start_time&to=$end_time&orgId=1&panelId=7&var-interval=%24__auto_interval&var-type=All&width=900&height=500&tz=UTC-04%3A00";
+	  //   $this->view->url = $urlbase."?var-site=All&ylabel=$ylabel&from=$start_time&to=$end_time&orgId=1&var-interval=%24__auto_interval&var-type=All&width=900&height=500&tz=UTC-04%3A00";
+
+	 $this->view->url = $urlbase."?from=$start_time&to=$end_time&width=900&height=500&tz=UTC-04%3A00";
 	}
 	//	$this->view->url = $urlbase."?var-vo=All&title=&ylabel=$ylabel&from=$start_time&to=$end_time&orgId=1&panelId=7&var-interval=%24__auto_interval&var-type=All&width=1000&height=500&tz=UTC-04%3A00";
 
