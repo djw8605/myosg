@@ -28,7 +28,7 @@ class RgaccountController extends RgGratiaController
         {
         case "cumulative_hours":
 	  $urlbase = config()->gratiaweb."dashboard-guide?orgId=1&panelId=11&";;//."/cumulative_graphs/vo_success_cumulative_smry";
-            $sub_title = "Cumulative Wall Hours (by VO)";
+            $sub_title = "Core Hours Hours by VO";
             $ylabel = "Hours";
             break;
         case "daily_hours_byvo":
