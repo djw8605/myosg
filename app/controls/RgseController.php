@@ -19,7 +19,7 @@ include("RgGratiaController.php");
 
 class RgseController extends RgGratiaController
 {
-    public static function default_title() { return "SE Specific Gratia Accounting"; }
+    public static function default_title() { return "SE Specific Accounting"; }
     public static function default_url($query) { return ""; }
 
     public function map() {
@@ -27,7 +27,7 @@ class RgseController extends RgGratiaController
         switch($dirty_type) 
         {
         case "vo_transfer_volume":
-	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=2&";//"/status_graphs/status_vo";
+	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=18&var-VOName=All&var-Project=All&var-User=All&var-Probe=All&var-interval=1d&";//"/status_graphs/status_vo";
             $sub_title = "Transfer volume (Grouped by VO)";
             $ylabel = "Transfer Volume (GB)";
             break;

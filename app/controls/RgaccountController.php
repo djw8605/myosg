@@ -19,7 +19,7 @@ include("RgGratiaController.php");
 
 class RgaccountController extends RgGratiaController
 {
-    public static function default_title() { return "Gratia Accounting"; }
+    public static function default_title() { return "GRACC Accounting"; }
     public static function default_url($query) { return ""; }
 
     public function map() {
