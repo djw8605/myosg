@@ -27,7 +27,7 @@ class RgseController extends RgGratiaController
         switch($dirty_type) 
         {
         case "vo_transfer_volume":
-	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=2&width=900&height=500&tz=UTC-04%3A00&var-VOName=All&var-Project=All&var-User=All&var-Probe=All&var-interval=1d&";//"/status_graphs/status_vo";
+	  $urlbase = config()->gratiaweb."transfer-summary?orgId=1&panelId=2&width=750&height=400&tz=UTC-04%3A00&var-VOName=All&var-Project=All&var-User=All&var-Probe=All&var-interval=1d&";//"/status_graphs/status_vo";
             $sub_title = "Transfer volume (Grouped by VO)";
             $ylabel = "Transfer Volume (GB)";
             break;
