@@ -44,8 +44,11 @@ foreach($this->vos as $vo_id=>$vo) {
         echo "</MemeberResources>";
     }
     if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
+      if(isset($this->field_of_science[$vo_id])){
         echo "<FieldsOfScience>";
+
         $ranks = $this->field_of_science[$vo_id];
+	
         foreach($ranks as $rank_id=>$fss) {
             switch($rank_id) {
             case 1: $elem = "Primary";break;
@@ -58,6 +61,7 @@ foreach($this->vos as $vo_id=>$vo) {
             echo "</${elem}Fields>";
         }
         echo "</FieldsOfScience>";
+    }
     }
 
     if(isset($_REQUEST["summary_attrs_showparent_vo"])) {
