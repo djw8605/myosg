@@ -131,16 +131,22 @@ function init(scrollwheel) {
             if(isset($_REQUEST["map_attrs_shownr"])) {
                 //show as "non reporting"
                 $status = "nr";
+		// SWT working to satisfy request, choose "nr" for green circle with no checkmark, show=true to plot this point //
+		$status = "nr";
                 $show = true;
+		// end of SWT work //
             }
         } else {
             //decide site status
-            if($status_critical > 0) $status = "critical";
+	    if($status_critical > 0) $status = "critical";
             else if($status_downtime > 0) $status = "downtime";
             else if($status_warning > 0) $status = "warning";
             else if($status_unknown > 0) $status = "unknown";
             else if($status_ok > 0) $status = "ok";
             else $status = "unknown"; //no info!?
+	    // SWT working to satisfy request, choose "ok" for green circle with a checkmark. Unconditional assignment overwrites above logic //
+	       $status = "nr";
+	    // end of SWT work //
 
             //show marker
             if($site->latitude == null) $site->latitude = 0;
@@ -188,7 +194,9 @@ function init(scrollwheel) {
     });
 
     <?php
-    if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
+	// SWT work, choosing the not (!) removes the campus grid icons independent of the logic invoking this code
+#    if(isset($_REQUEST["map_attrs_showcampusgrid"])) {
+    if(!isset($_REQUEST["map_attrs_showcampusgrid"])) {
         //add campus grid icons
         foreach($this->campusgrids as $cg) {
            $name = addslashes($cg->name);
