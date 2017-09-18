@@ -1,2 +1,17 @@
 RewriteEngine on
+#RewriteRule !\.(css\.php|txt|js|ico|gif|jpg|png|css|xsd)$ index.php
+
+RewriteCond %{HTTP_HOST} myosg.grid.iu.edu$ [NC]
+RewriteRule ^psmesh/json/name/(.*)$ https://meshconfig.grid.iu.edu/pub/config/$1 [L,R=301]
+RewriteRule ^pfmesh/json/name/(.*)$ https://meshconfig.grid.iu.edu/pub/config/$1 [L,R=301]
+
+RewriteRule ^psmesh/mine/hostname/(.*)$ https://meshconfig.grid.iu.edu/pub/auto/$1 [L,R=301]
+RewriteRule ^pfmesh/mine/hostname/(.*)$ https://meshconfig.grid.iu.edu/pub/auto/$1 [L,R=301]
+
+
 RewriteRule !\.(css\.php|txt|js|ico|gif|jpg|png|css|xsd)$ index.php
+
+#RewriteRule  ^/psmesh/json/name/(.+)  http://meshconfig-itb.grid.iu.edu/pub/config/$1 [R,L]
+
+#RewriteEngine on
+#RewriteRule !\.(css\.php|txt|js|ico|gif|jpg|png|css|xsd)$ index.php
