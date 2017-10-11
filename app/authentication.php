@@ -95,7 +95,7 @@ function cert_authenticate()
         Zend_Registry::set("user", $guest);
         slog("guest access from ".$_SERVER["REMOTE_ADDR"]);
     }
-
+    /*
     if(!isset($_SERVER["HTTPS"])) {
         if(config()->force_https and !isbot()) {
             //reload as https (if not bot)
@@ -138,6 +138,36 @@ function cert_authenticate()
             _setguest();
         }
     }
+    */
+
+    if(isset($_SESSION["email"])){
+      // print "hello: " .$_SESSION["email"];
+      $dn = $_SESSION["email"];
+      //apply dn override (for debugging)
+      if(isset(config()->dn_override[$dn])) {
+	$override = config()->dn_override[$dn];
+	$dn = $override;
+	slog("Overriding DN to $dn");
+      }
+      $user = new User($dn);
+      if(is_null($user->getPersonID())) {
+	//not yet registered?
+	Zend_Registry::set("unregistered_dn", $dn);
+	_setguest();
+      } else if($user->isDisabled()) {
+	Zend_Registry::set("disabled_dn", $dn);
+	_setguest();
+      } else {
+	Zend_Registry::set("user", $user);
+	slog("authenticated:".$user->getPersonName()."($dn)". " from ".$_SERVER["REMOTE_ADDR"]);
+      }
+    } else {
+      //no client cert provided
+      _setguest();
+    }
+    //   session_destroy();
+    //    _setguest(); 
+
 }
 
 //shorthand

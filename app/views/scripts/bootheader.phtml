@@ -117,6 +117,7 @@
             <!-- can't put dropdown menu under collapsible - bootstrap2 can't handle resizing-->
             <ul class="nav pull-right">
                 <?php 
+	
                 if(!user()->isGuest()) {
                     //user
                     echo "<li class=\"dropdown\">";
@@ -125,21 +126,29 @@
                     echo "<li><a href=\"miscuser".config()->default_url("misc")."\">OSG Users</a></li>";
                     //echo "<li><a href=\"notification\">Notification Settings</a></li>";
                     echo "<li class=\"divider\"></li>";
-                    echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">Logoff</a></li>";
+                    echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."/logout/\">Logoff</a></li>";
                     echo "</ul>";
                     echo "</li>";
                 } else if(@$_SERVER['HTTPS'] == "on") {
-                    if(Zend_Registry::isRegistered("unregistered_dn")) {
+		  /*if(Zend_Registry::isRegistered("unregistered_dn")) {
                         echo "<li><a href=\"https://oim.opensciencegrid.org/oim/register\">Register</a></li>";
                     } else if(Zend_Registry::isRegistered("disabled_dn")) {
                         echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">(Disabled)</a></li>";
                     } else {
                         echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">(NoCert)</a></li>";
                     }
+*/
+                    echo "<li><a href=\"https://".$_SERVER["SERVER_NAME"]."/sso/\">Login</a></li>";
+
                 } else {
                     //probably via http
-                    echo "<li><a href=\"https:".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]."\">Login</a></li>";
+                //    echo "<li><a href=\"https:".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]."\">Login</a></li>";
+
+		  echo "<li><a href=\"https://".$_SERVER["SERVER_NAME"]."/sso/\">Login</a></li>";
+
                 }
+
+
                 ?>
             </ul>
         <div class="nav-collapse">
