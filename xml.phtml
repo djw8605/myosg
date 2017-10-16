@@ -1,0 +1,337 @@
+<?=$this->header?>
+<?
+if(user()->isGuest()) {
+    echo "<!--";
+    echo "NOTE: Email address and phone number of contacts are displayed only to authorized users who have there DN loaded in their web-browser or wget/curl type web client, and are registered in OIM with appropriate authorization level(s).";
+    echo "-->";
+}
+?>
+<ResourceSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgsummary.xsd">
+<?
+//foreach($this->resource_groups as $resource_group_id=>$resource_list) {
+foreach($this->rgs as $resource_group_id=>$resource_list) {
+    $resource_group = $this->resourcegroups[$resource_group_id][0];
+    echo "<ResourceGroup>";
+    $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->description;
+    echo "<GridType>";
+    echo htmlsafe($gridtype_name);
+    echo "</GridType>";
+    echo "<GroupID>".$resource_group->id."</GroupID>";
+    echo "<GroupName>".htmlsafe($resource_group->name)."</GroupName>";
+
+    echo "<Disable>";
+    if($resource_group->disable == 1) { 
+        echo "True"; 
+    } else {
+        echo "False"; 
+    }
+    echo "</Disable>";
+
+
+    if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
+        $hierarchy = $this->hierarchy[$resource_group_id];
+        echo "<Facility><ID>".$hierarchy["facility"]->id."</ID><Name>".htmlsafe($hierarchy["facility"]->name)."</Name></Facility>";
+        echo "<Site><ID>".$hierarchy["site"]->id."</ID><Name>".htmlsafe($hierarchy["site"]->name)."</Name></Site>";
+        echo "<SupportCenter><ID>".$hierarchy["sc"]->id."</ID><Name>".htmlsafe($hierarchy["sc"]->name)."</Name></SupportCenter>";
+    } 
+
+    if(isset($_REQUEST["summary_attrs_showdesc"])) {
+        echo "<GroupDescription>";
+        if($resource_group->description != "") {
+            echo htmlsafe($resource_group->description);
+        } else {
+            echo "(No resource group description)";
+        }
+        echo "</GroupDescription>";
+    }
+
+
+    echo "<Resources>";
+    foreach($resource_list as $rid=>$resource) {
+        echo "<Resource>";
+        echo "<ID>".$resource->id."</ID>";
+        echo "<Name>".htmlsafe($resource->name)."</Name>";
+
+        echo "<Active>";
+        if($resource->active == 1) { 
+            echo "True"; 
+        } else {
+            echo "False"; 
+        }
+        echo "</Active>";
+
+        echo "<Disable>";
+        if($resource->disable == 1) { 
+            echo "True"; 
+        } else {
+            echo "False"; 
+        }
+        echo "</Disable>";
+
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            echo "<Services>";
+            if(isset($this->resource_services[$rid]) == 0) {
+                echo "no applicable service exists";
+            } else {
+                $services = $this->resource_services[$rid];
+                foreach($services as $service) {
+                    if(isset($this->servicetypes[$service->service_id])) {
+                        echo "<Service>".
+                          "<ID>".$service->service_id."</ID>".
+                          "<Name>".htmlsafe($this->servicetypes[$service->service_id][0]->name)."</Name>".
+                          "<Description>".htmlsafe($this->servicetypes[$service->service_id][0]->description)."</Description>";
+
+                        //I really don't want user to use this (why do we even have this?)
+                        //echo "<DefaultPort>".$service->port."</DefaultPort>";
+
+                        echo "<Details>";
+                        foreach($service->details as $key=>$value) {
+                            echo "<".htmlsafe($key).">".htmlsafe($value)."</".htmlsafe($key).">";
+                        }
+                        echo "</Details>";
+
+/*
+                        echo "<ServiceUri>";
+                        if ($service->endpoint_override != "") {
+                          echo $service->endpoint_override;
+                        }
+                        else {
+                          echo $resource->fqdn.":".$this->servicetypes[$service->service_id][0]->port; 
+                        }
+                        echo "</ServiceUri>";
+
+                        echo "<HiddenService>";
+                        if($service->hidden == 1) {
+                            echo "True";
+                        } else {
+                            echo "False";
+                        }
+                        echo "</HiddenService>";
+
+                        echo "<CentralService>";
+                        if($service->central == 1) {
+                            echo "True";
+                        } else {
+                            echo "False";
+                        }
+                        echo "</CentralService>";
+*/
+                 
+                        echo "</Service>";
+                    } else {
+                        echo "<Service>unknown_service_id:".$service->service_id."</Service>";
+                    }
+                }
+            }
+            echo "</Services>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
+            if(!isset($this->resource_status[$rid])) {
+                $note = "Resource status is not calculated for this resource";
+                $status = "UNKNOWN";
+            } else {
+                $resource_status = $this->resource_status[$rid][0];
+                $note = $resource_status->detail;
+                $status = Status::getStatus($resource_status->status_id);
+            }
+
+            if(isset($this->downtime[$rid])) {
+                $downtime = $this->downtime[$rid][0];
+                $status = "DOWNTIME";
+                $downtime_desc = $downtime->downtime_summary;
+                $internal_note = $note;
+                $note = "This resource is currently under maintenance.";
+                $note .= "Maintenance Summary: $downtime_desc";
+                $note .= "Internal status: $internal_note";
+            }
+            echo "<RSVStatus><Status>$status</Status><Note>".htmlsafe($note)."</Note></RSVStatus>";
+        }
+
+
+
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            if(isset($this->resource_services[$rid]) == 0) {
+                $service_names = "no applicable service exists";
+            } else {
+                $services = $this->resource_services[$rid];
+                $service_names = "";
+                foreach($services as $service) {
+                    if($service_names != "") $service_names .= " / ";
+                    if(isset($this->servicetypes[$service->service_id])) {
+                        $service_names .= $this->servicetypes[$service->service_id][0]->description;
+                    } else {
+                        $service_names .= "unknown_service_id:".$service->service_id;
+                    }
+                }
+            }
+        }
+
+        if(isset($_REQUEST["summary_attrs_showdesc"])) {
+            echo "<Description>";
+            if($resource->description != "") {
+                echo htmlsafe($resource->description);
+            } else {
+                echo "(No resource description)";
+            }
+            echo "</Description>";
+        }
+
+        echo "<FQDN>".$resource->fqdn."</FQDN>";
+        if(isset($_REQUEST["summary_attrs_showfqdn"])) {
+            echo "<FQDNAliases>";
+            if(isset($this->aliases[$rid])) {
+                foreach($this->aliases[$rid] as $alias) {
+                    echo "<FQDNAlias>".$alias->resource_alias."</FQDNAlias>";
+                }
+            }
+            echo "</FQDNAliases>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showvomembership"])) {
+            echo "<SupportedVOs>";
+            if(isset($this->vos_supported[$rid])) {
+                $volist = $this->vos_supported[$rid];
+                foreach($volist as $vo) {
+                    echo "<VO>$vo</VO>";
+                }
+            } else {
+                echo "(Information not reported)";
+            }
+            echo "</SupportedVOs>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showvoownership"])) {
+            echo "<VOOwnership>";
+            $ownership = @$this->resource_ownerships[$rid];
+            if($ownership === null) {
+                echo "(Information not available)";
+            } else {
+                $chd = "";
+                $chl = "";
+                $total = 0;
+                foreach($ownership as $item) {
+                    echo "<Ownership><Percent>$item->percent</Percent><VO>$item->name</VO></Ownership>";
+                    if($chd != "") $chd .= ",";
+                    $chd .= $item->percent;
+                    if($chl != "") $chl .= "|";
+                    $chl .= $item->name."(".$item->percent."%)";
+                    $total += $item->percent;
+                }
+                if($total < 100) {
+                    if($chd != "") $chd .= ",";
+                    $left = 100 - $total;
+                    $chd .= $left;
+                    if($chl != "") $chl .= "|";
+                    $chl .= "Other($left%)";
+
+                    echo "<Ownership><Percent>$left</Percent><VO>(Other)</VO></Ownership>";
+                }
+                $url = htmlsafe("http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=280x65&chl=$chl");
+                echo "<ChartURL>$url</ChartURL>";
+            }
+            echo "</VOOwnership>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showwlcg"])) {
+            echo "<WLCGInformation>";
+            // if(isset($this->resource_wlcg[$rid])) {
+            $info = @$this->resource_wlcg[$rid][0];
+            if($info == null) {
+                echo "(Information not available)";
+            } else {
+                $info = $this->resource_wlcg[$rid][0];
+                $value = "False";
+                if($info->interop_bdii == 1) { $value = "True"; }
+                else {$info->ldap_url = "";}
+                echo "<InteropBDII>$value</InteropBDII>";
+                echo "<LDAPURL>$info->ldap_url</LDAPURL>";
+
+                $value = "False";
+                if($info->interop_monitoring == 1) { $value = "True"; }
+                echo "<InteropMonitoring>$value</InteropMonitoring>";
+
+                $value = "False";
+                if($info->interop_accounting == 1) { $value = "True"; }
+                echo "<InteropAccounting>$value</InteropAccounting>";
+
+                echo "<AccountingName>".htmlsafe($info->accounting_name)."</AccountingName>";
+                echo "<KSI2KMin>$info->ksi2k_minimum</KSI2KMin>";
+                echo "<KSI2KMax>$info->ksi2k_maximum</KSI2KMax>";
+                echo "<!-- in TB -->";
+                echo "<StorageCapacityMin>$info->storage_capacity_minimum</StorageCapacityMin>";
+                echo "<!-- in TB -->";
+                echo "<StorageCapacityMax>$info->storage_capacity_maximum</StorageCapacityMax>";
+                echo "<HEPSPEC>$info->hepspec</HEPSPEC>";
+                echo "<APELNormalFactor>$info->apel_normal_factor</APELNormalFactor>";
+                echo "<!-- in TB -->";
+                if($info->tape_capacity === null) {
+                    echo "<TapeCapacity/>";
+                } else {
+                    echo "<TapeCapacity>$info->tape_capacity</TapeCapacity>";
+                }
+            }
+            echo "</WLCGInformation>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showenv"])) {
+            echo "<ENV>";
+            $xml = @$this->envs[$rid];
+            if($xml === null) {
+                echo "(Information Not available)";
+            } else {
+                foreach($xml as $key=>$value) {
+                    echo "<".htmlsafe($key).">".htmlsafe($value)."</".htmlsafe($key).">";
+                }
+            }
+            echo "</ENV>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            $contact_types = @$this->contacts[$rid];
+            echo "<ContactLists>";
+            if(isset($contact_types)) {
+                foreach($contact_types as $type_name=>$contacts) {
+                    echo "<ContactList>";
+                    echo "<ContactType>".htmlsafe($type_name)."</ContactType>";
+                    echo "<Contacts>";
+                    foreach($contacts as $contact) {
+                        echo "<Contact>";
+                        echo "<Name>".htmlsafe($contact->name)."</Name>";
+                        if(!user()->isGuest()) {
+                            echo "<Email>".htmlsafe($contact->primary_email)."</Email>";
+                            echo "<Phone>".htmlsafe($contact->primary_phone)."</Phone>";
+                            echo "<SMSAddress>".htmlsafe($contact->sms_address)."</SMSAddress>";
+                            echo "<DN>".htmlsafe($contact->dn)."</DN>";
+                        }
+                        echo "<ContactRank>".htmlsafe($contact->rank_type)."</ContactRank>";
+                        echo "</Contact>";
+                    }
+                    echo "</Contacts>";
+                    echo "</ContactList>";
+                }
+            }
+            echo "</ContactLists>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showticket"])) {
+            echo "<OpenGOCTickets>";
+            if(isset($this->tickets[$rid])) {
+                foreach($this->tickets[$rid] as $ticket) {
+                    echo "<Ticket>";
+                    echo "<ID>".$ticket->ID."</ID>";
+                    echo "<URL>".$this->escape($ticket->URL)."</URL>";
+                    echo "<Title>".$this->escape($ticket->Title)."</Title>";
+                    echo "</Ticket>";
+                }
+            }
+            echo "</OpenGOCTickets>";
+        }
+
+        echo "</Resource>";
+    }
+    echo "</Resources>";
+    echo "</ResourceGroup>";
+}
+?>
+</ResourceSummary>

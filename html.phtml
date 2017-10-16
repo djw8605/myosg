@@ -1,0 +1,423 @@
+<link rel="stylesheet" type="text/css" href="<?=fullbase()?>/css/hierarchy.css"/>
+<style>
+.rgsummary div.resource {
+background-color: inherit;
+border: none;
+}
+
+.rgsummary .content a {
+text-decoration: underline;
+}
+
+.rgsummary .table,
+.rgsummary pre {
+margin-bottom: 0;
+}
+
+/*
+.rgsummary .table th,
+.rgsummary .table td {
+padding: 4px;
+}
+*/
+
+.rgsummary tr.noborder > th,
+.rgsummary tr.noborder > td {
+border-top: none;
+}
+
+.rgsummary table th {
+margin: 0px;
+}
+
+.rgsummary .label {
+font-weight: normal;
+}
+
+.rgsummary .service {
+background-color: gray;
+display: inline-block;
+color: white;
+padding: 1px 6px;
+font-weight: bold;
+margin-left: 3px;
+}
+
+.rgsummary th.main_th {
+width: 25%;
+}
+</style>
+<?
+echo "<div class=\"rgsummary\">";
+echo "<table class=\"table\">";
+foreach($this->rgs as $resource_group_id=>$resource_list) {
+    $resource_group = $this->resourcegroups[$resource_group_id][0];
+    $group_name = $resource_group->name;
+    if($resource_group->disable == 1) {
+        $group_name .= " (Removed)";
+    }
+    echo "<tr class=\"noborder\"><td colspan=\"2\">";
+    echo "<div class=\"group_header\">";
+    echo "<span class='h3'>$group_name</span>";
+    $gridtype_name = $this->gridtypes[$resource_group->osg_grid_type_id][0]->name;
+    echo " <small>$gridtype_name</small>";
+    echo "</div>";
+    if(isset($_REQUEST["summary_attrs_showdesc"])) {
+        if($resource_group->description != "") {
+            echo htmlsafe($resource_group->description);
+        } else {
+            echo "<span class=\"muted\">No resource group description</span>";
+        }
+    }
+    echo "</tr>";
+
+
+    if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
+        $hierarchy = $this->hierarchy[$resource_group_id];
+
+        echo "<tr><th class=\"main_th\">OIM&nbsp;Hierarchy</th><td>";
+    
+        echo "<div class=\"hierarchy_facility round well\">";
+        $facility_url = "https://oim.grid.iu.edu/oim/topology?facility_id=".$hierarchy["facility"]->id;
+        echo "<a href=\"$facility_url\"><b>".$hierarchy["facility"]->name."</b></a>&nbsp;<span>Facility</span>";
+
+        echo "<div class=\"hierarchy_site round\">";
+        echo "<span class=\"pull-right\">Supported by <b>".$hierarchy["sc"]->name."</b></span>";
+        echo "<b>".$hierarchy["site"]->name."</b>&nbsp;<span>Site</span>";
+
+        echo "<div class=\"hierarchy_rg round\">";
+        echo "<b>".$group_name."</b>&nbsp;<span>Resource Group</span>";
+
+        echo "</div>"; //rg
+        echo "</div>"; //site
+
+        //show sibling sites
+        foreach($this->sites as $site_id=>$site) {
+            if($site_id == $hierarchy["site"]->id) continue;
+            if($site[0]->facility_id == $hierarchy["facility"]->id) {
+                echo "<div style=\"width: 60%\" class=\"hierarchy_site round\">";
+                echo "<b>".$site[0]->name."</b>&nbsp;<span>Site</span>";
+                echo "</div>";
+            }
+        }
+
+        echo "</div>"; //facility
+
+/*
+        echo "<div class=\"hierarchy_sc round\">";
+        echo "<b>".$hierarchy["sc"]->name."</b> Support Center";
+        echo "</div>";
+*/
+        echo "</td></tr>";
+    }
+
+    if(count($resource_list) == 0) {
+        echo "<tr><td colspan=2><p class=\"alert\">There are no resources that match your current filter</p></td></tr>";
+    }
+    $first = true;
+    foreach($resource_list as $rid=>$resource) {
+        if($first) {
+            echo "<tr >";
+            $first = false;
+        } else {
+            echo "<tr class=\"noborder\">";
+        }
+        $disabled = "";
+        if($resource->disable == 1) {
+            $disabled = "disabled";
+        }
+        echo "<th class=\"main_th\">";
+
+        //show resource name & desc
+        echo "<div class=\"resource $disabled\">";
+    
+        echo "<span class=\"h4\">".$resource->name."</span>";
+        if($resource->disable == 1) {
+            echo " (Removed)";
+        }
+        if($resource->active == 0) {
+            echo " (Inactive)";
+        }
+        if($resource->disable == 0 && $resource->active == 1) {
+            echo "<a target=\"_gocticket\" href=\"".config()->gocticket_url."/submit?resource_issue_check=on&resource[$rid]=on\" class=\"sidenote\">";
+            echo "<img src=\"".fullbase()."/images/tag_orange.png\" alt=\"Open GOC Ticket\"/ title=\"Open GOC Ticket\"></a>";
+        }
+        if(isset($_REQUEST["summary_attrs_showdesc"])) {
+            echo "<br/>";
+            echo "<p style=\"font-weight: normal; font-size: 11px;\">";
+            if($resource->description != "") {
+                echo $resource->description;
+            } else {
+                echo "<span class=\"muted\">No resource description</span>";
+            }
+            echo "</p>";
+        }
+        echo "</div>";
+        echo "</th>";
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //Optional Information
+        echo "<td>";
+        //display ticket open link if it's active
+        echo "<table class='table table-bordered table-condensed $disabled'>";
+
+        //fqdn
+        echo "<tr><th width=\"110px\">FQDN</th><td><code>$resource->fqdn</code></td></th></tr>";
+
+        if(isset($_REQUEST["summary_attrs_showservice"])) {
+            echo "<tr>";
+            echo "<th>Services</th>";
+            echo "<td>";
+            if(isset($this->resource_services[$rid]) == 0) {
+                echo "This resource has no grid service.";
+            } else {
+                $services = $this->resource_services[$rid];
+                $service_names = "";
+                foreach($services as $service) {
+                    echo "<div class=\"service round\">";
+                    if(isset($this->servicetypes[$service->service_id])) {
+
+                        $service_info = $this->servicetypes[$service->service_id][0];
+                        echo "<span>".htmlsafe($service_info->name)."</span>";
+                        if(count($service->details) > 0) {
+                            foreach($service->details as $key=>$value) {
+                                echo " <span class=\"label\"><b>".htmlsafe($key)."</b> = ".htmlsafe($value)."</span>";
+                            }
+                        } else {
+                            echo "<br>";
+                        }
+
+                    } else {
+                        echo "(Unknown Service ID:".$service->service_id.")";
+                    }
+                    echo "</div>";
+                }
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showrsvstatus"])) {
+            echo "<tr>";
+            echo "<th>RSV&nbsp;Status</th>";
+            echo "<td>";
+            if(!isset($this->resource_status[$rid])) {
+                $note = "<div>Resource status is not calculated for this resource.</div>";
+                $status = "UNKNOWN";
+            } else {
+                $detail_url = htmlsafe(fullbase()."/rgcurrentstatus/index?datasource=currentstatus&rg=on&rg_$resource_group_id=on&end_type=now");
+                $history_url = htmlsafe(fullbase()."/rgstatushistory/index?datasource=statushistory&start_type=7daysago&end_type=now&rg=on&rg_$resource_group_id=on");
+                $resource_status = $this->resource_status[$rid][0];
+                $note = "<div>".$resource_status->detail."<br/><a href=\"$detail_url\">Current Status Detail</a> <a href=\"$history_url\">Status History</a></div>";
+                $status = Status::getStatus($resource_status->status_id);
+            }
+
+            if(isset($this->downtime[$rid])) {
+                $downtime = $this->downtime[$rid][0];
+                $instatus = $status;
+                $status = "DOWNTIME";
+                $downtime_desc = $downtime->downtime_summary;
+                $internal_note = $note;
+                $note = "This resource is currently under maintenance.<br/>";
+                $note .= "<div class=\"well downtime\"><b>Maintenance Summary:</b><div>$downtime_desc</div>";
+                $note .= "<b>Internal status:</b><div class=\"status_$instatus\">$internal_note</div></div>";
+            }
+
+            echo "<div class=\"status_$status\">";
+            echo $note;
+            echo "</div>";
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showfqdn"])) {
+            echo "<tr><th>FQDN Alias</th><td>";
+            if(isset($this->aliases[$rid])) {
+                foreach($this->aliases[$rid] as $alias) {
+                    echo "<code>".$alias->resource_alias."</code> ";
+                }
+            } else {
+                echo "<span class=\"muted\">No Alias</span>";
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showvomembership"])) {
+            echo "<tr>";
+            echo "<th>Supported&nbsp;VOs</th>";
+            echo "<td>";
+            if(isset($this->vos_supported[$rid])) {
+                $volist = $this->vos_supported[$rid];
+                $vonames = "";
+                foreach($volist as $vo) {
+                    $vo_name = $vo;
+                    $attrs = $vo->attributes();
+                    $vo_id = $attrs["id"];
+                    $vonames .= "<span class=\"label\" style=\"color: white;\" onclick=\"document.location='".fullbase()."/vosummary/index?datasource=summary&vo=on&vo_$vo_id=on';\">$vo_name</span> ";
+                }                
+                echo $vonames;
+                if(isset($this->vos_errors[$rid])) {
+                    $error = $this->vos_errors[$rid];
+                    if($error != "") {
+                        if($vonames == "" || uwa()) {
+                            echo "<pre>$error</pre>";
+                        } else {
+                            echo outputToggle("Show Errors", "Hide Errors", "<pre>$error</pre>"); 
+                        }
+                    } else {
+                        if($vonames == "") {
+                            echo "<span class=\"muted\">No VOs supported</span>";
+                        }
+                    }
+                }
+            } else {
+                echo "<span class=\"muted\">Information not reported</span>";
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showvoownership"])) {
+            echo "<tr>";
+            echo "<th>VO&nbsp;Ownership</th>";
+            echo "<td>";
+            if(!isset($this->resource_ownerships[$rid])) {
+                echo "<span class=\"muted\">Information not available</span>";
+            } else {
+                $ownership = $this->resource_ownerships[$rid];
+                $chd = "";
+                $chl = "";
+                $total = 0;
+                foreach($ownership as $item) {
+                    if($chd != "") $chd .= ",";
+                    $chd .= $item->percent;
+                    if($chl != "") $chl .= "|";
+                    $chl .= $item->name."(".$item->percent."%)";
+                    $total += $item->percent;
+                }
+                if($total < 100) {
+                    if($chd != "") $chd .= ",";
+                    $left = 100 - $total;
+                    $chd .= $left;
+                    if($chl != "") $chl .= "|";
+                    $chl .= "Other($left%)";
+                }
+                $background = "";
+                if($resource->disable == 1) {
+                    $background = "&chf=bg,s,eeeeee";
+                }
+                //for google chart api, look http://code.google.com/apis/chart/styles.html
+                $url = "http://chart.apis.google.com/chart?chco=00cc00&cht=p3&chd=t:$chd&chs=300x65&chl=$chl$background";
+                echo "<img src='$url'/>";
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showwlcg"])) {
+            echo "<tr><th>WLCG Information</th><td>";
+            if(!isset($this->resource_wlcg[$rid][0]->interop_bdii)) {
+                echo "<span class=\"muted\">Not a WLCG resource</span>";
+            } else {
+                $info = $this->resource_wlcg[$rid][0];
+                echo "<table class=\"table table-bordered table-striped\">";
+
+                $value = "False";
+                if($info->interop_bdii == 1) { 
+                    $value = "True ($info->ldap_url)"; 
+                }
+                echo "<tr><th>Interop BDII</th><td>$value</td></tr>";
+
+                $value = "False";
+                if($info->interop_monitoring == 1) { $value = "True"; }
+                echo "<tr><th>Interop Monitoring</th><td>$value</td></tr>";
+
+                $value = "False";
+                if($info->interop_accounting == 1) { $value = "True"; }
+                echo "<tr><th>Interop Accounting</th><td>$value</td></tr>";
+
+                echo "<tr><th>Accounting Name</th><td>$info->accounting_name</td></tr>";
+                echo "<tr><th>KSI2K Min</th><td>$info->ksi2k_minimum</td></tr>";
+                echo "<tr><th>KSI2K Max</th><td>$info->ksi2k_maximum</td></tr>";
+                echo "<tr><th>HEPSPEC Value</th><td>$info->hepspec</td></tr>";
+                echo "<tr><th>APEL Normalization Factor</th><td>$info->apel_normal_factor</td></tr>";
+                echo "<tr><th>Storage Capacity Min</th><td>$info->storage_capacity_minimum TB</td></tr>";
+                echo "<tr><th>Storage Capacity Max</th><td>$info->storage_capacity_maximum TB</td></tr>";
+                if($info->tape_capacity === null) {
+                    echo "<tr><th>Tape Capacity</th><td>".nullImage()."</td></tr>";
+                } else {
+                    echo "<tr><th>Tape Capacity</th><td>$info->tape_capacity TB</td></tr>";
+                } 
+
+                echo "</table>";
+            }
+            echo "</td></tr>";
+        }
+
+        /*
+        if(isset($_REQUEST["summary_attrs_showenv"])) {
+            echo "<tr><th>ENV Parameters</th><td>";
+            $xml = @$this->envs[$rid];
+            if($xml === null) {
+                echo "<span class=\"muted\">Information not available</span>";
+            } else {
+                echo "<table class=\"summary_subtable\">";
+                foreach($xml as $key=>$value) {
+                    echo "<tr><th>".htmlsafe($key)."</th><td>".htmlsafe($value)."</td></tr>";
+                }
+                echo "</table>";
+            }
+            echo "</td></tr>";
+        }
+        */
+
+        if(isset($_REQUEST["summary_attrs_showcontact"])) {
+            echo "<tr><th>Contacts</th><td>";
+            if(isset($this->contacts[$rid])) {
+                $contact_types = $this->contacts[$rid];
+                echo "<table class=\"table table-bordered table-striped\">";
+                foreach($contact_types as $type_name=>$contacts) {
+                    echo "<tr><th>$type_name</th><td>";
+                    $group = array();//used to group same contact with different dn together
+                    foreach($contacts as $contact) {
+                        if(!isset($group[$contact->id])) {
+                            $group[$contact->id] = 1;
+                            if(user()->isGuest()) {
+                                echo htmlsafe($contact->name)."<br/>";
+                            } else {
+                                echo "<a href=\"mailto:".htmlsafe($contact->primary_email)."\">".htmlsafe($contact->name)."</a> ";
+                                echo htmlsafe($contact->primary_phone)."<br>";
+                                //echo htmlsafe($contact->dn)."<br>";
+                                if($contact->sms_address != null) {
+                                    echo "SMS Address: ".htmlsafe($contact->sms_address)."<br>";
+                                }
+                            }
+                        } else {
+                            $group[$contact->id]++;//just count number of records for this person (not used right now..)
+                        }
+                    }
+                    echo "</td></tr>";
+                }
+                echo "</table>";
+            }
+            echo "</td></tr>";
+        }
+
+        if(isset($_REQUEST["summary_attrs_showticket"])) {
+            echo "<tr><th>Open GOC Tickets</th><td>";
+            if(isset($this->tickets[$rid])) {
+                foreach($this->tickets[$rid] as $ticket) {
+                    //$ticket->Title is already escaped.. for some reason
+                    echo "<a class=\"suppress_deco\" href=\"".$ticket->URL."\" target=\"_blank\">(".$ticket->ID.") ".$ticket->Title."</a><br>";
+                }
+            } else {
+                echo "<span class=\"muted\">No Tickets</span>";
+            }
+            echo "</td></tr>";
+        }
+
+        echo "</table>";//resource summary table
+        echo "</td>";
+        echo "</tr>";
+    }
+}
+echo "</table>";
+
+
+echo "</div>";
