@@ -28,7 +28,6 @@ margin-bottom: 5px;
         <option value="">(Please Select)</option>
         <option value="rgsummary">Resource Group Summary</option>
         <option value="rgcurrentstatus">Current RSV Status</option>
-        <option value="rggipstatus">Current GIP Validation Status</option>
         <option value="rgstatushistory">RSV Status History</option>
         <option value="rgarhistory">Availability History</option>
         <option value="rgarmetric">Availability Metrics</option>
@@ -179,7 +178,6 @@ margin-bottom: 5px;
             echo checklist("gridtype", "Grid Type", $kv);
 
             $kv = array("OK"=>"OK", "FAIL"=>"FAIL", "UNKNOWN"=>"UNKNOWN");
-            echo checklist("gipstatus", "Current GIP Status", $kv);
 
             ?>
             <h4 style="margin-top: 5px;">For Resource</h4>
