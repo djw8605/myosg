@@ -52,7 +52,7 @@ class User
    
       if($row_sso) {
 	//  $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now())";
-	$update_sso = "update  contact_authorization_type set given_name='".$_SESSION["given_name"]."', family_name ='".$_SESSION["family_name"]."', idp= '".$_SESSION["idp"]."', idp_name= '".$_SESSION["idp_name"]."',aud='".$_SESSION["aud"]."', name= '".$_SESSION["name"]."',  oidc= '".$_SESSION["oidc"]."', openid= '".$_SESSION["openid"]."', sub='".$_SESSION["sub"]."', access_token='".$_SESSION["access_token"]."', remote_user='".$_SESSION["remote_user"]."'";
+	$update_sso = "update  contact_authorization_type set given_name='".$_SESSION["given_name"]."', family_name ='".$_SESSION["family_name"]."', idp= '".$_SESSION["idp"]."', idp_name= '".$_SESSION["idp_name"]."',aud='".$_SESSION["aud"]."', name= '".$_SESSION["name"]."',  oidc= '".$_SESSION["oidc"]."', openid= '".$_SESSION["openid"]."', sub='".$_SESSION["sub"]."', access_token='".$_SESSION["access_token"]."', remote_user='".$_SESSION["remote_user"]."'  where email = \"$dn\" ";
 	//print "<br>".$update_sso;
 	db("sso")->exec($update_sso);
 	$sso_idp = $row_sso->idp;
@@ -68,8 +68,7 @@ class User
 	$row_select_contact = db("oim")->fetchRow($sql_select_contact);
 	if($row_select_contact) {
 	  $contact_id = $row_select_contact->id;
-	    $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, su\
-b, access_token, access_token_expires, remote_user,authorization_type_id, created, contact_id) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now(),'".$contact_id."')";                                                                                   
+	    $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created, contact_id) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now(),'".$contact_id."')";                                                                                   
  
 	    $insert_sso_contact = db("sso")->fetchRow($insert_sso);
 	      
@@ -86,6 +85,8 @@ b, access_token, access_token_expires, remote_user,authorization_type_id, create
 	      $sql = "select * from dn_authorization_type where dn_id=".$dn_id."";
 	      foreach(db("oim")->fetchAll($sql) as $row) {
 		$authorization_type_id  = $row->authorization_type_id;
+		db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$contact_authorization_type_id." and au\
+thorization_type_id=".$authorization_type_id."");
 		$insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$contact_authorization_type_id.",".$authorization_type_id.")";
 		db("sso")->exec($sql);
 	      }
@@ -103,6 +104,7 @@ b, access_token, access_token_expires, remote_user,authorization_type_id, create
 		$sql = "select * from dn_authorization_type where dn_id=".$dn_id."";
 		foreach(db("oim")->fetchAll($sql) as $row) {
 		  $authorization_type_id  = $row->authorization_type_id;
+		  db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$contact_authorization_type_id." and authorization_type_id=".$authorization_type_id."");
 		  $insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$contact_authorization_type_id.",".$authorization_type_id.")";
 		  db("sso")->exec($sql);
 		    
