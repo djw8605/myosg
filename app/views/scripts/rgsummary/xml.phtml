@@ -27,36 +27,6 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
     }
     echo "</Disable>";
 
-    if(isset($_REQUEST["summary_attrs_showgipstatus"])) {
-        $gipstatus = "NA";
-        if(isset($this->gipstatus[$resource_group->name])) {
-            $gip = $this->gipstatus[$resource_group->name];
-            $gipstatus = (string)$gip->Result;
-        }
-        switch($gipstatus) {
-        case "PASS":
-            $status = "OK"; 
-            $note = "GIP validation is passing all test";
-            break;
-        case "INFO":
-            $status = "WARNING";
-            $note = "At least one test is reporting information.";
-            break;
-        case "CRIT":
-            $status = "CRITICAL";
-            $note = "At least one test is failing";
-            break;
-        case "UNKNOWN":
-            $status = "UNKNOWN";
-            $note = "GIP Validation is not available for this resource group";
-            break;
-        default:
-            $status = "UNKNOWN";
-            $note = "GIP Validation is returning unknown status";
-        }
-
-        echo "<GIPStatus><Status>$status</Status><Note>$note</Note></GIPStatus>";
-    }
 
     if(isset($_REQUEST["summary_attrs_showhierarchy"])) {
         $hierarchy = $this->hierarchy[$resource_group_id];
