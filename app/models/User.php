@@ -45,35 +45,37 @@ class User
     {
         //make sure user DN exists and active
 
-      $sql_sso = "select * from contact_authorization_type where email = \"$dn\" or email1 = \"$dn\" or email2 = \"$dn\" or email3 = \"$dn\"  ";
+      $sql_sso = "select * from contact_authorization_type where email = \"$dn\" or email1 = \"$dn\" or email2 = \"$dn\" or email3 = \"$dn\" limit 1 ";
      
       //   print  $sql_sso ;
       $row_sso = db("sso")->fetchRow($sql_sso);
    
       if($row_sso) {
-	//  $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now())";
-	$update_sso = "update  contact_authorization_type set given_name='".$_SESSION["given_name"]."', family_name ='".$_SESSION["family_name"]."', idp= '".$_SESSION["idp"]."', idp_name= '".$_SESSION["idp_name"]."',aud='".$_SESSION["aud"]."', name= '".$_SESSION["name"]."',  oidc= '".$_SESSION["oidc"]."', openid= '".$_SESSION["openid"]."', sub='".$_SESSION["sub"]."', access_token='".$_SESSION["access_token"]."', remote_user='".$_SESSION["remote_user"]."', last_login=now()  where email = \"$dn\" ";
-	//print "<br>".$update_sso;
+
+	$update_sso = "update  contact_authorization_type set given_name='".$_SESSION["given_name"]."', family_name ='".$_SESSION["family_name"]."', idp= '".$_SESSION["idp"]."', idp_name= '".$_SESSION["idp_name"]."',aud='".$_SESSION["aud"]."', name= '".$_SESSION["name"]."',  oidc= '".$_SESSION["oidc"]."', openid= '".$_SESSION["openid"]."', sub='".$_SESSION["sub"]."', access_token='".$_SESSION["access_token"]."', remote_user='".$_SESSION["remote_user"]."', last_login=now()  where id = ".$row_sso->id."";
+	slog("UserModule- there SSO; ".$update_sso);
 	db("sso")->exec($update_sso);
 	$sso_idp = $row_sso->idp;
-	$this->dn_id = $row_sso->id;
-	$this->contact_id = $row_sso->contact_id;
-	$this->contact_name = "".$row_sso->given_name." ". $row_sso->family_name."";
-	//print "".$row_sso->given_name." ". $row_sso->family_name."<br>";                                                                                                                    
-	$this->contact_email = $row_sso->email;
-	$this->disable = ($row_sso->disable || $row_sso->dn_disable);
+
+	//	$this->dn_id = $row_sso->id;
+	$this->person_id = $row_sso->id;
+	$this->person_name = "".$row_sso->given_name." ". $row_sso->family_name."";
+	$this->person_email = $row_sso->email;
+	$this->disable =  ($row_sso->disable || $row_sso->dn_disable);
+
+
       }else{
 	// check if the email is in the contacts database 
 	$sql_select_contact = "select * from contact where primary_email = '".$dn."' or  secondary_email = '".$dn."'";
 	$row_select_contact = db("oim")->fetchRow($sql_select_contact);
 	if($row_select_contact) {
 	  $contact_id = $row_select_contact->id;
-	    $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created, contact_id) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now(),'".$contact_id."')";                                                                                   
+	  $insert_sso = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created, contact_id) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now(),'".$contact_id."')";                                                                     slog("UserModule: there no SSO but there is Contact: $insert_sso");
  
 	    $insert_sso_contact = db("sso")->fetchRow($insert_sso);
 	      
 	    $this->dn_id = $insert_sso_contact->getLastId();
-	    $contact_authorization_type_id = $insert_sso_contact->getLastId();
+	    $sso_id_last = $insert_sso_contact->getLastId();
 	    $this->contact_name = $_SESSION["given_name"]."' '".$_SESSION["family_name"];
 	    $this->contact_email = $_SESSION["email"];
 	    // add actions
@@ -85,11 +87,13 @@ class User
 	      $sql = "select * from dn_authorization_type where dn_id=".$dn_id."";
 	      foreach(db("oim")->fetchAll($sql) as $row) {
 		$authorization_type_id  = $row->authorization_type_id;
-		db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$contact_authorization_type_id." and au\
-thorization_type_id=".$authorization_type_id."");
-		$insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$contact_authorization_type_id.",".$authorization_type_id.")";
-		db("sso")->exec($sql);
+		db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$sso_id_last." and authorization_type_id=".$authorization_type_id."");
+		$insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$sso_id_last.",".$authorization_type_id.")";
+		db("sso")->exec($insert_action);
 	      }
+	    }else{
+	      $insert_1 = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$sso_id_last.",1)";
+	      db("sso")->exec($insert_1);
 	    }
 	}else{
 
@@ -99,58 +103,52 @@ thorization_type_id=".$authorization_type_id."");
 	    if($row_select_dn) {
 	      $dn_contact_id = $row_select_dn->contact_id;
 	      $insert_sso_dn = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created, contact_id) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now(),'".$dn_contact_id."')";
+	      slog("UserModule: there is DN, NO Contact, NO SSO : $insert_sso_dn");
+
+	      $insert_sso_contact_dn = db("sso")->fetchRow($insert_sso_dn);
+              $sso_id_last = $insert_sso_contact_dn->getLastId();
+
 	      $dn_id=$row_select_dn->id;
 	      if($dn_id!=""){
 		$sql = "select * from dn_authorization_type where dn_id=".$dn_id."";
 		foreach(db("oim")->fetchAll($sql) as $row) {
 		  $authorization_type_id  = $row->authorization_type_id;
-		  db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$contact_authorization_type_id." and authorization_type_id=".$authorization_type_id."");
-		  $insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$contact_authorization_type_id.",".$authorization_type_id.")";
-		  db("sso")->exec($sql);
+		  db("sso")->exec("delete from contact_authorization_type_index where contact_authorization_type_id=".$sso_id_last." and authorization_type_id=".$authorization_type_id."");
+		  $insert_action = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$sso_id_last.",".$authorization_type_id.")";
+		  db("sso")->exec($insert_action);
 		    
 		}
+	      }else{
+		$insert_2 = "INSERT INTO contact_authorization_type_index (contact_authorization_type_id, authorization_type_id) VALUES (".$sso_id_last.",1)";
+		db("sso")->exec($insert_2);
 	      }
 	    }
 	  }else{ // there is no DN
 	    $insert_sso_dn_last = "insert into contact_authorization_type (given_name, family_name, email, idp, idp_name,aud, iat, name, iss, nonce, oidc, openid, sub, access_token, access_token_expires, remote_user,authorization_type_id, created) values('".$_SESSION["given_name"]."', '".$_SESSION["family_name"]."','".$_SESSION["email"]."', '".$_SESSION["idp"]."', '".$_SESSION["idp_name"]."','".$_SESSION["aud"]."', '".$_SESSION["iat"]."', '".$_SESSION["name"]."', '".$_SESSION["iss"]."', '".$_SESSION["nonce"]."', '".$_SESSION["oidc"]."', '".$_SESSION["openid"]."', '".$_SESSION["sub"]."', '".$_SESSION["access_token"]."', '".$_SESSION["access_token_expires"]."', '".$_SESSION["remote_user"]."',1, now())";
+	    slog("NO SSO, NO DN, NO Contact : $insert_sso_dn_last ");  
 	    $insert_sso_dn=db("sso")->fetchRow($insert_sso_dn_last);
-	    $last_inserted_dnid=$insert_sso_dn->getLastId();
-	    $insert_actions ="insert into contact_authorization_type_index (contact_authorization_type,authorization_type_id) values (".$last_inserted_dnid.",1)";
+	    $sso_id_last=$insert_sso_dn->getLastId();
+
+	    $insert_actions ="insert into contact_authorization_type_index (contact_authorization_type,authorization_type_id) values (".$sso_id_last.",1)";
 	    $insert_sso_index = db("sso")->fetchRow($insert_actions);
 	  }
 	}
-      }
+      
       //  slog("DN: $dn doesn't exist in oim");
-        
-      $sql_sso2 = "select * from contact_authorization_type where email = \"$dn\" or email1 = \"$dn\" or email2 = \"$dn\" or email3 = \"$dn\"  ";
-      $row_sso2 = db("sso")->fetchRow($sql_sso2);
-
-      if($row_sso2) {
-                                                                                                                                                                
-	$this->person_id = $row_sso2->contact_id;
-        	
-	$this->person_name = $row_sso2->given_name." ".$row_sso2->family_name;                                                                                                 
-                                       
-	$this->person_email = $row_sso2->email;                                                                                                                              
-	//$this->person_phone = $row->primary_phone;                                                                                                                              
-	//$this->timezone = $row->timezone;                                                                                                                                       
-	$this->disable = $row_sso2->disable;                                                                           
-                                        
-      }     
-
-      /* $sql = "select p.*,c.disable as dn_disable from dn c left join contact p on (c.contact_id = p.id)
-                    where dn_string = \"$dn\"";
-        $row = db("oim")->fetchRow($sql);
-        if($row) {
-            $this->person_id = $row->id;
-            $this->person_name = $row->name;
-            $this->person_email = $row->primary_email;
-            $this->person_phone = $row->primary_phone;
-            $this->timezone = $row->timezone;
-            $this->disable = ($row->dn_disable || $row->disable);
-        }
-      */
-
+      }
+      if($sso_id_last!=""){
+	$sql_sso2 = "select * from contact_authorization_type where id=$sso_id_last ";
+	slog("Get record:".$sql_sso2);
+	$row_sso2 = db("sso")->fetchRow($sql_sso2);
+	
+	if($row_sso2) {
+	  $this->person_id = $row_sso->id;
+	  $this->person_name = "".$row_sso->given_name." ". $row_sso->family_name."";
+	  $this->person_email = $row_sso->email;
+	  $this->disable =  ($row_sso->disable || $row_sso->dn_disable);
+	  
+	}     
+      }
     }
 
     private function lookupRoles($person_id)
