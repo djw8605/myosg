@@ -30,7 +30,12 @@ function showdowntimes($downtimes) {
         echo "<Class>".htmlsafe($downtime["class"])."</Class>";
         echo "<Severity>".htmlsafe($downtime["severity"])."</Severity>";
         if(!user()->isGuest()) {
+	  if(trim($downtime["full_name"])!=""){
+            echo "<DN>".htmlsafe($downtime["full_name"])."</DN>";
+
+	  }else{
             echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
+	  }
         }
         echo "<CreatedTime>".$downtime["created"]."</CreatedTime>";
         echo "<UpdateTime>".$downtime["timestamp"]."</UpdateTime>";

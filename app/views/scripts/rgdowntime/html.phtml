@@ -72,8 +72,16 @@ function showdowntimes($downtimes) {
         }
         echo "</td></tr>";
         if(!user()->isGuest()) {
+	 
+	  if(trim($downtime["full_name"])!=""){
+	    echo "<tr><th>Submitted By</th><td>".htmlsafe($downtime["full_name"])."</td></tr>"; 
+
+	  }else{
             echo "<tr><th>Submitter DN</th><td>".htmlsafe($downtime["dn"])."</td></tr>";
-        }
+	  }
+	}
+
+
         echo "<tr><th>Created On</th><td>".htmlsafe($downtime["created"])."</td></tr>";
 
         echo "<tr><th>Updated At</th><td>".htmlsafe($downtime["timestamp"])."</td></tr>";
