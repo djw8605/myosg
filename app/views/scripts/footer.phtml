@@ -2,9 +2,9 @@
 <footer>
 <?php
 if(user()->isGuest()) {
-    $ticket_url = "http://ticket.grid.iu.edu/goc";
+    $ticket_url = "http://ticket.opensciencegrid.org/goc";
 } else {
-    $ticket_url = "https://ticket.grid.iu.edu/goc";
+    $ticket_url = "https://ticket.opensciencegrid.org/goc";
 }
 echo "<p>".config()->app_name." Version ".config()->version;
 ?> 
