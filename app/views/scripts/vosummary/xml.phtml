@@ -6,7 +6,7 @@ if(user()->isGuest()) {
     echo "-->";
 }
 ?>
-<VOSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/vosummary.xsd">
+<VOSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://my.opensciencegrid.org/schema/vosummary.xsd">
 <?
 foreach($this->vos as $vo_id=>$vo) {
     echo "<VO>";
