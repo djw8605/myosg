@@ -14,6 +14,17 @@ $oidc->addScope("profile");
 $oidc->addScope("org.cilogon.userinfo");                                                                                                                          
 $oidc->authenticate();                                                                                                                                            
 $name = $oidc->requestUserInfo('email');                                                                                                                          
+
+if(preg_match("/opensciencegrid/",$_SESSION['ref_loc'])){
+  $redirect_url=config()->cilogon_client_redirect;
+  elog("redirect: opensciencegrid");
+}else{
+  $redirect_url=config()->cilogon_client_redirect_grid;
+  elog("redirect: grid.iu.edu");
+}
+elog("callback url:". $redirect_url);
+
+
 if($_SESSION['access_token']==""){                                                                                                                             
     
   if (isset($_REQUEST['code'])) {                                                                                                                                   
