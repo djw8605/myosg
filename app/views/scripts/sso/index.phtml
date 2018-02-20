@@ -1,5 +1,16 @@
 <?php
 require "/usr/local/myosg/vendor/autoload.php";
+
+if(preg_match("/opensciencegrid/",$_SESSION['ref_loc'])){
+  $redirect_url=config()->cilogon_client_redirect;
+  elog("redirect: opensciencegrid");
+}else{
+  $redirect_url=config()->cilogon_client_redirect_grid;
+  elog("redirect: grid.iu.edu");
+}
+elog("callback url:". $redirect_url);
+
+
 $client_id = config()->cilogon_client_id;
 $redirect_url=config()->cilogon_client_redirect;
 $client_host=config()->cilogon_client_host;
@@ -14,15 +25,6 @@ $oidc->addScope("profile");
 $oidc->addScope("org.cilogon.userinfo");                                                                                                                          
 $oidc->authenticate();                                                                                                                                            
 $name = $oidc->requestUserInfo('email');                                                                                                                          
-
-if(preg_match("/opensciencegrid/",$_SESSION['ref_loc'])){
-  $redirect_url=config()->cilogon_client_redirect;
-  elog("redirect: opensciencegrid");
-}else{
-  $redirect_url=config()->cilogon_client_redirect_grid;
-  elog("redirect: grid.iu.edu");
-}
-elog("callback url:". $redirect_url);
 
 
 if($_SESSION['access_token']==""){                                                                                                                             
