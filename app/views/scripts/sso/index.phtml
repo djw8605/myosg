@@ -1,5 +1,7 @@
 <?php
 require "/usr/local/myosg/vendor/autoload.php";
+elog("current host:". $_SERVER['HTTP_HOST']);
+elog("current host refer:". $_SESSION['ref_loc']);
 
 if(preg_match("/opensciencegrid/",$_SESSION['ref_loc'])){
   $redirect_url=config()->cilogon_client_redirect;
@@ -12,7 +14,7 @@ elog("callback url:". $redirect_url);
 
 
 $client_id = config()->cilogon_client_id;
-$redirect_url=config()->cilogon_client_redirect;
+#$redirect_url=config()->cilogon_client_redirect;
 $client_host=config()->cilogon_client_host;
 $client_secret=config()->cilogon_client_secret;
 $oidc = new OpenIDConnectClient($client_host,                                                                            
