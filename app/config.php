@@ -61,7 +61,7 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
-        $this->version = "3.0";
+        $this->version = "3.2";
 
         //application to display or used in email
         $this->app_name = "MyOSG";
@@ -202,6 +202,7 @@ class common_config
 
         //$this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
         $this->eventjs_url = "https://".gethostname().":12345";//assume running locally to the server host
+
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
         //override this in site config to point to production if necessary
