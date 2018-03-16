@@ -44,8 +44,8 @@ class User
     private function lookupUserID($dn)
     {
  
-          if($_SESSION["session_login"]==""){
-
+      if($_SESSION["session_login"]==""){
+	
         slog("session login is NOT:" + $_SESSION["session_login"]);
 	
 	$sql_sso = "select * from contact_authorization_type where email = \"$dn\" or email1 = \"$dn\" or email2 = \"$dn\" or email3 = \"$dn\" limit 1 ";
