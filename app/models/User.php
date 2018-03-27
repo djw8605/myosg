@@ -74,7 +74,7 @@ class User
 	  }
 	}
 	$sql_select_dn = "select * from dn where dn_string='".$_SERVER["SSL_CLIENT_S_DN"]."'";
-	print $sql_select_dn;
+	
 	slog($sql_select_dn);
 	$row_select_dn = db("oim")->fetchRow($sql_select_dn);
 	if($row_select_dn) {
@@ -166,7 +166,7 @@ class User
 	      
 	      if($dn_flag>0 && $contact_no_sso_id>0){
 		  $update_sso_dn = "update  contact_authorization_type set contact_id='".$dn_contact_id."', email2='".$_SESSION["email"]."' where id = ".$contact_no_sso_id."";
-		  print $update_sso_dn;
+		  
 		  $sso_id_last= $contact_no_sso_id;
 		  db("sso")->exec($update_sso_dn);
 		  
@@ -224,7 +224,7 @@ class User
 	
 	if($sso_id_last!=""){
 	  $sql_sso2 = "select * from contact_authorization_type where id=$sso_id_last ";
-	  print $sql_sso2;
+	  
 	  slog("Get record:".$sql_sso2);
 	  $row_sso2 = db("sso")->fetchRow($sql_sso2);
 	  
