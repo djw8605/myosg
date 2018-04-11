@@ -297,14 +297,6 @@ class User
         return in_array($role, $this->roles);
     }
     public function isGuest() { return $this->guest; }
-    public function isLogged() {
-
-      if($_SESSION["logged_in"]!=""){
-	
-	return true;
-      } 
-      return false;
-    }
 
     public function isDisabled() { return $this->disable; }
     public function getPersonID() { return $this->person_id; }
