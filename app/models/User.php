@@ -39,11 +39,23 @@ class User
                 $this->lookupRoles($this->person_id);
             }
         }
+
+
+	$sql_select_dn_myosg = "select * from dn where dn_string='".$_SERVER["SSL_CLIENT_S_DN"]."' and disable=0";
+
+  	$row_select_dn_myosg = db("oim")->fetchRow($sql_select_dn_myosg);
+	if($row_select_dn_myosg) {
+	  $this->guest = false;
+
+        }
+
     }
 
     private function lookupUserID($dn)
     {
  
+
+
       if($_SESSION["session_login"]==""){
 	
         slog("session login is NOT:" + $_SESSION["session_login"]);
@@ -81,6 +93,7 @@ class User
 	  $dn_string_id = $row_select_dn->id;
 	  $contact_id = $row_select_dn->contact_id;
           $dn_contact_id = $row_select_dn->contact_id;
+	
 	  $sql_sso_dn = "select * from contact_authorization_type where contact_id=".$contact_id." ";
 	  slog($sql_sso_dn);
 	  
@@ -92,6 +105,7 @@ class User
 	    $contact_no_sso_id=$row_select_sso_dn->id;
 	    $sso_id_last = $contact_no_sso_id;
 	    $dn_flag=1;
+	   
 	  }
 	}
 	
@@ -283,8 +297,18 @@ class User
         return in_array($role, $this->roles);
     }
     public function isGuest() { return $this->guest; }
+    public function isLogged() {
+
+      if($_SESSION["logged_in"]!=""){
+	
+	return true;
+      } 
+      return false;
+    }
+
     public function isDisabled() { return $this->disable; }
     public function getPersonID() { return $this->person_id; }
+    public function getDNPersonID() { return $this->person_id; }
     public function getPersonName() { return $this->person_name; }
     public function getPersonEmail() { return $this->person_email; }
     public function getPersonPhone() { return $this->person_phone; }

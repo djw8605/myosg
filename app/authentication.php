@@ -95,6 +95,14 @@ function cert_authenticate()
         Zend_Registry::set("user", $guest);
         slog("guest access from ".$_SERVER["REMOTE_ADDR"]);
     }
+
+    if(isset($_SERVER["SSL_CLIENT_S_DN"]) && $_SERVER["SSL_CLIENT_VERIFY"] == "SUCCESS") {
+      $usercert = new User($_SERVER["SSL_CLIENT_S_DN"]);
+      if(!is_null($usercert->getDNPersonID())) {
+	$_SESSION["logged_in"] = $_SERVER["SSL_CLIENT_S_DN"];                                                                                                                       
+      }
+    }
+
     /*
     if(!isset($_SERVER["HTTPS"])) {
         if(config()->force_https and !isbot()) {
