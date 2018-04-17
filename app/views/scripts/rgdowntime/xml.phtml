@@ -1,5 +1,5 @@
 <?=$this->header?>
-<Downtimes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myosg.grid.iu.edu/schema/rgdowntime.xsd">
+<Downtimes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://my.opensciencegrid.org/schema/rgdowntime.xsd">
 <?if(isset($_REQUEST["downtime_attrs_showpast"])) {?>
     <PastDowntimes>
     <?showdowntimes($this->past_downtimes); ?>
@@ -30,8 +30,14 @@ function showdowntimes($downtimes) {
         echo "<Class>".htmlsafe($downtime["class"])."</Class>";
         echo "<Severity>".htmlsafe($downtime["severity"])."</Severity>";
         if(!user()->isGuest()) {
+	  if(trim($downtime["full_name"])!=""){
+            echo "<DN>".htmlsafe($downtime["full_name"])."</DN>";
+
+	  }else{
             echo "<DN>".htmlsafe($downtime["dn"])."</DN>";
+	  }
         }
+        echo "<CreatedTime>".$downtime["created"]."</CreatedTime>";
         echo "<UpdateTime>".$downtime["timestamp"]."</UpdateTime>";
 
         echo "<Services>";

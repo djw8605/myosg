@@ -27,17 +27,17 @@ class RgceController extends RgGratiaController
         switch($dirty_type) 
         {
         case "gip_vo":
-            $urlbase = config()->gratiaweb."/status_graphs/status_vo";
+	  $urlbase = config()->gratiaweb."/vo-summary?";//."/status_graphs/status_vo";
             $sub_title = "Running Jobs by VO";
             $ylabel = "Jobs";
             break;
         case "gip_vo_waiting":
-            $urlbase = config()->gratiaweb."/status_graphs/status_vo_waiting";
+	  $urlbase = config()->gratiaweb."/vo-summary?";//."/status_graphs/status_vo_waiting";
             $sub_title = "Queued Jobs by VO";
             $ylabel = "Jobs";
             break;
         case "rsv_metric_quality":
-            $urlbase = config()->gratiaweb."/rsv_graphs/rsv_metric_quality";
+	  $urlbase = config()->gratiaweb."/vo-summary?";//."/rsv_graphs/rsv_metric_quality";
             $sub_title = "RSV Data";
             $ylabel = "Probe Names";
             break;

@@ -94,6 +94,10 @@ class RgdowntimeController extends RgController
         $model = new Contact();
         $contacts = $model->getindex();
 
+	$model = new SSO();
+        $sso = $model->getindex();
+
+
         //pull all resource ids that we are interested in
         $resource_ids = array();
         foreach($this->rgs as $rgid=>$rg) {
@@ -117,6 +121,16 @@ class RgdowntimeController extends RgController
                     $end = date(config()->date_format_full, $downtime->unix_end_time);
                     $timestamp = date(config()->date_format_full, $downtime->unix_timestamp);
 
+		    if($downtime->created<>"" && $downtime->created<>"0000-00-00" && $downtime->created<>"NULL" && $downtime->created<>"0000-00-00 00:00:00"){
+		      $created = date(config()->date_format_full, strtotime($downtime->created));
+		    }else{
+		      $created = "Not Available";
+
+		    }
+	
+
+		    $full_name = $sso[$downtime->sso_id][0]->family_name." ".$sso[$downtime->sso_id][0]->given_name;
+
                     //get affected services
                     $affected_services = array();
                     foreach($downtime_services as $service) {
@@ -133,6 +147,7 @@ class RgdowntimeController extends RgController
                     $class = $downtime_class[$downtime->downtime_class_id][0]->name;
                     if(isset($dns[$downtime->dn_id])) {
                         $dn = $dns[$downtime->dn_id][0]->dn_string;
+		
                         $contact_id  = $dns[$downtime->dn_id][0]->contact_id;
                         $contact_name = $contacts[$contact_id][0]->name;
                     } else {
@@ -153,7 +168,9 @@ class RgdowntimeController extends RgController
                         "unix_end_time"=>$downtime->unix_end_time,
                         "start_time"=>$start,
                         "dn"=>$dn,
+			"full_name"=>$full_name,
                         "timestamp"=>$timestamp,
+			"created"=>$created,
                         "contact_name"=>$contact_name,
                         "end_time"=>$end
                     );

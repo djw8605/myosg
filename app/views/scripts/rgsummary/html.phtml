@@ -78,7 +78,7 @@ foreach($this->rgs as $resource_group_id=>$resource_list) {
         echo "<tr><th class=\"main_th\">OIM&nbsp;Hierarchy</th><td>";
     
         echo "<div class=\"hierarchy_facility round well\">";
-        $facility_url = "https://oim.grid.iu.edu/oim/topology?facility_id=".$hierarchy["facility"]->id;
+        $facility_url = "https://oim.opensciencegrid.org/oim/topology?facility_id=".$hierarchy["facility"]->id;
         echo "<a href=\"$facility_url\"><b>".$hierarchy["facility"]->name."</b></a>&nbsp;<span>Facility</span>";
 
         echo "<div class=\"hierarchy_site round\">";

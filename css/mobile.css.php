@@ -425,23 +425,23 @@ table.summary_table th
 }
 .status_CRITICAL
 {
-background:transparent url(http://myosg.grid.iu.edu/images/button_cancel_small.png) no-repeat 2px 3px;
+background:transparent url(https://my.opensciencegrid.org/images/button_cancel_small.png) no-repeat 2px 3px;
 }
 .status_DOWNTIME
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_downtime_small.png) no-repeat 2px 3px;
+background:transparent url(https://my.opensciencegrid.org/images/status_downtime_small.png) no-repeat 2px 3px;
 }
 .status_OK
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_ok_small.png) no-repeat 2px 3px;
+background:transparent url(https://my.opensciencegrid.org/images/status_ok_small.png) no-repeat 2px 3px;
 }
 .status_WARNING
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_warning_small.png) no-repeat 2px 3px;
+background:transparent url(https://my.opensciencegrid.org/images/status_warning_small.png) no-repeat 2px 3px;
 }
 .status_UNKNOWN, .status_
 {
-background:transparent url(http://myosg.grid.iu.edu/images/status_unknown_small.png) no-repeat 2px 3px;
+background:transparent url(https://my.opensciencegrid.org/images/status_unknown_small.png) no-repeat 2px 3px;
 }
 
 .bottom_border

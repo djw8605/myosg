@@ -312,14 +312,25 @@ class MapController extends ControllerBase
         } else {
             foreach($_REQUEST as $key=>$value) {
                 if(isset($_REQUEST["sc"])) {
+		  /* SWT modifies per https://ticket.grid.iu.edu/26937 */
+		  /*
                     if(preg_match("/^sc_(\d+)/", $key, $matches)) {
                         $this->process_sitelist_addsc($site_ids, $matches[1]);
                     }
+		  */
+		  foreach($this->getids("sc", $key, $value) as $id) {
+		    $this->process_sitelist_addsc($site_ids, $id);
+		  }
                 }
                 if(isset($_REQUEST["facility"])) {
+		  /*
                     if(preg_match("/^facility_(\d+)/", $key, $matches)) {
                         $this->process_sitelist_addfacility($site_ids, $matches[1]);
                     }
+		  */
+		  foreach($this->getids("facility", $key, $value) as $id) {
+		    $this->process_sitelist_addfacility($site_ids, $id);
+		  }
                 }
             }
         }

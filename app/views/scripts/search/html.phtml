@@ -61,13 +61,13 @@ echo "<br><p><a class=\"btn\" href=\"http://www.google.com/cse?cx=01675269527517
 
 function show_resource($rec) {
     echo "<p class=\"btn-group pull-right\">";
-    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/resourceedit?id=".$rec->id."\">Edit OIM Detail</a>"; 
+    echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/resourceedit?id=".$rec->id."\">Edit OIM Detail</a>"; 
 
     $attr = "";
     if($rec->disable || !$rec->active) {
         $attr .= "disabled";
     } else {
-        $url = "https://ticket.grid.iu.edu/goc/submit?resource_issue_check=on&resource[".$rec->id."]=on";
+        $url = "https://ticket.opensciencegrid.org/goc/submit?resource_issue_check=on&resource[".$rec->id."]=on";
         $onclick = "document.location='$url'";
     }
     echo "<button class=\"btn btn-small\" $attr onclick=\"$onclick\">Submit Ticket</button>";
@@ -98,7 +98,7 @@ function show_resource($rec) {
 
 function show_resourcegroup($rec) {
     echo "<p class=\"btn-group pull-right\">";
-    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/resourcegroupedit?id=".$rec->id."\">Edit</a>"; 
+    echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/resourcegroupedit?id=".$rec->id."\">Edit</a>"; 
     echo "</p>";
 
     echo "<p><span class=\"tag resource_group\">Resource Group</span> ".$rec->v1."</p>";
@@ -119,7 +119,7 @@ function show_resourcegroup($rec) {
 function show_sc($rec) {
     if(user()->hasRole("admin")) {
         echo "<p class=\"btn-group pull-right\">";
-        echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/scedit?id=".$rec->id."\">Edit (Admin)</a>"; 
+        echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/scedit?id=".$rec->id."\">Edit (Admin)</a>"; 
         echo "</p>";
     }
 
@@ -140,7 +140,7 @@ function show_sc($rec) {
 function show_vo($rec) {
     if(user()->hasRole("admin")) {
         echo "<p class=\"btn-group pull-right\">";
-        echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/voedit?id=".$rec->id."\">Edit (Admin)</a>"; 
+        echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/voedit?id=".$rec->id."\">Edit (Admin)</a>"; 
         echo "</p>";
     }
 
@@ -162,7 +162,7 @@ function show_vo($rec) {
 
 function show_facility($rec) {
     echo "<p class=\"btn-group pull-right\">";
-    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/facilityedit?facility_id=".$rec->id."\">Edit</a>";
+    echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/facilityedit?facility_id=".$rec->id."\">Edit</a>";
     echo "</p>";
 
     echo "<p><span class=\"tag facility\">Facility</span> ".$rec->v1."</p>";
@@ -178,7 +178,7 @@ function show_facility($rec) {
     echo "</div>";//span
 
     echo "<div class=\"span4\">";
-    echo "<a href=\"https://oim.grid.iu.edu/oim/topology?facility_id=".$rec->id."\">OIM Hierarchy</a>"; 
+    echo "<a href=\"https://oim.opensciencegrid.org/oim/topology?facility_id=".$rec->id."\">OIM Hierarchy</a>"; 
     echo "</div>";//span
 
     echo "</div>";//row
@@ -186,7 +186,7 @@ function show_facility($rec) {
 
 function show_project($rec) {
     echo "<p class=\"btn-group pull-right\">";
-    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/projectedit?id=".$rec->id."\">Edit</a>";
+    echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/projectedit?id=".$rec->id."\">Edit</a>";
     echo "</p>";
     echo "<p><span class=\"tag project\">Project</span> ".$rec->v1."</p>";
 
@@ -205,7 +205,7 @@ function show_project($rec) {
 
 function show_site($rec) {
     echo "<p class=\"btn-group pull-right\">";
-    echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/siteedit?site_id=".$rec->id."\">Edit</a>";
+    echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/siteedit?site_id=".$rec->id."\">Edit</a>";
     echo "</p>";
 
     echo "<p><span class=\"tag site\">Site</span> ".$rec->v1."</p>";
@@ -222,7 +222,7 @@ function show_site($rec) {
     echo "</div>";//span
 
     echo "<div class=\"span4\">";
-    echo "<a href=\"https://oim.grid.iu.edu/oim/site?site_id=".$rec->id."\">OIM Summary</a>"; 
+    echo "<a href=\"https://oim.opensciencegrid.org/oim/site?site_id=".$rec->id."\">OIM Summary</a>"; 
     echo "</div>";//span
 
     echo "</div>";//row
@@ -231,12 +231,12 @@ function show_site($rec) {
 function show_contact($rec) {
     if(user()->getPersonID() == $rec->id) {
         echo "<p class=\"btn-group pull-right\">";
-        echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/profileedit\">Edit</a>";
+        echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/profileedit\">Edit</a>";
         echo "</p>";
     } else {
         if(user()->hasRole("admin") || user()->hasRole("admin_contacts")) {
             echo "<p class=\"btn-group pull-right\">";
-            echo "<a class=\"btn btn-small\" href=\"https://oim.grid.iu.edu/oim/contactedit?id=".$rec->id."\">Edit (Admin)</a>"; 
+            echo "<a class=\"btn btn-small\" href=\"https://oim.opensciencegrid.org/oim/contactedit?id=".$rec->id."\">Edit (Admin)</a>"; 
             echo "</p>";
         }
     }

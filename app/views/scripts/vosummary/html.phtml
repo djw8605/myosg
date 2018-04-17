@@ -94,6 +94,8 @@ foreach($this->vos as $vo_id=>$vo) {
     }
 
     if(isset($_REQUEST["summary_attrs_showfield_of_science"])) {
+      if(isset($this->field_of_science[$vo_id])){
+
         echo "<tr><th>Field Of Science</th><td>";
         $ranks = $this->field_of_science[$vo_id];
         foreach($ranks as $rank_id=>$fss) {
@@ -109,6 +111,7 @@ foreach($this->vos as $vo_id=>$vo) {
             }
         }
         echo "</td></tr>";
+      }
     }
 
     if(isset($_REQUEST["summary_attrs_showreporting_group"])) {

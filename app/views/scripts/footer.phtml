@@ -2,14 +2,14 @@
 <footer>
 <?php
 if(user()->isGuest()) {
-    $ticket_url = "http://ticket.grid.iu.edu/goc";
+    $ticket_url = "http://ticket.opensciencegrid.org/goc";
 } else {
-    $ticket_url = "https://ticket.grid.iu.edu/goc";
+    $ticket_url = "https://ticket.opensciencegrid.org/goc";
 }
 echo "<p>".config()->app_name." Version ".config()->version;
 ?> 
 | <a href="<?php echo $ticket_url?>/submit?app_issue_check=on&app_issue_type=goc&app_goc_url=<?=urlencode(fullurl())?>">Report Bugs</a>
-| <a href="https://twiki.grid.iu.edu/bin/view/Operations/IUPrivacyPolicy">Privacy Policy</a>
+| <a href="https://github.com/opensciencegrid/operations/blob/master/docs/privacy.md">Privacy Policy</a>
 <?
 /* produces annoying "svn: warning";
 if(config()->debug) {
@@ -19,5 +19,5 @@ if(config()->debug) {
 */
 echo "</p>";
 ?>
-<p><img src="images/myosg_favi.png" align="top">&nbsp; Copyright 2013 - The Trustees of Indiana University - Developed for Open Science Grid</p>
+<p><img src="images/myosg_favi.png" align="top">&nbsp; Copyright 2018 - The Trustees of Indiana University - Developed for Open Science Grid</p>
 </footer>

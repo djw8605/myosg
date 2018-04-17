@@ -51,12 +51,16 @@
         }
     </style>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<!--    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.0.1.js"></script>
+
+
     <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="//netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
-    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <link href="lib/select2/select2.css" rel="stylesheet"/>
     <script src="lib/select2/select2.js"></script>
@@ -104,9 +108,9 @@
                     <li><a href="https://ticket.opensciencegrid.org">Ticket</a></li>
                     <li><a href="https://twiki.opensciencegrid.org">TWiki</a></li>
                     <li class="divider"></li>
-                    <li><a href="http://gratiaweb.opensciencegrid.org">GratiaWeb</a></li>
+                    <li><a href="http://gracc.opensciencegrid.org">GRACC</a></li>
                     <li><a href="http://repo.opensciencegrid.org">Repo</a></li>
-                    <li><a href="http://is.grid.iu.edu">OSG BDII</a></li>
+                   <!-- <li><a href="http://is.grid.iu.edu">OSG BDII</a></li>-->
                     <li class="divider"></li>
                     <li><a href="http://blogs.opensciencegrid.org">Blog</a></li>
                     <li><a href="http://display.opensciencegrid.org">Display</a></li>
@@ -117,6 +121,7 @@
             <!-- can't put dropdown menu under collapsible - bootstrap2 can't handle resizing-->
             <ul class="nav pull-right">
                 <?php 
+	
                 if(!user()->isGuest()) {
                     //user
                     echo "<li class=\"dropdown\">";
@@ -125,21 +130,29 @@
                     echo "<li><a href=\"miscuser".config()->default_url("misc")."\">OSG Users</a></li>";
                     //echo "<li><a href=\"notification\">Notification Settings</a></li>";
                     echo "<li class=\"divider\"></li>";
-                    echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">Logoff</a></li>";
+                    echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."/logout/\">Logoff</a></li>";
                     echo "</ul>";
                     echo "</li>";
                 } else if(@$_SERVER['HTTPS'] == "on") {
-                    if(Zend_Registry::isRegistered("unregistered_dn")) {
+		  /*if(Zend_Registry::isRegistered("unregistered_dn")) {
                         echo "<li><a href=\"https://oim.opensciencegrid.org/oim/register\">Register</a></li>";
                     } else if(Zend_Registry::isRegistered("disabled_dn")) {
                         echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">(Disabled)</a></li>";
                     } else {
                         echo "<li><a href=\"http://".$_SERVER["SERVER_NAME"].base()."\">(NoCert)</a></li>";
                     }
+*/
+                    echo "<li><a href=\"https://".$_SERVER["SERVER_NAME"]."/sso/\">Login</a></li>";
+
                 } else {
                     //probably via http
-                    echo "<li><a href=\"https:".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]."\">Login</a></li>";
+                //    echo "<li><a href=\"https:".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]."\">Login</a></li>";
+
+		  echo "<li><a href=\"https://".$_SERVER["SERVER_NAME"]."/sso/\">Login</a></li>";
+
                 }
+
+
                 ?>
             </ul>
         <div class="nav-collapse">
@@ -156,13 +169,12 @@
                         <li id="menu_rgarmetric"><a href="rgarmetric<?php echo config()->default_url("rg")?>">Availability Metrics</a></li>
                         <li class="divider"></li>
                         <li id="menu_rgdowntime"><a href="rgdowntime<?php echo config()->default_url("rg")?>">Downtime Schedule</a></li>
-                        <li id="menu_rggipstatus"><a href="rggipstatus<?php echo config()->default_url("rg")?>">Current GIP Validation Status</a></li>
-                        <li id="menu_rgbdii"><a href="rgbdii<?php echo config()->default_url("rg")?>&bdii_server=is-osg&bdii_object=cluster">BDII Information Browser</a></li>
+                      <!--  <li id="menu_rgbdii"><a href="rgbdii<?php echo config()->default_url("rg")?>&bdii_server=is-osg&bdii_object=cluster">BDII Information Browser</a></li>
                         <li class="divider"></li>
-                        <li id="menu_rgaccount"><a href="rgaccount<?php echo config()->default_url("rg")?>&account_type=cumulative_hours">Gratia Accounting Graphs</a></li>
-                        <li id="menu_rgce"><a href="rgce<?php echo config()->default_url("rg")?>&ce_account_type=gip_vo">Gratia Accounting Graphs (for CE)</a></li>
-                        <li id="menu_rgse"><a href="rgse<?php echo config()->default_url("rg")?>&se_account_type=vo_transfer_volume">Gratia Accounting Graphs (for SE)</a></li>
-                        </ul>
+                        <li id="menu_rgaccount"><a href="rgaccount<?php echo config()->default_url("rg")?>&account_type=cumulative_hours">GRACC Accounting Graphs</a></li>
+                        <li id="menu_rgce"><a href="rgce<?php echo config()->default_url("rg")?>&ce_account_type=gip_vo">GRACC Accounting Graphs (for CE)</a></li>
+                       <!-- <li id="menu_rgse"><a href="rgse<?php echo config()->default_url("rg")?>&se_account_type=vo_transfer_volume">Gratia Accounting Graphs (for SE)</a></li>
+                        --></ul>
                     </li>
                     <li id="menu_vo" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Virtual Organization<b class="caret"></b></a>
                         <ul class="dropdown-menu">

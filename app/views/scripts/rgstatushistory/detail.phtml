@@ -34,7 +34,7 @@ if(isset($this->downtime)) {
         echo "<div class=\"well status_".$status."\">";
         $status_time = $this->detail_service_status->timestamp;
         $iso = date(DATE_W3C, $status_time);
-        $timestr = date(config()->date_format_full, $time);
+        //$timestr = date(config()->date_format_full, $time);
         echo "<p>Status changed to $status at <time datetime=\"$iso\"/><br/>";
         echo $this->detail_service_status->detail."</p>";
         echo "</div>";

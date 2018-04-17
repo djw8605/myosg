@@ -61,12 +61,16 @@ class common_config
         //
 
         //application version to use for version specific data structures, etc.
+<<<<<<< HEAD
         $this->version = "2.39";
+=======
+        $this->version = "3.2";
+>>>>>>> 3.3
 
         //application to display or used in email
         $this->app_name = "MyOSG";
         $this->app_subname = "by Grid Operations Center";
-        $this->copyright = "Copyright 2011 The Trustees of Indiana University - Developed for Open Science Grid";
+        $this->copyright = "Copyright 2018 The Trustees of Indiana University - Developed for Open Science Grid";
         //application name used in places such as session name
         $this->app_id = "rsv_viewer";
 
@@ -126,7 +130,7 @@ class common_config
 
         //GOC Ticket Open ticket XML
         $this->gocticket_open_cache = "/tmp/gocticket.open.cache.xml";
-        $this->gocticket_open_url = "http://ticket.grid.iu.edu/goc/rest/listopen";
+        $this->gocticket_open_url = "https://ticket.opensciencegrid.org/goc/rest/listopen";
 
         //locale
         $this->date_format_full = "M j, Y H:i A e";
@@ -191,16 +195,18 @@ class common_config
         //if specific metric_id is not found, use following
         $this->default_rsvforum = "https://twiki.grid.iu.edu/bin/view/MonitoringInformation/RsvProbeList";
 
-        $this->gocticket_url = "https://ticket.grid.iu.edu";
-        $this->oim_url = "https://oim.grid.iu.edu/oim";
+        $this->gocticket_url = "https://ticket.opensciencegrid.org";
+        $this->oim_url = "https://oim.opensciencegrid.org/oim";
 
         $this->status_expires_days = 30;
 
-        $this->gratiaweb = "http://gratiaweb.grid.iu.edu/gratia";
+        $this->gratiaweb = "https://gracc.opensciencegrid.org/render/dashboard-solo/db/";
+         //"http://gratiaweb.grid.iu.edu/gratia";
         //$this->gratiaweb = "http://t2.unl.edu/gratia";
 
         //$this->cometd_url = "http://comet1.grid.iu.edu:8080/cometd";
         $this->eventjs_url = "https://".gethostname().":12345";//assume running locally to the server host
+
         $this->dn_override = array(); //use this in site config to temporarily override dn for testing
 
         //override this in site config to point to production if necessary

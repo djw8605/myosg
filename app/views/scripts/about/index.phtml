@@ -69,43 +69,35 @@ background-color: white;
             <h5>Current RSV Status</h5>
             <img class="thumbnail" src="images/screenshots/rgcurrentstatus.png">
         </li>
-        <?$url = "rgbdii/index?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&datasource=bdii&bdii_server=is-osg&bdii_object=cluster";?>
+    <!--    <?$url = "rgbdii/index?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&datasource=bdii&bdii_server=is-osg&bdii_object=cluster";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>BDII Information Browser</h5>
             <img class="thumbnail" src="images/screenshots/rgbdii.png">
-        </li>
-    </ul>
-    </div>
+        </li>-->
 
-    <div class="row-fluid">
-    <ul class="thumbnails">
-        <li class="span3" onclick="document.location='map<?php echo config()->default_url("map")?>'">
+<li class="span3" onclick="document.location='map<?php echo config()->default_url("map")?>'">
             <h5>Status Map</h5>
             <img class="thumbnail" src="images/screenshots/map.png">
         </li>
 
-        <?$url = "rgaccount/index?datasource=account&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=daily_hours_byvo&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
-        <li class="span3" onclick="document.location='<?php echo $url?>'">
-            <h5>Gratia Accounting</h5>
-            <img class="thumbnail" src="images/screenshots/rgaccount.png">
-        </li>
+</ul>
+</div>
+    <div class="row-fluid">
 
-        <?$url = "rggipstatus/index?datasource=gipstatus&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=cumulative_hours&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service=on&service_1=on&service_central_value=0&service_hidden_value=0&active_value=1&disable_value=1";?>
-        <li class="span3" onclick="document.location='<?php echo $url?>'">
-            <h5>GIP Validation Results</h5>
-            <img class="thumbnail" src="images/screenshots/rggipstatus.png">
-        </li>
+    <ul class="thumbnails">
+   
+ <!--       <?$url = "rgaccount/index?datasource=account&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showtestresults=on&downtime_attrs_showpast=&account_type=daily_hours_byvo&ce_account_type=gip_vo&se_account_type=vo_transfer_volume&start_type=7daysago&end_type=now&facility=on&facility_10009=on&gridtype=on&gridtype_1=on&service_central_value=0&service_hidden_value=0&active=on&active_value=1&disable_value=1";?>
+<li class="span3" onclick="document.location='<?php echo $url?>'">
+            <h5>GRACC Accounting</h5>
+            <img class="thumbnail" src="images/screenshots/rgaccount_gracc.png">
+        </li>-->
+
 
         <?$url = "rgarhistory?facility=on&facility_10009=on&gridtype=on&gridtype_1=on&summary_attrs_showservice=on&summary_attrs_showrsvstatus=on&summary_attrs_showfqdn=on&gip_status_attrs_showfqdn=on&gip_status_attrs_showtestresults=on";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>Availability History</h5>
             <img class="thumbnail" src="images/screenshots/arhistory.png">
         </li>
-    </ul><!--thumbnails-->
-    </div><!--row-fluid-->
-
-    <div class="row-fluid">
-    <ul class="thumbnails">
         <?$url = "voactivation?all_vos=on&active=on&active_value=1";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>VO Activation Status</h5>
@@ -113,11 +105,17 @@ background-color: white;
         </li>
 
         <?$url = "vovomsstatus?all_vos=on&active=on&active_value=1";?>
+
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>VOMS Status</h5>
             <img class="thumbnail" src="images/screenshots/vovomsstatus.png">
         </li>
 
+</ul>
+</div>
+    <div class="row-fluid">
+
+    <ul class="thumbnails">
         <?$url = "misccount?count_sg_1&count_active=on&count_enabled=on&count_sg_1=on&count_active=on&count_enabled=on";?>
         <li class="span3" onclick="document.location='<?php echo $url?>'">
             <h5>Resource Service Counts</h5>
@@ -164,9 +162,9 @@ background-color: white;
                 </a>
             </li>
              <li class="span3">
-                <a target="_blank" href="http://gratiaweb.opensciencegrid.org">
-                <h5>GratiaWeb</h5>
-                <img src="images/screenshots/gratiaweb.png">
+                <a target="_blank" href="http://gracc.opensciencegrid.org">
+                <h5>GRACC</h5>
+                <img src="images/screenshots/rgaccount_gracc1.png">
                 <div class="caption">
                     External access to the current OSG activity statistics / graphs.
                 </div>
@@ -253,7 +251,7 @@ background-color: white;
         echo "<p class=\"muted\">by ".htmlsafe($ucv[4])." (".htmlsafe(trim($ucv[3])).")</p>";
     }
     ?>
-    <span class="sidenote">Edit at <a target="_blank" href="https://twiki.opensciencegrid.org/bin/view/Operations/UserContributedViews">TWiki</a></span>
+ 
     <br clear="all">
     <!---
     <div class="indent">
